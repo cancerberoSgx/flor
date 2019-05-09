@@ -8,9 +8,17 @@ import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
 import { isElement } from './elementUtil'
 import { ProgramDocument } from './programDocument'
-import { FullProps } from './types'
+import { FullProps, Attrs, ElementProps } from './types'
+import { ProgramDocumentRenderer } from '../render';
 
+interface DrawContext {
+  write: (y: number, x: number, s: string) => void;
+    setStyle: (props: Partial<Attrs>) => void;
+    attrs: Partial<ElementProps>
+  }
 export class ProgramElement extends Element {
+
+
 
   private static counter = 1
 
@@ -222,6 +230,8 @@ export class ProgramElement extends Element {
       Array.from(this.childNodes)
         .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
+  
+
 }
 
 interface DebugOptions {

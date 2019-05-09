@@ -878,8 +878,8 @@ If 88- or 256-color support is compiled, the following apply.
   Ps.
 ```
    */
-  charAttributes(param: string, val?: string): boolean
-  charAttributes(param: string[], val?: string): boolean
+  charAttributes(param: string, val?: boolean): boolean
+  charAttributes(param: string[], val?: boolean): boolean
   /**
    * set the foreground color and character for the following writings to the output buffer. Example:
 ```

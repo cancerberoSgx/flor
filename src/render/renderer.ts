@@ -8,7 +8,7 @@ import { TextNode } from '../dom/text'
 import { isElement } from '../programDom'
 import { ProgramElement } from '../programDom/programElement'
 import { PAttrs } from '../programDom/styleProps'
-import { Attrs } from '../programDom/types'
+import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
@@ -33,6 +33,8 @@ export class ProgramDocumentRenderer {
   private currentAttrs: Attrs
 
   constructor(options: RendererOptions) {
+    // this.write = this.write.bind(this)
+    // this.setStyle = this.setStyle.bind(this)
     this._program = options.program || createProgram(options.programOptions)
     this.useBuffer = !options.noBuffer || true
     this.defaultStyle = {
@@ -92,7 +94,7 @@ export class ProgramDocumentRenderer {
   /**
    * All writes to program must be from here
    */
-  protected write(y: number, x: number, s: string) {
+  write(y: number, x: number, s: string) {
     this._program.cursorPos(y, x)
     this._program._write(s)
     if (this.useBuffer) {
@@ -112,24 +114,39 @@ export class ProgramDocumentRenderer {
     el._beforeRender()
     this.renderElementWithoutChildren(el)
     el._afterRenderWithoutChildren()
-    this.lastAbsLeft = el.absoluteContentLeft,
-    this.lastAbsTop = el.absoluteContentTop
-    Array.from(el.childNodes).forEach((c, i, a) => {
-      if (c instanceof  TextNode) {
-        // TODO: word wrap, correct char width for unicode.
-        this.renderText(c, a[i + 1])
-      } else if (c instanceof ProgramElement) {
-        this.renderElement(c)
-      } else {
-        debug('Element type invalid: ' + inspect(c))
-      }
-    })
+    if(el.props.renderChildren){
+      el.props.renderChildren(this)
+    }
+    else {
+      this.lastAbsLeft = el.absoluteContentLeft,
+      this.lastAbsTop = el.absoluteContentTop
+      Array.from(el.childNodes).forEach((c, i, a) => {
+        if (c instanceof  TextNode) {
+          if(el.props.renderChildText){
+            el.props.renderChildText(this, c, i)
+          }
+          else {
+            this.renderText(c, a[i + 1])
+          }
+        } else if (c instanceof ProgramElement) {
+          if(el.props.renderChildElement){
+            el.props.renderChildElement(this, c, i)
+          }
+          else {
+            this.renderElement(c)
+          }
+        } else {
+          debug('Element type invalid: ' + inspect(c))
+        }
+      })
+    }
     el._afterRender()
     el._renderCounter = this.renderCounter ++
     return el
   }
-
+  
   protected renderText(c: TextNode, nextNode: Node) {
+    // TODO: correct char width for unicode.
     let s = (c.textContent || '')
     const parent  = c.parentNode as ProgramElement
     if (parent.props.textWrap) {
@@ -158,15 +175,32 @@ export class ProgramDocumentRenderer {
   }
 
   renderElementWithoutChildren(el: ProgramElement) {
-    this.setStyle({ ...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data })
-    const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
-    const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
-    const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
-    const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
-    for (let i = 0; i < height; i++) {
-      this.write(yi + i, xi, this._program.repeat(el.props.ch || this.currentAttrs.ch, width))
+    const attrs: Partial<ElementProps> = { ...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data }
+    if(el.props.render) {
+      el.props.render(this)
+      return
     }
-    this.drawElementBorder(el)
+    if(el.props.renderContent) {
+      el.props.renderContent(this)
+    }
+    else {
+      if(!attrs.noFill){
+          this.setStyle(attrs) // TODO: merge with all ancestors
+          const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
+          const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
+          const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
+          const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
+          for (let i = 0; i < height; i++) {
+            this.write(yi + i, xi, this._program.repeat(el.props.ch || this.currentAttrs.ch, width))
+          }
+        }
+    }
+    if(el.props.renderBorder) {
+      el.props.renderBorder(this)
+    }
+    else {
+      this.drawElementBorder(el, attrs)
+    }
   }
 
   eraseElement(el: ProgramElement): any {
@@ -181,18 +215,31 @@ export class ProgramDocumentRenderer {
   }
 
   setStyle(props: PAttrs) {
-    if (props.bg) {
+    if (props.bg && props.bg !==this.currentAttrs.bg) {
       this._program.bg(props.bg)
-      if (this.useBuffer) {
+      // if (this.useBuffer) {
         this.currentAttrs.bg = props.bg
-      }
+      // }
     }
-    if (props.fg) {
+    if (props.fg && props.fg !==this.currentAttrs.fg) {
       this._program.fg(props.fg)
-      if (this.useBuffer) {
+      // if (this.useBuffer) {
         this.currentAttrs.fg = props.fg
-      }
+      // }
     }
+    if (typeof props.invisible!=='undefined'&& props.invisible!==this.currentAttrs.invisible) {
+      this._program.charAttributes('invisible', props.invisible)
+      // if (this.useBuffer) {
+        this.currentAttrs.invisible = props.invisible
+      // }
+    }
+    if (typeof props.bold!=='undefined'&& props.bold!==this.currentAttrs.bold) {
+      this._program.charAttributes('bold', props.bold)
+      // if (this.useBuffer) {
+        this.currentAttrs.bold = props.bold
+      // }
+    }
+
   }
 
   resetStyle() {
@@ -200,17 +247,18 @@ export class ProgramDocumentRenderer {
     this.setStyle(this.defaultStyle)
   }
 
-  private drawElementBorder(el: ProgramElement) {
-    const border = el.props.border
+  private drawElementBorder(el: ProgramElement, elProps: Partial<ElementProps> = el.props.data) {
+    const border = elProps.border
     if (!border) {
       return
     }
     const type = border.type || BorderStyle.light
-    this.setStyle({ ...el.props , ...border })
-    const { xi, xl, yi, yl } = { xi: el.absoluteLeft,
-      xl: el.absoluteLeft + el.props.width ,
+    this.setStyle({ ...elProps , ...border })
+    const { xi, xl, yi, yl } = { 
+      xi: el.absoluteLeft,
+      xl: el.absoluteLeft + (elProps.width||el.props.width) ,
       yi: el.absoluteTop,
-      yl: el.absoluteTop + el.props.height
+      yl: el.absoluteTop + (elProps.height||el.props.height)
     }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))

@@ -1,4 +1,4 @@
-import { KeyEvent, MouseEvent } from '../render'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../render'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
@@ -32,14 +32,7 @@ export interface Attrs {
 }
 
 export interface StyleProps extends Attrs {
-}
-
-export interface BorderProps extends StyleProps {
-  type?: BorderStyle
-}
-
-export interface ElementProps extends StyleProps {
-  /**
+    /**
    * Width of the element. If the value is a number between 0 and 1 (non inclusive) then it will be the parent's contentHeight multiplied for that number. For example, width==0.5 will be half the parent's height. Otherwise is columns
    */
   width: number
@@ -56,8 +49,6 @@ export interface ElementProps extends StyleProps {
    */
   left: number
   textWrap: boolean
-  focusable: boolean
-  focused: boolean
 
   /**
    *
@@ -71,6 +62,23 @@ export interface ElementProps extends StyleProps {
    * This means the inner (content) dimension is not affected.
    */
   border: Partial<BorderProps>
+
+  /**
+   * It will prevent painting the background so back elements will be visible. IMPORTANT: if true then `bg` property must be undefined. NOTE: to preserve parent's background color, just don't `bg` instead using this. This whould rarely used, probably useful fo rcustom elements that need to manage the rendering 100% their self. 
+   */
+  noFill: boolean
+}
+
+export interface BorderProps extends StyleProps {
+  type?: BorderStyle
+}
+
+export interface ElementProps extends StyleProps {
+
+
+  focusable: boolean
+  focused: boolean
+
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
@@ -130,9 +138,30 @@ export interface ElementProps extends StyleProps {
    */
   value: string
 
-  onBlur(e: BlurEvent): void
-  onFocus(e: FocusEvent): void
+  onBlur?(e: BlurEvent): void
+  onFocus?(e: FocusEvent): void
 
+
+  /**
+   * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared, the content and border won't be rendered, and implementation is responsible of them.
+   */
+  render?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content. 
+   */
+  renderContent?(renderer: ProgramDocumentRenderer): void
+
+
+  /**
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content. 
+   */
+  renderBorder?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses that need custom children drawing method. If declared, children   won't be rendered but the content and border will. The implementation is responsible of drawing the children. 
+   */
+  renderChildren?(renderer: ProgramDocumentRenderer): void
 
 }
 

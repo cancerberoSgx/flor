@@ -1,104 +1,12 @@
-import { KeyEvent, MouseEvent } from '../render'
-import { LayoutOptions } from '../util'
-import { isElement } from './elementUtil'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../render'
 import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { BorderProps, ElementProps, Padding } from './types'
 import { BlurEvent, FocusEvent } from '../render/focusManager';
+import { TextNode } from '../dom/text';
 
-export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> implements Partial<ElementProps> {
+export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements Partial<ElementProps> {
  
-  public get textWrap(): boolean | undefined {
-    return this._data.textWrap
-  }
-  public set textWrap(value: boolean | undefined) {
-    this._data.textWrap = value
-  }
-
-  public get border() {
-    return this._data.border
-  }
-  public set border(value: Partial<BorderProps> | undefined) {
-    this._data.border = value
-  }
-
-  public get padding(): Padding | undefined {
-    return this._data.padding
-  }
-  public set padding(value: Padding | undefined) {
-    this._data.padding = value
-  }
-
-  public get width(): number {
-    if (!this._data.width) {
-      return 0
-    }
-    if (this._data.width > 0 && this._data.width < 1) {
-      return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentWidth * this._data.width) || this._data.width
-    }
-    return this._data.width || 0
-  }
-  public set width(value: number) {
-    if (this._data.width !== value) {
-      this._data.width = value
-    }
-  }
-
-  public get height(): number {
-    if (!this._data.height) {
-      return 0
-    }
-    if (this._data.height > 0 && this._data.height < 1) {
-      return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentHeight * this._data.height) || this._data.height
-    }
-    return this._data.height || 0
-  }
-  public set height(value: number) {
-    if (this._data.height !== value) {
-      this._data.height = value
-    }
-  }
-
-  get left(): number {
-    if (!this._data.left) {
-      return 0
-    }
-    if (this._data.left > 0 && this._data.left < 1) {
-      return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentWidth * this._data.left) || this._data.left
-    }
-    return this._data.left || 0
-  }
-  set left(value: number) {
-    if (this._data.left !== value) {
-      this.owner.positionDirty = true
-      this._data.left = value
-    }
-  }
-
-  get top(): number {
-    if (!this._data.top) {
-      return 0
-    }
-    if (this._data.top > 0 && this._data.top < 1) {
-      return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentHeight * this._data.top) || this._data.top
-    }
-    return this._data.top || 0
-  }
-  set top(value: number) {
-    if (this._data.top !== value) {
-      this.owner.positionDirty = true
-      this._data.top = value
-    }
-  }
-
-  public get layout(): LayoutOptions | undefined {
-    return this._data.layout
-  }
-  public set layout(value: LayoutOptions | undefined) {
-    this._data.layout = value
-    this.owner.positionDirty = true
-  }
-
   public get focused(): boolean | undefined {
     return this._data.focused
   }
@@ -118,6 +26,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   afterRenderWithoutChildren?(): boolean
   afterRender?(): boolean
   beforeRender?(): boolean
+
   onClick?(r: MouseEvent): void
   onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void
   onMouse?(r: MouseEvent): void
@@ -130,6 +39,48 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   onBlur?(e: BlurEvent): void
   onFocus?(e: FocusEvent): void
 
+  /**
+   * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared,
+   * the content and border won't be rendered, and implementation is responsible of them.
+   */
+  render?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
+   * method. If declared, the content   won't be rendered but the border will. The implementation is
+   * responsible of drawing the content. 
+   */
+  renderContent?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
+   * method. If declared, the content   won't be rendered but the border will. The implementation is
+   * responsible of drawing the content. 
+   */
+  renderBorder?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses
+   * that need custom children drawing method. If declared, children   won't be rendered but the content and
+   * border will. The implementation is responsible of drawing the children. 
+   */
+  renderChildren?(renderer: ProgramDocumentRenderer): void
+  /**
+   * Custom element child element draw function. Child elements are child elements but not text nodes. Can be
+   * declared by subclasses that need custom children drawing method. If declared, child elements (not text)
+   * won't be rendered but the child text nodes, content and border will. The implementation is responsible of
+   * drawing the child elements and its children's children. 
+   */
+  renderChildElement?(renderer: ProgramDocumentRenderer, child: ProgramElement, index: number): void
+
+  /**
+   * Custom element child text node draw function. Child text nodes are child  text but not child elements.
+   * Can be declared by subclasses that need custom child text nodes drawing method. If declared, child text
+   * nodes (not child elements) won't be rendered but the child elements, content and border will. The
+   * implementation is responsible of drawing the text and respecting props.wordWrap and styles.
+   */
+  renderChildText?(renderer: ProgramDocumentRenderer, text: TextNode, index: number): void
+ 
   public get input(): string | undefined {
     return this._data.input
   }

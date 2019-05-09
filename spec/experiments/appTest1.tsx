@@ -9,12 +9,12 @@ try {
   flor.render()
   const app = <box width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['top-down'], neverResizeContainer: true }}>
 
-    <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['left-right'], neverResizeContainer: true }}
+    <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['left-right'], neverResizeContainer: true }}  
     >
-    <box width={.49} height={.99} border={{ type: BorderStyle.double }} bg="magenta" textWrap={true}>
+    <box width={.49} height={.99} border={{ type: BorderStyle.double }} bg="blue" textWrap={true}>
        Do ad sunt est cillum. Laboris esse fugiat proident excepteur sit minim elit eiusmod et et aliquip consectetur ullamco. Adipisicing pariatur ad aute ipsum nulla consectetur. Aliquip sunt enim qui laboris ex labore ea eu consequat velit eiusmod reprehenderit et. Qui do nulla sit voluptate proident tempor. Non commodo incididunt ipsum pariatur excepteur.
       </box>
-      <box width={.49} height={.99} border={{ type: BorderStyle.double }} fg="black" bg="cyan"  textWrap={true}>Duis commodo sit excepteur excepteur. Est officia commodo in aliqua sunt magna est ipsum exercitation. Fugiat nulla dolore deserunt est anim labore et duis anim reprehenderit ex non proident tempor. Culpa aute ex ad eu. Elit ut excepteur veniam nostrud cillum minim aliqua ullamco id. Nulla qui velit officia dolor sint. Nulla sint quis eu id mollit adipisicing.
+      <box width={.49} height={.99}   border={{ type: BorderStyle.double }} fg="black"   textWrap={true}>Duis commodo sit excepteur excepteur. Est officia commodo in aliqua sunt magna est ipsum exercitation. Fugiat nulla dolore deserunt est anim labore et duis anim reprehenderit ex non proident tempor. Culpa aute ex ad eu. Elit ut excepteur veniam nostrud cillum minim aliqua ullamco id. Nulla qui velit officia dolor sint. Nulla sint quis eu id mollit adipisicing.
       </box>
 </box>
 
@@ -37,7 +37,7 @@ try {
       <box height={float(.3,.7)} width={float(.33,.5)} textWrap={true} border={{ type: item(borderStyles) as any }} >Est aliqua sit Lorem sit occaecat excepteur sint.</box>
       <box height={float(.3,.7)} width={float(.33,.5)} textWrap={true} border={{ type: item(borderStyles) as any }} >Cupidatat elit do ad qui in anim amet sint.</box>
 
-      <box height={float(.3,.7)} width={float(.33,.5)}  fg={color()} textWrap={true} border={{ type: item(borderStyles) as any }} >Sunt ea ex dolor qui nulla ipsum cillum eiusmod nulla ea occaecat velit.</box>
+      <box height={float(.3,.7)} width={float(.33,.5)}  fg={color()} textWrap={true} border={{ type: item(borderStyles) as any }} bg={''} >Sunt ea ex dolor qui nulla ipsum cillum eiusmod nulla ea occaecat velit.</box>
       <box height={float(.3,.7)} width={float(.33,.5)}  fg={color()}textWrap={true} border={{ type: item(borderStyles) as any }} >Consequat ullamco nulla nisi ex.</box>
       <box height={float(.3,.7)} width={float(.33,.5)}  fg={color()}textWrap={true} border={{ type: item(borderStyles) as any }} >Nisi elit quis deserunt culpa.</box>
       <box height={float(.3,.7)} width={float(.33,.5)} fg={color()} textWrap={true} border={{ type: item(borderStyles) as any }} >Est aliqua sit Lorem sit occaecat excepteur sint.</box>
