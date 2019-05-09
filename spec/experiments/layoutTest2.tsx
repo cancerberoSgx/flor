@@ -18,13 +18,13 @@ try {
 
   const { renderer, el } = createProgramRendererDocumentAndElement(undefined)
 
-  el.assignProps({ layout: { layout: Layout['justified-layout'], justifiedLayout: { targetRowHeight: 10, targetRowHeightTolerance: 0 } } })
+  el.props.assign({ layout: { layout: Layout['justified-layout'], justifiedLayout: { targetRowHeight: 10, targetRowHeightTolerance: 0 } } })
 
   function draw() {
     renderer.eraseElement(el)
     el.empty()
     array(20).map(i => ({
-      top: number(0, 20), left: number(20), width: number(23, 40), height: number(12, 20), bg: color(), border: true
+      top: number(0, 20), left: number(20), width: number(23, 40), height: number(12, 20), bg: color(), border: {}
    , children: [`El ${i}`] })).forEach(el.create.bind(el))
     renderer.renderElement(el)
   }

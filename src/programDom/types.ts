@@ -32,9 +32,11 @@ export interface Attrs {
 
 export interface StyleProps extends Attrs {
 }
-export interface BorderProps extends Partial<StyleProps> {
+
+export interface BorderProps extends StyleProps {
   type?: BorderStyle
 }
+
 export interface ElementProps extends StyleProps {
   width: number
   height: number
@@ -58,7 +60,7 @@ export interface ElementProps extends StyleProps {
    * if defined, a 1-sized outer wrapper will be added in all size calculations and a border will be drawn.
    * This means the inner (content) dimension is not affected.
    */
-  border: BorderProps | boolean | BorderStyle
+  border: Partial<BorderProps>// | boolean | BorderStyle
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.

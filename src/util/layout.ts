@@ -159,7 +159,7 @@ function handleJustifiedLayout(o: LayoutOptions & { el: ProgramElement }) {
     children.forEach((c, i) => {
       const r = result.boxes[i]
       if (r) {
-        c.assignProps({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) })
+        c.props.assign({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) })
       }
     })
   }

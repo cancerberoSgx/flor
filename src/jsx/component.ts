@@ -1,7 +1,6 @@
 import { ProgramElement } from '..'
 
 interface ExtraProps {
-  // ref?: RefObject
   children?: JSX.FlorJsxNode
 }
 
@@ -15,18 +14,21 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   constructor(protected props: P, protected state: S) {}
 
   /**
-   * Called from JSX render() when [[element]] was just created. Take into account that its attributes and
-   * children are not yet initialized. For that use [[elementReady]]
+   * Called from `Flor.render` when [[element]] was just created. Take into account that its attributes and
+   * children are not yet initialized. For that use [[elementReady]].
+   * 
+   * @internal
    */
   elementCreated() {}
 
   /**
-   * Called from JSX render() when [[element]] was is ready, this is with its attributes and children
+   * Called from `Flor.render` when [[element]] was is ready, this is with its attributes and children
    * initialized and rendered. Take into account that perhaps the element is not yet attached to any document.
-   *
+   * 
+   * @internal
    */
   elementReady() {
-    this.element && this.element.childrenReady()
+    this.element && this.element._childrenReady()
   }
 
   element: ProgramElement | undefined

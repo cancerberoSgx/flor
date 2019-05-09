@@ -25,48 +25,70 @@ export class FlorDocument {
   static ELEMENT_NODE = Node.ELEMENT_NODE
 
   private _renderer: ProgramDocumentRenderer
-  public get renderer(): ProgramDocumentRenderer {
-    return this._renderer
-  }
-  private program: Program = undefined as any
-  private document: ProgramDocument
+  private _program: Program = undefined as any
+  private _document: ProgramDocument
   private events: EventManager
 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
-      this.program = new Program(o)
-      installExitKeys(this.program)
+      this._program = new Program(o)
+      installExitKeys(this._program)
     }
-    this.events = new EventManager(this.program)
-    this.document = new ProgramDocument(this.events)
-    Flor.setDocument(this.document)
-    this._renderer = new ProgramDocumentRenderer({ program: this.program })
-    this.body = new FlorBody('flor', this.document, this)
-    this.document.__setBody(this.body)
+    this.events = new EventManager(this._program)
+    this._document = new ProgramDocument(this.events)
+    Flor.setDocument(this._document)
+    this._renderer = new ProgramDocumentRenderer({ program: this._program })
+    this.body = new FlorBody('flor', this._document, this)
+    this._document.__setBody(this.body)
   }
 
   createElement(t: string) {
-    return this.document.createElement(t)
+    return this._document.createElement(t)
   }
+
   createTextNode(c: string) {
-    return this.document.createTextNode(c)
+    return this._document.createTextNode(c)
   }
+
   create(props: Partial<FullProps>) {
-    return this.document.create(props)
+    return this._document.create(props)
   }
+
   add(el: ProgramElement | Partial<FullProps> | JSX.Element) {
     return this.body.add(el)
   }
 
   renderElement(el: JSX.Element) {
     const e = this.Flor.render(el)
-    return this.renderer.renderElement(e)
+    return this._renderer.renderElement(e)
+  }
+
+  get document() {
+    return this._document
   }
   get Flor() {
     return Flor
   }
+  get program() {
+    return this._program
+  }
+  public get renderer(): ProgramDocumentRenderer {
+    return this._renderer
+  }
 
+  _debugEl: ProgramElement = undefined as any
+  debug(el: ProgramElement) {
+    if(!this._debugEl) {
+      this._debugEl = this.create({top: 10, left: 40, width: 40, height: 20, children: [el.debug()]})
+    }
+    this._debugEl.empty()
+    el.debug().split('\n').forEach((l, i)=>{
+      this._debugEl.appendChild(this.create({top: i, left: 0, children: [l]}))
+    })
+    this.renderer.renderElement(this._debugEl)
+  }
 }
+
 class FlorBody extends ProgramElement {
   constructor(tagName: string, ownerDoc: ProgramDocument, private flor: FlorDocument) {
     super(tagName, ownerDoc)
@@ -91,7 +113,3 @@ class FlorBody extends ProgramElement {
     }
   }
 }
-
-// function isCreatable(e: any):e is Partial<FullProps> {
-//   return e && e.children
-// }

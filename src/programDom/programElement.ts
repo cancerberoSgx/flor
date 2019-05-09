@@ -5,18 +5,27 @@ import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
+import { isElement } from './elementUtil';
+import { indent } from 'misc-utils-of-mine-generic';
 
 export class ProgramElement extends Element {
   /**
    * Called by `Flor.render()` after all children `ProgramElement` are created and appended to this element.
+   * 
+   * @internal
    */
-  childrenReady() {
-    if (! this.props.childrenReady()) {
-      this.layoutChildren()
+  _childrenReady() {
+    if (!this.props.childrenReady || ! this.props.childrenReady()) {
+      this.layout()
     }
   }
 
-  layoutChildren() {
+  /**
+   * Runs the layout algorithm possibly changing children and self position and dimension. 
+   * 
+   * @internal
+   */
+  layout() {
     if (this.props.layout) {
       layoutChildren({
         el: this, ...this.props.layout
@@ -28,28 +37,34 @@ export class ProgramElement extends Element {
    * Called by the rendered just after the element all all its children were rendered to the screen
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
+   * 
+   * @internal
    */
-  afterRender(): any {
-    this.props.afterRender()
+  _afterRender(): any {
+    this.props.afterRender && this.props.afterRender()
   }
 
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be next.
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
+   * 
+   * @internal
    */
-  afterRenderWithoutChildren(): any {
-    this.props.afterRenderWithoutChildren()
+  _afterRenderWithoutChildren(): any {
+    this.props.afterRenderWithoutChildren && this.props.afterRenderWithoutChildren()
   }
 
   /**
    * Called by the renderer just before rendering this element. It's children will follow.
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
+   * 
+   * @internal
    */
-  beforeRender(): any {
-    if (!this.props.beforeRender()) {
-      this.layoutChildren()
+  _beforeRender(): any {
+    if (!this.props.beforeRender || !this.props.beforeRender()) {
+      this.layout()
     }
   }
 
@@ -63,7 +78,7 @@ export class ProgramElement extends Element {
   constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
     super(tagName, ownerDocument)
     this.internalId = ProgramElement.counter++
-    this.props = new ElementPropsImpl()
+    this.props = new ElementPropsImpl({})
   }
 
   readonly internalId: number
@@ -115,14 +130,30 @@ export class ProgramElement extends Element {
     return createElement(this.ownerDocument as ProgramDocument, { ...props, parent: this })
   }
 
-  assignProps(o: any) {
-    Object.assign(this.props, o)
-  }
+
 
   addEventListener(name: string, listener: EventListener): void {
     if (ProgramDocument.is(this.ownerDocument)) {
-      this.ownerDocument.registerEventListener({ el: this,  name, listener })
+      this.ownerDocument.registerEventListener({ el: this, name:  this._getEventName(name), listener })
     }
   }
 
+  private _getEventName(name: string): string {
+    if(['onclick', 'click'].includes(name.toLowerCase())){
+      return 'mouseup'
+    }
+    return name
+  }
+
+  getChildrenElements(){
+    return Array.from(this.childNodes).filter(isElement)
+  }
+
+  debug(o: DebugOptions = {level: 0}): string{
+    return `${indent(o.level)}<${this.tagName} ${Object.keys(this.props).map(p=>`${p}=""`).join(' ')} textContent="${this.textContent}">\n${indent(o.level+1)}${Array.from(this.childNodes).map(e=>isElement(e) ? e.debug({...o, level: (o.level) + 1}) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
+  }
+}
+
+interface DebugOptions {
+  level: number
 }

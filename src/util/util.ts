@@ -26,7 +26,7 @@ export function destroyProgramAndExit(program: Program, status = 0) {
 
 export function destroyProgram(program: Program) {
 
-  if (!program.isAlt) return
+  // if (!program.isAlt) return
   program.put.keypad_local()
   // if (program.scrollTop !== 0
   //     || program.rows - 1) {
@@ -45,11 +45,6 @@ export function destroyProgram(program: Program) {
   // tryTo(()=>cursorReset())
   program.cursorReset()
 
-  program.flush()
-  if (process.platform === 'win32') {
-    tryTo(() => require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 }))
-  }
-
   program.resetCursor()
   program.showCursor()
   program.disableMouse()
@@ -57,7 +52,15 @@ export function destroyProgram(program: Program) {
   program.sgr0()
   program.reset()
   program.clear()
+  
+  program.flush()
+  if (process.platform === 'win32') {
+    tryTo(() => require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 }))
+  }
+  
   program.destroy()
+  program.flush()
+
 }
 
 export function installExitKeys(program: Program) {
@@ -88,7 +91,7 @@ export function createProgramRendererDocumentAndElement(programOptions: ProgramO
   installExitKeys(program)
   program.reset()
   const renderer = new ProgramDocumentRenderer({ program })
-  const el = document.create({ top: 0, left: 0, width: program.cols - 1, height: program.rows - 1, fg: 'black', bg: 'green', border: true,  ...props || {} })
+  const el = document.create({ top: 0, left: 0, width: program.cols - 1, height: program.rows - 1, fg: 'black', bg: 'green', border: {},  ...props || {} })
   return { renderer, document, program, el }
 }
 

@@ -21,7 +21,8 @@
   "license": "MIT",
   "dependencies": {
     "layout": "^2.2.0",
-    "misc-utils-of-mine-generic": "0.2.0"
+    "misc-utils-of-mine-generic": "0.2.0",
+    "justified-layout": "^2.1.1"
   },
   "devDependencies": {
     "@types/jasmine": "^3.3.12",
@@ -31,7 +32,6 @@
     "browserify": "^16.2.3",
     "cli-driver": "^0.2.1",
     "jasmine": "^3.4.0",
-    "justified-layout": "^2.1.1",
     "shelljs": "^0.8.3",
     "terser": "^3.17.0",
     "ts-node": "^8.1.0",

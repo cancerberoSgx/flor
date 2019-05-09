@@ -46,16 +46,16 @@ export abstract class Node extends EventTarget {
   get innerHTML() {
     return nodeHtml(this, false)
   }
-  set innerHTML(id: string | null) {
-    throw new Error('not implemented')
-  }
+  // set innerHTML(id: string | null) {
+  //   throw new Error('not implemented')
+  // }
 
   get outerHTML() {
     return nodeHtml(this, true)
   }
-  set outerHTML(id: string | null) {
-    throw new Error('not implemented')
-  }
+  // set outerHTML(id: string | null) {
+  //   throw new Error('not implemented')
+  // }
 
   getAttribute(a: string) {
     return this._attributes[a] ? this._attributes[a].value : null

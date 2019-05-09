@@ -1,83 +1,98 @@
-import { nonEnumerableMember } from '../util/misc'
+import { nonEnumerableMember, enumerableMember } from '../util/misc'
 import { Attrs, StyleProps } from './types'
 
-export class AttrsImpl implements Partial<Attrs> {
-  constructor(p?: Partial<StyleProps>) {
-    if (p) {
-      for (let k of AttrsImpl.attr_props) {
-        // @ts-ignore
-        this['_' + k] = p[k]
-      }
-    }
-    this._non_iterable()
+export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
+  constructor(p: PAttrs) {
+    // if (p) {
+      this._data = p as any || {}
+    //   for (let k of AttrsImpl.attr_props) {
+    //     // @ts-ignore
+    //     this['_' + k] = p[k]
+    //   }
+    // }
+    // else {
+    //   this._data = {} as any
+    // }
+    // for (let p of AttrsImpl.attr_props) {
+    //   nonEnumerableMember(this, '_' + p)
+    //    enumerableMember(this, p)
+    // }
+    // this._data.non_iterable()
+  }
+  assign(o: any) {
+    Object.assign(this._data, o||{})
   }
 
-  private static attr_props = ['bg', 'fg', 'bold', 'underline', 'standout', 'ch', 'blink', 'invisible']
+  protected _data:T
+  get data() {
+    return this._data
+ }
+  // private static attr_props = ['bg', 'fg', 'bold', 'underline', 'standout', 'ch', 'blink', 'invisible']
 
-  private _non_iterable() {
-    for (let p of AttrsImpl.attr_props) {
-      nonEnumerableMember(this, '_' + p)
-    }
-  }
+  // private _non_iterable() {
+  //   for (let p of AttrsImpl.attr_props) {
+  //     nonEnumerableMember(this, '_' + p)
+  //   }
+  // }
 
-  private _bold: boolean | undefined
+  // private _bold: boolean | undefined
   public get bold(): boolean  | undefined {
-    return !!this._bold
+    return this._data.bold
   }
   public set bold(value: boolean | undefined) {
-    this._bold = !!value
+    this._data.bold = !!value
   }
-  private _bg: Color | undefined
+  // private _bg: Color | undefined
   public get bg(): Color | undefined {
-    return this._bg
+    return this._data.bg
   }
   public set bg(value: Color | undefined) {
-    this._bg = value
+    this._data.bg = value
   }
-  private _fg: Color | undefined
+  // private _fg: Color | undefined
   public get fg(): Color | undefined {
-    return this._fg
+    return this._data.fg
   }
   public set fg(value: Color | undefined) {
-    this._fg = value
+    this._data.fg = value
   }
-  private _ch: string | undefined
+  // private _ch: string | undefined
   public get ch(): string | undefined {
-    return this._ch
+    return this._data.ch
   }
   public set ch(value: string | undefined) {
-    this._ch = value
+    this._data.ch = value
   }
-  private _underline: boolean | undefined
+  // private _underline: boolean | undefined
   public get underline(): boolean | undefined {
-    return this._underline
+    return this._data.underline
   }
   public set underline(value: boolean | undefined) {
-    this._underline = value
+    this._data.underline = value
   }
-  private _blink: boolean | undefined
+  // private _blink: boolean | undefined
   public get blink(): boolean | undefined {
-    return this._blink
+    return this._data.blink
   }
   public set blink(value: boolean | undefined) {
-    this._blink = value
+    this._data.blink = value
   }
-  private _standout: boolean | undefined
+  // private _standout: boolean | undefined
   public get standout(): boolean | undefined {
-    return this._standout
+    return this._data.standout
   }
   public set standout(value: boolean | undefined) {
-    this._standout = value
+    this._data.standout = value
   }
-  private _invisible: boolean | undefined
+  // private _invisible: boolean | undefined
   public get invisible(): boolean | undefined {
-    return this._invisible
+    return this._data.invisible
   }
   public set invisible(value: boolean | undefined) {
-    this._invisible = value
+    this._data.invisible = value
   }
 }
-export class StylePropsImpl extends AttrsImpl implements Partial<StyleProps> {
+export class StylePropsImpl< T extends PAttrs = PAttrs> extends AttrsImpl<T> implements Partial<StyleProps> {
 }
 export type Color = string
 

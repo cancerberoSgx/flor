@@ -58,7 +58,7 @@ class FlorJsxImpl implements FlorJsx {
       e._component.elementCreated()
     }
     if ((e as any)._type === 'string') {
-      el.assignProps({ ...e.props || {}, children: undefined } as any)
+      el.props.assign({ ...e.props || {}, children: undefined } as any)
     }
     Object.keys(e.props || {}).forEach(attr => {
       const val = (e as any).props[attr]
