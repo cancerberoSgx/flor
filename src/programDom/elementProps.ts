@@ -1,10 +1,9 @@
-import { MouseEvent, KeyEvent } from '../render'
+import { KeyEvent, MouseEvent } from '../render'
 import { LayoutOptions } from '../util'
 import { isElement } from './elementUtil'
+import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { BorderProps, ElementProps, Padding } from './types'
-import { ProgramElement } from './programElement';
-import { KeyEventListener, ProgramKeyEvent } from '../declarations/program';
 
 export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> implements Partial<ElementProps> {
 
@@ -12,9 +11,6 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     return this._data.border
   }
   public set border(value: Partial<BorderProps> | undefined) {
-    // if(!!this._data.border!==!!value){
-    //   this.owner.positionDirty=true
-    // }
     this._data.border = value
   }
 
@@ -35,13 +31,8 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     return this._data.width || 0
   }
   public set width(value: number) {
-    // if(value>0&&value<1) {
-    //   value = isElement(this.owner.parentNode) ?  Math.round(this.owner.parentNode.props.width*value) : 0
-    //   debug(value,isElement(this.owner.parentNode), (this.owner.parentNode as any).props.width)
-    // }
     if (this._data.width !== value) {
-      // this.owner.positionDirty = true
-      this._data.width = value
+      this._data.width = value && Math.round(value)
     }
   }
 
@@ -55,12 +46,8 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     return this._data.height || 0
   }
   public set height(value: number) {
-    // if(value>0&&value<1) {
-    //   value = isElement(this.owner.parentNode) ?  Math.round(this.owner.parentNode.props.height*value) : 0
-    // }
     if (this._data.height !== value) {
-      // this.owner.positionDirty = true
-      this._data.height = value
+      this._data.height = value && Math.round(value)
     }
   }
 
@@ -74,12 +61,9 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     return this._data.left || 0
   }
   set left(value: number) {
-    // if(value>0&&value<1) {
-    //   value = isElement(this.owner.parentNode) ?  Math.round(this.owner.parentNode.props.width*value) : 0
-    // }
     if (this._data.left !== value) {
       this.owner.positionDirty = true
-      this._data.left = value
+      this._data.left = value && Math.round(value)
     }
   }
 
@@ -93,14 +77,21 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     return this._data.top || 0
   }
   set top(value: number) {
-    // if(value>0&&value<1) {
-    //   value = isElement(this.owner.parentNode) ?  Math.round(this.owner.parentNode.props.height*value) : 0
-    // }
     if (this._data.top !== value) {
       this.owner.positionDirty = true
-      this._data.top = value
+      this._data.top = value && Math.round(value)
     }
   }
+
+  private _focused: boolean | undefined
+  public get focused(): boolean | undefined {
+    return this._focused
+  }
+  public set focused(value: boolean | undefined) {
+    this._focused = value
+  //  throw new Error('Not implemented')//TODO: use focusManager
+  }
+  
 
   public get layout(): LayoutOptions | undefined {
     return this._data.layout
@@ -109,13 +100,13 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     this._data.layout = value
     this.owner.positionDirty = true
   }
-  
-  private _focusable: boolean | undefined;
+
+  private _focusable: boolean | undefined
   public get focusable(): boolean | undefined {
-    return this._focusable;
+    return this._focusable
   }
   public set focusable(value: boolean | undefined) {
-    this._focusable = value;
+    this._focusable = value
   }
 
   childrenReady?: () => boolean
@@ -123,7 +114,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   afterRender?: () => boolean
   beforeRender?: () => boolean
   onClick?(r: MouseEvent): void
-  onKeyPressed?<T extends ProgramElement= ProgramElement>(  e: KeyEvent<T> ):void
+  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void
   onMouse?(r: MouseEvent): void
   onMouseOut?(r: MouseEvent): void
   onMouseOver?(r: MouseEvent): void
@@ -132,21 +123,19 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   onWheelUp?(r: MouseEvent): void
   onMouseMove?(r: MouseEvent): void
 
-  private _input: string | undefined;
+  private _input: string | undefined
   public get input(): string | undefined {
-    return this._input;
+    return this._input
   }
   public set input(value: string | undefined) {
-    this._input = value;
+    this._input = value
   }
 
-  private _value: string | undefined;
+  private _value: string | undefined
   public get value(): string | undefined {
-    return this._value;
+    return this._value
   }
   public set value(value: string | undefined) {
-    this._value = value;
+    this._value = value
   }
 }
-
-// class BorderPropsImpl extends Sts

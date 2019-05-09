@@ -49,7 +49,6 @@ export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredica
   return Array.from(n.childNodes).filter(c => p(c))
 }
 
-
 export type Visitor<T extends Node = Node> = (n: T) => boolean
 /**
  * settings for visitDescendants regarding visiting order and visit interruption modes.
@@ -144,14 +143,13 @@ export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredica
   return a
 }
 
-
-export function visitAscendants(n: Node, v: Visitor, o = {}): boolean {
-  return !n || v(n) || !n.parentNode || n.parentNode===n.ownerDocument || visitAscendants(n.parentNode, v, o)
+export function visitAncestors(n: Node, v: Visitor, o = {}): boolean {
+  return !n || v(n) || !n.parentNode || n.parentNode === n.ownerDocument || visitAncestors(n.parentNode, v, o)
 }
 
-export function findAscendant<T extends Node = Node>(n: Element, p: ElementPredicate, o = {}) {
+export function findAncestor<T extends Node = Node>(n: Element, p: ElementPredicate, o = {}) {
   let a: T | undefined
-  visitAscendants(
+  visitAncestors(
     n,
     c => {
       if (p(c)) {
@@ -165,13 +163,9 @@ export function findAscendant<T extends Node = Node>(n: Element, p: ElementPredi
   return a
 }
 
-// export function findRootElement(n: Element): Element {
-//   return isScreen(n) || isScreen(n.parentNode) ? n : findAscendant(n, a => isScreen(a) || isScreen(a.parentNode))
-// }
-
-export function filterAscendants<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
+export function filterAncestors<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
   const a: T[] = []
-  visitAscendants(n, c => {
+  visitAncestors(n, c => {
     if (p(c)) {
       a.push(c as T)
     }

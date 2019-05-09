@@ -1,12 +1,11 @@
 import { isObject } from 'misc-utils-of-mine-generic'
 import { Program, ProgramOptions } from '../declarations/program'
-import { Node } from '../dom'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
 import { FullProps, isElement, ProgramDocument, ProgramElement } from '../programDom'
 import { installExitKeys } from '../util/util'
 import { EventManager } from './eventManager'
+import { FocusManager } from './focusManager'
 import { ProgramDocumentRenderer, RendererOptions } from './renderer'
-import { FocusManager } from './focusManager';
 
 interface FlorDocumentOptions extends ProgramOptions, RendererOptions {
   program?: Program
@@ -86,7 +85,7 @@ export class FlorDocument {
   get focus() {
     return this._focus
   }
-  
+
   get renderer(): ProgramDocumentRenderer {
     return this._renderer
   }
@@ -97,15 +96,14 @@ export class FlorDocument {
   }
 
   private _debugEl: ProgramElement = undefined as any
-  debug(el: ProgramElement|string, props = {}) {
+  debug(el: ProgramElement | string, props = {}) {
     if (!this._debugEl) {
       this._debugEl = this.create({   top: 10, left: 40, width: 40, height: 20, ...props, children: [] })
     }
     this._debugEl.empty()
-    if(typeof el==='string'){
+    if (typeof el === 'string') {
       this._debugEl.appendChild(this.create({ top: 0, left: 0, children: [el] }))
-    }
-    else {
+    } else {
       el.debug().split('\n').forEach((l, i) => {
         this._debugEl.appendChild(this.create({ top: i, left: 0, children: [l] }))
       })

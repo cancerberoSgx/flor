@@ -1,9 +1,8 @@
-import { MouseEvent, KeyEvent } from '../render'
+import { KeyEvent, MouseEvent } from '../render'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { Color } from './styleProps'
-import { KeyEventListener, ProgramKeyEvent } from '../declarations/program';
 
 // export abstract class AbstractPropsImpl implements AbstractProps {
 
@@ -44,22 +43,23 @@ export interface ElementProps extends StyleProps {
    */
   width: number
   /**
-   * Height of the element. If the value is a number between 0 and 1 (non inclusive) then it will be the parent's contentHeight multiplied for that number. For example, height==0.5 will be half the parent's height. Otherwise is rows. 
+   * Height of the element. If the value is a number between 0 and 1 (non inclusive) then it will be the parent's contentHeight multiplied for that number. For example, height==0.5 will be half the parent's height. Otherwise is rows.
    */
   height: number
   /**
-   * top coordinate (row number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute top position multiplied for that number. For example, top==0.5 will be position the element at the middle of the parent. Otherwise is rows. 
+   * top coordinate (row number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute top position multiplied for that number. For example, top==0.5 will be position the element at the middle of the parent. Otherwise is rows.
    */
   top: number
   /**
-   * left coordinate (column number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute left position multiplied for that number. For example, left==0.5 will be position the element at the middle of the parent. Otherwise is columns. 
+   * left coordinate (column number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute left position multiplied for that number. For example, left==0.5 will be position the element at the middle of the parent. Otherwise is columns.
    */
   left: number
 
   focusable: boolean
+  focused: boolean
   
   /**
-   * 
+   *
    */
   padding: Padding
 
@@ -105,12 +105,12 @@ export interface ElementProps extends StyleProps {
   /**
    * Listener for when the element is clicked. The program must have the mouse enabled (`Program.enableMouse()`)
    */
-  onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void|boolean
+  onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
    * Listener for when the element is clicked. The program must have the mouse enabled (`Program.enableMouse()`)
    */
-  onKeyPressed?<T extends ProgramElement= ProgramElement>(  e: KeyEvent<T> ):void
+  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void
 
   onMouse?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
   onMouseOut?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
@@ -120,15 +120,15 @@ export interface ElementProps extends StyleProps {
   onWheelUp?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
   onMouseMove?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
 
-  /** 
+  /**
    * Current input for input elements like input, textarea, etc.
    */
   input: string
-  /** 
+  /**
    * Current value for input elements like input, textarea, etc.
    */
   value: string
-  
+
 }
 
 export interface FullProps extends ElementProps {

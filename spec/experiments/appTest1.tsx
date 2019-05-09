@@ -1,38 +1,38 @@
-import { BorderStyle, debug, FlorDocument, Layout, ElementProps } from '../../src'
+import { BorderStyle, debug, ElementProps, FlorDocument, Layout } from '../../src'
+import { Component } from '../../src/jsx/component'
 import { Flor } from '../../src/jsx/createElement'
-import { Component } from '../../src/jsx/component';
 
 try {
 
-interface InputProps extends Partial<ElementProps> {
-  onInput?: (e:{currentTarget: Input, input: string})=>void
-  onChange?: (e:{currentTarget: Input, value: string})=>void
+  interface InputProps extends Partial<ElementProps> {
+  onInput?: (e: {currentTarget: Input, input: string}) => void
+  onChange?: (e: {currentTarget: Input, value: string}) => void
   value?: string
 }
-class Input extends Component<InputProps, {}> {
+  class Input extends Component<InputProps, {}> {
   protected input: string = ''
-  constructor(p: InputProps, s: {}){
+  constructor(p: InputProps, s: {}) {
     super(p,s)
     this.input = p.value || ''
   }
-  render(){    
-    return <box focusable={true} height={3} border={{ type: BorderStyle.round }} {...{...this.props, onChange: undefined, inInput: undefined}}  
-    onClick={e=>{
+  render() {
+    return <box focusable={true} height={3} border={{ type: BorderStyle.round }} {...{ ...this.props, onChange: undefined, inInput: undefined }}
+    onClick={e => {
       this.program!.saveCursor('Input')
-      this.program!.cursorPos(this.element!.absoluteContentLeft + this.input.length,this.element!.absoluteContentTop )
+      this.program!.cursorPos(this.element!.absoluteContentLeft + this.input.length,this.element!.absoluteContentTop)
       this.program!.showCursor()
-            }}            
-            onKeyPressed={e=>{
-              if(!this.element|| !this.element.focused ||!e.ch){
+    }}
+            onKeyPressed={e => {
+              if (!this.element || !this.element.props.focused || !e.ch) {
                 return
               }
-              if(e.name==='enter') {
-                this.element!.focused=false
-      this.program!.restoreCursor('Input')
-      this.program!.hideCursor()
-                this.props.onChange && this.props.onChange({...e, currentTarget: this , value: this.input})
+              if (e.name === 'enter') {
+                this.element.props.focused = false
+                this.program!.restoreCursor('Input')
+                this.program!.hideCursor()
+                this.props.onChange && this.props.onChange({ ...e, currentTarget: this , value: this.input })
               }
-              this.input+= e.sequence
+              this.input += e.sequence
               this.program!._write(e.ch)
               return false
             }}
@@ -43,16 +43,15 @@ class Input extends Component<InputProps, {}> {
 
 }
 
-
   const flor = new FlorDocument()
   flor.renderer.program.enableMouse()
   flor.body.props.assign({ top: 0, left: 0, width: flor.program.cols, height: flor.program.rows })
   flor.render()
-  const app = <box width={.99} height={.999} bg='gray' fg='green' border={{ type: BorderStyle.round }} layout={{ layout: Layout['top-down'], neverResizeContainer: true }}>
+  const app = <box width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['top-down'], neverResizeContainer: true }}>
 
     <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['left-right'], neverResizeContainer: true }}
     >
-      {/* <box width={.5} height={.97} border={{ type: BorderStyle.heavy }} bg="blue" 
+      {/* <box width={.5} height={.97} border={{ type: BorderStyle.heavy }} bg="blue"
       onClick={e=>{
 flor.program.cursorPos(e.y, e.x)
 flor.program.showCursor()
@@ -63,7 +62,7 @@ flor.program.showCursor()
         click me
       </box> */}
 
-      <Input width={.5} height={.97} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e=>flor.debug(e.value)}></Input>
+      <Input width={.5} height={.97} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug(e.value)}></Input>
       <box width={.46} height={.999} border={{ type: BorderStyle.double }} bg="magenta">
        click me
       </box>
@@ -76,8 +75,7 @@ flor.program.showCursor()
       box3</box>
   </box>
 
-
-flor.program.hideCursor()
+  flor.program.hideCursor()
   const le = flor.create(app)
   flor.render()
 
@@ -86,4 +84,3 @@ flor.program.hideCursor()
 } catch (error) {
   debug(error)
 }
-

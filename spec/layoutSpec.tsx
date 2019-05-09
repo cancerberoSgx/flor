@@ -1,7 +1,7 @@
-import { array, serial, sleep } from 'misc-utils-of-mine-generic'
-import { BorderStyle, Layout, layoutChildren } from '../src'
+import { array, serial } from 'misc-utils-of-mine-generic'
+import { BorderStyle, Layout } from '../src'
 import { createElement, createProgramRendererDocumentAndElement } from '../src/util/util'
-import { color, number } from './data'
+import { number } from './data'
 
 describe('layout', () => {
   it('all layouts should make all text visible if there is enough space - invoking layoutChildren manually', async done => {
@@ -11,9 +11,8 @@ describe('layout', () => {
 
     const N = 10
     await serial([
-      'top-down', 'left-right', 'diagonal', 'alt-diagonal', 'binary-tree',
-      'justified-layout'
-    ].map(l => async () => {
+      'top-down', 'left-right', 'diagonal', 'alt-diagonal', 'binary-tree', 'justified-layout'
+    ].map(l => async() => {
       const el = createElement(document, 'Div', document.body, { bg: 'yellow', fg: 'black', layout: { layout: l as any }, border: { type: BorderStyle.double }, left: 20, top: 2, height: 26, width: 60, ch: ' ' },
         array(N).map(i => createElement(document, 'Div', undefined, { bg: 'white', fg: 'black', top: number(2, 12), left: number(2, 8), height: number(2, 4), width: number(6, 12), ch: '.', border: { type: BorderStyle.round } }, [
           document.createTextNode('N' + i + 'th')

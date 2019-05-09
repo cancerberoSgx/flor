@@ -3,9 +3,9 @@
 /// <reference types="node" />
 
 import { EventEmitter } from 'events';
+import { enumKeys } from 'misc-utils-of-mine-typescript';
 import { Readable, Writable } from 'stream';
 import { TPut } from './tput';
-import { enumKeys } from 'misc-utils-of-mine-typescript';
 export interface ProgramMouseEvent extends UIEvent {
   x: number
   y: number

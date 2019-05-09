@@ -12,7 +12,7 @@ interface AddEventListenerOptions extends EventListenerOptions {
   passive?: boolean
 }
 
-export type EventListener <T extends EventTarget = EventTarget>= (evt: Event<T>) => void|boolean
+export type EventListener <T extends EventTarget = EventTarget>= (evt: Event<T>) => void | boolean
 
 export interface Event<T extends EventTarget = EventTarget> extends StopPropagation {
   readonly currentTarget: T | null
