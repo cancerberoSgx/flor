@@ -118,15 +118,15 @@ export interface ElementProps extends StyleProps {
   /**
    * Listener for when the element is clicked. The program must have the mouse enabled (`Program.enableMouse()`)
    */
-  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void
+  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>):  void | boolean
 
-  onMouse?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
-  onMouseOut?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
-  onMouseOver?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
-  onMouseDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
-  onWheelDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
-  onWheelUp?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
-  onMouseMove?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void
+  onMouse?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onMouseOut?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onMouseOver?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onMouseDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onWheelDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onWheelUp?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onMouseMove?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
 
   /**
    * Current input for input elements like input, textarea, etc.
@@ -137,8 +137,8 @@ export interface ElementProps extends StyleProps {
    */
   value: string
 
-  onBlur?(e: BlurEvent): void
-  onFocus?(e: FocusEvent): void
+  onBlur?(e: BlurEvent): void | boolean
+  onFocus?(e: FocusEvent): void | boolean
 
   /**
    * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared, the content and border won't be rendered, and implementation is responsible of them.

@@ -24,7 +24,7 @@ export interface StopPropagation {
 }
 export class EventTarget   {
 
-  addEventListener(type: string, listener: EventListener | undefined, options?: boolean | AddEventListenerOptions): void {
+  _addEventListener(type: string, listener: EventListener | undefined, options?: boolean | AddEventListenerOptions): void {
     // throw new Error('not implemented')
   }
 

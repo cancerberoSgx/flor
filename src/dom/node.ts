@@ -65,6 +65,7 @@ export abstract class Node extends EventTarget {
   }
 
   appendChild(c: Node) {
+    c.remove()
     this._children.push(c)
     c._parentNode = this
   }
@@ -80,6 +81,10 @@ export abstract class Node extends EventTarget {
     this.parentNode && this.parentNode.removeChild(this)
   }
   removeChild(n: Node): Node | undefined {
+    // const c2 = this._children.filter(c=>c!==n)
+    // const removed = c2.length<this._children.length
+    // this._children = c2
+    // return removed ? n : undefined
     const i = this._children.findIndex(c => c === n)
     if (i !== -1) {
       return this._children.splice(i, 1)[0] || undefined

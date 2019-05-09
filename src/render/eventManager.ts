@@ -3,6 +3,7 @@ import { Event, EventTarget, StopPropagation } from '../dom/event'
 import { ProgramElement } from '../programDom'
 import { debug } from '../util'
 import { RemoveProperties } from '../util/misc'
+import { unique } from 'misc-utils-of-mine-generic';
 
 export type RegisteredEventListener = { el: ProgramElement, name: string; listener: MouseListener | KeyListener }
 
@@ -50,7 +51,7 @@ export class EventManager {
     return this._program
   }
 
-  onKeyPress(ch: string | undefined, e: ProgramKeyEvent) {
+  protected onKeyPress(ch: string | undefined, e: ProgramKeyEvent) {
     this.keyListeners.some(l => {
       return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el, target: l.el }as any)
     })
@@ -94,7 +95,6 @@ export class EventManager {
         //   if (!pos) continue;
 
       if (this._isMouseEventTarget(e, el)) {
-            // debug('onMouse matched!!')
         const ev = {  ...e, currentTarget: el, target: el, type: name }
         return notifyListener(listener, ev)
         // if (e.action === 'mouseup' && name === 'click') {
@@ -141,8 +141,12 @@ export class EventManager {
   }
 
   private mouseListeners: RegisteredEventListener[] = []
-  private keyListeners: RegisteredEventListener[] = []
-
+  private keyListeners:( RemoveProperties<RegisteredEventListener, 'el'>&{el?: ProgramElement})[] = []
+addKeyListener(l: KeyListener) {
+  if(!this.keyListeners.find(k=>k.listener===l)){
+    this.keyListeners.push({name: 'keypress', listener: l  })
+  }
+}
   _isMouseEventTarget(e: ProgramMouseEvent, el: ProgramElement) {
     return e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
       e.y >= el.absoluteTop && e.y < el.absoluteTop + el.props.height
@@ -152,12 +156,17 @@ export class EventManager {
   _registerEventListener(o: RegisteredEventListener): any {
     const n = o.name.toLowerCase()
     const keyPressed = n === 'keypress' || n === 'onkeypress' || n === 'onkeypressed'
-    if (keyPressed || n.startsWith('key') && !this.keyListeners.find(l => l.el === o.el)) {
+    if (keyPressed || n.startsWith('key') 
+    && !this.keyListeners.find(l => l.el === o.el)
+    ) {
       this.keyListeners.push(keyPressed ? { ...o, name: 'keypress' } : o)
-    } else if (!this.mouseListeners.find(l => l.el === o.el)) {
+    } else 
+    if (!this.mouseListeners.find(l => l.el === o.el)) 
+    {
       // TODO: verify is mouse event
-      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseout' } : o))
-    } else {
+      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseup' } : o))
+    } 
+    else {
       debug('WARNING: ignoring event listener registration because already registered:', o)
     }
   }

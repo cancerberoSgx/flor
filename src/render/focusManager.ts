@@ -61,9 +61,7 @@ export class FocusManager {
   }
 
   addFocusListener(l: {els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void}) {
-    if (!this.focusListeners.find(ll => l !== ll)) {
       this.focusListeners.push(l)
-    }
   }
   addBlurListener(l: {els?: ProgramElement[], listener: (e: BlurEvent) => boolean | void}) {
     if (!this.focusListeners.find(ll => l !== ll)) {
@@ -74,7 +72,7 @@ export class FocusManager {
   focusNext() {
     const focusables = filterDescendants<ProgramElement>(this.document.body, n => isElement(n) && !!n.props.focusable)
     const current = focusables.findIndex(f => f === this.focused)
-    const target = focusables[current >= focusables.length - 1 ? 0 : current + 1]
+    const target = focusables[current >= (focusables.length - 1) ? 0 : (current + 1)]
     this.dispatchFocused(target)
   }
 
@@ -86,10 +84,10 @@ export class FocusManager {
   }
 }
 
-export interface FocusEvent extends Event {
+export interface FocusEvent extends Event<ProgramElement> {
   previous?: ProgramElement
 }
 
-export interface BlurEvent extends Event {
+export interface BlurEvent extends Event<ProgramElement> {
   focused?: ProgramElement
 }

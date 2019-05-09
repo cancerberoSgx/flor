@@ -61,7 +61,7 @@ class FlorJsxImpl implements FlorJsx {
     Object.keys(e.props || {}).forEach(attr => {
       const val = (e as any).props[attr]
       if (typeof val === 'function') {
-        el.addEventListener(attr, val)
+        el._addEventListener(attr, val)
       } else {
         (el.props as any)[attr] = val
       }

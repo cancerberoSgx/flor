@@ -181,9 +181,17 @@ export class ProgramElement extends Element {
     return createElement(this.ownerDocument, { ...props, parent: this })
   }
 
-  addEventListener(name: string, listener: EventListener): void {
+  _addEventListener(name: string, listener: EventListener): void {
     if (ProgramDocument.is(this.ownerDocument)) {
-      this.ownerDocument.registerEventListener({ el: this, name: this._getEventName(name), listener })
+      if(name==='onFocus'){
+        this.ownerDocument._registerListener({type: 'focus', listener: { els: [this], listener }})
+      }
+      else if(name==='onBlur'){
+        this.ownerDocument._registerListener({type: 'blur', listener: { els: [this], listener }})
+      }
+      else {
+        this.ownerDocument._registerListener({type: 'event', listener: { el: this, name: this._getEventName(name), listener }})
+      }
     }
   }
 

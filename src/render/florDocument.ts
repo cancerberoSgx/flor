@@ -1,7 +1,7 @@
 import { isObject } from 'misc-utils-of-mine-generic'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
-import { FullProps, isElement, ProgramDocument, ProgramElement } from '../programDom'
+import { FullProps, isElement, ProgramDocument, ProgramElement, ElementProps } from '../programDom'
 import { installExitKeys } from '../util/util'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
@@ -28,13 +28,18 @@ export class FlorDocument {
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
       this._program = new Program(o)
+      this._program.enableMouse()
       installExitKeys(this._program)
     }
     this._events = new EventManager(this._program)
-    this._document = new ProgramDocument(this._events)
+    this._document = new ProgramDocument()
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
+    this.body.props.assign({height: this.program.rows, width: this.program.cols
+      // , padding: {top: 2, left: 2, right: 2, bottom: 2}
+    })
+    this._document._setManagers(this)
   }
 
   createElement(t: string) {
@@ -95,20 +100,28 @@ export class FlorDocument {
     this.renderer.renderElement(el || this.body)
   }
 
-  private _debugEl: ProgramElement = undefined as any
-  debug(el: ProgramElement | string, props = {}) {
+  private _debugEl: ProgramElement|undefined
+  debug(el: ProgramElement | string, props: Partial<ElementProps>&{hideTimeout?:number} = {}) {
     if (!this._debugEl) {
-      this._debugEl = this.create({   top: 10, left: 40, width: 40, height: 20, ...props, children: [] })
+      this._debugEl = this.create({   top: .7, left: .7, width: .3, height: .3, ...props, children: [] })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
       this._debugEl.appendChild(this.create({ top: 0, left: 0, children: [el] }))
-    } else {
+    } else if(this._debugEl){
       el.debug().split('\n').forEach((l, i) => {
-        this._debugEl.appendChild(this.create({ top: i, left: 0, children: [l] }))
+        this._debugEl!.appendChild(this.create({ top: i, left: 0, children: [l] }))
       })
     }
     this.renderer.renderElement(this._debugEl)
+    if(props.hideTimeout) {
+      setTimeout(() => {
+        if(this._debugEl){
+          this._debugEl.empty()
+          this.render(this._debugEl)
+        }
+      }, props.hideTimeout)
+    }
   }
 
   destroy(): any {

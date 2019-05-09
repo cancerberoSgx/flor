@@ -1,34 +1,27 @@
 import { Document } from '../dom'
 import { EventManager, RegisteredEventListener } from '../render'
-import { BorderStyle } from '../util'
+import { BorderStyle, debug } from '../util'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
+import { FocusManager } from '../render/focusManager';
 
 export class ProgramDocument extends Document {
 
   body: ProgramElement
-
-  _getEventManager() {
-    return this.events
-  }
+  protected managers: { events: EventManager; focus: FocusManager; }|undefined
+  // /** @internal */
+  // _getEventManager() {
+  //   return this.events
+  // }
   get program() {
-    return this._getEventManager() && this._getEventManager()!.program
+    return this.managers &&  this.managers.events.program
   }
-  constructor(protected events?: EventManager) {
+  constructor() {
     super()
     this.body =  this.createElement('body')
-    if (this.program) {
-      this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white', border: { type: BorderStyle.round } })
-    }
     this.appendChild(this.body)
   }
-
-  // __setBody(_body: ProgramElement) {
-  //   this.removeChild(this.body)
-  //   this.body = _body
-  //   this.appendChild(_body)
-  // }
 
   createElement(t: string) {
     return new ProgramElement(t, this)
@@ -43,28 +36,35 @@ export class ProgramDocument extends Document {
     return el
   }
 
-  setEventManager(eventManager: EventManager) {
-    this.events = eventManager
-    this._emptyEventListenerQueue()
+  _setManagers(managers: {events: EventManager, focus: FocusManager}) {
+    this.managers = managers
+    this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white', border: { type: BorderStyle.round } })
+    this._emptyListenerQueue()
   }
 
-  private registerEventListenerQueue: RegisteredEventListener[] = []
+  private registerListenerQueue: {type: 'event'|'blur'|'focus', listener: any}[] = []
 
-  registerEventListener(l: RegisteredEventListener) {
-    if (this.events) {
-      this.events._registerEventListener(l)
-      this._emptyEventListenerQueue()
-    } else {
-      this.registerEventListenerQueue.push(l)
-    }
+  _registerListener(l: {type: 'event'|'blur'|'focus' , listener :any}) {
+    this.registerListenerQueue.push(l)
+    if (this.managers) {
+      this._emptyListenerQueue()
+    } 
   }
 
-  private _emptyEventListenerQueue() {
-    if (this.registerEventListenerQueue.length) {
-      this.registerEventListenerQueue.forEach(l => {
-        this.events!._registerEventListener(l)
+  private _emptyListenerQueue() {
+    if (this.managers) {
+      this.registerListenerQueue.forEach(l => {
+        if(l.type==='event'){
+          this.managers!.events._registerEventListener(l.listener)
+        }
+        else if(l.type==='focus'){
+          this.managers!.focus.addFocusListener(l.listener)
+        }
+        else if(l.type==='blur'){
+          this.managers!.focus.addBlurListener(l.listener)
+        }
       })
-      this.registerEventListenerQueue.length = 0
+      this.registerListenerQueue.length = 0
     }
   }
 
