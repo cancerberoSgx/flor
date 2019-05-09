@@ -35,7 +35,7 @@ export interface MouseEvent<T extends ProgramElement= ProgramElement> extends Ab
 }
 
 /**
- * auxiliary class that bind events with ProgramElements rendered by renderer
+ * Manager class responsible of registering and dispatching keyboard and mouse events. 
  */
 export class EventManager {
 

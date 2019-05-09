@@ -67,7 +67,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
   }
   set left(value: number) {
     if (this._data.left !== value) {
-      this.owner.positionDirty = true
+      this.owner._positionDirty = true
       this._data.left = value
     }
   }
@@ -83,7 +83,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
   }
   set top(value: number) {
     if (this._data.top !== value) {
-      this.owner.positionDirty = true
+      this.owner._positionDirty = true
       this._data.top = value
     }
   }
@@ -93,7 +93,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
   }
   public set layout(value: LayoutOptions | undefined) {
     this._data.layout = value
-    this.owner.positionDirty = true
+    this.owner._positionDirty = true
   }
 
   public get noFill(): boolean | undefined {

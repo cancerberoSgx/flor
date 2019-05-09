@@ -21,8 +21,8 @@ describe('focus', () => {
     function msg(s: string) {
       flor.debug('msg:' + s)
     }
-    const a = <box {...{ height: .9, width: .9, top: 0, left: 0, layout: { neverResizeContainer: true, layout: Layout['left-right'] } }}>
-      <box {...{ height: .9, width: .4, layout: { layout: Layout['top-down'] } }}>
+    const a = <box {...{ height: .9, width: .9, top: 0, left: 0, layout: { neverResizeContainer: true, layout: Layout['leftRight'] } }}>
+      <box {...{ height: .9, width: .4, layout: { layout: Layout.topDown } }}>
         <box height={6} width={.9} focusable={true} onFocus={e => msg('button 1 focused')} onClick={e => msg('button 1 clicked')} >button1</box>
         <box height={6} width={.9} focusable={true} onFocus={e => msg('button 2 focused')} onClick={e => msg('button 2 clicked')} >button2</box>
         <box height={6} width={.9} focusable={true} onFocus={e => msg('button 3 focused')} onClick={e => msg('button 3 clicked')} >button3</box>

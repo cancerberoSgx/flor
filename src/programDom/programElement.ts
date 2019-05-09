@@ -10,11 +10,6 @@ import { isElement } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { Attrs, ElementProps, FullProps } from './types'
 
-interface DrawContext {
-  write: (y: number, x: number, s: string) => void
-  setStyle: (props: Partial<Attrs>) => void
-  attrs: Partial<ElementProps>
-}
 export class ProgramElement extends Element {
 
   private static counter = 1
@@ -31,9 +26,10 @@ export class ProgramElement extends Element {
     this._ownerDocument = ownerDocument
     this.internalId = ProgramElement.counter++
     this.props = new ElementPropsImpl({}, this)
-    this._positionDirty = true
+    this.__positionDirty = true
   }
 
+  /** A unique id for this element instance that won't change. */
   readonly internalId: number
 
   /**
@@ -52,8 +48,8 @@ export class ProgramElement extends Element {
    *
    * @internal
    */
-  layout() {
-    if (this.props.layout && this.positionDirty) {
+  protected layout() {
+    if (this.props.layout && this._positionDirty) {
       layoutChildren({
         el: this, ...this.props.layout
       })
@@ -91,7 +87,7 @@ export class ProgramElement extends Element {
    */
   _beforeRender(): any {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
-      if (this.positionDirty) {
+      if (this._positionDirty) {
         this.update(true)
       }
     }
@@ -103,7 +99,7 @@ export class ProgramElement extends Element {
 
   private _absoluteLeft = 0
   get absoluteLeft() {
-    if (this.positionDirty) {
+    if (this._positionDirty) {
       let x = this.props.left
       let n: ProgramElement | ProgramDocument = this
       while (n.parentNode !== n.ownerDocument) {
@@ -117,7 +113,7 @@ export class ProgramElement extends Element {
 
   private _absoluteTop = 0
   get absoluteTop() {
-    if (this.positionDirty) {
+    if (this._positionDirty) {
       let y = this.props.top
       let n: ProgramElement | ProgramDocument = this
       while (n.parentNode && n.parentNode !== n.ownerDocument) {
@@ -132,6 +128,7 @@ export class ProgramElement extends Element {
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top  : 0)
   }
+
   get absoluteContentLeft() {
     return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left  : 0)
   }
@@ -139,30 +136,35 @@ export class ProgramElement extends Element {
   get contentHeight() {
     return this.props.height - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.top + this.props.padding.bottom) : 0)
   }
+
   get contentWidth() {
     return this.props.width - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.left + this.props.padding.right) : 0)
   }
 
-  protected _positionDirty: boolean
-  get positionDirty() {
-    return this._positionDirty
+  protected __positionDirty: boolean
+  get _positionDirty() {
+    return this.__positionDirty
   }
-  set positionDirty(d: boolean) {
-    if (d !== this._positionDirty) {
-      this._positionDirty = d
+  /** @internal */
+  set _positionDirty(d: boolean) {
+    if (d !== this.__positionDirty) {
+      this.__positionDirty = d
       if (d) {
         this.getChildrenElements().forEach(e => {
-          e.positionDirty = true
+          e._positionDirty = true
         })
       }
     }
   }
 
+  /**
+   * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if `descendant` argument is passed also recursively for all descendants.
+   */
   protected update(descendants?: boolean) {
-    if (this.positionDirty) {
+    if (this._positionDirty) {
       let a = this.absoluteLeft - this.absoluteTop
       this.layout()
-      this.positionDirty = false
+      this._positionDirty = false
     }
     if (descendants) {
       this.getChildrenElements().forEach(e => {
@@ -181,6 +183,7 @@ export class ProgramElement extends Element {
     return createElement(this.ownerDocument, { ...props, parent: this })
   }
 
+  /** @internal */
   _addEventListener(name: string, listener: EventListener): void {
     if (ProgramDocument.is(this.ownerDocument)) {
       if (name === 'onFocus') {
@@ -192,14 +195,6 @@ export class ProgramElement extends Element {
       }
     }
   }
-
-  /**
-   * Gets the component instance associated with this element, if any.
-   */
-  getComponent<T extends Component = Component>() {
-    return this._component as T | undefined
-  }
-
   private _getEventName(name: string): string {
     if (['onclick', 'click'].includes(name.toLowerCase())) {
       return 'mouseup'
@@ -216,15 +211,28 @@ export class ProgramElement extends Element {
     return name.toLowerCase()
   }
 
+  /**
+   * Gets the component instance associated with this element, if any.
+   */
+  getComponent<T extends Component = Component>() {
+    return this._component as T | undefined
+  }
+
   protected _ownerDocument: ProgramDocument
   get ownerDocument() {
     return this._ownerDocument
   }
 
+  /**
+   * Gets only childNodes that are elements.
+   */
   getChildrenElements() {
     return Array.from(this.childNodes).filter(isElement)
   }
 
+  /**
+   * Returns a XML like string representation of this element instance. 
+   */
   debug(o: DebugOptions = { level: 0 }): string {
     return `${indent(o.level)}<${this.tagName} ${
       Object.keys({ ...this.props, ...this.props.data })

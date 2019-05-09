@@ -7,9 +7,9 @@ try {
   flor.renderer.program.enableMouse()
   flor.body.props.assign({ top: 0, left: 0, width: flor.program.cols, height: flor.program.rows })
   flor.render()
-  const app = <box width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['top-down'], neverResizeContainer: true }}>
+  const app = <box width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['topDown'], neverResizeContainer: true }}>
 
-    <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['left-right'], neverResizeContainer: true }}
+    <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['leftRight'], neverResizeContainer: true }}
     >
     <box width={.49} height={.99} border={{ type: BorderStyle.double }} bg="blue" textWrap={true}>
        Do ad sunt est cillum. Laboris esse fugiat proident excepteur sit minim elit eiusmod et et aliquip consectetur ullamco. Adipisicing pariatur ad aute ipsum nulla consectetur. Aliquip sunt enim qui laboris ex labore ea eu consequat velit eiusmod reprehenderit et. Qui do nulla sit voluptate proident tempor. Non commodo incididunt ipsum pariatur excepteur.
@@ -18,13 +18,13 @@ try {
       </box>
 </box>
 
-    <box height={0.33} width={.99} bg={'yellow'} fg="black" border={{ type: BorderStyle.triangleCorners }} padding={{ top: 2, left: 1, right: 1, bottom: 2 }} layout={{ layout: Layout['top-down'], neverResizeContainer: true }} textWrap={true}>
+    <box height={0.33} width={.99} bg={'yellow'} fg="black" border={{ type: BorderStyle.triangleCorners }} padding={{ top: 2, left: 1, right: 1, bottom: 2 }} layout={{ layout: Layout['topDown'], neverResizeContainer: true }} textWrap={true}>
    <box width={.99}  height={0.2} textWrap={true}> Laboris commodo id proident minim est ad proident fugiat do non id velit. Esse ullamco sit elit magna et esse excepteur exercitation ut eiusmod sint sit irure enim. Proident excepteur quis elit incididunt eiusmod excepteur veniam eiusmod duis adipisicing velit qui tempor mollit. Elit qui non labore laborum do eu nulla adipisicing fugiat aliqua nisi voluptate. Ex Lorem sit laboris veniam id id cillum fugiat ad aliquip consequat cupidatat in duis. Est et duis pariatur sit aute id consequat velit velit tempor reprehenderit.</box>
     <Input width={.5} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug(e.value)}></Input>
     <box width={.99}  height={0.2} textWrap={true}>     Amet sunt magna cillum cupidatat magna adipisicing enim sint. Deserunt cillum aute non aliquip voluptate sunt tempor aliqua irure consequat et eiusmod amet ullamco. Id mollit reprehenderit quis ullamco aute dolore cupidatat. Adipisicing reprehenderit sit consequat nulla.</box>
       </box>
 
-    <box height={0.46} width={.99}  bg="white" fg="black" layout={{ layout: Layout['justified-layout'] ,
+    <box height={0.46} width={.99}  bg="white" fg="black" layout={{ layout: Layout['justifiedRows'] ,
       justifiedLayout: {
       // boxSpacing: {horizontal: 1, vertical: 1},
     // targetRowHeight: 10, targetRowHeightTolerance: 0

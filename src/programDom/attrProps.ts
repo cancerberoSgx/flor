@@ -1,6 +1,6 @@
 import { ProgramElement } from './programElement'
 import { Color, PAttrs } from './styleProps'
-let attrProps
+
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs, owner: ProgramElement) {
     this._data = p as any || {}
@@ -12,10 +12,25 @@ export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   protected _data: T
   protected owner: ProgramElement
   /**
-   * The props as plain object
+   * Gets all props as plain object.
    */
   get data() {
     return this._data
+  }
+  /**
+   * Gets only the character attributes as plain object.
+   */
+  get attrs(){
+    return {
+      bold: this._data.bold, 
+      bg: this._data.bg, 
+      fg: this._data.fg, 
+      ch: this._data.ch, 
+      invisible: this._data.invisible, 
+      underline: this._data.underline, 
+      standout: this._data.standout, 
+      blink: this._data.blink, 
+    } as PAttrs
   }
   public get bold(): boolean | undefined {
     return this._data.bold
