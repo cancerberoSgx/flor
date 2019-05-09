@@ -148,7 +148,7 @@ export class ProgramElement extends Element {
   }
 
   debug(o: DebugOptions = { level: 0 }): string {
-    return `${indent(o.level)}<${this.tagName} ${Object.keys({...this.props, ...this.props.data}).filter(f=>f!=='_data').map(p => `${p}=${JSON.stringify((this.props as any)[p]||(this.props.data as any)[p]||'')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${Array.from(this.childNodes).map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
+    return `${indent(o.level)}<${this.tagName} ${Object.keys({ ...this.props, ...this.props.data }).filter(f => f !== '_data').map(p => `${p}=${JSON.stringify((this.props as any)[p] || (this.props.data as any)[p] || '')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${Array.from(this.childNodes).map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 }
 

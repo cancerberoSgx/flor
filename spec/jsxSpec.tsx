@@ -78,12 +78,12 @@ describe('jsx', () => {
   it('should render components', async done => {
     class C extends Component<{ name: string, colors: string[] }> {
       render() {
-          return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
+        return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
             <text top={1}>hello {this.props.name}</text>
             Your colors:
         {this.props.colors.map((c, i) => <text width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</text>)}
           </box>
-        }
+      }
     }
     const app = <C name="seba" colors={['red', 'blue', 'green']}/>
     const { renderer, document } = createProgramRendererDocument()
@@ -122,17 +122,17 @@ describe('jsx', () => {
     let elementReady = false, elementCreated = false
     class C extends Component<{ name: string, colors: string[] }> {
       elementReady() {
-          elementReady = true
-          Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
+        elementReady = true
+        Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
             c.props.top = i + 1
           })
-        }
+      }
       elementCreated() {
-          elementCreated = true
-        }
+        elementCreated = true
+      }
       render() {
-          return <box><text>hello</text><text>my parent</text><text>will get me</text><text>an empty line</text></box>
-        }
+        return <box><text>hello</text><text>my parent</text><text>will get me</text><text>an empty line</text></box>
+      }
     }
     const { renderer } = createProgramRendererDocument()
     const e = Flor.render(<C name="seba" colors={['red', 'blue', 'green']} />)

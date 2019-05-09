@@ -153,7 +153,7 @@ export class EventManager {
   triggerKeyEvent(ch: string, e: ProgramKeyEvent) {
     this.onKeyPress(ch, e)
   }
-  
+
 }
 
 function notifyListener<T extends EventTarget= EventTarget, E extends Event<T> = Event<T>>(l: EventListener<T>, ev: RemoveProperties<E, 'stopPropagation'>) {
