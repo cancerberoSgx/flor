@@ -19,7 +19,7 @@ flor.create({bg: 'red', fg: 'black', border: 'round', children: []})
 ```
  */
 export class FlorDocument {
-  body: FlorBody
+  // body: FlorBody
   static DOCUMENT_TYPE_NODE = Node.DOCUMENT_TYPE_NODE
   static TEXT_NODE = Node.TEXT_NODE
   static ELEMENT_NODE = Node.ELEMENT_NODE
@@ -38,8 +38,6 @@ export class FlorDocument {
     this._document = new ProgramDocument(this._events)
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
-    this.body = new FlorBody('flor', this._document, this)
-    this._document.__setBody(this.body)
   }
 
   createElement(t: string) {
@@ -50,36 +48,51 @@ export class FlorDocument {
     return this._document.createTextNode(c)
   }
 
-  create(props: Partial<FullProps>) {
-    return this._document.create(props)
-  }
-
-  add(el: ProgramElement | Partial<FullProps> | JSX.Element) {
-    return this.body.add(el)
-  }
-
-  renderElement(el: JSX.Element) {
-    const e = this.Flor.render(el)
-    return this._renderer.renderElement(e)
+  create(el: ProgramElement | Partial<FullProps> | JSX.Element) {
+    let r: ProgramElement | undefined
+    if (isElement(el)) {
+      r = el;
+    }
+    else if (isJSXElementImpl(el)) {
+      r = this.Flor.render(el  );
+    }
+    else if (isObject(el)) {
+      r = this.document.create({ ...el as any });
+    }
+    if(r){
+      this.document.body.appendChild(r)
+    }
+    else {
+      throw new Error('Could not create element for input ' + el)
+    }
+    return r
   }
 
   get document() {
     return this._document
   }
+
   get Flor() {
     return Flor
   }
+
   get program() {
     return this._program
   }
+
   get events() {
     return this._events
   }
-  public get renderer(): ProgramDocumentRenderer {
+
+  get renderer(): ProgramDocumentRenderer {
     return this._renderer
   }
 
-  _debugEl: ProgramElement = undefined as any
+  render() {
+    this.renderer.renderElement(this.document.body)
+  }
+
+  private _debugEl: ProgramElement = undefined as any
   debug(el: ProgramElement) {
     if (!this._debugEl) {
       this._debugEl = this.create({ fg: 'white', bg: 'black', top: 10, left: 40, width: 40, height: 20, children: [el.debug()] })
@@ -92,27 +105,37 @@ export class FlorDocument {
   }
 }
 
-class FlorBody extends ProgramElement {
-  constructor(tagName: string, ownerDoc: ProgramDocument, private flor: FlorDocument) {
-    super(tagName, ownerDoc)
-  }
-  add(el: ProgramElement | Partial<FullProps> | JSX.Element) {
-    let r: ProgramElement | undefined
-    if (isElement(el)) {
-      r = el
-    } else if (isJSXElementImpl(el)) {
-      r = this.flor.renderElement(el)
-    } else if (isObject(el)) {
-      r = this.create({ ...el as any })
-    }
-    if (r) {
-      if (!r.parentNode) {
-        this.appendChild(r)
-      }
-      return r
-    } else {
-      // TODO: report error
-      throw new Error('Could not create element for input ' + el)
-    }
-  }
-}
+// function create(el: JSX.Element<{}> | ProgramElement | Partial<FullProps>) {
+//   let r: ProgramElement | undefined
+//   if (isElement(el)) {
+//     r = el;
+//   }
+//   else if (isJSXElementImpl(el)) {
+//     r = this.flor.renderElement(el);
+//   }
+//   else if (isObject(el)) {
+//     r = this.create({ ...el as any });
+//   }
+//   return r;
+// }
+
+
+// class FlorBody extends ProgramElement {
+//   constructor(tagName: string, ownerDoc: ProgramDocument, private flor: FlorDocument) {
+//     super(tagName, ownerDoc)
+//   }
+//   // add(el: ProgramElement | Partial<FullProps> | JSX.Element) {
+//   //   let r: ProgramElement | undefined
+//   //   r = create(el);
+//   //   if (r) {
+//   //     if (!r.parentNode) {
+//   //       this.appendChild(r)
+//   //     }
+//   //     return r
+//   //   } else {
+//   //     // TODO: report error
+//   //     throw new Error('Could not create element for input ' + el)
+//   //   }
+//   // }
+
+// }

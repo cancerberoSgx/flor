@@ -10,17 +10,16 @@ try {
     if (!e.currentTarget!.props.border) {
       e.currentTarget!.props.border = { type: BorderStyle.double, fg: color() }
     } else {
-      e.currentTarget!.props.border.fg = color()
+      e.currentTarget!.props.border!.fg = color()
     }
     flor.debug(e.currentTarget!)
     flor.renderer.renderElement(le)
   }}>
   text
-  {/* <box>other</box> */}
   </box>
   const flor = new FlorDocument()
   flor.renderer.program.enableMouse()
-  const le = flor.renderElement(p)
+  const le = flor.create(p)
 
 } catch (error) {
   debug(error)

@@ -1,3 +1,3 @@
-export * from './Document'
+export * from './florDocument'
 export * from './eventManager'
 export * from './renderer'

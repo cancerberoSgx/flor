@@ -14,11 +14,11 @@ export class ProgramDocument extends Document {
     this.appendChild(this.body)
   }
 
-  __setBody(_body: ProgramElement) {
-    this.removeChild(this.body)
-    this.body = _body
-    this.appendChild(_body)
-  }
+  // __setBody(_body: ProgramElement) {
+  //   this.removeChild(this.body)
+  //   this.body = _body
+  //   this.appendChild(_body)
+  // }
 
   createElement(t: string) {
     return new ProgramElement(t, this)
