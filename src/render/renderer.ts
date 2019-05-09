@@ -11,6 +11,8 @@ import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
 import { createProgram, destroyProgram } from '../util/util'
+import * as wrap from 'word-wrap'
+import { isElement } from '../programDom';
 
 export interface RendererOptions {
   program?: Program
@@ -128,16 +130,37 @@ export class ProgramDocumentRenderer {
   }
 
   protected renderText(c: TextNode, nextNode: Node) {
-    const s = c.textContent || ''
-    this.write(this.lastAbsTop,this.lastAbsLeft, s)
+    let s =( c.textContent || '').trim()
+    const parent  = c.parentNode as ProgramElement
+    if(parent.props.textWrap) {
+      const cutIndex = Math.min(s.length,  this.lastAbsLeft - parent.absoluteContentLeft)
+      const s1 = s.substring(0,cutIndex)
+      const s2 = s.substring(cutIndex, s.length)
+      if(s1){
+        this.write(this.lastAbsTop,this.lastAbsLeft, s1)
+        this.lastAbsTop = this.lastAbsTop + 1
+      this.lastAbsLeft = parent.absoluteContentLeft
+      }
+      wrap(s2.replace(/\n/g, ' '), {width: parent.contentWidth-1}).split('\n').map(l=>l.trim()).forEach(l=>{
+        if(s1){
+        }
+        this.write(this.lastAbsTop,this.lastAbsLeft, l)
+        this.lastAbsTop = this.lastAbsTop + 1
+      this.lastAbsLeft = parent.absoluteContentLeft
+        // s=l
+      })
+    }
+    else {
+      const nextChildIsText = isText(nextNode)
+      this.write(this.lastAbsTop,this.lastAbsLeft, s)
+      this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
+      this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)
+    }
     // Heads up : if next child is also text, we keep writing on the same line, if not, on a new  line.
-    const nextChildIsText = isText(nextNode)
-    this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
-    this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)
   }
 
   renderElementWithoutChildren(el: ProgramElement) {
-    this.setStyle(el.props)
+    this.setStyle({...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data})
     const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
     const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
     const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)

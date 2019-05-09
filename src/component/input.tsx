@@ -1,11 +1,11 @@
-import { ElementProps, ProgramElement, ProgramDocument } from '../programDom';
-import { Component, Flor } from '../jsx';
+import { Component, Flor } from '../jsx'
+import { ElementProps, ProgramDocument, ProgramElement } from '../programDom'
 
 // import { Component, ElementProps, Flor, ProgramDocument, ProgramElement } from '..'
 
 interface InputProps extends Partial<ElementProps> {
   onInput?: (e: { currentTarget: ProgramElement, input: string }) => void
-  onChange?(e: { currentTarget: ProgramElement, value: string }) : void
+  onChange?(e: { currentTarget: ProgramElement, value: string }): void
   value?: string
 }
 

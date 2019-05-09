@@ -2,7 +2,7 @@ import { writeFileSync } from 'fs'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../../src'
 import { nextTick } from '../../src/util/misc'
 import { createElement, getPerformanceFileName } from '../../src/util/util'
-import { number } from '../data'
+import { int } from '../data'
 
 async function main() {
   let renderer: ProgramDocumentRenderer
@@ -74,10 +74,10 @@ function test(renderer: ProgramDocumentRenderer, testLabel: string) {
     let counter = 0
     function draw() {
       renderer.eraseElement(el)
-      el.props.width = number(24, 44)
-      el.props.height = number(16, 30)
-      el.props.left = number(2, program.cols - el.props.width - 3)
-      el.props.top = number(2, program.rows - el.props.height - 3)
+      el.props.width = int(24, 44)
+      el.props.height = int(16, 30)
+      el.props.left = int(2, program.cols - el.props.width - 3)
+      el.props.top = int(2, program.rows - el.props.height - 3)
       !finish && nextTick(() => {
         renderer.renderElement(el)
         counter++

@@ -1,7 +1,7 @@
 import { array, serial } from 'misc-utils-of-mine-generic'
 import { BorderStyle, Layout } from '../src'
 import { createElement, createProgramRendererDocumentAndElement } from '../src/util/util'
-import { number } from './data'
+import { int } from './data'
 
 describe('layout', () => {
   it('all layouts should make all text visible if there is enough space - invoking layoutChildren manually', async done => {
@@ -14,7 +14,7 @@ describe('layout', () => {
       'top-down', 'left-right', 'diagonal', 'alt-diagonal', 'binary-tree', 'justified-layout'
     ].map(l => async() => {
       const el = createElement(document, 'Div', document.body, { bg: 'yellow', fg: 'black', layout: { layout: l as any }, border: { type: BorderStyle.double }, left: 20, top: 2, height: 26, width: 60, ch: ' ' },
-        array(N).map(i => createElement(document, 'Div', undefined, { bg: 'white', fg: 'black', top: number(2, 12), left: number(2, 8), height: number(2, 4), width: number(6, 12), ch: '.', border: { type: BorderStyle.round } }, [
+        array(N).map(i => createElement(document, 'Div', undefined, { bg: 'white', fg: 'black', top: int(2, 12), left: int(2, 8), height: int(2, 4), width: int(6, 12), ch: '.', border: { type: BorderStyle.round } }, [
           document.createTextNode('N' + i + 'th')
         ]))
       )
@@ -34,7 +34,7 @@ describe('layout', () => {
     renderer.eraseElement(el)
     el.empty()
     array(N).map(i => ({
-      top: number(0, 20), left: number(20), width: number(23, 40), height: number(12, 20), bg: 'white', fg: 'black', border: {}
+      top: int(0, 20), left: int(20), width: int(23, 40), height: int(12, 20), bg: 'white', fg: 'black', border: {}
       , children: [`N${i}th`]
     })).forEach(el.create.bind(el))
     renderer.renderElement(el)

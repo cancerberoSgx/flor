@@ -54,10 +54,10 @@ export interface ElementProps extends StyleProps {
    * left coordinate (column number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute left position multiplied for that number. For example, left==0.5 will be position the element at the middle of the parent. Otherwise is columns.
    */
   left: number
-
+  textWrap: boolean
   focusable: boolean
   focused: boolean
-  
+
   /**
    *
    */

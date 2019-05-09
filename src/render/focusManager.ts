@@ -31,8 +31,8 @@ export class FocusManager {
     const previous = this.focused
     this._focused = target
     if (target) {
-        target.props.focused = true
-      }
+      target.props.focused = true
+    }
     const ev = {  currentTarget: this.focused, target: this.focused, previous }
     this.focusListeners.some(l => {
       if (!l.els || l.els.find(e => e === this.focused)) {

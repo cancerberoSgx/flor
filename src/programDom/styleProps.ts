@@ -3,7 +3,8 @@ import { Attrs, StyleProps } from './types'
 
 export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs, owner: ProgramElement) {
-    this._data = p as any || {}
+    this._data = p as any || {
+    }
     this.owner = owner
   }
 

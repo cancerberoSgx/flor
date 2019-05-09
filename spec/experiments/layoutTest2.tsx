@@ -1,7 +1,7 @@
 import { array } from 'misc-utils-of-mine-generic'
 import { debug, Layout } from '../../src'
 import { createProgramRendererDocumentAndElement } from '../../src/util/util'
-import { color, number } from '../data'
+import { color, int } from '../data'
 
 interface LG {
   boxes: {
@@ -24,7 +24,7 @@ try {
     renderer.eraseElement(el)
     el.empty()
     array(20).map(i => ({
-      top: number(0, 20), left: number(20), width: number(23, 40), height: number(12, 20), bg: color(), border: {}
+      top: int(0, 20), left: int(20), width: int(23, 40), height: int(12, 20), bg: color(), border: {}
    , children: [`El ${i}`] })).forEach(el.create.bind(el))
     renderer.renderElement(el)
   }
