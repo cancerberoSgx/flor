@@ -118,15 +118,15 @@ export interface ElementProps extends StyleProps {
   /**
    * Listener for when the element is clicked. The program must have the mouse enabled (`Program.enableMouse()`)
    */
-  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>):  void | boolean
+  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void | boolean
 
-  onMouse?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
-  onMouseOut?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
-  onMouseOver?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
-  onMouseDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
-  onWheelDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
-  onWheelUp?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
-  onMouseMove?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>):  void | boolean
+  onMouse?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseOut?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseOver?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onWheelDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onWheelUp?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseMove?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
    * Current input for input elements like input, textarea, etc.

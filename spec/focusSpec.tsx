@@ -1,5 +1,4 @@
-import { BorderStyle, Flor, FlorDocument, Input, input, MouseAction, ProgramElement, Layout } from '../src';
-import { flatReadOnly } from 'misc-utils-of-mine-generic';
+import { Flor, FlorDocument, Layout } from '../src'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 

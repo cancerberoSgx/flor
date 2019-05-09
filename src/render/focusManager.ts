@@ -61,7 +61,7 @@ export class FocusManager {
   }
 
   addFocusListener(l: {els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void}) {
-      this.focusListeners.push(l)
+    this.focusListeners.push(l)
   }
   addBlurListener(l: {els?: ProgramElement[], listener: (e: BlurEvent) => boolean | void}) {
     if (!this.focusListeners.find(ll => l !== ll)) {

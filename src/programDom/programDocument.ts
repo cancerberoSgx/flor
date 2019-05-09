@@ -1,15 +1,15 @@
 import { Document } from '../dom'
-import { EventManager, RegisteredEventListener } from '../render'
-import { BorderStyle, debug } from '../util'
+import { EventManager } from '../render'
+import { FocusManager } from '../render/focusManager'
+import { BorderStyle } from '../util'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
-import { FocusManager } from '../render/focusManager';
 
 export class ProgramDocument extends Document {
 
   body: ProgramElement
-  protected managers: { events: EventManager; focus: FocusManager; }|undefined
+  protected managers: { events: EventManager; focus: FocusManager; } | undefined
   // /** @internal */
   // _getEventManager() {
   //   return this.events
@@ -42,25 +42,23 @@ export class ProgramDocument extends Document {
     this._emptyListenerQueue()
   }
 
-  private registerListenerQueue: {type: 'event'|'blur'|'focus', listener: any}[] = []
+  private registerListenerQueue: {type: 'event' | 'blur' | 'focus', listener: any}[] = []
 
-  _registerListener(l: {type: 'event'|'blur'|'focus' , listener :any}) {
+  _registerListener(l: {type: 'event' | 'blur' | 'focus' , listener: any}) {
     this.registerListenerQueue.push(l)
     if (this.managers) {
       this._emptyListenerQueue()
-    } 
+    }
   }
 
   private _emptyListenerQueue() {
     if (this.managers) {
       this.registerListenerQueue.forEach(l => {
-        if(l.type==='event'){
+        if (l.type === 'event') {
           this.managers!.events._registerEventListener(l.listener)
-        }
-        else if(l.type==='focus'){
+        } else if (l.type === 'focus') {
           this.managers!.focus.addFocusListener(l.listener)
-        }
-        else if(l.type==='blur'){
+        } else if (l.type === 'blur') {
           this.managers!.focus.addBlurListener(l.listener)
         }
       })

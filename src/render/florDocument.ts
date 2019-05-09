@@ -1,7 +1,7 @@
 import { isObject } from 'misc-utils-of-mine-generic'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
-import { FullProps, isElement, ProgramDocument, ProgramElement, ElementProps } from '../programDom'
+import { ElementProps, FullProps, isElement, ProgramDocument, ProgramElement } from '../programDom'
 import { installExitKeys } from '../util/util'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
@@ -100,23 +100,23 @@ export class FlorDocument {
     this.renderer.renderElement(el || this.body)
   }
 
-  private _debugEl: ProgramElement|undefined
-  debug(el: ProgramElement | string, props: Partial<ElementProps>&{hideTimeout?:number} = {}) {
+  private _debugEl: ProgramElement | undefined
+  debug(el: ProgramElement | string, props: Partial<ElementProps> & {hideTimeout?: number} = {}) {
     if (!this._debugEl) {
       this._debugEl = this.create({   top: .7, left: .7, width: .3, height: .3, ...props, children: [] })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
       this._debugEl.appendChild(this.create({ top: 0, left: 0, children: [el] }))
-    } else if(this._debugEl){
+    } else if (this._debugEl) {
       el.debug().split('\n').forEach((l, i) => {
         this._debugEl!.appendChild(this.create({ top: i, left: 0, children: [l] }))
       })
     }
     this.renderer.renderElement(this._debugEl)
-    if(props.hideTimeout) {
+    if (props.hideTimeout) {
       setTimeout(() => {
-        if(this._debugEl){
+        if (this._debugEl) {
           this._debugEl.empty()
           this.render(this._debugEl)
         }

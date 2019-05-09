@@ -187,8 +187,8 @@ export class ProgramDocumentRenderer {
         const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
         const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
         for (let i = 0; i < height; i++) {
-            this.write(yi + i, xi, this._program.repeat(el.props.ch || this.currentAttrs.ch, width))
-          }
+          this.write(yi + i, xi, this._program.repeat(el.props.ch || this.currentAttrs.ch, width))
+        }
       }
     }
     if (el.props.renderBorder) {
