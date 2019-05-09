@@ -1,6 +1,6 @@
 // interface EventTarget {
-//   addEventListener(type: string, listener: EventListener | null, options?: boolean | AddEventListenerOptions): void
-//   removeEventListener(type: string, callback: EventListener | null, options?: EventListenerOptions | boolean): void
+//   addEventListener(type: string, listener: EventListener | undefined, options?: boolean | AddEventListenerOptions): void
+//   removeEventListener(type: string, callback: EventListener | undefined, options?: EventListenerOptions | boolean): void
 // }
 
 interface EventListenerOptions {
@@ -15,8 +15,8 @@ interface AddEventListenerOptions extends EventListenerOptions {
 export type EventListener <T extends EventTarget = EventTarget>= (evt: Event<T>) => void | boolean
 
 export interface Event<T extends EventTarget = EventTarget> extends StopPropagation {
-  readonly currentTarget: T | null
-  readonly target: T | null
+  readonly currentTarget: T | undefined
+  readonly target: T | undefined
   readonly type: string
 }
 export interface StopPropagation {
@@ -24,11 +24,11 @@ export interface StopPropagation {
 }
 export class EventTarget   {
 
-  addEventListener(type: string, listener: EventListener | null, options?: boolean | AddEventListenerOptions): void {
+  addEventListener(type: string, listener: EventListener | undefined, options?: boolean | AddEventListenerOptions): void {
     // throw new Error('not implemented')
   }
 
-  removeEventListener(type: string, callback: EventListener | null, options?: EventListenerOptions | boolean): void {
+  removeEventListener(type: string, callback: EventListener | undefined, options?: EventListenerOptions | boolean): void {
     // throw new Error('not implemented')
   }
 

@@ -4,13 +4,15 @@ import { isElement } from './elementUtil'
 import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { BorderProps, ElementProps, Padding } from './types'
+import { BlurEvent, FocusEvent } from '../render/focusManager';
 
 export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> implements Partial<ElementProps> {
+ 
   public get textWrap(): boolean | undefined {
-    return this._data.textWrap;
+    return this._data.textWrap
   }
   public set textWrap(value: boolean | undefined) {
-    this._data.textWrap = value;
+    this._data.textWrap = value
   }
 
   public get border() {
@@ -38,7 +40,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   public set width(value: number) {
     if (this._data.width !== value) {
-      this._data.width =value
+      this._data.width = value
     }
   }
 
@@ -53,7 +55,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   public set height(value: number) {
     if (this._data.height !== value) {
-      this._data.height =value 
+      this._data.height = value
     }
   }
 
@@ -69,7 +71,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   set left(value: number) {
     if (this._data.left !== value) {
       this.owner.positionDirty = true
-      this._data.left =value
+      this._data.left = value
     }
   }
 
@@ -85,17 +87,8 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   set top(value: number) {
     if (this._data.top !== value) {
       this.owner.positionDirty = true
-      this._data.top =value
+      this._data.top = value
     }
-  }
-
-  // private _focused: boolean | undefined
-  public get focused(): boolean | undefined {
-    return this._data.focused
-  }
-  public set focused(value: boolean | undefined) {
-    this._data.focused = value
-    //TODO: here we could notify focusManager
   }
 
   public get layout(): LayoutOptions | undefined {
@@ -106,6 +99,14 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     this.owner.positionDirty = true
   }
 
+  public get focused(): boolean | undefined {
+    return this._data.focused
+  }
+  public set focused(value: boolean | undefined) {
+    this._data.focused = value
+    // TODO: here we could notify focusManager
+  }
+
   public get focusable(): boolean | undefined {
     return this._data.focusable
   }
@@ -113,10 +114,10 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     this._data.focusable = value
   }
 
-  childrenReady?: () => boolean
-  afterRenderWithoutChildren?: () => boolean
-  afterRender?: () => boolean
-  beforeRender?: () => boolean
+  childrenReady?(): boolean
+  afterRenderWithoutChildren?(): boolean
+  afterRender?(): boolean
+  beforeRender?(): boolean
   onClick?(r: MouseEvent): void
   onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void
   onMouse?(r: MouseEvent): void
@@ -126,6 +127,8 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   onWheelDown?(r: MouseEvent): void
   onWheelUp?(r: MouseEvent): void
   onMouseMove?(r: MouseEvent): void
+  onBlur?(e: BlurEvent): void
+  onFocus?(e: FocusEvent): void
 
   public get input(): string | undefined {
     return this._data.input

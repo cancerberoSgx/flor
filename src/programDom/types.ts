@@ -3,6 +3,7 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { Color } from './styleProps'
+import { BlurEvent, FocusEvent } from '../render/focusManager';
 
 // export abstract class AbstractPropsImpl implements AbstractProps {
 
@@ -128,6 +129,10 @@ export interface ElementProps extends StyleProps {
    * Current value for input elements like input, textarea, etc.
    */
   value: string
+
+  onBlur(e: BlurEvent): void
+  onFocus(e: FocusEvent): void
+
 
 }
 

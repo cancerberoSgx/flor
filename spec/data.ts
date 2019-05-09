@@ -24,7 +24,6 @@ export function color() {
   return colors[int(0, colors.length - 1)]
 }
 
-
-export function item<T=any>(a: T[]): T {
-  return a[int(0, a.length-1)]
+export function item<T= any>(a: T[]): T {
+  return a[int(0, a.length - 1)]
 }

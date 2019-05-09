@@ -1,9 +1,11 @@
 import { array } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
+import * as wrap from 'word-wrap'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Node } from '../dom'
 import { isText } from '../dom/nodeUtil'
 import { TextNode } from '../dom/text'
+import { isElement } from '../programDom'
 import { ProgramElement } from '../programDom/programElement'
 import { PAttrs } from '../programDom/styleProps'
 import { Attrs } from '../programDom/types'
@@ -11,8 +13,6 @@ import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
 import { createProgram, destroyProgram } from '../util/util'
-import * as wrap from 'word-wrap'
-import { isElement } from '../programDom';
 
 export interface RendererOptions {
   program?: Program
@@ -130,27 +130,25 @@ export class ProgramDocumentRenderer {
   }
 
   protected renderText(c: TextNode, nextNode: Node) {
-    let s =( c.textContent || '').trim()
+    let s = (c.textContent || '')
     const parent  = c.parentNode as ProgramElement
-    if(parent.props.textWrap) {
+    if (parent.props.textWrap) {
       const cutIndex = Math.min(s.length,  this.lastAbsLeft - parent.absoluteContentLeft)
       const s1 = s.substring(0,cutIndex)
       const s2 = s.substring(cutIndex, s.length)
-      if(s1){
+      if (s1) {
         this.write(this.lastAbsTop,this.lastAbsLeft, s1)
         this.lastAbsTop = this.lastAbsTop + 1
-      this.lastAbsLeft = parent.absoluteContentLeft
+        this.lastAbsLeft = parent.absoluteContentLeft
       }
-      wrap(s2.replace(/\n/g, ' '), {width: parent.contentWidth-1}).split('\n').map(l=>l.trim()).forEach(l=>{
-        if(s1){
+      wrap(s2.replace(/\n/g, ' '), { width: parent.contentWidth - 1 }).split('\n').map(l => l.trim()).forEach(l => {
+        if (s1) {
         }
         this.write(this.lastAbsTop,this.lastAbsLeft, l)
         this.lastAbsTop = this.lastAbsTop + 1
-      this.lastAbsLeft = parent.absoluteContentLeft
-        // s=l
+        this.lastAbsLeft = parent.absoluteContentLeft
       })
-    }
-    else {
+    } else {
       const nextChildIsText = isText(nextNode)
       this.write(this.lastAbsTop,this.lastAbsLeft, s)
       this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
@@ -160,7 +158,7 @@ export class ProgramDocumentRenderer {
   }
 
   renderElementWithoutChildren(el: ProgramElement) {
-    this.setStyle({...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data})
+    this.setStyle({ ...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data })
     const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
     const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
     const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)

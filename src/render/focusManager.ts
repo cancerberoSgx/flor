@@ -1,5 +1,5 @@
 import { ProgramMouseEvent } from '../declarations/program'
-import { StopPropagation } from '../dom/event'
+import { StopPropagation, Event } from '../dom/event'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { isElement, ProgramDocument, ProgramElement } from '../programDom'
 import { EventManager, notifyListener } from './eventManager'
@@ -22,27 +22,50 @@ export class FocusManager {
       return isElement(n) &&  !!n.props.focusable && this.events._isMouseEventTarget(e, n)
     }, { childrenFirst: true })
 
-    this.notifyFocusListeners(target)
+    this.dispatchFocused(target)
   }
 
   protected focusListeners: {els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void}[] = []
+  protected blurListeners: {els?: ProgramElement[], listener: (e: BlurEvent) => boolean | void}[] = []
 
-  private notifyFocusListeners(target: ProgramElement | undefined) {
+  private dispatchFocused(target: ProgramElement | undefined) {
     const previous = this.focused
+    if(previous===target) {
+      return
+    }
     this._focused = target
+    const focusEvent = {  currentTarget: target, target , previous, type: 'focus' }
+    const blurEvent = {currentTarget: previous, target: previous, focused: target, type: 'blur'}
+    let stopFocus = false
+    let stopBlur = false
     if (target) {
       target.props.focused = true
+      stopFocus = !!target.props.onFocus && notifyListener(target.props.onFocus, focusEvent)
     }
-    const ev = {  currentTarget: this.focused, target: this.focused, previous }
-    this.focusListeners.some(l => {
-      if (!l.els || l.els.find(e => e === this.focused)) {
-        return notifyListener(l.listener as any, ev as any)
+    if(previous) {
+      previous.props.focused = false
+      stopBlur = !!previous.props.onBlur &&notifyListener(previous.props.onBlur, blurEvent) 
+    }
+    !stopFocus && this.focusListeners.some(l => {
+      if (!l.els || l.els.find(e => e === focusEvent.currentTarget)) {
+        return notifyListener(l.listener as any, focusEvent as any)
+      }
+      return false
+    })
+    !stopBlur && this.blurListeners.some(l => {
+      if (!l.els || l.els.find(e => e === blurEvent.currentTarget)) {
+        return notifyListener(l.listener as any, blurEvent as any)
       }
       return false
     })
   }
 
-  addBeforeAllMouseListener(l: {els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void}) {
+  addFocusListener(l: {els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void}) {
+    if (!this.focusListeners.find(ll => l !== ll)) {
+      this.focusListeners.push(l)
+    }
+  }  
+  addBlurListener(l: {els?: ProgramElement[], listener: (e: BlurEvent) => boolean | void}) {
     if (!this.focusListeners.find(ll => l !== ll)) {
       this.focusListeners.push(l)
     }
@@ -52,19 +75,21 @@ export class FocusManager {
     const focusables = filterDescendants<ProgramElement>(this.document.body, n => isElement(n) && !!n.props.focusable)
     const current = focusables.findIndex(f => f === this.focused)
     const target = focusables[current >= focusables.length - 1 ? 0 : current + 1]
-    this.notifyFocusListeners(target)
+    this.dispatchFocused(target)
   }
 
   focusPrevious() {
     const focusables = filterDescendants<ProgramElement>(this.document.body, n => isElement(n) && !!n.props.focusable)
     const current = focusables.findIndex(f => f === this.focused)
     const target = focusables[current <= 0 ? focusables.length - 1 : current - 1]
-    this.notifyFocusListeners(target)
+    this.dispatchFocused(target)
   }
 }
 
-interface FocusEvent extends StopPropagation {
-  currentTarget?: ProgramElement
-  target?: ProgramElement
+export interface FocusEvent extends Event {
   previous?: ProgramElement
+}
+
+export interface BlurEvent extends Event {
+  focused?: ProgramElement
 }
