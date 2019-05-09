@@ -136,9 +136,9 @@ function handleJustifiedLayout(o: LayoutOptions & { el: ProgramElement }) {
     height: c.props.height || 1
   }))
   const def = {
-    containerWidth: o.el.props.width,
-    containerHeight: o.el.props.height,
-    targetRowHeight: Math.trunc(o.el.props.height / 5),
+    containerWidth: o.el.contentWidth,
+    containerHeight: o.el.contentHeight,
+    targetRowHeight: Math.trunc(o.el.contentHeight / 5),
     boxSpacing: 0,
     maxNumRows: 5,
     containerPadding: {
@@ -199,8 +199,8 @@ function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
     i.meta.props.width = i.width
     i.meta.props.height = i.height
   })
-  if(!o.neverResizeContainer){
-    o.el.props.width = info.width + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.left+o.el.props.padding.right : 0)
-    o.el.props.height = info.height + + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.top+o.el.props.padding.bottom : 0)
+  if (!o.neverResizeContainer) {
+    o.el.props.width = info.width + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.left + o.el.props.padding.right : 0)
+    o.el.props.height = info.height + + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.top + o.el.props.padding.bottom : 0)
   }
 }

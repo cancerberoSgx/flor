@@ -153,7 +153,7 @@ describe('programDocumentRenderer', () => {
     done()
   })
   it('el.props.padding', async done => {
-    const el = createElement(doc, 'Div', doc.body, { bg: 'yellow', ch: 'T', fg: 'black', border: { type: BorderStyle.double }, left: 10, top: 3, height: 13, width: 22 , padding: {top: 2, left: 3, right: 1, bottom: 1}}, [createElement(doc, 'Div', undefined, {bg: 'green', ch: 'V', padding: {top: 1, left: 1, right: 1, bottom: 1}, border: { type: BorderStyle.round }, top: 1, left: 1, width: 15, height: 6}, [
+    const el = createElement(doc, 'Div', doc.body, { bg: 'yellow', ch: 'T', fg: 'black', border: { type: BorderStyle.double }, left: 10, top: 3, height: 13, width: 22 , padding: { top: 2, left: 3, right: 1, bottom: 1 } }, [createElement(doc, 'Div', undefined, { bg: 'green', ch: 'V', padding: { top: 1, left: 1, right: 1, bottom: 1 }, border: { type: BorderStyle.round }, top: 1, left: 1, width: 15, height: 6 }, [
       doc.createTextNode('hello'), doc.createTextNode(' world')])
     ])
     renderer.renderElement(el)

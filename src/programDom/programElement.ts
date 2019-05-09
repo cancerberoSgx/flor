@@ -125,7 +125,7 @@ export class ProgramElement extends Element {
   get absoluteContentLeft() {
     return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left  : 0)
   }
-  
+
   get contentHeight() {
     return this.props.height - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.top + this.props.padding.bottom) : 0)
   }
@@ -147,10 +147,10 @@ export class ProgramElement extends Element {
       }
     }
   }
-  
+
   protected update(descendants?: boolean) {
     if (this.positionDirty) {
-      var a = this.absoluteLeft - this.absoluteTop
+      let a = this.absoluteLeft - this.absoluteTop
       this.layout()
       this.positionDirty = false
     }
@@ -192,7 +192,7 @@ export class ProgramElement extends Element {
     return `${indent(o.level)}<${this.tagName} ${
       Object.keys({ ...this.props, ...this.props.data })
         .filter(f => f !== '_data').map(p => `${p}=${
-          JSON.stringify(({...this.props, owner: undefined} as any)[p] || (this.props.data as any)[p] || '')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${
+          JSON.stringify(({ ...this.props, owner: undefined } as any)[p] || (this.props.data as any)[p] || '')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${
       Array.from(this.childNodes)
         .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }

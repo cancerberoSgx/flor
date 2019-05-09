@@ -10,7 +10,7 @@ try {
     if (!e.currentTarget!.props.border) {
       e.currentTarget!.props.border = { type: BorderStyle.double, fg: color() }
     } else {
-      e.currentTarget!.props.border!.fg = color()
+      e.currentTarget!.props.border.fg = color()
     }
     flor.debug(e.currentTarget!)
     flor.renderer.renderElement(le)

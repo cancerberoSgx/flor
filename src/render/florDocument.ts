@@ -55,18 +55,15 @@ export class FlorDocument {
   create(el: ProgramElement | Partial<FullProps> | JSX.Element) {
     let r: ProgramElement | undefined
     if (isElement(el)) {
-      r = el;
+      r = el
+    } else if (isJSXElementImpl(el)) {
+      r = this.Flor.render(el)
+    } else if (isObject(el)) {
+      r = this.document.create({ ...el as any })
     }
-    else if (isJSXElementImpl(el)) {
-      r = this.Flor.render(el  );
-    }
-    else if (isObject(el)) {
-      r = this.document.create({ ...el as any });
-    }
-    if(r){
+    if (r) {
       this.document.body.appendChild(r)
-    }
-    else {
+    } else {
       throw new Error('Could not create element for input ' + el)
     }
     return r

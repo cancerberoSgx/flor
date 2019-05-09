@@ -1,5 +1,5 @@
+import { ProgramElement } from './programElement'
 import { Attrs, StyleProps } from './types'
-import { ProgramElement } from './programElement';
 
 export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs, owner: ProgramElement) {

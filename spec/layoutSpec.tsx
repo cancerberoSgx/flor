@@ -1,5 +1,5 @@
 import { array, serial } from 'misc-utils-of-mine-generic'
-import { BorderStyle, layoutChildren, Layout } from '../src'
+import { BorderStyle, Layout, layoutChildren } from '../src'
 import { createElement, createProgramRendererDocumentAndElement } from '../src/util/util'
 import { color, number } from './data'
 

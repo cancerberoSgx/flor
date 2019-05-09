@@ -138,10 +138,10 @@ export class ProgramDocumentRenderer {
 
   renderElementWithoutChildren(el: ProgramElement) {
     this.setStyle(el.props)
-    const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0) 
-    const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0) 
-    const width = el.contentWidth+(el.props.padding ? el.props.padding.left+el.props.padding.right : 0) 
-    const height = el.contentHeight+(el.props.padding ? el.props.padding.top+el.props.padding.bottom : 0) 
+    const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
+    const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
+    const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
+    const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
     for (let i = 0; i < height; i++) {
       this.write(yi + i, xi, this._program.repeat(el.props.ch || this.currentAttrs.ch, width))
     }

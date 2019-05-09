@@ -124,8 +124,8 @@ describe('jsx', () => {
       elementReady() {
         elementReady = true
         Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
-            c.props.top = i + 1
-          })
+          c.props.top = i + 1
+        })
       }
       elementCreated() {
         elementCreated = true
