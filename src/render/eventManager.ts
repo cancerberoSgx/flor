@@ -1,8 +1,8 @@
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
 import { Event, EventListener, EventTarget } from '../dom/event'
 import { ProgramElement } from '../programDom'
+import { debug } from '../util'
 import { RemoveProperties } from '../util/misc'
-import { debug } from '../util';
 
 export type RegisteredEventListener = { el: ProgramElement, name: string; listener: EventListener; }
 
@@ -58,20 +58,20 @@ export class EventManager {
     }
   }
 
-  private _ignoreMouse = false;
+  private _ignoreMouse = false
   public get ignoreMouse() {
-    return this._ignoreMouse;
+    return this._ignoreMouse
   }
   public set ignoreMouse(value) {
-    this._ignoreMouse = value;
+    this._ignoreMouse = value
   }
-  
+
   onMouse(e: ProgramMouseEvent) {
-    if (this._ignoreMouse) return;
+    if (this._ignoreMouse) return
     this.beforeAllMouseListeners.forEach(l => {
       // const ev: MouseEvent = {  ...e, currentTarget: l.el, target: l.el,type: l.name}
     })
-    this.mouseListeners.filter(l=>l.name===e.action).forEach(({ el, name, listener }) => {
+    this.mouseListeners.filter(l => l.name === e.action).forEach(({ el, name, listener }) => {
       // // for (; i < self.clickable.length; i++) {
         // //   el = self.clickable[i];
         // if(el.v)
@@ -82,12 +82,12 @@ export class EventManager {
         //   //     && !el.hasAncestor(self.focused)) continue;
         //   pos = el.lpos;
         //   if (!pos) continue;
-        
-        if (e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
+
+      if (e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
           e.y >= el.absoluteTop && e.y < el.absoluteTop + el.props.height) {
             // debug('onMouse matched!!')
-            const ev = {  ...e, currentTarget: el, target: el, type: name }
-        return notifyListener(listener, ev)
+          const ev = {  ...e, currentTarget: el, target: el, type: name }
+          return notifyListener(listener, ev)
         // if (e.action === 'mouseup' && name === 'click') {
         //   if (notifyListener(listener, { ...ev, type: 'click' })) {
         //     return
@@ -115,10 +115,9 @@ export class EventManager {
         //     el.emit(data.action, data);
         //     break;
         //   }
-      }
-      else {
-        return false
-      }
+        } else {
+          return false
+        }
       // // Just mouseover?
       // if ((data.action === 'mousemove'
       //     || data.action === 'mousedown'
@@ -139,11 +138,10 @@ export class EventManager {
   _registerEventListener(o: RegisteredEventListener): any {
     if (o.name === 'keypress' || o.name.startsWith('key') && !this.keyListeners.find(l => l.el === o.el)) {
       this.keyListeners.push(o)
-    } else if(!this.keyListeners.find(l => l.el === o.el)){
+    } else if (!this.keyListeners.find(l => l.el === o.el)) {
       // TODO: verify is mouse event
       this.mouseListeners.push(o)
-    }
-    else {
+    } else {
       debug('WARNING: ignoring event listener registration because already registered:', o)
     }
   }

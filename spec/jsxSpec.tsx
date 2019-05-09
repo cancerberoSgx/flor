@@ -8,9 +8,9 @@ import { createProgramRendererDocument } from '../src/util/util'
 
 describe('jsx', () => {
 
-  xit('createElement', async done => {
+  it('createElement', async done => {
     const p = <box>hello</box>
-    expect(JSON.stringify(p)).toEqual(`{"type":"box","children":[{"type":"__text","props":{"textContent":"hello","children":[]},"children":[]}],"props":{}}`)
+    expect(JSON.stringify(p)).toEqual(`{"type":"box","children":[{"type":"__text","props":{"textContent":"hello","children":[]},"children":[],"_type":"string"}],"props":{},"_type":"string"}`)
     done()
   })
 
@@ -19,7 +19,7 @@ describe('jsx', () => {
     const doc = new ProgramDocument()
     Flor.setDocument(doc)
     const e = Flor.render(p)
-    // expect(e.outerHTML).toBe('<box bg="red" fg="black" ch="y" width="10" height="7" top="4" left="12">hello</box>')
+    expect(e.outerHTML).toBe('<box width="10" height="7" bg="red" fg="black" top="4" left="12" ch="y">hello</box>')
     const { renderer } = createProgramRendererDocument()
     renderer.renderElement(e)
     expect(renderer.printBuffer(true)).toContain(`
@@ -76,55 +76,52 @@ describe('jsx', () => {
     done()
   })
 
-  // describe('components', () => {
-
-  xit('should render components', async done => {
-      class C extends Component<{ name: string, colors: string[] }> {
+  it('should render components', async done => {
+    class C extends Component<{ name: string, colors: string[] }> {
         render() {
-          return <box top={7} left={4} width={23} height={17} ch="X" bg="blue">
+          return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
             <text top={1}>hello {this.props.name}</text>
             Your colors:
         {this.props.colors.map((c, i) => <text width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</text>)}
           </box>
         }
       }
-      const app = <C name="seba" colors={['red', 'blue', 'green']} />
-      const { renderer } = createProgramRendererDocument()
-      renderer.fillAll('G')
-      await sleep(100)
-      const e = Flor.render(app)
-      await sleep(100)
-      renderer.renderElement(e)
-      await sleep(100)
-      expect(renderer.printBuffer(true)).toContain(`
+    const app = <C name="seba" colors={['red', 'blue', 'green']}/>
+    const { renderer, document } = createProgramRendererDocument()
+    const e = Flor.render(app)
+    renderer.renderElement(e)
+    expect(renderer.printBuffer(true)).toContain(`
 
 
 
-    hello seba_________________________________
-    ______Your colors:_________________________
-    ___________________________________________
-    _red_______________________________________
-    _blue______________________________________
-    _green_____________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
-    ___________________________________________
+
+
+
+    _______________________
+    hello seba_____________
+    ______Your colors:_____
+    _______________________
+    _red___________________
+    _blue__________________
+    _green_________________
+    _PPPPP_________________
+    _PPPPP_________________
+    _PPPPP_________________
+    _______________________
+    _______________________
+    _______________________
+    _______________________
+    _______________________
+    _______________________
+    _______________________
 `)
-      renderer.destroy()
-      done()
-    })
+    renderer.destroy()
+    done()
+  })
 
   it('should call  elementCreated and elementReady', async done => {
-      let elementReady = false, elementCreated = false
-      class C extends Component<{ name: string, colors: string[] }> {
+    let elementReady = false, elementCreated = false
+    class C extends Component<{ name: string, colors: string[] }> {
         elementReady() {
           elementReady = true
           Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
@@ -138,21 +135,20 @@ describe('jsx', () => {
           return <box><text>hello</text><text>my parent</text><text>will get me</text><text>an empty line</text></box>
         }
       }
-      const { renderer } = createProgramRendererDocument()
-      const e = Flor.render(<C name="seba" colors={['red', 'blue', 'green']} />)
-      expect(elementReady).toBe(true)
-      expect(elementCreated).toBe(true)
-      renderer.renderElement(e)
-      expect(renderer.printBuffer(true)).toContain(`
+    const { renderer } = createProgramRendererDocument()
+    const e = Flor.render(<C name="seba" colors={['red', 'blue', 'green']} />)
+    expect(elementReady).toBe(true)
+    expect(elementCreated).toBe(true)
+    renderer.renderElement(e)
+    expect(renderer.printBuffer(true)).toContain(`
 hello
 my parent
 will get me
 an empty line
 `)
-      renderer.destroy()
-      done()
-    })
+    renderer.destroy()
+    done()
+  })
 
 })
 
-// })

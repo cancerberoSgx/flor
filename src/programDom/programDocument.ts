@@ -59,6 +59,6 @@ export class ProgramDocument extends Document {
   }
 
   static is(d: any): d is ProgramDocument {
-    return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create) 
+    return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create)
   }
 }

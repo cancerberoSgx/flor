@@ -6,7 +6,7 @@ type Color = number | string
 interface Colors {
   /**
    * Match given color in a high level form (like rgb or hex expression) with a terminal color number
-   * interpolatingg to a similar color.
+   * interpolating to a similar color.
    */
   match(r1: Color | ColorRgb, g1?: number, b1?: number): number
   convert(color: Color): number

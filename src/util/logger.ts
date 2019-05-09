@@ -12,4 +12,3 @@ export function debug(...args: any[]) {
     )
   }
 }
-

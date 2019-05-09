@@ -1,10 +1,9 @@
-import { nonEnumerableMember, enumerableMember } from '../util/misc'
 import { Attrs, StyleProps } from './types'
 
 export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs) {
     // if (p) {
-      this._data = p as any || {}
+    this._data = p as any || {}
     //   for (let k of AttrsImpl.attr_props) {
     //     // @ts-ignore
     //     this['_' + k] = p[k]
@@ -20,13 +19,13 @@ export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
     // this._data.non_iterable()
   }
   assign(o: any) {
-    Object.assign(this._data, o||{})
+    Object.assign(this._data, o || {})
   }
 
-  protected _data:T
+  protected _data: T
   get data() {
     return this._data
- }
+  }
   // private static attr_props = ['bg', 'fg', 'bold', 'underline', 'standout', 'ch', 'blink', 'invisible']
 
   // private _non_iterable() {
@@ -97,4 +96,3 @@ export class StylePropsImpl< T extends PAttrs = PAttrs> extends AttrsImpl<T> imp
 export type Color = string
 
 export type PAttrs = Partial<Attrs>
-

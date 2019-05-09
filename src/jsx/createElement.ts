@@ -57,9 +57,9 @@ class FlorJsxImpl implements FlorJsx {
       e._component.element = el
       e._component.elementCreated()
     }
-    if ((e as any)._type === 'string') {
+    // if ((e as any)._type === 'string') {
       el.props.assign({ ...e.props || {}, children: undefined } as any)
-    }
+    // }
     Object.keys(e.props || {}).forEach(attr => {
       const val = (e as any).props[attr]
       if (typeof val === 'function') {
@@ -103,7 +103,6 @@ class FlorJsxImpl implements FlorJsx {
   }
 
   createElement(tag: JSX.ElementType, attrs: BlessedJsxAttrs, ...children: any[]) {
-
     let el: JSX.FlorJsxNode
     let component: Component | undefined
     if (isComponentConstructor(tag)) {
@@ -120,7 +119,7 @@ class FlorJsxImpl implements FlorJsx {
       el = new JSXElementImpl(tag, attrs);
       (el as any)._type = 'string'
     }
-    if (typeof tag === 'string'    ) {
+    if (typeof tag === 'string') {
       this.installAttributesAndChildren(el! as any,         children)
     }
     return el!
@@ -160,7 +159,7 @@ class FlorJsxImpl implements FlorJsx {
    * return true the child won't be appended
    */
   protected appendChild(el: JSXElementImpl, child: JSXElementImpl): any {
-    if (el && el.props && el.children) { 
+    if (el && el.props && el.children) {
       el.children.push(child)
     }
   }

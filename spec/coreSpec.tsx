@@ -1,10 +1,10 @@
-import { StylePropsImpl, ProgramDocument } from '../src'
+import { ProgramDocument, StylePropsImpl } from '../src'
 
 describe('core', () => {
   it('Attr and Props should not spread private members', async done => {
     const s = new StylePropsImpl({ bg: 'red' })
     expect(JSON.stringify(s.data)).toBe('{"bg":"red"}')
-    expect({...s.data}).toEqual({bg: 'red'})
+    expect({ ...s.data }).toEqual({ bg: 'red' })
     expect(Object.keys(s.data)).toEqual(['bg'])
     // expect((s as any)._bg).toBe(undefined)
     done()
@@ -14,7 +14,7 @@ describe('core', () => {
     const el = doc.createElement('box')
     const s = el.props.data
     expect(JSON.stringify(s)).toBe('{}')
-    expect({...s}).toEqual({})
+    expect({ ...s }).toEqual({})
     expect(Object.keys(s)).toEqual([])
     el.props.bg = 'blue'
     expect(Object.keys(s)).toEqual(['bg'])

@@ -5,13 +5,12 @@ import { Node } from '../dom'
 import { isText } from '../dom/nodeUtil'
 import { TextNode } from '../dom/text'
 import { ProgramElement } from '../programDom/programElement'
-import { AttrsImpl, PAttrs } from '../programDom/styleProps'
+import { PAttrs } from '../programDom/styleProps'
 import { Attrs } from '../programDom/types'
+import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
 import { createProgram, destroyProgram } from '../util/util'
-import { debug } from '../util';
-
 
 export interface RendererOptions {
   program?: Program
@@ -32,7 +31,7 @@ export interface RendererOptions {
 //   standout: false,
 //   ch: ' ',
 //   blink: false
-// 
+//
 // }
 export class ProgramDocumentRenderer {
 
@@ -40,7 +39,7 @@ export class ProgramDocumentRenderer {
   private _program: Program
   private buffer: PAttrs[][] = []
   // private ch: string
-  private defaultStyle: Attrs 
+  private defaultStyle: Attrs
   private currentAttrs: Attrs
 
   constructor(options: RendererOptions) {
@@ -56,7 +55,7 @@ export class ProgramDocumentRenderer {
       standout: false,
       ch: ' ',
       blink: false
-    }  
+    }
     this.currentAttrs = {      ...this.defaultStyle    }
     // this.bypassingBuffer(() => this.fillAll())
     this.resetStyle()
@@ -120,7 +119,6 @@ export class ProgramDocumentRenderer {
     }
   }
 
-
   private lastAbsLeft: number = 0
   private lastAbsTop: number = 0
   private renderCounter = 0
@@ -138,7 +136,7 @@ export class ProgramDocumentRenderer {
       } else if (c instanceof ProgramElement) {
         this.renderElement(c)
       } else {
-       debug('Element type invalid: ' + inspect(c))
+        debug('Element type invalid: ' + inspect(c))
       }
     })
     el._afterRender()
@@ -192,9 +190,9 @@ export class ProgramDocumentRenderer {
   }
 
   resetStyle() {
-    this.currentAttrs = {...this.defaultStyle}
+    this.currentAttrs = { ...this.defaultStyle }
     this.setStyle(this.defaultStyle)
-  }  
+  }
 
   private drawElementBorder(el: ProgramElement) {
     const border = el.props.border

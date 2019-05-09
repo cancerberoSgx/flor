@@ -52,12 +52,12 @@ export function destroyProgram(program: Program) {
   program.sgr0()
   program.reset()
   program.clear()
-  
+
   program.flush()
   if (process.platform === 'win32') {
     tryTo(() => require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 }))
   }
-  
+
   program.destroy()
   program.flush()
 

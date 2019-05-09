@@ -16,7 +16,7 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   /**
    * Called from `Flor.render` when [[element]] was just created. Take into account that its attributes and
    * children are not yet initialized. For that use [[elementReady]].
-   * 
+   *
    * @internal
    */
   elementCreated() {}
@@ -24,7 +24,7 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   /**
    * Called from `Flor.render` when [[element]] was is ready, this is with its attributes and children
    * initialized and rendered. Take into account that perhaps the element is not yet attached to any document.
-   * 
+   *
    * @internal
    */
   elementReady() {

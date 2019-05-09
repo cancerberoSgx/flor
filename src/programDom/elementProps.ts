@@ -1,11 +1,9 @@
 import { MouseEvent } from '../render'
-import { LayoutOptions, debug } from '../util'
+import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
+import { isElementProps } from './elementUtil'
 import { StylePropsImpl } from './styleProps'
 import { BorderProps, ElementProps, Padding } from './types'
-import { isElementProps } from './elementUtil';
-import { objectFilter } from 'misc-utils-of-mine-generic';
-import { nonEnumerableMember } from '../util/misc';
 
 export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> implements Partial<ElementProps> {
   constructor(p: Partial<ElementProps>) {
@@ -31,9 +29,9 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   public get border() {
     return this._data.border
   }
-  public set border(value: Partial<BorderProps>|undefined){//} | boolean | BorderStyle | undefined) {
+  public set border(value: Partial<BorderProps> | undefined) {// } | boolean | BorderStyle | undefined) {
     // if(!value){
-      this._data.border = value 
+    this._data.border = value
     // }
     // else {
     //   if(!this._data.border){
@@ -71,28 +69,28 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   // private _width: number = 0
   public get width(): number {
-    return this._data.width||0
+    return this._data.width || 0
   }
   public set width(value: number) {
     this._data.width = value
   }
   // private _height: number = 0
   public get height(): number {
-    return this._data.height||0
+    return this._data.height || 0
   }
   public set height(value: number) {
     this._data.height = value
   }
   // private _left: number = 0
   get left(): number {
-    return this._data.left||0
+    return this._data.left || 0
   }
   set left(value: number) {
     this._data.left = value
   }
   // private _top: number = 0
   get top(): number {
-    return this._data.top||0
+    return this._data.top || 0
   }
   set top(value: number) {
     this._data.top = value
@@ -106,10 +104,10 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
 
   childrenReady?: () => boolean// = () => { return false }
-  afterRenderWithoutChildren? : () => boolean
+  afterRenderWithoutChildren?: () => boolean
   // Dont remove this implementation - will break isEElementProps
   afterRender?: () => boolean
-  beforeRender?: () => boolean//{ return false }
+  beforeRender?: () => boolean// { return false }
   onClick?(r: MouseEvent): void
 }
 
@@ -118,8 +116,8 @@ class BorderPropsImpl extends StylePropsImpl<Partial<BorderProps>> implements Pa
   constructor(p: Partial<BorderProps> = {}) {
     super(p)
     this._data.type = typeof p === 'string'  ? p : typeof p === 'boolean' ? BorderStyle.light : typeof p === 'undefined' ? undefined : p.type
-    if(isElementProps(p)) {
-      if(p.fg){
+    if (isElementProps(p)) {
+      if (p.fg) {
         this.fg = p.fg
       }
     }

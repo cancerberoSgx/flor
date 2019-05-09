@@ -78,12 +78,12 @@ export class FlorDocument {
 
   _debugEl: ProgramElement = undefined as any
   debug(el: ProgramElement) {
-    if(!this._debugEl) {
-      this._debugEl = this.create({top: 10, left: 40, width: 40, height: 20, children: [el.debug()]})
+    if (!this._debugEl) {
+      this._debugEl = this.create({ top: 10, left: 40, width: 40, height: 20, children: [el.debug()] })
     }
     this._debugEl.empty()
-    el.debug().split('\n').forEach((l, i)=>{
-      this._debugEl.appendChild(this.create({top: i, left: 0, children: [l]}))
+    el.debug().split('\n').forEach((l, i) => {
+      this._debugEl.appendChild(this.create({ top: i, left: 0, children: [l] }))
     })
     this.renderer.renderElement(this._debugEl)
   }

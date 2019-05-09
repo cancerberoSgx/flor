@@ -1,17 +1,17 @@
+import { indent } from 'misc-utils-of-mine-generic'
 import { Element } from '../dom'
 import { EventListener } from '../dom/event'
-import { debug, layoutChildren } from '../util'
+import { layoutChildren } from '../util'
 import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
+import { isElement } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
-import { isElement } from './elementUtil';
-import { indent } from 'misc-utils-of-mine-generic';
 
 export class ProgramElement extends Element {
   /**
    * Called by `Flor.render()` after all children `ProgramElement` are created and appended to this element.
-   * 
+   *
    * @internal
    */
   _childrenReady() {
@@ -21,8 +21,8 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * Runs the layout algorithm possibly changing children and self position and dimension. 
-   * 
+   * Runs the layout algorithm possibly changing children and self position and dimension.
+   *
    * @internal
    */
   layout() {
@@ -37,7 +37,7 @@ export class ProgramElement extends Element {
    * Called by the rendered just after the element all all its children were rendered to the screen
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
-   * 
+   *
    * @internal
    */
   _afterRender(): any {
@@ -48,7 +48,7 @@ export class ProgramElement extends Element {
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be next.
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
-   * 
+   *
    * @internal
    */
   _afterRenderWithoutChildren(): any {
@@ -59,7 +59,7 @@ export class ProgramElement extends Element {
    * Called by the renderer just before rendering this element. It's children will follow.
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
-   * 
+   *
    * @internal
    */
   _beforeRender(): any {
@@ -130,8 +130,6 @@ export class ProgramElement extends Element {
     return createElement(this.ownerDocument as ProgramDocument, { ...props, parent: this })
   }
 
-
-
   addEventListener(name: string, listener: EventListener): void {
     if (ProgramDocument.is(this.ownerDocument)) {
       this.ownerDocument.registerEventListener({ el: this, name:  this._getEventName(name), listener })
@@ -139,18 +137,18 @@ export class ProgramElement extends Element {
   }
 
   private _getEventName(name: string): string {
-    if(['onclick', 'click'].includes(name.toLowerCase())){
+    if (['onclick', 'click'].includes(name.toLowerCase())) {
       return 'mouseup'
     }
     return name
   }
 
-  getChildrenElements(){
+  getChildrenElements() {
     return Array.from(this.childNodes).filter(isElement)
   }
 
-  debug(o: DebugOptions = {level: 0}): string{
-    return `${indent(o.level)}<${this.tagName} ${Object.keys(this.props).map(p=>`${p}=""`).join(' ')} textContent="${this.textContent}">\n${indent(o.level+1)}${Array.from(this.childNodes).map(e=>isElement(e) ? e.debug({...o, level: (o.level) + 1}) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
+  debug(o: DebugOptions = { level: 0 }): string {
+    return `${indent(o.level)}<${this.tagName} ${Object.keys(this.props).map(p => `${p}=""`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${Array.from(this.childNodes).map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 }
 
