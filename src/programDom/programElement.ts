@@ -15,7 +15,7 @@ export class ProgramElement extends Element {
    * @internal
    */
   _childrenReady() {
-    if (!this.props.childrenReady || ! this.props.childrenReady()) {
+    if (!this.props.childrenReady || !this.props.childrenReady()) {
       this.layout()
     }
   }
@@ -26,7 +26,7 @@ export class ProgramElement extends Element {
    * @internal
    */
   layout() {
-    if (this.props.layout) {
+    if (this.props.layout && this.dirty) {
       layoutChildren({
         el: this, ...this.props.layout
       })
@@ -87,24 +87,32 @@ export class ProgramElement extends Element {
     return this._parentNode as any
   }
 
+  private _absoluteLeft = 0
   get absoluteLeft() {
-    let x = this.props.left
-    let n: ProgramElement | ProgramDocument = this
-    while (n.parentNode !== n.ownerDocument) {
-      x = x + (n.parentNode as ProgramElement).props.left + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.left || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
-      n = n.parentNode
+    if (this.dirty) {
+      let x = this.props.left
+      let n: ProgramElement | ProgramDocument = this
+      while (n.parentNode !== n.ownerDocument) {
+        x = x + (n.parentNode as ProgramElement).props.left + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.left || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
+        n = n.parentNode
+      }
+      this._absoluteLeft = x
     }
-    return x
+    return this._absoluteLeft
   }
 
+  private _absoluteTop = 0
   get absoluteTop() {
-    let y = this.props.top
-    let n: ProgramElement | ProgramDocument = this
-    while (n.parentNode && n.parentNode !== n.ownerDocument) {
-      y = y + (n.parentNode as ProgramElement).props.top + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.top || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
-      n = n.parentNode
+    if (this.dirty) {
+      let y = this.props.top
+      let n: ProgramElement | ProgramDocument = this
+      while (n.parentNode && n.parentNode !== n.ownerDocument) {
+        y = y + (n.parentNode as ProgramElement).props.top + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.top || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
+        n = n.parentNode
+      }
+      this._absoluteTop = y
     }
-    return y
+    return this._absoluteTop
   }
 
   get absoluteContentTop() {
@@ -120,6 +128,20 @@ export class ProgramElement extends Element {
     return this.props.width - (this.props.border ? 1 : 0)
   }
 
+  get dirty() {
+    return this.props.dirty
+  }
+  set dirty(d: boolean) {
+    this.props.dirty = d
+  }
+  update() {
+    if (this.dirty) {
+      this.absoluteLeft
+      this.absoluteTop
+      this.layout()
+      this.dirty = false
+    }
+  }
   /**
    * creates a new element and appends it to this element.
    */
@@ -132,7 +154,7 @@ export class ProgramElement extends Element {
 
   addEventListener(name: string, listener: EventListener): void {
     if (ProgramDocument.is(this.ownerDocument)) {
-      this.ownerDocument.registerEventListener({ el: this, name:  this._getEventName(name), listener })
+      this.ownerDocument.registerEventListener({ el: this, name: this._getEventName(name), listener })
     }
   }
 
@@ -140,7 +162,7 @@ export class ProgramElement extends Element {
     if (['onclick', 'click'].includes(name.toLowerCase())) {
       return 'mouseup'
     }
-    return name
+    return name.toLowerCase()
   }
 
   getChildrenElements() {
@@ -148,7 +170,12 @@ export class ProgramElement extends Element {
   }
 
   debug(o: DebugOptions = { level: 0 }): string {
-    return `${indent(o.level)}<${this.tagName} ${Object.keys({ ...this.props, ...this.props.data }).filter(f => f !== '_data').map(p => `${p}=${JSON.stringify((this.props as any)[p] || (this.props.data as any)[p] || '')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${Array.from(this.childNodes).map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
+    return `${indent(o.level)}<${this.tagName} ${
+      Object.keys({ ...this.props, ...this.props.data })
+        .filter(f => f !== '_data').map(p => `${p}=${
+          JSON.stringify((this.props as any)[p] || (this.props.data as any)[p] || '')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${
+      Array.from(this.childNodes)
+        .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 }
 

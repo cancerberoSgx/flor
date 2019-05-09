@@ -1,5 +1,5 @@
 import { array, serial } from 'misc-utils-of-mine-generic'
-import { BorderStyle, layoutChildren } from '../src'
+import { BorderStyle, layoutChildren, Layout } from '../src'
 import { createElement, createProgramRendererDocumentAndElement } from '../src/util/util'
 import { color, number } from './data'
 
@@ -30,7 +30,7 @@ describe('layout', () => {
 
   it('justify-layout should make all text visible if there is enough space', async done => {
     const { renderer, el } = createProgramRendererDocumentAndElement()
-    el.props.assign({ layout: { layout: 'justified-layout', justifiedLayout: { targetRowHeight: 10, targetRowHeightTolerance: 0 } } })
+    el.props.assign({ layout: { layout: Layout['justified-layout'], justifiedLayout: { targetRowHeight: 10, targetRowHeightTolerance: 0 } } })
     function draw() {
       renderer.eraseElement(el)
       el.empty()

@@ -7,5 +7,5 @@ export function isElement(n: any): n is ProgramElement {
 }
 
 export function isElementProps(e: any): e is ElementProps {
-  return e && e.afterRender
+  return e && e._data
 }
