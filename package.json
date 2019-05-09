@@ -1,10 +1,10 @@
 {
   "name": "flor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Command line user interface JavaScript toolkit",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
-  "bin": "bin/cli-fonts-gallery.js",
+  "bin": "bin/tput.js",
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc && rm -rf dist/src/blessed && cp -r src/blessed dist/src && echo 'build successful'",
@@ -13,6 +13,8 @@
     "prepare": "npm run build",
     "test-performance": "ts-node -T spec/performance/animElementTest.ts",
     "clean": "rm -rf dist",
+    "docs-readme-toc": "npx markdown-toc README.md -i",
+    "docs-accursed-md": "D=docs/api/accursed-md && rm -rf $D; mkdir $D ; npx typedoc  --options typedoc.ts  --theme markdown --out $D",
     "all": "npm run clean && npm run tslint; npm run build && npm test",
     "tslint": "npx ts-refactor organizeImports \"src/**/*.ts*\" \"spec/**/*.ts*\" --dontAsk && npx tslint -p ./tsconfig.json --fix",
     "browserify": "rm -rf dist build && npm run build && mkdir -p build && npx browserify dist/test/programTest.js -o build/programTest.js && npx terser build/programTest.js -o build/programTest.js"
@@ -34,12 +36,15 @@
     "browserify": "^16.2.3",
     "cli-driver": "^0.2.1",
     "jasmine": "^3.4.0",
+    "markdown-toc": "^1.2.0",
     "shelljs": "^0.8.3",
     "terser": "^3.17.0",
     "ts-node": "^8.1.0",
     "ts-refactor": "0.0.2",
     "tslint": "^5.16.0",
     "tslint-config-standard": "^8.0.1",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.2.0",
     "typescript": "^3.4.5"
   },
   "keywords": [

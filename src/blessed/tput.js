@@ -113,21 +113,21 @@ Tput.prototype._useVt102Cap = function() {
 };
 
 Tput.prototype._useXtermCap = function() {
-  return this.injectTermcap(__dirname + '/../usr/xterm.termcap');
+  return this.injectTermcap(__dirname + '/../../usr/xterm.termcap');
 };
 
 Tput.prototype._useXtermInfo = function() {
-  return this.injectTerminfo(__dirname + '/../usr/xterm');
+  return this.injectTerminfo(__dirname + '/../../usr/xterm');
 };
 
 Tput.prototype._useInternalInfo = function(name) {
   name = path.basename(name);
-  return this.injectTerminfo(__dirname + '/../usr/' + name);
+  return this.injectTerminfo(__dirname + '/../../usr/' + name);
 };
 
 Tput.prototype._useInternalCap = function(name) {
   name = path.basename(name);
-  return this.injectTermcap(__dirname + '/../usr/' + name + '.termcap');
+  return this.injectTermcap(__dirname + '/../../usr/' + name + '.termcap');
 };
 
 /**
