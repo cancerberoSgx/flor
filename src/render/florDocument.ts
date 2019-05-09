@@ -40,6 +40,10 @@ export class FlorDocument {
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
   }
 
+  get body() {
+    return this.document.body
+  }
+
   createElement(t: string) {
     return this._document.createElement(t)
   }
@@ -88,14 +92,15 @@ export class FlorDocument {
     return this._renderer
   }
 
-  render() {
-    this.renderer.renderElement(this.document.body)
+  render(el?: ProgramElement) {
+    this.renderer.eraseElement(el || this.body)
+    this.renderer.renderElement(el || this.body)
   }
 
   private _debugEl: ProgramElement = undefined as any
-  debug(el: ProgramElement) {
+  debug(el: ProgramElement, props = {}) {
     if (!this._debugEl) {
-      this._debugEl = this.create({ fg: 'white', bg: 'black', top: 10, left: 40, width: 40, height: 20, children: [el.debug()] })
+      this._debugEl = this.create({   top: 10, left: 40, width: 40, height: 20, ...props, children: [el.debug()] })
     }
     this._debugEl.empty()
     el.debug().split('\n').forEach((l, i) => {
@@ -104,38 +109,3 @@ export class FlorDocument {
     this.renderer.renderElement(this._debugEl)
   }
 }
-
-// function create(el: JSX.Element<{}> | ProgramElement | Partial<FullProps>) {
-//   let r: ProgramElement | undefined
-//   if (isElement(el)) {
-//     r = el;
-//   }
-//   else if (isJSXElementImpl(el)) {
-//     r = this.flor.renderElement(el);
-//   }
-//   else if (isObject(el)) {
-//     r = this.create({ ...el as any });
-//   }
-//   return r;
-// }
-
-
-// class FlorBody extends ProgramElement {
-//   constructor(tagName: string, ownerDoc: ProgramDocument, private flor: FlorDocument) {
-//     super(tagName, ownerDoc)
-//   }
-//   // add(el: ProgramElement | Partial<FullProps> | JSX.Element) {
-//   //   let r: ProgramElement | undefined
-//   //   r = create(el);
-//   //   if (r) {
-//   //     if (!r.parentNode) {
-//   //       this.appendChild(r)
-//   //     }
-//   //     return r
-//   //   } else {
-//   //     // TODO: report error
-//   //     throw new Error('Could not create element for input ' + el)
-//   //   }
-//   // }
-
-// }

@@ -11,6 +11,7 @@ export interface LayoutOptions {
    * lined-up layouts support sorting items from smaller to biggest one.
    */
   sort?: boolean
+  neverResizeContainer?: boolean
 
   /**
    * Options for layout == 'justified-layout
@@ -198,6 +199,8 @@ function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
     i.meta.props.width = i.width
     i.meta.props.height = i.height
   })
-  o.el.props.width = info.width + (o.el.props.border ? 2 : 0)
-  o.el.props.height = info.height + + (o.el.props.border ? 2 : 0)
+  if(!o.neverResizeContainer){
+    o.el.props.width = info.width + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.left+o.el.props.padding.right : 0)
+    o.el.props.height = info.height + + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.top+o.el.props.padding.bottom : 0)
+  }
 }
