@@ -83,12 +83,9 @@ export class ProgramElement extends Element {
   }
 
   get absoluteTop() {
-    debug(this.props, this.tagName)
     let y = this.props.top
     let n: ProgramElement | ProgramDocument = this
     while (n.parentNode && n.parentNode !== n.ownerDocument) {
-      // debug((n.parentNode)//, (n.parentNode as ProgramElement).props.padding)
-
       y = y + (n.parentNode as ProgramElement).props.top + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.top || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
       n = n.parentNode
     }
@@ -123,7 +120,6 @@ export class ProgramElement extends Element {
   }
 
   addEventListener(name: string, listener: EventListener): void {
-    debugger
     if (ProgramDocument.is(this.ownerDocument)) {
       this.ownerDocument.registerEventListener({ el: this,  name, listener })
     }

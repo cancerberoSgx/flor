@@ -1,7 +1,6 @@
 import { merge } from 'misc-utils-of-mine-generic'
 import { ProgramElement } from '..'
 import { isElement } from '../programDom/elementUtil'
-import { debug } from './logger'
 
 export interface LayoutOptions {
   /**
@@ -63,7 +62,6 @@ export enum Layout {
  * height.
  */
 export function layoutChildren(o: LayoutOptions & { el: ProgramElement }) {
-  debug('layout()', o.layout)
   if (!o.layout || layoutNames.includes(o.layout)) {
     handleLayout(o)
   } else if (o.layout === 'justified-layout') {
@@ -136,7 +134,6 @@ function handleJustifiedLayout(o: LayoutOptions & { el: ProgramElement }) {
     width: c.props.width || 1,
     height: c.props.height || 1
   }))
-  // debug(data)
   const def = {
     containerWidth: o.el.props.width,
     containerHeight: o.el.props.height,
@@ -155,13 +152,9 @@ function handleJustifiedLayout(o: LayoutOptions & { el: ProgramElement }) {
     containerHeight: o.el.props.height
   }
   const options = merge(true, true, {}, def, o.justifiedLayout || {}, mandatory)
-  // debug({ options })
   const result = justifiedLayout(data, options) as JustifiedLayoutResult
-  // debug(result.boxes)
-
   if (result && result.boxes) {
     if (result.boxes.length !== children.length) {
-      // console.warn('WARNING - justified-layout returned different amonunt of results than current children: ', result)
     }
     children.forEach((c, i) => {
       const r = result.boxes[i]
@@ -170,34 +163,6 @@ function handleJustifiedLayout(o: LayoutOptions & { el: ProgramElement }) {
       }
     })
   }
-  // if (result && result.containerHeight) {
-  //   o.el.props.height = Math.round(result.containerHeight)
-  // }
-
-// const layoutGeometry = justifiedLayout(i, {
-//   containerWidth: o.el.props.width,
-//   containerHeight: o.el.props.height,
-//   targetRowHeight: o.ju15,
-//   boxSpacing: 0,
-//   // containerPadding: 0,
-//   maxNumRows: 6,
-//   containerPadding: {
-//     top: 2,
-//     right: 5,
-//     bottom: 1,
-//     left: 1
-// }
-// ,
-//   // forceAspectRatio: true
-// }) as LG
-
-// }
-
-// el.create({children: layoutGeometry.boxes.map(b=>({top: Math.trunc(b.top), left: Math.trunc(b.left),width:
-// Math.trunc(b.width),height: Math.trunc(b.height),bg: 'red', border: true}))})
-
-// layout package impl
-
 }
 
 interface JustifiedLayoutResult {

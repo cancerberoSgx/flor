@@ -16,7 +16,6 @@ export class Document  extends Node {
   createTextNode(content: string) {
     return new TextNode(content, this)
   }
-
 }
 
 class HeadElement extends Element {

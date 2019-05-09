@@ -11,10 +11,6 @@ export abstract class Node extends EventTarget {
   static _WATERMARK = 'jsx-alone-dom-dom'
   public attributes: NamedNodeMap<Attr>
 
-//   get attributes(){
-// return this.__attributes
-//   }
-  // NamedNodeMap<Attr>
   protected _attributes: {
     [k: string]: Attr;
   } = {}
@@ -104,11 +100,9 @@ export abstract class Node extends EventTarget {
    * Replaces node with nodes, while replacing strings in nodes with equivalent Text nodes. Throws a "HierarchyRequestError" DOMException if the constraints of the node tree are violated.
    */
   replaceWith(...nodes: (Node | string)[]): void {
-    // if (this._parentNode) {
     const children = (this._parentNode as any)._children as Node[]
     children.splice(children.indexOf(this), 1,
         ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
-    // }
   }
 
 }

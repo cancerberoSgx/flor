@@ -59,7 +59,6 @@ export class ProgramDocument extends Document {
   }
 
   static is(d: any): d is ProgramDocument {
-    // debugger
-    return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create) // && (d as ProgramDocument).handleEventListener
+    return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create) 
   }
 }

@@ -8,17 +8,6 @@ export class ElementPropsImpl extends StylePropsImpl implements Partial<ElementP
   constructor() {
     super()
   }
-  // getObject() {
-  //   return {
-  //     ...super.getObject(),
-  //     width: this._width,
-  //     height: this._height,
-  //     top: this._top,
-  //     left: this._left,
-  //     padding: this._padding,
-  //     border: this._border
-  //   }
-  // }
 
   private _border: BorderProps | undefined
   public get border(): BorderProps | boolean | BorderStyle | undefined {
@@ -77,7 +66,7 @@ export class ElementPropsImpl extends StylePropsImpl implements Partial<ElementP
   }
   childrenReady: () => boolean = () => { return false }
   afterRenderWithoutChildren = () => { }
-  // Dont remove this implementation - will break isELementProps
+  // Dont remove this implementation - will break isEElementProps
   afterRender = () => { }
   beforeRender = () => { return false }
   onClick?(r: MouseEvent): void
@@ -85,9 +74,7 @@ export class ElementPropsImpl extends StylePropsImpl implements Partial<ElementP
 
 class BorderPropsImpl extends StylePropsImpl implements BorderProps {
   private _type: BorderStyle | undefined
-  // constructor(p: BorderProps | boolean | BorderStyle | undefined) {
   constructor(p: BorderProps | boolean | BorderStyle | undefined) {
-
     super()
     this._type = typeof p === 'string'  ? p : typeof p === 'boolean' ? BorderStyle.light : typeof p === 'undefined' ? undefined : p.type
   }

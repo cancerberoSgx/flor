@@ -6,6 +6,8 @@ import { Flor } from '../jsx/createElement'
 import { ElementProps, FullProps, isElement } from '../programDom'
 import { getCurrentCommit, nowFormat } from './misc'
 
+const defaultProgramOptions = { buffer: true }
+
 export function getPerformanceFileName(label: string) {
   return nowFormat().replace(/:/g, '_') + '_' + getCurrentCommit() + '_' + label + '.json'
 }
@@ -21,6 +23,7 @@ export function destroyProgramAndExit(program: Program, status = 0) {
 //   this.cursor.color = null;
 //   this.cursor._set = false;
 // }
+
 export function destroyProgram(program: Program) {
 
   if (!program.isAlt) return
@@ -54,10 +57,9 @@ export function destroyProgram(program: Program) {
   program.sgr0()
   program.reset()
   program.clear()
-
   program.destroy()
 }
-const defaultProgramOptions = { buffer: true }
+
 export function installExitKeys(program: Program) {
   program.key(['q', 'escape', 'C-c'], function() {
     destroyProgramAndExit(program)
@@ -77,7 +79,6 @@ export function createProgram(programOptions: ProgramOptions & {installDefaultEx
   const p =  new Program(programOptions)
   programOptions.installDefaultExitKeys && installExitKeys(p)
   return p
-
 }
 
 export function createProgramRendererDocumentAndElement(programOptions: ProgramOptions = defaultProgramOptions, props?: FullProps) {
@@ -108,7 +109,6 @@ export function createElement(doc: ProgramDocument, tagName: string | Partial<Fu
     })
   }
   const el = doc.createElement(tagName)
-  // doc.appendChild(el)
   Object.assign(el.props, props)
   if (parent) {
     parent.appendChild(el)

@@ -7,13 +7,6 @@ import { RemoveProperties } from '../util/misc'
  * auxiliary class that bind events with ProgramElements rendered by renderer
  */
 export class EventManager {
-//   registerEventListener(e: RegisteredEventListener): any {
-//     if(e.name.startsWith('key')){
-// this.k
-//     }
-//   }
-
-  // protected eventTargets: { [id: number]: { el: ProgramElement } } = {}
 
   constructor(protected program: Program) {
     this.onKeyPress = this.onKeyPress.bind(this)
@@ -21,13 +14,6 @@ export class EventManager {
     this.program.on('keypress', this.onKeyPress)
     program.on('mouse', this.onMouse)
   }
-
-  // /**
-  //  * register the element (event target) in our dictionary
-  //  */
-  // register(el: ProgramElement) {
-  //   this.eventTargets[el.internalId] = this.eventTargets[el.internalId] || { el }
-  // }
 
   onKeyPress(ch: string, e: ProgramKeyEvent) {
     this.keyListeners.some(l => {
@@ -47,29 +33,24 @@ export class EventManager {
     this.beforeAllMouseListeners.forEach(l => {
       // const ev: MouseEvent = {  ...e, currentTarget: l.el, target: l.el,type: l.name}
     })
+
     // if (self.lockKeys) return;
     // if (self._needsClickableSort) {
     //   self.clickable = helpers.hsort(self.clickable);
     //   self._needsClickableSort = false;
     // }
-    this.mouseListeners.forEach(({ el, name, listener }) => {
-
-// let stopPropagation = false
+    this.mouseClickListeners.forEach(({ el, name, listener }) => {
       // var i = 0
       //   , el
       //   , set
       //   , pos;
-
       // // for (; i < self.clickable.length; i++) {
       // //   el = self.clickable[i];
-
       // if (el.detached || !el.visible) {                                              ignore retached - invisible listeners
       //   continue;
       // }
-
       //   // if (self.grabMouse && self.focused !== el                                       IGNORE FOCUSED
       //   //     && !el.hasAncestor(self.focused)) continue;
-
       //   pos = el.lpos;
       //   if (!pos) continue;
 
@@ -121,15 +102,14 @@ export class EventManager {
     })
   }
 
-  private mouseListeners: RegisteredEventListener[] = []
+  private mouseClickListeners: RegisteredEventListener[] = []
   /** @internal */
   _registerEventListener(o: RegisteredEventListener): any {
-    // debug('_registerEventListener', o)
     if (o.name === 'keypress' || o.name.startsWith('key') && !this.keyListeners.find(l => l.el === o.el)) {
       this.keyListeners.push(o)
     } else {
       // TODO: verify is mouse event
-      this.mouseListeners.push(o)
+      this.mouseClickListeners.push(o)
     }
   }
   // private   _addEventHandlers: { name: string; listener: any; }[] = []

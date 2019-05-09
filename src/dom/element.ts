@@ -19,22 +19,12 @@ export class Element  extends Node  {
     this._textContent = c
   }
 
-  // outerHTML: string;
-
   get id() {
     return this.getAttribute('id')
   }
   set id(id: string | null) {
     this.setAttribute('id', id)
   }
-  // innerHTML: string;
-  // readonly classList: DOMTokenList;
-  // className: string;  // get/set
-
-  // HTMLELEMENT :
-  // click(): void;
-  // innerText: string;
-
 }
 
 class ElementList<T extends Node = Node> {

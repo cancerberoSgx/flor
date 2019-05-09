@@ -10,10 +10,11 @@ import { Attrs } from '../programDom/types'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
 import { createProgram, destroyProgram } from '../util/util'
+import { debug } from '../util';
 
 const defaultAttrs: Attrs = {
-  bg: 'black',
-  // bg: '#1e1e1e',
+  // bg: 'black',
+  bg: '#1e1e1e',
   fg: 'white',
   bold: false,
   invisible: false,
@@ -27,15 +28,8 @@ export class ProgramDocumentRenderer {
 
   private useBuffer: boolean
   private _program: Program
-
-  public get program(): Program {
-    return this._program
-  }
-
   private buffer: PAttrs[][] = []
-
   private ch: string
-
   private defaultStyle: PAttrs
   private currentAttrs: PAttrs
 
@@ -48,12 +42,16 @@ export class ProgramDocumentRenderer {
       ch:  ' ',
       ...this.defaultStyle
     }
-    this.bypassingBuffer(() => this.fillAll())
+    // this.bypassingBuffer(() => this.fillAll())
     this.resetBuffer()
   }
 
+  public get program(): Program {
+    return this._program
+  }
+
   destroy() {
-    this.fillAll()
+    // this.fillAll()
     this.resetStyle()
     this.resetBuffer()
     destroyProgram(this.program)
@@ -69,39 +67,37 @@ export class ProgramDocumentRenderer {
     f()
     this.useBuffer = current
   }
+
   resetBuffer() {
     if (this.useBuffer) {
       this.buffer .length = 0
       delete    this.buffer
       this.buffer = array(this._program.rows).map(c => array(this._program.cols).map(c => ({ ...this.currentAttrs })))
     }
-
   }
 
   resetStyle() {
     this.setStyle(this.defaultStyle)
   }
 
-  // private lastRenderedNode: Node|undefined;
   private lastAbsLeft: number = 0
   private lastAbsTop: number = 0
   private renderCounter = 0
+
   renderElement(el: ProgramElement) {
     el.beforeRender()
     this.renderElementWithoutChildren(el)
     el.afterRenderWithoutChildren()
     this.lastAbsLeft = el.absoluteContentLeft,
     this.lastAbsTop = el.absoluteContentTop
-    // this.lastRenderedNode = undefined
     Array.from(el.childNodes).forEach((c, i, a) => {
       if (c instanceof  TextNode) {
         // TODO: word wrap, correct char width for unicode.
         this.renderText(c, a[i + 1])
-        // this.lastRenderedNode = c
       } else if (c instanceof ProgramElement) {
         this.renderElement(c)
       } else {
-        this.log('Element type invalid: ' + inspect(c))
+       debug('Element type invalid: ' + inspect(c))
       }
     })
     el.afterRender()
@@ -110,26 +106,18 @@ export class ProgramDocumentRenderer {
   }
 
   private renderText(c: TextNode, nextNode: Node) {
-    // const y = lastAbsTop;
-    // const x = lastAbsLeft;
     const s = c.textContent || ''
     this.write(this.lastAbsTop,this.lastAbsLeft, s)
     // Heads up : if next child is also text, we keep writing on the same line, if not, on a new  line.
     const nextChildIsText = isText(nextNode)
     this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
     this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)
-    // return { lastAbsTop, lastAbsLeft };
-  }
-
-  protected   log(s: string): any {
-    console.error(s)
   }
 
   /**
    * The [[buffer]] should contain the same content as what's displayed currently in the screen. Useful for tests.
    */
   printBuffer(linesTrimRight?: boolean) {
-    // debug(JSON.stringify(this.buffer.slice(1,2), null, 2))
     const s =  this.buffer.map(l => l.map(l => l.ch).join('')).join('\n')
     const r =  linesTrimRight ? trimRightLines(s) : s
     return r
