@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": [
+      "esnext"
+    ],
+    "strict": true,
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "declaration": true,
+    "jsx": "react",
+    "jsxFactory": "Flor.createElement"
+  },
+  "include": [
+    "src", "spec"
+  ],
+  "exclude": [
+    "node_modules", "dist"
+  ]
+}

@@ -1,0 +1,15 @@
+dist/spec
+src
+scripts
+tmp
+spec
+*.tgz
+apps
+log.txt
+tsconfig.json
+.travis.yml
+/docs
+/guides
+/test
+test_output.txt
+tslint.json
