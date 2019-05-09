@@ -1,7 +1,7 @@
-import { Attrs, StyleProps, BorderProps, Padding } from './types'
-import { isElement } from './elementUtil';
-import { LayoutOptions } from '../util';
-import { AttrsImpl } from './attrProps';
+import { LayoutOptions } from '../util'
+import { AttrsImpl } from './attrProps'
+import { isElement } from './elementUtil'
+import { Attrs, BorderProps, Padding, StyleProps } from './types'
 
 export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImpl<Partial<T>> implements Partial<StyleProps> {
 
@@ -97,10 +97,10 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
   }
 
   public get noFill(): boolean | undefined {
-    return this._data.noFill;
+    return this._data.noFill
   }
   public set noFill(value: boolean | undefined) {
-    this._data.noFill = value;
+    this._data.noFill = value
   }
 }
 export type Color = string

@@ -9,7 +9,7 @@ try {
   flor.render()
   const app = <box width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['top-down'], neverResizeContainer: true }}>
 
-    <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['left-right'], neverResizeContainer: true }}  
+    <box height={.19}  width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['left-right'], neverResizeContainer: true }}
     >
     <box width={.49} height={.99} border={{ type: BorderStyle.double }} bg="blue" textWrap={true}>
        Do ad sunt est cillum. Laboris esse fugiat proident excepteur sit minim elit eiusmod et et aliquip consectetur ullamco. Adipisicing pariatur ad aute ipsum nulla consectetur. Aliquip sunt enim qui laboris ex labore ea eu consequat velit eiusmod reprehenderit et. Qui do nulla sit voluptate proident tempor. Non commodo incididunt ipsum pariatur excepteur.
@@ -28,7 +28,7 @@ try {
       justifiedLayout: {
       // boxSpacing: {horizontal: 1, vertical: 1},
     // targetRowHeight: 10, targetRowHeightTolerance: 0
-    }
+      }
     }}
     >
       <box height={float(.3,.7)} width={float(.33,.5)} fg={color()} border={{ type: item(borderStyles) as any }} textWrap={true}>Sunt ea ex dolor qui nulla ipsum cillum eiusmod nulla ea occaecat velit.</box>

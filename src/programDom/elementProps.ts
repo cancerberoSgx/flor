@@ -1,12 +1,12 @@
+import { TextNode } from '../dom/text'
 import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../render'
+import { BlurEvent, FocusEvent } from '../render/focusManager'
 import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
-import { BorderProps, ElementProps, Padding } from './types'
-import { BlurEvent, FocusEvent } from '../render/focusManager';
-import { TextNode } from '../dom/text';
+import { ElementProps } from './types'
 
 export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements Partial<ElementProps> {
- 
+
   public get focused(): boolean | undefined {
     return this._data.focused
   }
@@ -48,28 +48,28 @@ export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements P
   /**
    * Custom element content draw function. Can be declared by subclasses that need custom content drawing
    * method. If declared, the content   won't be rendered but the border will. The implementation is
-   * responsible of drawing the content. 
+   * responsible of drawing the content.
    */
   renderContent?(renderer: ProgramDocumentRenderer): void
 
   /**
    * Custom element content draw function. Can be declared by subclasses that need custom content drawing
    * method. If declared, the content   won't be rendered but the border will. The implementation is
-   * responsible of drawing the content. 
+   * responsible of drawing the content.
    */
   renderBorder?(renderer: ProgramDocumentRenderer): void
 
   /**
    * Custom element children draw function. Children are both elements and text. Can be declared by subclasses
    * that need custom children drawing method. If declared, children   won't be rendered but the content and
-   * border will. The implementation is responsible of drawing the children. 
+   * border will. The implementation is responsible of drawing the children.
    */
   renderChildren?(renderer: ProgramDocumentRenderer): void
   /**
    * Custom element child element draw function. Child elements are child elements but not text nodes. Can be
    * declared by subclasses that need custom children drawing method. If declared, child elements (not text)
    * won't be rendered but the child text nodes, content and border will. The implementation is responsible of
-   * drawing the child elements and its children's children. 
+   * drawing the child elements and its children's children.
    */
   renderChildElement?(renderer: ProgramDocumentRenderer, child: ProgramElement, index: number): void
 
@@ -80,7 +80,7 @@ export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements P
    * implementation is responsible of drawing the text and respecting props.wordWrap and styles.
    */
   renderChildText?(renderer: ProgramDocumentRenderer, text: TextNode, index: number): void
- 
+
   public get input(): string | undefined {
     return this._data.input
   }

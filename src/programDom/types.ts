@@ -1,9 +1,9 @@
 import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../render'
+import { BlurEvent, FocusEvent } from '../render/focusManager'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { Color } from './styleProps'
-import { BlurEvent, FocusEvent } from '../render/focusManager';
 
 // export abstract class AbstractPropsImpl implements AbstractProps {
 
@@ -64,7 +64,7 @@ export interface StyleProps extends Attrs {
   border: Partial<BorderProps>
 
   /**
-   * It will prevent painting the background so back elements will be visible. IMPORTANT: if true then `bg` property must be undefined. NOTE: to preserve parent's background color, just don't `bg` instead using this. This whould rarely used, probably useful fo rcustom elements that need to manage the rendering 100% their self. 
+   * It will prevent painting the background so back elements will be visible. IMPORTANT: if true then `bg` property must be undefined. NOTE: to preserve parent's background color, just don't `bg` instead using this. This whould rarely used, probably useful fo rcustom elements that need to manage the rendering 100% their self.
    */
   noFill: boolean
 }
@@ -74,7 +74,6 @@ export interface BorderProps extends StyleProps {
 }
 
 export interface ElementProps extends StyleProps {
-
 
   focusable: boolean
   focused: boolean
@@ -141,25 +140,23 @@ export interface ElementProps extends StyleProps {
   onBlur?(e: BlurEvent): void
   onFocus?(e: FocusEvent): void
 
-
   /**
    * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared, the content and border won't be rendered, and implementation is responsible of them.
    */
   render?(renderer: ProgramDocumentRenderer): void
 
   /**
-   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content. 
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content.
    */
   renderContent?(renderer: ProgramDocumentRenderer): void
 
-
   /**
-   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content. 
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content.
    */
   renderBorder?(renderer: ProgramDocumentRenderer): void
 
   /**
-   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses that need custom children drawing method. If declared, children   won't be rendered but the content and border will. The implementation is responsible of drawing the children. 
+   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses that need custom children drawing method. If declared, children   won't be rendered but the content and border will. The implementation is responsible of drawing the children.
    */
   renderChildren?(renderer: ProgramDocumentRenderer): void
 

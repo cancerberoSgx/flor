@@ -114,25 +114,22 @@ export class ProgramDocumentRenderer {
     el._beforeRender()
     this.renderElementWithoutChildren(el)
     el._afterRenderWithoutChildren()
-    if(el.props.renderChildren){
+    if (el.props.renderChildren) {
       el.props.renderChildren(this)
-    }
-    else {
+    } else {
       this.lastAbsLeft = el.absoluteContentLeft,
       this.lastAbsTop = el.absoluteContentTop
       Array.from(el.childNodes).forEach((c, i, a) => {
         if (c instanceof  TextNode) {
-          if(el.props.renderChildText){
+          if (el.props.renderChildText) {
             el.props.renderChildText(this, c, i)
-          }
-          else {
+          } else {
             this.renderText(c, a[i + 1])
           }
         } else if (c instanceof ProgramElement) {
-          if(el.props.renderChildElement){
+          if (el.props.renderChildElement) {
             el.props.renderChildElement(this, c, i)
-          }
-          else {
+          } else {
             this.renderElement(c)
           }
         } else {
@@ -144,7 +141,7 @@ export class ProgramDocumentRenderer {
     el._renderCounter = this.renderCounter ++
     return el
   }
-  
+
   protected renderText(c: TextNode, nextNode: Node) {
     // TODO: correct char width for unicode.
     let s = (c.textContent || '')
@@ -176,29 +173,27 @@ export class ProgramDocumentRenderer {
 
   renderElementWithoutChildren(el: ProgramElement) {
     const attrs: Partial<ElementProps> = { ...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data }
-    if(el.props.render) {
+    if (el.props.render) {
       el.props.render(this)
       return
     }
-    if(el.props.renderContent) {
+    if (el.props.renderContent) {
       el.props.renderContent(this)
-    }
-    else {
-      if(!attrs.noFill){
-          this.setStyle(attrs) // TODO: merge with all ancestors
-          const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
-          const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
-          const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
-          const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
-          for (let i = 0; i < height; i++) {
+    } else {
+      if (!attrs.noFill) {
+        this.setStyle(attrs) // TODO: merge with all ancestors
+        const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
+        const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
+        const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
+        const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
+        for (let i = 0; i < height; i++) {
             this.write(yi + i, xi, this._program.repeat(el.props.ch || this.currentAttrs.ch, width))
           }
-        }
+      }
     }
-    if(el.props.renderBorder) {
+    if (el.props.renderBorder) {
       el.props.renderBorder(this)
-    }
-    else {
+    } else {
       this.drawElementBorder(el, attrs)
     }
   }
@@ -215,28 +210,28 @@ export class ProgramDocumentRenderer {
   }
 
   setStyle(props: PAttrs) {
-    if (props.bg && props.bg !==this.currentAttrs.bg) {
+    if (props.bg && props.bg !== this.currentAttrs.bg) {
       this._program.bg(props.bg)
       // if (this.useBuffer) {
-        this.currentAttrs.bg = props.bg
+      this.currentAttrs.bg = props.bg
       // }
     }
-    if (props.fg && props.fg !==this.currentAttrs.fg) {
+    if (props.fg && props.fg !== this.currentAttrs.fg) {
       this._program.fg(props.fg)
       // if (this.useBuffer) {
-        this.currentAttrs.fg = props.fg
+      this.currentAttrs.fg = props.fg
       // }
     }
-    if (typeof props.invisible!=='undefined'&& props.invisible!==this.currentAttrs.invisible) {
+    if (typeof props.invisible !== 'undefined' && props.invisible !== this.currentAttrs.invisible) {
       this._program.charAttributes('invisible', props.invisible)
       // if (this.useBuffer) {
-        this.currentAttrs.invisible = props.invisible
+      this.currentAttrs.invisible = props.invisible
       // }
     }
-    if (typeof props.bold!=='undefined'&& props.bold!==this.currentAttrs.bold) {
+    if (typeof props.bold !== 'undefined' && props.bold !== this.currentAttrs.bold) {
       this._program.charAttributes('bold', props.bold)
       // if (this.useBuffer) {
-        this.currentAttrs.bold = props.bold
+      this.currentAttrs.bold = props.bold
       // }
     }
 
@@ -254,11 +249,11 @@ export class ProgramDocumentRenderer {
     }
     const type = border.type || BorderStyle.light
     this.setStyle({ ...elProps , ...border })
-    const { xi, xl, yi, yl } = { 
+    const { xi, xl, yi, yl } = {
       xi: el.absoluteLeft,
-      xl: el.absoluteLeft + (elProps.width||el.props.width) ,
+      xl: el.absoluteLeft + (elProps.width || el.props.width) ,
       yi: el.absoluteTop,
-      yl: el.absoluteTop + (elProps.height||el.props.height)
+      yl: el.absoluteTop + (elProps.height || el.props.height)
     }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
