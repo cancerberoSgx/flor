@@ -27,15 +27,15 @@ export class FlorDocument {
   private _renderer: ProgramDocumentRenderer
   private _program: Program = undefined as any
   private _document: ProgramDocument
-  private events: EventManager
+  private _events: EventManager
 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
       this._program = new Program(o)
       installExitKeys(this._program)
     }
-    this.events = new EventManager(this._program)
-    this._document = new ProgramDocument(this.events)
+    this._events = new EventManager(this._program)
+    this._document = new ProgramDocument(this._events)
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this.body = new FlorBody('flor', this._document, this)
@@ -72,6 +72,9 @@ export class FlorDocument {
   get program() {
     return this._program
   }
+  get events() {
+    return this._events
+  }
   public get renderer(): ProgramDocumentRenderer {
     return this._renderer
   }
@@ -79,7 +82,7 @@ export class FlorDocument {
   _debugEl: ProgramElement = undefined as any
   debug(el: ProgramElement) {
     if (!this._debugEl) {
-      this._debugEl = this.create({ top: 10, left: 40, width: 40, height: 20, children: [el.debug()] })
+      this._debugEl = this.create({ fg: 'white', bg: 'black', top: 10, left: 40, width: 40, height: 20, children: [el.debug()] })
     }
     this._debugEl.empty()
     el.debug().split('\n').forEach((l, i) => {

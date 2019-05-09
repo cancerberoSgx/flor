@@ -86,8 +86,8 @@ export class EventManager {
       if (e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
           e.y >= el.absoluteTop && e.y < el.absoluteTop + el.props.height) {
             // debug('onMouse matched!!')
-          const ev = {  ...e, currentTarget: el, target: el, type: name }
-          return notifyListener(listener, ev)
+        const ev = {  ...e, currentTarget: el, target: el, type: name }
+        return notifyListener(listener, ev)
         // if (e.action === 'mouseup' && name === 'click') {
         //   if (notifyListener(listener, { ...ev, type: 'click' })) {
         //     return
@@ -115,9 +115,9 @@ export class EventManager {
         //     el.emit(data.action, data);
         //     break;
         //   }
-        } else {
-          return false
-        }
+      } else {
+        return false
+      }
       // // Just mouseover?
       // if ((data.action === 'mousemove'
       //     || data.action === 'mousedown'
@@ -145,6 +145,15 @@ export class EventManager {
       debug('WARNING: ignoring event listener registration because already registered:', o)
     }
   }
+
+  triggerMouseEvent(e: Partial<ProgramMouseEvent>) {
+    this.onMouse(e as ProgramMouseEvent)
+  }
+
+  triggerKeyEvent(ch: string, e: ProgramKeyEvent) {
+    this.onKeyPress(ch, e)
+  }
+  
 }
 
 function notifyListener<T extends EventTarget= EventTarget, E extends Event<T> = Event<T>>(l: EventListener<T>, ev: RemoveProperties<E, 'stopPropagation'>) {

@@ -3,21 +3,20 @@ import { Flor } from '../../src/jsx/createElement'
 import { color, string } from '../data'
 
 try {
-  const p = <box width={10} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClick={e => {
+  let counter = 0
+  const p = <box width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClick={e => {
     e.currentTarget!.props.bg = color()
-    e.currentTarget!.textContent = string(10)
+    e.currentTarget!.childNodes.item(0)!.textContent='clicked_'+counter++
     if (!e.currentTarget!.props.border) {
       e.currentTarget!.props.border = { type: BorderStyle.double, fg: color() }
     } else {
-      e.currentTarget!.props.border.fg = color()
+      e.currentTarget!.props.border!.fg = color()
     }
     flor.debug(e.currentTarget!)
-    // e.currentTarget!.props.border!.fg = color()
-    debug(e.currentTarget!.props.border)
     flor.renderer.renderElement(le)
   }}>
   text
-  <box>other</box>
+  {/* <box>other</box> */}
   </box>
   const flor = new FlorDocument()
   flor.renderer.program.enableMouse()

@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../../src'
 import { nextTick } from '../../src/util/misc'
-import { createElement, destroyProgram, destroyProgramAndExit, getPerformanceFileName } from '../../src/util/util'
+import { createElement, getPerformanceFileName } from '../../src/util/util'
 import { number } from '../data'
 
 async function main() {
@@ -10,20 +10,20 @@ async function main() {
   let result: any
 
   // renderer =;
-  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true }) }),'buffer_true-debug_false')
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true }), noBuffer: true }),'buffer_true-debug_false')
   data.push({ label: 'buffer_true-debug_false', result })
 
   // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: false }), debug: false });
-  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: false }) }),'buffer_false-debug_false')
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: false }), noBuffer: true }),'buffer_false-debug_false')
   data.push({ label: 'buffer_false-debug_false', result })
 
-// var differ = require('ansi-diff-stream')
-// var diff = differ()
-// // diff.pipe(process.stdout)
+  let differ = require('ansi-diff-stream')
+  let diff = differ()
+  diff.pipe(process.stdout)
 // diff.on('data', c=>process.stdout.write(c))
-//   // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: false }), debug: false });
-//   result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: false, input: diff }), debug: false }),'buffer_false-debug_false-diff_true' )
-//   data.push({label: 'buffer_false-debug_false-diff_true', result});
+  // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: false }), debug: false });
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true, input: diff }),noBuffer: true }),'buffer_true-debug_false-diff_true')
+  data.push({ label: 'buffer_true-debug_false-diff_true', result })
 
   // await test(renderer, 'buffer_false-debug_false');
   // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: true }), debug: true });
@@ -40,7 +40,8 @@ async function main() {
   const f = getPerformanceFileName('renderElement01')
   writeFileSync('spec/performance/logs/' + f, JSON.stringify(data, null, 2))
 
-  destroyProgramAndExit(renderer.program)
+  // destroyProgramAndExit(renderer.program)
+  renderer.destroy()
 }
 
 // (async ()=>{
@@ -54,7 +55,8 @@ function test(renderer: ProgramDocumentRenderer, testLabel: string) {
     let finish = false
     const program = renderer.program
     setTimeout(() => {
-      destroyProgram(program)
+      // destroyProgram(program)
+      renderer.destroy()
       // fps.length=0
       clearInterval(timer)
       finish = true

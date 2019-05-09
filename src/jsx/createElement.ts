@@ -57,16 +57,14 @@ class FlorJsxImpl implements FlorJsx {
       e._component.element = el
       e._component.elementCreated()
     }
-    // if ((e as any)._type === 'string') {
-      el.props.assign({ ...e.props || {}, children: undefined } as any)
-    // }
     Object.keys(e.props || {}).forEach(attr => {
       const val = (e as any).props[attr]
       if (typeof val === 'function') {
         el.addEventListener(attr, val)
+      } else {
+        (el.props as any)[attr] = val
       }
     })
-
     if (e.children) {
       if (Array.isArray(e.children)) {
         e.children.forEach(c => {

@@ -1,4 +1,3 @@
-import { sleep } from 'misc-utils-of-mine-generic'
 import { ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'
@@ -78,14 +77,14 @@ describe('jsx', () => {
 
   it('should render components', async done => {
     class C extends Component<{ name: string, colors: string[] }> {
-        render() {
+      render() {
           return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
             <text top={1}>hello {this.props.name}</text>
             Your colors:
         {this.props.colors.map((c, i) => <text width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</text>)}
           </box>
         }
-      }
+    }
     const app = <C name="seba" colors={['red', 'blue', 'green']}/>
     const { renderer, document } = createProgramRendererDocument()
     const e = Flor.render(app)
@@ -122,19 +121,19 @@ describe('jsx', () => {
   it('should call  elementCreated and elementReady', async done => {
     let elementReady = false, elementCreated = false
     class C extends Component<{ name: string, colors: string[] }> {
-        elementReady() {
+      elementReady() {
           elementReady = true
           Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
             c.props.top = i + 1
           })
         }
-        elementCreated() {
+      elementCreated() {
           elementCreated = true
         }
-        render() {
+      render() {
           return <box><text>hello</text><text>my parent</text><text>will get me</text><text>an empty line</text></box>
         }
-      }
+    }
     const { renderer } = createProgramRendererDocument()
     const e = Flor.render(<C name="seba" colors={['red', 'blue', 'green']} />)
     expect(elementReady).toBe(true)
@@ -151,4 +150,3 @@ an empty line
   })
 
 })
-

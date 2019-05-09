@@ -22,32 +22,20 @@ export interface RendererOptions {
   defaultChar?: string
 }
 
-// const defaultAttrs: Attrs = {
-//   bg: '#1e1e1e',
-//   fg: 'white',
-//   bold: false,
-//   invisible: false,
-//   underline: false,
-//   standout: false,
-//   ch: ' ',
-//   blink: false
-//
-// }
 export class ProgramDocumentRenderer {
 
   private useBuffer: boolean
   private _program: Program
   private buffer: PAttrs[][] = []
-  // private ch: string
   private defaultStyle: Attrs
   private currentAttrs: Attrs
 
   constructor(options: RendererOptions) {
     this._program = options.program || createProgram(options.programOptions)
     this.useBuffer = !options.noBuffer || true
-    // this.ch = options.defaultChar || ' '
     this.defaultStyle = {
       bg: '#1e1e1e',
+      // bg: 'black',
       fg: 'white',
       bold: false,
       invisible: false,
@@ -57,7 +45,6 @@ export class ProgramDocumentRenderer {
       blink: false
     }
     this.currentAttrs = {      ...this.defaultStyle    }
-    // this.bypassingBuffer(() => this.fillAll())
     this.resetStyle()
     this.resetBuffer()
   }
@@ -67,7 +54,6 @@ export class ProgramDocumentRenderer {
   }
 
   destroy() {
-    // this.fillAll()
     this.resetStyle()
     this.resetBuffer()
     destroyProgram(this.program)
@@ -79,8 +65,6 @@ export class ProgramDocumentRenderer {
 
   resetBuffer() {
     if (this.useBuffer) {
-      // this.buffer .length = 0
-      // delete    this.buffer
       this.buffer = array(this._program.rows).map(c => array(this._program.cols).map(c => ({ ...this.currentAttrs })))
     }
   }
@@ -90,8 +74,7 @@ export class ProgramDocumentRenderer {
    */
   printBuffer(linesTrimRight?: boolean) {
     const s =  this.buffer.map(l => l.map(l => l.ch).join('')).join('\n')
-    const r =  linesTrimRight ? trimRightLines(s) : s
-    return r
+    return linesTrimRight ? trimRightLines(s) : s
   }
 
   /**
@@ -144,7 +127,7 @@ export class ProgramDocumentRenderer {
     return el
   }
 
-  private renderText(c: TextNode, nextNode: Node) {
+  protected renderText(c: TextNode, nextNode: Node) {
     const s = c.textContent || ''
     this.write(this.lastAbsTop,this.lastAbsLeft, s)
     // Heads up : if next child is also text, we keep writing on the same line, if not, on a new  line.
@@ -164,8 +147,7 @@ export class ProgramDocumentRenderer {
 
   eraseElement(el: ProgramElement): any {
     this.setStyle(this.defaultStyle)
-    const yi = el.absoluteTop , xi = el.absoluteLeft
-    this.fillRectangle(yi, xi, el.props.height, el.props.width)
+    this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
   }
 
   fillRectangle(top: number, left: number, height: number, width: number, ch= this.currentAttrs.ch) {
@@ -201,8 +183,11 @@ export class ProgramDocumentRenderer {
     }
     const type = border.type || BorderStyle.light
     this.setStyle({ ...el.props , ...border })
-    debug({ ...el.props , ...border }, border)
-    const { xi, xl, yi, yl } = { xi: el.absoluteLeft , xl: el.absoluteLeft + el.props.width , yi: el.absoluteTop , yl: el.absoluteTop + el.props.height  }
+    const { xi, xl, yi, yl } = { xi: el.absoluteLeft,
+      xl: el.absoluteLeft + el.props.width ,
+      yi: el.absoluteTop,
+      yl: el.absoluteTop + el.props.height
+    }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
     this.write(yl - 1, xi, getBoxStyleChar(type, BorderSide.bottomLeft))
