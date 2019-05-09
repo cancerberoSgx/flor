@@ -9,6 +9,23 @@ import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
 
 export class ProgramElement extends Element {
+
+  private static counter = 1
+
+  props: ElementPropsImpl
+
+  /** @internal */
+  _renderCounter: number = -1
+
+  constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
+    super(tagName, ownerDocument)
+    this.internalId = ProgramElement.counter++
+    this.props = new ElementPropsImpl({}, this)
+    this._positionDirty = true
+  }
+
+  readonly internalId: number
+
   /**
    * Called by `Flor.render()` after all children `ProgramElement` are created and appended to this element.
    *
@@ -26,7 +43,7 @@ export class ProgramElement extends Element {
    * @internal
    */
   layout() {
-    if (this.props.layout && this.dirty) {
+    if (this.props.layout && this.positionDirty) {
       layoutChildren({
         el: this, ...this.props.layout
       })
@@ -64,24 +81,11 @@ export class ProgramElement extends Element {
    */
   _beforeRender(): any {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
-      this.layout()
+      if (this.positionDirty) {
+        this.update(true)
+      }
     }
   }
-
-  private static counter = 1
-
-  props: ElementPropsImpl
-
-  /** @internal */
-  _renderCounter: number = -1
-
-  constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
-    super(tagName, ownerDocument)
-    this.internalId = ProgramElement.counter++
-    this.props = new ElementPropsImpl({})
-  }
-
-  readonly internalId: number
 
   get parentNode(): ProgramElement | ProgramDocument {
     return this._parentNode as any
@@ -89,7 +93,7 @@ export class ProgramElement extends Element {
 
   private _absoluteLeft = 0
   get absoluteLeft() {
-    if (this.dirty) {
+    if (this.positionDirty) {
       let x = this.props.left
       let n: ProgramElement | ProgramDocument = this
       while (n.parentNode !== n.ownerDocument) {
@@ -103,7 +107,7 @@ export class ProgramElement extends Element {
 
   private _absoluteTop = 0
   get absoluteTop() {
-    if (this.dirty) {
+    if (this.positionDirty) {
       let y = this.props.top
       let n: ProgramElement | ProgramDocument = this
       while (n.parentNode && n.parentNode !== n.ownerDocument) {
@@ -128,20 +132,34 @@ export class ProgramElement extends Element {
     return this.props.width - (this.props.border ? 1 : 0)
   }
 
-  get dirty() {
-    return this.props.dirty
+  protected _positionDirty: boolean
+  get positionDirty() {
+    return this._positionDirty
   }
-  set dirty(d: boolean) {
-    this.props.dirty = d
-  }
-  update() {
-    if (this.dirty) {
-      this.absoluteLeft
-      this.absoluteTop
-      this.layout()
-      this.dirty = false
+  set positionDirty(d: boolean) {
+    if (d !== this._positionDirty) {
+      this._positionDirty = d
+      if (d) {
+        this.getChildrenElements().forEach(e => {
+          e.positionDirty = true
+        })
+      }
     }
   }
+  
+  protected update(descendants?: boolean) {
+    if (this.positionDirty) {
+      var a = this.absoluteLeft - this.absoluteTop
+      this.layout()
+      this.positionDirty = false
+    }
+    if (descendants) {
+      this.getChildrenElements().forEach(e => {
+        e.update(true)
+      })
+    }
+  }
+
   /**
    * creates a new element and appends it to this element.
    */

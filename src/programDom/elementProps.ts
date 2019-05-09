@@ -10,9 +10,9 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     return this._data.border
   }
   public set border(value: Partial<BorderProps> | undefined) {
-    if(!!this._data.border!==!!value){
-      this.dirty=true
-    }
+    // if(!!this._data.border!==!!value){
+    //   this.owner.positionDirty=true
+    // }
     this._data.border = value
   }
 
@@ -28,7 +28,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   public set width(value: number) {
     if(this._data.width !==value) {
-      this.dirty = true
+      // this.owner.positionDirty = true
       this._data.width = value
     }
   }
@@ -38,7 +38,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   public set height(value: number) {
     if(this._data.height !==value) {
-      this.dirty = true
+      // this.owner.positionDirty = true
       this._data.height = value
     }
   }
@@ -48,7 +48,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   set left(value: number) {
     if(this._data.left !==value) {
-      this.dirty = true
+      this.owner.positionDirty = true
       this._data.left = value
     }
   }
@@ -58,7 +58,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   set top(value: number) {
     if(this._data.top !==value) {
-      this.dirty = true
+      this.owner.positionDirty = true
       this._data.top = value
     }
   }
@@ -68,7 +68,7 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
   }
   public set layout(value: LayoutOptions | undefined) {
     this._data.layout = value
-    this.dirty = true
+    this.owner.positionDirty = true
   }
 
   childrenReady?: () => boolean

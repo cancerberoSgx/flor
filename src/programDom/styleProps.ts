@@ -1,9 +1,10 @@
 import { Attrs, StyleProps } from './types'
+import { ProgramElement } from './programElement';
 
 export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
-  constructor(p: PAttrs) {
+  constructor(p: PAttrs, owner: ProgramElement) {
     this._data = p as any || {}
-    this._dirty = true
+    this.owner = owner
   }
 
   assign(o: T) {
@@ -11,20 +12,13 @@ export class AttrsImpl< T extends PAttrs = PAttrs> implements PAttrs {
   }
 
   protected _data: T
-  private _dirty: boolean;
+  protected owner: ProgramElement
 
   /**
    * The props as plain object
    */
   get data() {
     return this._data
-  }
-
-  public get dirty(): boolean {
-    return this._dirty;
-  }
-  public set dirty(value: boolean) {
-    this._dirty = value;
   }
 
   public get bold(): boolean  | undefined {
