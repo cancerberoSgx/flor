@@ -7,6 +7,8 @@ import { ElementPropsImpl } from './elementProps'
 import { isElement } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
+import { mouseActionNames } from '../declarations/program';
+import { Component } from '../jsx';
 
 export class ProgramElement extends Element {
 
@@ -17,8 +19,16 @@ export class ProgramElement extends Element {
   /** @internal */
   _renderCounter: number = -1
 
+  private _component?: Component
+  /**
+   * Gets the component instance associated with this element, if any.
+   */
+  getComponent<T extends Component = Component>() {
+    return this._component as T|undefined
+  }
   constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
     super(tagName, ownerDocument)
+    this._ownerDocument = ownerDocument
     this.internalId = ProgramElement.counter++
     this.props = new ElementPropsImpl({}, this)
     this._positionDirty = true
@@ -177,11 +187,34 @@ export class ProgramElement extends Element {
     }
   }
 
+  private _focused: boolean | undefined;
+  public get focused(): boolean | undefined {
+    return this._focused;
+  }
+  public set focused(value: boolean | undefined) {
+    this._focused = value
+  //  throw new Error('Not implemented')//TODO: use focusManager
+  }
+ 
   private _getEventName(name: string): string {
     if (['onclick', 'click'].includes(name.toLowerCase())) {
       return 'mouseup'
     }
+    if(['keypress', 'keypressed', 'onkeypressed'].includes(name.toLowerCase())){
+      return 'keypress'
+    }
+    if(name.startsWith('on')){
+      const n = name.substring(2)
+      if(mouseActionNames.includes(n)){
+        return n
+      }
+    }
     return name.toLowerCase()
+  }
+
+  protected _ownerDocument: ProgramDocument
+  get ownerDocument() {
+    return this._ownerDocument  
   }
 
   getChildrenElements() {

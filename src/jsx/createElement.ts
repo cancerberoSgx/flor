@@ -54,7 +54,8 @@ class FlorJsxImpl implements FlorJsx {
     }
     const el = document.createElement(e.type)
     if (isJSXElementImpl(e) && e._component) {
-      e._component.element = el
+      e._component.element = el;
+      (el as any)._component = e._component
       e._component.elementCreated()
     }
     Object.keys(e.props || {}).forEach(attr => {

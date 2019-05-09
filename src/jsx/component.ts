@@ -1,6 +1,6 @@
 import { ProgramElement } from '..'
 
-interface ExtraProps {
+export interface ExtraProps {
   children?: JSX.FlorJsxNode
 }
 
@@ -34,6 +34,11 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   element: ProgramElement | undefined
 
   abstract render(): JSX.FlorJsxNode
+
+
+  protected get program() {
+    return this.element && this.element.ownerDocument.program
+  }
 
 }
 

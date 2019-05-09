@@ -1,8 +1,10 @@
-import { MouseEvent } from '../render'
+import { MouseEvent, KeyEvent } from '../render'
 import { LayoutOptions } from '../util'
 import { isElement } from './elementUtil'
 import { StylePropsImpl } from './styleProps'
 import { BorderProps, ElementProps, Padding } from './types'
+import { ProgramElement } from './programElement';
+import { KeyEventListener, ProgramKeyEvent } from '../declarations/program';
 
 export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> implements Partial<ElementProps> {
 
@@ -107,12 +109,44 @@ export class ElementPropsImpl extends StylePropsImpl<Partial<ElementProps>> impl
     this._data.layout = value
     this.owner.positionDirty = true
   }
+  
+  private _focusable: boolean | undefined;
+  public get focusable(): boolean | undefined {
+    return this._focusable;
+  }
+  public set focusable(value: boolean | undefined) {
+    this._focusable = value;
+  }
 
   childrenReady?: () => boolean
   afterRenderWithoutChildren?: () => boolean
   afterRender?: () => boolean
   beforeRender?: () => boolean
   onClick?(r: MouseEvent): void
+  onKeyPressed?<T extends ProgramElement= ProgramElement>(  e: KeyEvent<T> ):void
+  onMouse?(r: MouseEvent): void
+  onMouseOut?(r: MouseEvent): void
+  onMouseOver?(r: MouseEvent): void
+  onMouseDown?(r: MouseEvent): void
+  onWheelDown?(r: MouseEvent): void
+  onWheelUp?(r: MouseEvent): void
+  onMouseMove?(r: MouseEvent): void
+
+  private _input: string | undefined;
+  public get input(): string | undefined {
+    return this._input;
+  }
+  public set input(value: string | undefined) {
+    this._input = value;
+  }
+
+  private _value: string | undefined;
+  public get value(): string | undefined {
+    return this._value;
+  }
+  public set value(value: string | undefined) {
+    this._value = value;
+  }
 }
 
 // class BorderPropsImpl extends Sts

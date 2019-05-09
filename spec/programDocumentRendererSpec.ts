@@ -1,7 +1,7 @@
 import { tryTo } from 'misc-utils-of-mine-generic'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 import { BorderStyle } from '../src/util/border'
-import { createElement } from '../src/util/util'
+import { createElement, installExitKeys } from '../src/util/util'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 
@@ -11,16 +11,8 @@ describe('programDocumentRenderer', () => {
   let renderer: ProgramDocumentRenderer
 
   beforeEach(() => {
-    program = new Program({
-    })
-    program.key(['q', 'escape', 'C-c'], function() {
-      program.showCursor()
-      program.disableMouse()
-      program.normalBuffer()
-      program.reset()
-      program.destroy()
-      process.exit(0)
-    })
+    program = new Program()
+    installExitKeys(program)
     program.reset()
     doc = new ProgramDocument()
     renderer = new ProgramDocumentRenderer({ program })

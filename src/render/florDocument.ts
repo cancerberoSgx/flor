@@ -6,6 +6,7 @@ import { FullProps, isElement, ProgramDocument, ProgramElement } from '../progra
 import { installExitKeys } from '../util/util'
 import { EventManager } from './eventManager'
 import { ProgramDocumentRenderer, RendererOptions } from './renderer'
+import { FocusManager } from './focusManager';
 
 interface FlorDocumentOptions extends ProgramOptions, RendererOptions {
   program?: Program
@@ -19,15 +20,11 @@ flor.create({bg: 'red', fg: 'black', border: 'round', children: []})
 ```
  */
 export class FlorDocument {
-  // body: FlorBody
-  static DOCUMENT_TYPE_NODE = Node.DOCUMENT_TYPE_NODE
-  static TEXT_NODE = Node.TEXT_NODE
-  static ELEMENT_NODE = Node.ELEMENT_NODE
-
   private _renderer: ProgramDocumentRenderer
   private _program: Program = undefined as any
   private _document: ProgramDocument
   private _events: EventManager
+  private _focus: FocusManager
 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
@@ -38,10 +35,7 @@ export class FlorDocument {
     this._document = new ProgramDocument(this._events)
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
-  }
-
-  get body() {
-    return this.document.body
+    this._focus = new FocusManager(this._events, this._document)
   }
 
   createElement(t: string) {
@@ -85,6 +79,14 @@ export class FlorDocument {
     return this._events
   }
 
+  get body() {
+    return this.document.body
+  }
+
+  get focus() {
+    return this._focus
+  }
+  
   get renderer(): ProgramDocumentRenderer {
     return this._renderer
   }
@@ -95,14 +97,24 @@ export class FlorDocument {
   }
 
   private _debugEl: ProgramElement = undefined as any
-  debug(el: ProgramElement, props = {}) {
+  debug(el: ProgramElement|string, props = {}) {
     if (!this._debugEl) {
-      this._debugEl = this.create({   top: 10, left: 40, width: 40, height: 20, ...props, children: [el.debug()] })
+      this._debugEl = this.create({   top: 10, left: 40, width: 40, height: 20, ...props, children: [] })
     }
     this._debugEl.empty()
-    el.debug().split('\n').forEach((l, i) => {
-      this._debugEl.appendChild(this.create({ top: i, left: 0, children: [l] }))
-    })
+    if(typeof el==='string'){
+      this._debugEl.appendChild(this.create({ top: 0, left: 0, children: [el] }))
+    }
+    else {
+      el.debug().split('\n').forEach((l, i) => {
+        this._debugEl.appendChild(this.create({ top: i, left: 0, children: [l] }))
+      })
+    }
     this.renderer.renderElement(this._debugEl)
   }
+
+  destroy(): any {
+    this.renderer.destroy()
+  }
+
 }

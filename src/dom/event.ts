@@ -12,15 +12,16 @@ interface AddEventListenerOptions extends EventListenerOptions {
   passive?: boolean
 }
 
-export type EventListener <T extends EventTarget = EventTarget>= (evt: Event<T>) => void
+export type EventListener <T extends EventTarget = EventTarget>= (evt: Event<T>) => void|boolean
 
-export interface Event<T extends EventTarget = EventTarget> {
+export interface Event<T extends EventTarget = EventTarget> extends StopPropagation {
   readonly currentTarget: T | null
   readonly target: T | null
   readonly type: string
+}
+export interface StopPropagation {
   stopPropagation(): void
 }
-
 export class EventTarget   {
 
   addEventListener(type: string, listener: EventListener | null, options?: boolean | AddEventListenerOptions): void {

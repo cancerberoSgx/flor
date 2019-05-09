@@ -3,14 +3,24 @@ import { EventManager, RegisteredEventListener } from '../render'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
+import { BorderStyle } from '../util';
 
 export class ProgramDocument extends Document {
 
   body: ProgramElement
 
-  constructor(private events?: EventManager) {
+  _getEventManager() {
+    return this.events
+  }
+  get program() {
+    return this._getEventManager() && this._getEventManager()!.program
+  }
+  constructor(protected events?: EventManager) {
     super()
     this.body =  this.createElement('body')
+    if(this.program){
+      this.body.props.assign({top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white', border: {type: BorderStyle.round}})
+    }
     this.appendChild(this.body)
   }
 

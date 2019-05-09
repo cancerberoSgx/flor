@@ -5,6 +5,7 @@
 import { EventEmitter } from 'events';
 import { Readable, Writable } from 'stream';
 import { TPut } from './tput';
+import { enumKeys } from 'misc-utils-of-mine-typescript';
 export interface ProgramMouseEvent extends UIEvent {
   x: number
   y: number
@@ -17,7 +18,14 @@ export interface ProgramMouseEvent extends UIEvent {
 
 export interface ProgramKeyEvent extends UIEvent {
   full: string
+  /**
+   * The key value, like 'a', '\0x13', etc
+   */
   sequence: string
+  /**
+   * The name of the key, like 'a', 'enter', 'tab', etc
+   */
+  name: string
 }
 
 // interface UIEvent {
@@ -42,6 +50,8 @@ export enum MouseAction {
 'mousemove' = 'mousemove',
 'click' = 'click',
 }
+
+export const mouseActionNames = enumKeys(MouseAction)
 
 /**
 'resize': Received on screen resize.
@@ -151,7 +161,6 @@ type ProgramResponseCallback = (this: Program, err: Error, data: ProgramResponse
 // }
 
 export interface UIEvent {
-  name: string
   shift: boolean
   ctrl: boolean
   meta: boolean
