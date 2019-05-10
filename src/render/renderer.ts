@@ -270,9 +270,9 @@ export class ProgramDocumentRenderer {
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade })
-    if (typeof preventChildrenCascadeOriginal !== 'undefined') {
-        options.preventChildrenCascade = preventChildrenCascadeOriginal
-      }
+    // if (typeof preventChildrenCascadeOriginal !== 'undefined') {
+    //     options.preventChildrenCascade = preventChildrenCascadeOriginal
+    //   }
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
@@ -353,22 +353,40 @@ export class ProgramDocumentRenderer {
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs) // TODO: merge with all ancestors ? or there should bealready merged ? 
-        const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
-        const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
+        let yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
+        let xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
         let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
         let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
-        debugger
+        // let y0 = yi
         if(isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow!=='visible') {
           
           height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop : height
-          attrs.height=height
           
 
           width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft : width
-          attrs.width=width
+          
+          // y0 = el.parentNode.absoluteContentTop>
+
+
+          // xi = el.parentNode.absoluteContentLeft
+          if(xi < el.parentNode.absoluteContentLeft){
+            width = width - (el.parentNode.absoluteContentLeft - xi)
+            xi = el.parentNode.absoluteContentLeft;
+            (attrs as any).xi = xi
+          }
+          if(yi < el.parentNode.absoluteContentTop){
+            height = height - (el.parentNode.absoluteContentTop - yi)
+            yi = el.parentNode.absoluteContentTop;
+            (attrs as any).yi = yi
+          }
+          attrs.height=height
+          attrs.width=width;
+      // xi =  ?  xi + el.parentNode.absoluteContentLeft - xi : xi
         }
         for (let i = 0; i < height; i++) {
-          this.write(yi + i, xi, this._program.repeat(el.props.ch || this._currentAttrs.ch, width))
+          // if(yi+i>=y0  ){
+            this.write(yi + i, xi, this._program.repeat(el.props.ch || this._currentAttrs.ch, width))
+          // }
         }
       }
     }
@@ -407,10 +425,10 @@ export class ProgramDocumentRenderer {
     const type = border.type || BorderStyle.light
     this.setAttrs({ ...elProps, ...border })
     const { xi, xl, yi, yl } = {
-      xi: el.absoluteLeft,
-      xl: el.absoluteLeft + (elProps.width || el.props.width),
-      yi: el.absoluteTop,
-      yl: el.absoluteTop + (elProps.height || el.props.height)
+      xi: (elProps as any).xi ||el.absoluteLeft,
+      xl: ((elProps as any).xi||el.absoluteLeft) + (elProps.width || el.props.width),
+      yi: (elProps as any).yi || el.absoluteTop,
+      yl: ((elProps as any).yi||el.absoluteTop) + (elProps.height || el.props.height)
     }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
