@@ -1,7 +1,6 @@
 import { ProgramElement } from '../..'
-import { isElement } from '../../programDom/elementUtil'
-import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout';
-import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms';
+import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout'
+import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms'
 
 export interface LayoutOptions {
   /**

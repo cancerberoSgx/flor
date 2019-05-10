@@ -50,7 +50,7 @@ describe('input component', () => {
     test(el, flor)
     done()
   })
-  
+
   it('plain input should grab user input', async done => {
     const p = input({ top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => flor.debug('*value===' + e.value + '*') , document: flor.document })
     flor.render(p)
@@ -59,4 +59,3 @@ describe('input component', () => {
     done()
   })
 })
-

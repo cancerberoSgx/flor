@@ -22,6 +22,19 @@ export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements P
     this._data.focusable = value
   }
 
+  public get preventSiblingCascade(): boolean | undefined {
+    return this._data.preventSiblingCascade
+  }
+  public set preventSiblingCascade(value: boolean | undefined) {
+    this._data.preventSiblingCascade = value
+  }
+  public get preventChildrenCascade(): boolean | undefined {
+    return this._data.preventChildrenCascade
+  }
+  public set preventChildrenCascade(value: boolean | undefined) {
+    this._data.preventChildrenCascade = value
+  }
+
   childrenReady?(): boolean
   afterRenderWithoutChildren?(): boolean
   afterRender?(): boolean

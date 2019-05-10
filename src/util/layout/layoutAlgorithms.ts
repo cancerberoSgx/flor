@@ -1,6 +1,6 @@
+import { LayoutOptions } from '.'
 import { ProgramElement } from '../..'
 import { isElement } from '../../programDom/elementUtil'
-import { LayoutOptions } from '.';
 
 const layout = require('layout')
 
@@ -28,6 +28,6 @@ export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
   }
 }
 
-export function isLayoutAlgorithm(s: string){
+export function isLayoutAlgorithm(s: string) {
   return ['binary-tree', 'alt-diagonal', 'diagonal', 'left-right', 'top-down'].includes(s)
 }

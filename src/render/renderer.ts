@@ -24,13 +24,13 @@ export interface RendererOptions {
 }
 
 /**
- * Responsibilities: 
+ * Responsibilities:
  *
- *  * Knows how to render an element's content to the screen using a [[Program]] instance. 
+ *  * Knows how to render an element's content to the screen using a [[Program]] instance.
  *   * fill the element with appropriate attrs
- *   * draw element's borders, 
- *   * draw element's children (text nodes and Elements), 
- *   * in the proper order. 
+ *   * draw element's borders,
+ *   * draw element's children (text nodes and Elements),
+ *   * in the proper order.
  *   * erase the element
  *  * Apply and keep track of elements character attributes
  *  *  implements the attrs cascading policy
@@ -41,12 +41,12 @@ export class ProgramDocumentRenderer {
   private useBuffer: boolean
   private _program: Program
   private buffer: PAttrs[][] = []
-  private _defaultAttrs: Attrs;
-  private _currentAttrs: Attrs;
-  // private _defaultRenderOptions: RenderElementOptions = {
-  //   resetPreviousSiblingAttrs: false,
-  //   preventCascade: false
-  // }
+  private _defaultAttrs: Attrs
+  private _currentAttrs: Attrs
+  private _defaultRenderOptions: RenderElementOptions = {
+    preventSiblingCascade: true,
+    preventChildrenCascade: false
+  }
 
   constructor(options: RendererOptions) {
     this._program = options.program || createProgram(options.programOptions)
@@ -75,7 +75,7 @@ export class ProgramDocumentRenderer {
 
   /**
    * Destroys this renderer instance, the program associated with it and, reset's the internal buffer and
-   * styles. 
+   * styles.
    */
   destroy() {
     this.resetAttrs()
@@ -83,7 +83,7 @@ export class ProgramDocumentRenderer {
     destroyProgram(this.program)
   }
 
-  /** 
+  /**
    * Fill the entire screen with given character and current attrs.
    */
   fillAll(ch = ' ') {
@@ -119,7 +119,7 @@ export class ProgramDocumentRenderer {
   }
 
   /**
-   * Writes given string at given coordinates. 
+   * Writes given string at given coordinates.
    *
    * IMPORTANT: all writings to program.output must be performed using this method, otherwise some features or
    * tests could fail.
@@ -142,16 +142,22 @@ export class ProgramDocumentRenderer {
 
   /**
    * Main public function to render given element in the screen. Element's props character attributes will me
-   * merged with [[currentAttrs]] and that will be used to render the element's pixels. 
+   * merged with [[currentAttrs]] and that will be used to render the element's pixels.
    */
-  renderElement(el: ProgramElement 
-    // , options: RenderElementOptions&{__onRecursion?: boolean} = this._defaultRenderOptions
+  renderElement(el: ProgramElement
+    , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions
     ) {
     el._beforeRender()
-    // if (options.preventCascade||!options.__onRecursion) {
+    Object.assign(options, {
+      preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
+      preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade })
+    // if(options.preventChildrenCascade){
+    //   attrs.preventChildrenCascade = true
+    // }
+    // if (options.preventChildrenCascade&&options.preventSiblingCascade||!options.__onRecursion) {
     //   this.resetAttrs()
     // }
-    this.renderElementWithoutChildren(el)
+    this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
@@ -160,7 +166,7 @@ export class ProgramDocumentRenderer {
       this.lastAbsTop = el.absoluteContentTop
       // const parentAttrs = {...this._currentAttrs}
       Array.from(el.childNodes).forEach((c, i, a) => {
-        // if(options.resetPreviousSiblingAttrs) {
+        // if(options.preventSiblingCascade) {
         //   this.currentAttrs = {...parentAttrs}
         // }
         if (c instanceof TextNode) {
@@ -173,7 +179,7 @@ export class ProgramDocumentRenderer {
           if (el.props.renderChildElement) {
             el.props.renderChildElement(this, c, i)
           } else {
-            this.renderElement(c)//, {...options, __onRecursion: true})
+            this.renderElement(c, { ...options, __onRecursion: true })
           }
         } else {
           debug('Element type invalid: ' + inspect(c))
@@ -215,10 +221,19 @@ export class ProgramDocumentRenderer {
   }
 
   /**
-   * Renders just the content area of this element and its borders, without children elements or text. 
+   * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement) {
-    const attrs: Partial<ElementProps> = { ...isElement(el.parentNode) ? el.parentNode.props.data : {}, ...el.props.data }
+  renderElementWithoutChildren(el: ProgramElement  , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions) {
+
+    const attrs: Partial<ElementProps> =  {
+      // ...!options.preventSiblingCascade ? this._currentAttrs : {},
+      ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
+      ...!options.preventSiblingCascade ? this._currentAttrs : {},
+      ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data : {}) : {},
+      // ... options.preventChildrenCascade===true ? {preventChildrenCascade: true} : {},
+      ...el.props.data
+    }
+
     if (el.props.render) {
       el.props.render(this)
       return
@@ -253,7 +268,7 @@ export class ProgramDocumentRenderer {
   }
 
   /**
-   * Writes given [[ch]] with [[currentAttrs]] in all pixels of given rectangle. 
+   * Writes given [[ch]] with [[currentAttrs]] in all pixels of given rectangle.
    */
   fillRectangle(top: number, left: number, height: number, width: number, ch = this._currentAttrs.ch) {
     for (let i = 0; i < height; i++) {
@@ -263,7 +278,7 @@ export class ProgramDocumentRenderer {
 
   /**
    * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
-   * only applied if not falsy. Boolean properties are applied only if not undefined. 
+   * only applied if not falsy. Boolean properties are applied only if not undefined.
    */
   setAttrs(props: PAttrs) {
     if (props.bg && props.bg !== this._currentAttrs.bg) {
@@ -282,21 +297,21 @@ export class ProgramDocumentRenderer {
       this._program.charAttributes('bold', props.bold)
       this._currentAttrs.bold = props.bold
     }
-    // if (typeof props.blink !== 'undefined' && props.blink !== this._currentAttrs.blink) {
-    //   this._program.charAttributes('blink', props.blink)
-    //   this._currentAttrs.blink = props.blink
-    // }
-    // if (typeof props.underline !== 'undefined' && props.underline !== this._currentAttrs.underline) {
-    //   this._program.charAttributes('underline', props.underline)
-    //   this._currentAttrs.underline = props.underline
-    // }
-    // if (typeof props.standout !== 'undefined' && props.standout !== this._currentAttrs.standout) {
-    //   this._program.charAttributes('standout', props.standout)
-    //   this._currentAttrs.standout = props.standout
-    // }
-    // if (typeof props.ch !== 'undefined' && props.ch.length && props.ch !== this._currentAttrs.ch) {
-    //   this._currentAttrs.ch = props.ch[0]
-    // }
+    if (typeof props.blink !== 'undefined' && props.blink !== this._currentAttrs.blink) {
+      this._program.charAttributes('blink', props.blink)
+      this._currentAttrs.blink = props.blink
+    }
+    if (typeof props.underline !== 'undefined' && props.underline !== this._currentAttrs.underline) {
+      this._program.charAttributes('underline', props.underline)
+      this._currentAttrs.underline = props.underline
+    }
+    if (typeof props.standout !== 'undefined' && props.standout !== this._currentAttrs.standout) {
+      this._program.charAttributes('standout', props.standout)
+      this._currentAttrs.standout = props.standout
+    }
+    if (typeof props.ch !== 'undefined' && props.ch.length && props.ch !== this._currentAttrs.ch) {
+      this._currentAttrs.ch = props.ch[0]
+    }
   }
 
   /**
@@ -341,10 +356,10 @@ export class ProgramDocumentRenderer {
    * Default character attributes and 'ch' string to fill.
    */
   public get defaultAttrs(): Attrs {
-    return this._defaultAttrs;
+    return this._defaultAttrs
   }
   public set defaultAttrs(value: Attrs) {
-    this._defaultAttrs = value;
+    this._defaultAttrs = value
   }
 
   /**
@@ -353,18 +368,18 @@ export class ProgramDocumentRenderer {
    * programmatically, for example, before rendering children or siblings, etc.
    */
   public get currentAttrs(): Attrs {
-    return this._currentAttrs;
+    return this._currentAttrs
   }
   public set currentAttrs(value: Attrs) {
-    this._currentAttrs = value;
+    this._currentAttrs = value
   }
 }
 
 interface RenderElementOptions {
   /**
    * If true, given element's props attrs will be merged with [[defaultAttrs]] so any value of
-   * [[currentAttrs]] will be ignored and lost. 
+   * [[currentAttrs]] will be ignored and lost.
    */
-  preventCascade?: boolean
-  resetPreviousSiblingAttrs?: boolean
+  preventChildrenCascade?: boolean
+  preventSiblingCascade?: boolean
 }

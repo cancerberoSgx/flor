@@ -35,7 +35,7 @@ export interface MouseEvent<T extends ProgramElement= ProgramElement> extends Ab
 }
 
 /**
- * Manager class responsible of registering and dispatching keyboard and mouse events. 
+ * Manager class responsible of registering and dispatching keyboard and mouse events.
  */
 export class EventManager {
 
@@ -142,10 +142,10 @@ export class EventManager {
   private mouseListeners: RegisteredEventListener[] = []
   private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
   addKeyListener(l: KeyListener) {
-  if (!this.keyListeners.find(k => k.listener === l)) {
+    if (!this.keyListeners.find(k => k.listener === l)) {
     this.keyListeners.push({ name: 'keypress', listener: l  })
   }
-}
+  }
   _isMouseEventTarget(e: ProgramMouseEvent, el: ProgramElement) {
     return e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
       e.y >= el.absoluteTop && e.y < el.absoluteTop + el.props.height

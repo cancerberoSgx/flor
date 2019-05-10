@@ -1,18 +1,18 @@
-import { merge } from 'misc-utils-of-mine-generic';
-import { ProgramElement } from '../..';
-import { isElement } from '../../programDom/elementUtil';
-const justifiedLayout = require('justified-layout');
-import { LayoutOptions } from './layout';
+import { merge } from 'misc-utils-of-mine-generic'
+import { ProgramElement } from '../..'
+import { isElement } from '../../programDom/elementUtil'
+import { LayoutOptions } from './layout'
+const justifiedLayout = require('justified-layout')
 export function handleJustifiedLayout(o: LayoutOptions & {
   el: ProgramElement;
 }) {
-  const children = Array.from(o.el.childNodes).filter(isElement);
+  const children = Array.from(o.el.childNodes).filter(isElement)
   const data = children.map(c => ({
     top: c.props.top,
     left: c.props.left,
     width: c.props.width || 1,
     height: c.props.height || 1
-  }));
+  }))
   const def = {
     containerWidth: o.el.contentWidth,
     containerHeight: o.el.contentHeight,
@@ -25,22 +25,22 @@ export function handleJustifiedLayout(o: LayoutOptions & {
       bottom: 0,
       left: 0
     }
-  };
+  }
   const mandatory = {
     containerWidth: o.el.props.width,
     containerHeight: o.el.props.height
-  };
-  const options = merge(true, true, {}, def, o.justifiedLayout || {}, mandatory);
-  const result = justifiedLayout(data, options) as JustifiedLayoutResult;
+  }
+  const options = merge(true, true, {}, def, o.justifiedLayout || {}, mandatory)
+  const result = justifiedLayout(data, options) as JustifiedLayoutResult
   if (result && result.boxes) {
     if (result.boxes.length !== children.length) {
     }
     children.forEach((c, i) => {
-      const r = result.boxes[i];
+      const r = result.boxes[i]
       if (r) {
-        c.props.assign({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) });
+        c.props.assign({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) })
       }
-    });
+    })
   }
 }
 /**
@@ -56,7 +56,7 @@ export interface JustifiedLayoutOptions {
     right?: number;
     bottom?: number;
     left?: number;
-  };
+  }
   /**
    *  Provide a single integer to apply spacing both horizontally and vertically or provide an object to
    *  apply individual values to each axis, like this:
@@ -64,35 +64,35 @@ export interface JustifiedLayoutOptions {
   boxSpacing?: {
     horizontal?: number;
     vertical?: number;
-  };
+  }
   /**
    * It's called a target because row height is the lever we use in order to fit everything in nicely. The
    * algorithm will get as close to the target row height as it can.
    *
    * **IMPORTANT** by default is setted to half element's height, but if many children should be adjust.
    */
-  targetRowHeight?: number;
+  targetRowHeight?: number
   /**
    * Will stop adding rows at this number regardless of how many items still need to be laid out.
    */
-  maxNumRows?: number;
+  maxNumRows?: number
   /**
    * If you'd like to insert a full width box every n rows you can specify it with this parameter. The box
    * on that row will ignore the targetRowHeight, make itself as wide as containerWidth - containerPadding
    * and be as tall as its aspect ratio defines. It'll only happen if that item has an aspect ratio >= 1.
    * Best to have a look at the examples to see what this does. Default : false.
    */
-  fullWidthBreakoutRowCadence?: boolean;
+  fullWidthBreakoutRowCadence?: boolean
   /**
    * How far row heights can stray from targetRowHeight. 0 would force rows to be the targetRowHeight
    * exactly and would likely make it impossible to justify. The value must be between 0 and 1. Default
    * value:   0.25.
    */
-  targetRowHeightTolerance?: number;
+  targetRowHeightTolerance?: number
   /**
   Provide an aspect ratio here to return everything in that aspect ratio. Makes the values in your input array irrelevant. The length of the array remains relevant. default value: false.
    */
-  forceAspectRatio?: boolean | number;
+  forceAspectRatio?: boolean | number
 }
 interface JustifiedLayoutResult {
   boxes: {
@@ -101,7 +101,7 @@ interface JustifiedLayoutResult {
     width: number;
     height: number;
     left: number;
-  }[];
-  containerHeight: number;
-  widowCount: number;
+  }[]
+  containerHeight: number
+  widowCount: number
 }

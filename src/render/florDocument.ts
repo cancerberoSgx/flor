@@ -11,7 +11,7 @@ interface FlorDocumentOptions extends ProgramOptions, RendererOptions {
   program?: Program
 }
 /**
- * Main entry point for the library. When calling `new FlorDocument()`, a new [[Program]] instance is created along with a new [[ProgramDocumentRenderer]], [[ProgramDocument]], [[EventManager]] and [[FocusManager]]. 
+ * Main entry point for the library. When calling `new FlorDocument()`, a new [[Program]] instance is created along with a new [[ProgramDocumentRenderer]], [[ProgramDocument]], [[EventManager]] and [[FocusManager]].
 
 Examples:
 ```
@@ -42,7 +42,7 @@ export class FlorDocument {
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
-    this.body.props.assign({height: this.program.rows, width: this.program.cols, top: 0, left: 0})
+    this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._document._setManagers(this)
   }
 
@@ -81,7 +81,7 @@ export class FlorDocument {
   }
 
   /**
-   * Current [[ProgramDocument]] instance. 
+   * Current [[ProgramDocument]] instance.
    */
   get document() {
     return this._document
@@ -139,7 +139,7 @@ export class FlorDocument {
 
   private _debugEl: ProgramElement | undefined
   /**
-   * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside. 
+   * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
   debug(el: ProgramElement | string, props: Partial<ElementProps> & {hideTimeout?: number} = {}) {
     if (!this._debugEl) {
@@ -165,7 +165,7 @@ export class FlorDocument {
   }
 
   /**
-   * Destroys the program. 
+   * Destroys the program.
    */
   destroy(): any {
     this.renderer.destroy()

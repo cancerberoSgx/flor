@@ -8,7 +8,7 @@ import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
 import { isElement } from './elementUtil'
 import { ProgramDocument } from './programDocument'
-import { Attrs, ElementProps, FullProps } from './types'
+import { FullProps } from './types'
 
 export class ProgramElement extends Element {
 
@@ -231,7 +231,7 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * Returns a XML like string representation of this element instance. 
+   * Returns a XML like string representation of this element instance.
    */
   debug(o: DebugOptions = { level: 0 }): string {
     return `${indent(o.level)}<${this.tagName} ${

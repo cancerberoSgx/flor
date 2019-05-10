@@ -3,9 +3,9 @@ import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 import { BorderStyle } from '../src/util/border'
 import { createElement, installExitKeys } from '../src/util/util'
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
-describe('programDocumentRenderer', () => {
+describe('renderer', () => {
   let program: Program
   let doc: ProgramDocument
   let renderer: ProgramDocumentRenderer
@@ -167,4 +167,5 @@ describe('programDocumentRenderer', () => {
 `)
     done()
   })
+
 })

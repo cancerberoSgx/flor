@@ -78,6 +78,9 @@ export interface ElementProps extends StyleProps {
   focusable: boolean
   focused: boolean
 
+  preventChildrenCascade: boolean
+  preventSiblingCascade: boolean
+
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
