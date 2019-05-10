@@ -1,7 +1,9 @@
 
 ## TODO
 
- * scrollable
+ * scrollable.Should be an element and should not have muh impact on the renderer. 
+
+ * we are not using Node.attributes - we should make attributes===props
  
  * when look up for mouse event target - we can associate the element in the renderer buffer and so each visible pixel has its element and the lookup is fastest
 

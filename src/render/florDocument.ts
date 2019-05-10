@@ -16,7 +16,7 @@ interface FlorDocumentOptions extends ProgramOptions, RendererOptions {
 Examples:
 ```
 const flor = new FlorDocument({})
-const mainBox = flor.create({bg: 'red', fg: 'black', left: 0, top: 0, width: .5, height: .5})
+const mainBox = flor.create({bg: 'red', fg: 'black', left: 0, top: 0, width: .5, height: .5, onClick={e=>flor.debug('Hello world')}})
 ```
 
 ```

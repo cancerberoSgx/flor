@@ -22,8 +22,8 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   elementCreated() {}
 
   /**
-   * Called from `Flor.render` when [[element]] was is ready, this is with its attributes and children
-   * initialized and rendered. Take into account that perhaps the element is not yet attached to any document.
+   * Called from `Flor.render` when [[element]] is ready, this is, with its attributes and children
+   * initialized and rendered as [[ProgramElement]]s. 
    *
    * @internal
    */

@@ -6,7 +6,14 @@ import { StylePropsImpl } from './styleProps'
 import { ElementProps } from './types'
 
 export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements Partial<ElementProps> {
-
+ 
+  public get overflow(): 'visible' | 'scroll' | 'hidden' | undefined {
+    return this._data.overflow;
+  }
+  public set overflow(value: 'visible' | 'scroll' | 'hidden' | undefined) {
+    this._data.overflow = value;
+  }
+  
   public get focused(): boolean | undefined {
     return this._data.focused
   }

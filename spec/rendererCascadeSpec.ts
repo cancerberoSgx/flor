@@ -161,11 +161,11 @@ describe('props cascade', () => {
         preventSiblingCascade: false,
         preventChildrenCascade: true, // need to re-declare : it won't inherits because of itself
         children: [
-        {// this child won't inherits from parent
-          top: 1, left: 1, width: 8, height: 6, ch: '_', border: { type: BorderStyle.round }},
-        { // this child will inherit from sibling
-          top: 2, left: 12, width: 7, height: 5}
-      ]},
+          {// this child won't inherits from parent
+            top: 1, left: 1, width: 8, height: 6, ch: '_', border: { type: BorderStyle.round }},
+          { // this child will inherit from sibling
+            top: 2, left: 12, width: 7, height: 5}
+        ]},
       { // This children should not inertia from parent nor from sibling  but it is (ch==='p') - preventChildrenCascade:true is problematic because it prevent itself to propagate... TODO
         top: 12, left: 2, width: 31, height: 7, preventChildrenCascade: false,     preventSiblingCascade: false,  border: { type: BorderStyle.singleRareCorners }, children: [
           {// inherits form parent

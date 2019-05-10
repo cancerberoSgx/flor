@@ -24,8 +24,53 @@ export interface RendererOptions {
 }
 
 /**
+
+# Property Propagation
+
+See spec/rendererCascadeSpec.ts
+
+There are two modes in which properties can be propagated across the element's document: 
+
+ * from parent to children, or 
+ * from sibling to next sibling. 
+
+This behavior can be customized using [[renderElement]] options parameter or using Element's [[preventChildrenCascade]] and [[preventSiblingCascade]] properties in element definitions. This means that you can have different policies declared for different fragments of the document is needed. 
+
+Below are the different behaviors supported currently: 
+
+## `{  preventChildrenCascade: false,  preventSiblingCascade: true  } `
+
+This is the default behavior. Properties are propagated like in HTML/CSS, only from parent to children, never from sibling to next sibling. This configuration is declared:
+
+## `{ preventChildrenCascade: false,  preventSiblingCascade: false }`
+
+If both are false properties will be propagated both from parent to children and from sibling to next sibling. The base props for an element will be the mix between its parent's and its previous sibling's. The parent's has priority and of course element's own property declarations will override any of these. 
+
+## `{ preventChildrenCascade: true,  preventSiblingCascade: false }`
+
+Then base props for an element will be [[currentAttrs]], this is, the state of the attrs that previous siblings (and descendants) leave in the renderer instance. If the previous sibling declared a border or background, then the next sibling will have that border or background by default. 
+
+## `{ preventChildrenCascade: true,  preventSiblingCascade: true }`
+   * if both If [[preventChildrenCascade]] and [[[preventSiblingCascade]] are true, then there will be no property propagation at all. The base props for an element will always be [[defaultAttrs]] and this means elements will always need to declare **all** its properties explicitly.
+
+ */
+interface RenderElementOptions {
+  /**
+   * Default value is `false`. in which case, children inherits its parent properties, declared or not declared. If `true`, children won't inherits parent's properties. See [[RenderElementOptions]] description for details..
+   */
+  preventChildrenCascade?: boolean
+  /**
+   * Default value: `true` in which an element's properties are totally independent on the properties of its siblings. If `false`, properties defined by previous siblings or their descendants will be propagated to the element. See [[RenderElementOptions]] description for details.
+   * 
+   */
+  preventSiblingCascade?: boolean
+}
+
+
+/**
  * Responsibilities:
  *
+ *  * implements property propagation through elements in the document. See [[RenderElementOptions]].
  *  * Knows how to render an element's content to the screen using a [[Program]] instance.
  *   * fill the element with appropriate attrs
  *   * draw element's borders,
@@ -140,6 +185,79 @@ export class ProgramDocumentRenderer {
   private lastAbsTop: number = 0
   private renderCounter = 0
 
+
+
+  /**
+   * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
+   * only applied if not falsy. Boolean properties are applied only if not undefined.
+   */
+  setAttrs(props: PAttrs) {
+    if (props.bg && props.bg !== this._currentAttrs.bg) {
+      this._program.bg(props.bg)
+      this._currentAttrs.bg = props.bg
+    }
+    if (props.fg && props.fg !== this._currentAttrs.fg) {
+      this._program.fg(props.fg)
+      this._currentAttrs.fg = props.fg
+    }
+    if (typeof props.invisible !== 'undefined' && props.invisible !== this._currentAttrs.invisible) {
+      this._program.charAttributes('invisible', props.invisible)
+      this._currentAttrs.invisible = props.invisible
+    }
+    if (typeof props.bold !== 'undefined' && props.bold !== this._currentAttrs.bold) {
+      this._program.charAttributes('bold', props.bold)
+      this._currentAttrs.bold = props.bold
+    }
+    if (typeof props.blink !== 'undefined' && props.blink !== this._currentAttrs.blink) {
+      this._program.charAttributes('blink', props.blink)
+      this._currentAttrs.blink = props.blink
+    }
+    if (typeof props.underline !== 'undefined' && props.underline !== this._currentAttrs.underline) {
+      this._program.charAttributes('underline', props.underline)
+      this._currentAttrs.underline = props.underline
+    }
+    if (typeof props.standout !== 'undefined' && props.standout !== this._currentAttrs.standout) {
+      this._program.charAttributes('standout', props.standout)
+      this._currentAttrs.standout = props.standout
+    }
+    if (typeof props.ch !== 'undefined' && props.ch.length && props.ch !== this._currentAttrs.ch) {
+      this._currentAttrs.ch = props.ch[0]
+    }
+  }
+
+  /**
+   * Reset [[currentAttrs]] to [[defaultAttrs]] and apply it to the program.
+   */
+  resetAttrs() {
+    this._currentAttrs = { ...this._defaultAttrs }
+    this.setAttrs(this._defaultAttrs)
+  }
+
+  /**
+   * Default character attributes and 'ch' string to fill.
+   */
+  public get defaultAttrs(): Attrs {
+    return this._defaultAttrs
+  }
+  public set defaultAttrs(value: Attrs) {
+    this._defaultAttrs = value
+  }
+
+  /**
+   * Current character attributes. As elements are rendered,[[currentAttrs]] are modified according to the
+   * element's attrs, so modifying this object the current character attribute status can be manipulated
+   * programmatically, for example, before rendering children or siblings, etc.
+   */
+  public get currentAttrs(): Attrs {
+    return this._currentAttrs
+  }
+  public set currentAttrs(value: Attrs) {
+    this._currentAttrs = value
+  }
+
+
+
+
   /**
    * Main public function to render given element in the screen. Element's props character attributes will me
    * merged with [[currentAttrs]] and that will be used to render the element's pixels.
@@ -148,15 +266,13 @@ export class ProgramDocumentRenderer {
     , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions
     ) {
     el._beforeRender()
+    const preventChildrenCascadeOriginal = options.preventChildrenCascade
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade })
-    // if(options.preventChildrenCascade){
-    //   attrs.preventChildrenCascade = true
-    // }
-    // if (options.preventChildrenCascade&&options.preventSiblingCascade||!options.__onRecursion) {
-    //   this.resetAttrs()
-    // }
+    if (typeof preventChildrenCascadeOriginal !== 'undefined') {
+        options.preventChildrenCascade = preventChildrenCascadeOriginal
+      }
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
@@ -164,11 +280,7 @@ export class ProgramDocumentRenderer {
     } else {
       this.lastAbsLeft = el.absoluteContentLeft
       this.lastAbsTop = el.absoluteContentTop
-      // const parentAttrs = {...this._currentAttrs}
       Array.from(el.childNodes).forEach((c, i, a) => {
-        // if(options.preventSiblingCascade) {
-        //   this.currentAttrs = {...parentAttrs}
-        // }
         if (c instanceof TextNode) {
           if (el.props.renderChildText) {
             el.props.renderChildText(this, c, i)
@@ -226,11 +338,9 @@ export class ProgramDocumentRenderer {
   renderElementWithoutChildren(el: ProgramElement  , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions) {
 
     const attrs: Partial<ElementProps> =  {
-      // ...!options.preventSiblingCascade ? this._currentAttrs : {},
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
       ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data : {}) : {},
-      // ... options.preventChildrenCascade===true ? {preventChildrenCascade: true} : {},
       ...el.props.data
     }
 
@@ -242,11 +352,21 @@ export class ProgramDocumentRenderer {
       el.props.renderContent(this)
     } else {
       if (!attrs.noFill) {
-        this.setAttrs(attrs) // TODO: merge with all ancestors
+        this.setAttrs(attrs) // TODO: merge with all ancestors ? or there should bealready merged ? 
         const yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
         const xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
-        const width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
-        const height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
+        let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
+        let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
+        debugger
+        if(isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow!=='visible') {
+          
+          height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop : height
+          attrs.height=height
+          
+
+          width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft : width
+          attrs.width=width
+        }
         for (let i = 0; i < height; i++) {
           this.write(yi + i, xi, this._program.repeat(el.props.ch || this._currentAttrs.ch, width))
         }
@@ -274,52 +394,6 @@ export class ProgramDocumentRenderer {
     for (let i = 0; i < height; i++) {
       this.write(top + i, left, this._program.repeat(ch, width))
     }
-  }
-
-  /**
-   * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
-   * only applied if not falsy. Boolean properties are applied only if not undefined.
-   */
-  setAttrs(props: PAttrs) {
-    if (props.bg && props.bg !== this._currentAttrs.bg) {
-      this._program.bg(props.bg)
-      this._currentAttrs.bg = props.bg
-    }
-    if (props.fg && props.fg !== this._currentAttrs.fg) {
-      this._program.fg(props.fg)
-      this._currentAttrs.fg = props.fg
-    }
-    if (typeof props.invisible !== 'undefined' && props.invisible !== this._currentAttrs.invisible) {
-      this._program.charAttributes('invisible', props.invisible)
-      this._currentAttrs.invisible = props.invisible
-    }
-    if (typeof props.bold !== 'undefined' && props.bold !== this._currentAttrs.bold) {
-      this._program.charAttributes('bold', props.bold)
-      this._currentAttrs.bold = props.bold
-    }
-    if (typeof props.blink !== 'undefined' && props.blink !== this._currentAttrs.blink) {
-      this._program.charAttributes('blink', props.blink)
-      this._currentAttrs.blink = props.blink
-    }
-    if (typeof props.underline !== 'undefined' && props.underline !== this._currentAttrs.underline) {
-      this._program.charAttributes('underline', props.underline)
-      this._currentAttrs.underline = props.underline
-    }
-    if (typeof props.standout !== 'undefined' && props.standout !== this._currentAttrs.standout) {
-      this._program.charAttributes('standout', props.standout)
-      this._currentAttrs.standout = props.standout
-    }
-    if (typeof props.ch !== 'undefined' && props.ch.length && props.ch !== this._currentAttrs.ch) {
-      this._currentAttrs.ch = props.ch[0]
-    }
-  }
-
-  /**
-   * Reset [[currentAttrs]] to [[defaultAttrs]] and apply it to the program.
-   */
-  resetAttrs() {
-    this._currentAttrs = { ...this._defaultAttrs }
-    this.setAttrs(this._defaultAttrs)
   }
 
   /**
@@ -352,34 +426,4 @@ export class ProgramDocumentRenderer {
     }
   }
 
-  /**
-   * Default character attributes and 'ch' string to fill.
-   */
-  public get defaultAttrs(): Attrs {
-    return this._defaultAttrs
-  }
-  public set defaultAttrs(value: Attrs) {
-    this._defaultAttrs = value
-  }
-
-  /**
-   * Current character attributes. As elements are rendered,[[currentAttrs]] are modified according to the
-   * element's attrs, so modifying this object the current character attribute status can be manipulated
-   * programmatically, for example, before rendering children or siblings, etc.
-   */
-  public get currentAttrs(): Attrs {
-    return this._currentAttrs
-  }
-  public set currentAttrs(value: Attrs) {
-    this._currentAttrs = value
-  }
-}
-
-interface RenderElementOptions {
-  /**
-   * If true, given element's props attrs will be merged with [[defaultAttrs]] so any value of
-   * [[currentAttrs]] will be ignored and lost.
-   */
-  preventChildrenCascade?: boolean
-  preventSiblingCascade?: boolean
 }

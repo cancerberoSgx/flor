@@ -143,8 +143,8 @@ export class EventManager {
   private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
   addKeyListener(l: KeyListener) {
     if (!this.keyListeners.find(k => k.listener === l)) {
-    this.keyListeners.push({ name: 'keypress', listener: l  })
-  }
+      this.keyListeners.push({ name: 'keypress', listener: l  })
+    }
   }
   _isMouseEventTarget(e: ProgramMouseEvent, el: ProgramElement) {
     return e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
