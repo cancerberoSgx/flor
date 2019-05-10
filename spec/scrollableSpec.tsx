@@ -6,7 +6,7 @@ import { trimRightLines } from '../src/util/misc'
 import { createProgramRendererDocument } from '../src/util/util'
 import { scrollable, Scrollable } from '../src/component/scrollable';
 import { float, int, words, color, string, char } from './data';
-import { asArray, array } from 'misc-utils-of-mine-generic';
+import { asArray, array, sleep } from 'misc-utils-of-mine-generic';
 
 describe('scrollable', () => {
 beforeEach(()=>{
@@ -30,6 +30,7 @@ beforeEach(()=>{
     flor.create(el)
     // flor.debug('hello')
     flor.render()
+    await sleep(1)
         expect(flor.renderer.printBuffer(true)).toContain(`first1 top el`)
         done()
     } catch (error) {
@@ -37,7 +38,7 @@ beforeEach(()=>{
     }
   })
 
-    fit('should hide overflow and scroll vertical with up and down arrows by default', async done => {
+    xit('should hide overflow and scroll vertical with up and down arrows by default', async done => {
       try {
         const flor = new FlorDocument({
           buffer: true, 

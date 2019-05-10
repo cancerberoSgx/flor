@@ -233,7 +233,7 @@ export class ProgramDocumentRenderer {
       // x<0|| 
       // x>=this.program.cols || 
       x<this._writeArea.xi || 
-      x > this._writeArea.xl
+      x >= this._writeArea.xl-1
       ) {
       // debug('outside area ', x, y)
       return
@@ -329,16 +329,12 @@ export class ProgramDocumentRenderer {
     , options: RenderElementOptions = this._defaultRenderOptions
   ) {
     el._beforeRender()
-    // if (!options.__onRecursion && options.writeArea) {
-    //   this.writeArea = options.writeArea!
-    // }
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
-    // debugger
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
     } else {
@@ -362,9 +358,6 @@ export class ProgramDocumentRenderer {
         }
       })
     }
-    // if (!options.__onRecursion && options.writeArea) {
-    //   this.resetWriteArea()
-    // }
     el._afterRender()
     el._renderCounter = this.renderCounter++
     return el

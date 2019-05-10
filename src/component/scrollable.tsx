@@ -84,28 +84,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this._renderChildren = this._renderChildren.bind(this)
     this.xOffset = 0 - this.p.leftExtraOffset
   }
-  // elementReady(){
-  //   this.element!.getChildrenElements().forEach(e=>{
-  //     if(this.yi>e.absoluteTop- this.element!.absoluteTop -this.p.topExtraOffset){
-  //       this.yi=e.absoluteTop- this.element!.absoluteTop  -this.p.topExtraOffset
-  //     }
-  //     if(this.yl<e.absoluteTop-this.element!.absoluteTop - this.element!.props.height + e.props.height + this.p.bottomExtraOffset){
-  //       this.yl=e.absoluteTop- this.element!.absoluteTop - this.element!.props.height + e.props.height + this.p.bottomExtraOffset
-  //     }
-  //   })
-  //   // this.yi = first ? first.absoluteTop - this.element!.absoluteTop : this.element!.absoluteTop
-  //   // this.yl = last ? last.absoluteTop - this.element!.absoluteTop + last.props.height : this.element!.absoluteTop + this.element!.props.height
-  // }
-
-  // private tc =
   protected renderChildren(r: ProgramDocumentRenderer){return this.props.throttleVertical ? throttle( this._renderChildren, this.props.throttleVertical, {trailing: true, leading: true}) :nextTick(this._renderChildren, r)}
-    // (r)=>this._renderChildren(r))}
-    // renderChildren this.props.throttleVertical ? throttle( this._renderChildren, this.props.throttleVertical, {trailing: true, leading: true}) : nextTick(this._renderChildren)
-  
-  // throttle(this._renderChildren.bind(this), 100, {leading: true})
-  // (renderer: ProgramDocumentRenderer) {
-    
-  // }C
   elArea : Rectangle = null as any
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
 
@@ -113,8 +92,11 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       this.elArea = this.element!.getBounds()
       this.renderer = renderer
       this.renderer.  writeArea= this.elArea
-    }
 
+    // this.element!.onBoundsChange(()=>{
+      
+    // })
+    }
     //TODO: clean this, remove first, last, use some() , performance
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
@@ -128,9 +110,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         if (this.yl < c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset) {
           this.yl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
         }
-
-        r = this.elementInViewportPredicate(c, this.element!)//, Math.round(c.props.height/2))//Math.round(c.props.height/2)) //&&( c.absoluteTop - this.element!.absoluteTop - this.yOffset)>=-this.element!.absoluteTop
-        // r = this.intersect(c, this.element!)
+        r = this.elementInViewportPredicate(c, this.element!)
         if (r && !first) {
           first = c
           return true
@@ -145,23 +125,14 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         if (first && (!last || !r)) return true
       }
     })
-    // if (this.vChildren.length) {
-    //   first = first || this.vChildren.find(isElement)
-    //   last = last || [...this.vChildren].reverse().find(isElement)
-    // }
-    // first = first
     // TODO: assuming children ordered top-down!!! 
     this.vChildren.forEach(c => {
       if (isElement(c)) {
-        // renderer.eraseElement(c)
         const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
         if (y >= -this.element!.absoluteTop) {
-          // dont draw elements that got totally outside the screen
           const top = c.props.top
-          // c.props.top = y
-          c.props.setTop(y, true)//false)// = y
+          c.props.setTop(y, true)
          this.renderElement(c)
-          // c.props.top = top
           c.props.setTop(top, true)
         }
       }
@@ -169,13 +140,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   }
 
   protected elementInViewportPredicate(c: ProgramElement, el: ProgramElement): any {
-    // return this.isContained(c, this.element!, Math.round(c.props.height / 2))
-    // return this.intersect(c, this.element!)
     return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), 0, this.yOffset))
   }
-  // private intersect(c: ProgramElement, e: ProgramElement): any {
-  //   return e.absoluteTop >= c.absoluteTop && c.absoluteTop <= e.absoluteTop + e.props.height || c.absoluteTop >= e.absoluteTop && e.absoluteTop <= c.absoluteTop + c.props.height
-  // }
   private isContained(c: ProgramElement, e: ProgramElement, ratio: number) {
     return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= this.yOffset + e.absoluteTop + e.props.height
   }
@@ -192,7 +158,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         this.scrolling = false
       }
       else {
-        // this.renderer!.program!.ff()
         this.scrolling = false
         this.stopAnimation()
         this.renderer!.program!.bell()
@@ -206,7 +171,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       animate({
         duration: this.p.verticalAnimationDuration,
         draw: t => {
-          // debug('onKeyPressed', e.name, t, dy, this.p.fastVerticalScrollStep, this.yOffset, Math.min(this.yl, start + dy))
           const final =  Math.round( Math.max(this.yi,start +this.p.fastVerticalScrollStep * t))
           if (this.yOffset !== final) {
             this.yOffset = Math.max(this.yi, final)

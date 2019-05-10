@@ -89,7 +89,7 @@ export class ProgramElement extends Element {
   _beforeRender(): any {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
       if (this._positionDirty) {
-        this.update(true)
+        this.updateBounds(true)
       }
     }
   }
@@ -128,6 +128,9 @@ export class ProgramElement extends Element {
     return this._absoluteTop
   }
 
+  onBoundsChange(arg0: () => void): any {
+    throw new Error('Method not implemented.');
+  }
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
   }
@@ -180,7 +183,7 @@ export class ProgramElement extends Element {
   /**
    * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if `descendant` argument is passed also recursively for all descendants.
    */
-  protected update(descendants?: boolean) {
+  protected updateBounds(descendants?: boolean) {
     if (this._positionDirty) {
       let a = this.absoluteLeft - this.absoluteTop
       this.layout()
@@ -188,7 +191,7 @@ export class ProgramElement extends Element {
     }
     if (descendants) {
       this.getChildrenElements().forEach(e => {
-        e.update(true)
+        e.updateBounds(true)
       })
     }
   }
