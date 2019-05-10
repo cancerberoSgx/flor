@@ -8,12 +8,14 @@ export function animate({
   draw,
   timing,
   onEnd,
+  onStop,
   lapse
 }: {
   duration: number
   draw: (n: number) => void
   timing: Animation
   onEnd?: ()=>void
+  onStop?: (l: ()=>void)=>void
   lapse?: number
 }) {
   if (isObject(timing)) {
@@ -21,12 +23,18 @@ export function animate({
   }
   let start = Date.now()
   let progress = 0
+  let stopped = false
+  onStop && onStop(()=>{stopped=true})
   requestAnimationFrame(function anim(time) {
+    if(stopped){
+      onEnd &&onEnd()
+      return
+    }
     let timeFraction = (time - start) / duration
     if (timeFraction > 1) timeFraction = 1
     progress = (timing as Timing)(timeFraction, time - start, duration)
     draw(progress)
-    if (timeFraction < 1) {
+    if (timeFraction < 1&&!stopped) {
       requestAnimationFrame(anim, lapse)
     }else {
       onEnd &&onEnd()

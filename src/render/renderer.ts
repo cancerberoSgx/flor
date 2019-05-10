@@ -227,13 +227,13 @@ export class ProgramDocumentRenderer {
   write(y: number, x: number, s: string) {
     if (
       // y<0 || 
-      y>=this.program.rows || 
-      y < this._writeArea.yi || 
+      // y>=this.program.rows || 
+      y <  this._writeArea.yi+1 || 
       y >= this._writeArea.yl || 
-      x<0|| 
+      // x<0|| 
       // x>=this.program.cols || 
       x<this._writeArea.xi || 
-      x >= this._writeArea.xl
+      x > this._writeArea.xl
       ) {
       // debug('outside area ', x, y)
       return

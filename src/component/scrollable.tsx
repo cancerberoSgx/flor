@@ -1,6 +1,6 @@
 import { asArray, throttle } from 'misc-utils-of-mine-generic'
 import { Component, Flor } from '../jsx'
-import { ElementProps, ProgramDocument, ProgramElement, isElement, Rectangle } from '../programDom'
+import { ElementProps, ProgramDocument, ProgramElement, isElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '../programDom'
 import { KeyEvent, ProgramDocumentRenderer } from '../render'
 import { Minimatch } from 'minimatch';
 import { Node } from '../dom';
@@ -9,8 +9,21 @@ import { animate, easing } from '..'
 import { TODO } from 'misc-utils-of-mine-typescript';
 import { nextTick } from '../util/misc';
 
+interface ScrollEvent { 
+  currentTarget: ProgramElement, 
+  /** number of rows considered to build the vertical offset. in other words the height ot the scrolled area. */
+  rows: number, 
+  /** number of  cols considered to build the horizontal offset. in other words the height ot the scrolled area. */
+  cols: number, 
+  /** current horizontal scroll position. [[cols]] / [[xOffset]] is the horizontal scrolled current percentage */
+  xOffset: number
+  /** current vertical scroll position. [[rows]] / [[yOffset]] is the vertical scrolled current percentage */
+  yOffset: number
+  /** Bounds of the scrolled region */
+  bounds: Rectangle
+ }
 interface ConcreteScrollableProps {
-  onScroll?: (e: { currentTarget: ProgramElement, Scrollable: string }) => void
+  onScroll?: (e: ScrollEvent) => void
   verticalStep?: number
   horizontalStep?: number
   topExtraOffset?: number
@@ -24,6 +37,7 @@ interface ConcreteScrollableProps {
   fastScrollDownKeys?: string[]
   fastScrollUpKeys?: string[]
   fastVerticalScrollStep?: number
+  interruptAnimation?: boolean
   // scrollVerticalEndKeys?: string[]
   // scrollVerticalBeginningKeys?: string[]
   // scrollUpBeginningKeys?: string[]
@@ -42,8 +56,21 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected scrolling: boolean = false
 
   protected defaultProps: Required<ConcreteScrollableProps> = {
-    fastVerticalScrollStep: 20, fastScrollDownKeys: ['s'], fastScrollUpKeys: ['a'], leftExtraOffset: 5, normalScrollDownKeys: ['down'], normalScrollUpKeys: ['up'],
-    verticalStep: 2, horizontalStep: 2, topExtraOffset: 5, bottomExtraOffset: 5, throttleVertical: 0, verticalAnimation: easing.bounceEasyOut(), verticalAnimationDuration: 2000, onScroll(e) { }
+    fastVerticalScrollStep: 20, 
+    fastScrollDownKeys: ['s'], 
+    interruptAnimation: false,
+    fastScrollUpKeys: ['a'], 
+    leftExtraOffset: 5,
+     normalScrollDownKeys: ['down'], 
+     normalScrollUpKeys: ['up'],
+    verticalStep: 2, 
+    horizontalStep: 2,
+     topExtraOffset: 5,
+      bottomExtraOffset: 5, 
+      throttleVertical: 0, 
+      verticalAnimation: easing.bounceEasyOut(), 
+      verticalAnimationDuration: 2000,
+       onScroll(e) { }
   }
 
   protected p: Required<ConcreteScrollableProps>
@@ -71,19 +98,24 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   // }
 
   // private tc =
-  protected renderChildren(r: ProgramDocumentRenderer){nextTick(this._renderChildren, r)}
+  protected renderChildren(r: ProgramDocumentRenderer){return this.props.throttleVertical ? throttle( this._renderChildren, this.props.throttleVertical, {trailing: true, leading: true}) :nextTick(this._renderChildren, r)}
     // (r)=>this._renderChildren(r))}
+    // renderChildren this.props.throttleVertical ? throttle( this._renderChildren, this.props.throttleVertical, {trailing: true, leading: true}) : nextTick(this._renderChildren)
+  
   // throttle(this._renderChildren.bind(this), 100, {leading: true})
   // (renderer: ProgramDocumentRenderer) {
     
   // }C
   elArea : Rectangle = null as any
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
+
     if(!this.renderer){
       this.elArea = this.element!.getBounds()
       this.renderer = renderer
       this.renderer.  writeArea= this.elArea
     }
+
+    //TODO: clean this, remove first, last, use some() , performance
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
     this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
@@ -126,33 +158,49 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         if (y >= -this.element!.absoluteTop) {
           // dont draw elements that got totally outside the screen
           const top = c.props.top
-          c.props.top = y
+          // c.props.top = y
+          c.props.setTop(y, true)//false)// = y
          this.renderElement(c)
-          c.props.top = top
+          // c.props.top = top
+          c.props.setTop(top, true)
         }
       }
     })
   }
 
   protected elementInViewportPredicate(c: ProgramElement, el: ProgramElement): any {
-    return this.isContained(c, this.element!, Math.round(c.props.height / 2))
+    // return this.isContained(c, this.element!, Math.round(c.props.height / 2))
+    // return this.intersect(c, this.element!)
+    return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), 0, this.yOffset))
   }
-  private intersect(c: ProgramElement, e: ProgramElement): any {
-    return e.absoluteTop >= c.absoluteTop && c.absoluteTop <= e.absoluteTop + e.props.height || c.absoluteTop >= e.absoluteTop && e.absoluteTop <= c.absoluteTop + c.props.height
-  }
+  // private intersect(c: ProgramElement, e: ProgramElement): any {
+  //   return e.absoluteTop >= c.absoluteTop && c.absoluteTop <= e.absoluteTop + e.props.height || c.absoluteTop >= e.absoluteTop && e.absoluteTop <= c.absoluteTop + c.props.height
+  // }
   private isContained(c: ProgramElement, e: ProgramElement, ratio: number) {
     return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= this.yOffset + e.absoluteTop + e.props.height
   }
+  
+  stopAnimation:()=>void = ()=>{}
 
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
-    // if(this.scrolling){
-    //   return
-    // }
-    // if (!this.element!.props.focused) {
-    //   return //
-    // }
+    if (!this.element!.props.focused) {
+        return //
+    }
+    else if(this.scrolling){
+      if(this.props.interruptAnimation){
+        this.stopAnimation()
+        this.scrolling = false
+      }
+      else {
+        // this.renderer!.program!.ff()
+        this.scrolling = false
+        this.stopAnimation()
+        this.renderer!.program!.bell()
+        return
+      }
+    }
 
-    if (this.p.fastScrollUpKeys.includes(e.name)) {
+    else if (this.p.fastScrollUpKeys.includes(e.name)) {
       this.scrolling = true
       const start = this.yOffset
       animate({
@@ -168,11 +216,13 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         timing: this.p.verticalAnimation,
         onEnd: () => {
           this.scrolling = false
-        }
+          this.stopAnimation()
+        }, 
+        onStop: (l=>this.stopAnimation = l)
       })
       return
     }
-    if (this.p.fastScrollDownKeys.includes(e.name)) {
+    else if (this.p.fastScrollDownKeys.includes(e.name)) {
       this.scrolling = true
       const start = this.yOffset
       animate({
@@ -187,11 +237,13 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         timing: this.p.verticalAnimation,
         onEnd: () => {
           this.scrolling = false
-        }
+          this.stopAnimation()
+        },
+        onStop: (l=>this.stopAnimation = l)
       })
       return
     }
-    if (this.p.normalScrollUpKeys.includes(e.name)) {
+    else if (this.p.normalScrollUpKeys.includes(e.name)) {
       this.yOffset = Math.min(this.yl, this.yOffset + this.p.verticalStep)
       this.renderElement();    
     }

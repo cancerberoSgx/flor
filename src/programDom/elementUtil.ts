@@ -25,13 +25,29 @@ export function isAttached(e: ProgramElement): boolean {
 export interface Rectangle {
   xi: number, yi: number, yl: number, xl: number
 }
-// type R = Rectangle
-// export function rectangleIntersects(r1:R, r2:R) {
-//   return 
-// }
-// intersect(c: ProgramElement, e: ProgramElement): any {
-//   return e.absoluteTop >= c.absoluteTop && c.absoluteTop <= e.absoluteTop + e.props.height || c.absoluteTop >= e.absoluteTop && e.absoluteTop <= c.absoluteTop + c.props.height
-// }
+type R = Rectangle
+export function rectangleIntersects(a:R, b:R) {
+    return (a.xi <= b.xl &&
+            b.xi <= a.xl &&
+            a.yi <= b.yl &&
+            b.yi <= a.yl)
+  }
+
+  export function rectanglePlusOffsets(r: R,xOffset=0, yOffset=0) {
+return {yi: r.yi+yOffset, yl: r.yl+yOffset, xi:r.xi+xOffset, xl: r.xl+xOffset}
+  }
+  // // function intersectRect(r1, r2) {
+  //   return !(r2.xi > r1.xl || 
+  //            r2.xl < r1.xi || 
+  //            r2.yi > r1.yl ||
+  //            r2.yl < r1.yi)
+  // }
+  // function intersectRect(r1, r2) {
+  //   return !(r2.left > r1.right || 
+  //            r2.right < r1.left || 
+  //            r2.top > r1.bottom ||
+  //            r2.bottom < r1.top);
+  // }
 // isContained(c: ProgramElement, e: ProgramElement, ratio: number) {
 //   return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= this.yOffset + e.absoluteTop + e.props.height
 // }

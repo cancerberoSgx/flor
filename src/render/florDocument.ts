@@ -40,16 +40,15 @@ export class FlorDocument {
   private _cursor: CursorManager;
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
-      if(o.useAnsiDiff){
-        
-  let differ = require('ansi-diff-stream')
-  let diff = differ()
-  diff.pipe(process.stdout)
-  this._program = new Program({...o, output: diff})
-      }
-else {
+      // if(o.useAnsiDiff){        
+  // let differ = require('ansi-diff-stream')
+  // let diff = differ()
+  // this._program = new Program({...o, input: diff})
+  // diff.pipe(program.output)
+      // }
+// else {C
   this._program = new Program(o)
-}
+// }
       this._program.enableMouse()
       installExitKeys(this._program)
     }
@@ -61,14 +60,14 @@ else {
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._document._setManagers(this)
     this._cursor = new CursorManager({program: this._program, cursor: {
-      color: 'red'
+      // color: 'red'
     }})
     this._cursor.enter()
     this.createTextNode = this.createTextNode.bind(this)
     this.debug = this.debug.bind(this)
-    // addLogger({log: (...args: any[])=>{
-    //   this.debug('', undefined, ...args)
-    // }})
+    addLogger({log: (...args: any[])=>{
+      this.debug('', undefined, ...args)
+    }})
   }
 
   /**

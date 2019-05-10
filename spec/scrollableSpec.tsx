@@ -44,7 +44,7 @@ beforeEach(()=>{
           // useAnsiDiff: true
         })
 
-        const a = <Scrollable {...{top: 3, left: 3, width: 55, height: 23, border: { type: BorderStyle.double }}} preventChildrenCascade={true} layout={{layout: Layout.topDown, manualLayout: true, neverResizeContainer: true}} verticalStep={2} fastVerticalScrollStep={40}>
+        const a = <Scrollable {...{top: 3, left: 3, width: 55, height: 23, border: { type: BorderStyle.double }}} preventChildrenCascade={true} layout={{layout: Layout.topDown, manualLayout: true, neverResizeContainer: true}} verticalStep={2} fastVerticalScrollStep={40} verticalAnimationDuration={1000} onScroll={e=>{debug('scroll '+e)}}>
         {array(80).map(i=> <box {...{ width: int(20, 45), height: int(7, 19), bg: color(), padding: {top: 1, left: 1, right: 1, bottom: 1},ch: ' '}}>{i} - - {words(4).join(', ')}</box>)}
         sf{words(3).join(' ')}sdf
         <box {...{ width: int(20, 45), height: int(7, 19), bg: color(), ch: char() }}> 1first1 top el</box>
