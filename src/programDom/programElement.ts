@@ -89,7 +89,7 @@ export class ProgramElement extends Element {
   _beforeRender(): any {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
       if (this._positionDirty) {
-        this.updateBounds(true)
+        this.updateBounds()
       }
     }
   }
@@ -98,8 +98,9 @@ export class ProgramElement extends Element {
     return this._parentNode as any
   }
   get parentElement(): ProgramElement | undefined {
-    return isElement(this._parentNode) ? this._parentNode : undefined// as any
+    return isElement(this._parentNode) ? this._parentNode : undefined
   }
+
   private _absoluteLeft = 0
   get absoluteLeft() {
     if (this._positionDirty) {
@@ -171,6 +172,7 @@ export class ProgramElement extends Element {
       throw 'TODO'
     }
   }
+
   getContentBounds(relative = false): Rectangle {
     if (!relative) {
       return { yi: this.absoluteContentTop, xi: this.absoluteContentLeft, yl: this.absoluteContentTop + this.contentHeight, xl: this._absoluteLeft + this.contentWidth }
@@ -182,6 +184,8 @@ export class ProgramElement extends Element {
 
   /**
    * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if `descendant` argument is passed also recursively for all descendants.
+   * 
+   * on render() , descendants doesn't need to be calculated since they are rendered after the parent and updateBounds will be called for them individually
    */
   protected updateBounds(descendants?: boolean) {
     if (this._positionDirty) {
@@ -191,7 +195,7 @@ export class ProgramElement extends Element {
     }
     if (descendants) {
       this.getChildrenElements().forEach(e => {
-        e.updateBounds(true)
+        e.updateBounds(descendants)
       })
     }
   }
@@ -214,24 +218,24 @@ export class ProgramElement extends Element {
       } else if (name === 'onBlur') {
         this.ownerDocument._registerListener({ type: 'blur', listener: { els: [this], listener } })
       } else {
-        this.ownerDocument._registerListener({ type: 'event', listener: { el: this, name: this._getEventName(name), listener } })
+        this.ownerDocument._registerListener({ type: 'event', listener: { el: this, name: _getEventName(name), listener } })
       }
     }
-  }
-  private _getEventName(name: string): string {
-    if (['onclick', 'click'].includes(name.toLowerCase())) {
-      return 'mouseup'
-    }
-    if (['keypress', 'keypressed', 'onkeypressed'].includes(name.toLowerCase())) {
-      return 'keypress'
-    }
-    if (name.startsWith('on')) {
-      const n = name.substring(2)
-      if (mouseActionNames.includes(n)) {
-        return n
+    function _getEventName(name: string): string {
+      if (['onclick', 'click'].includes(name.toLowerCase())) {
+        return 'mouseup'
       }
+      if (['keypress', 'keypressed', 'onkeypressed'].includes(name.toLowerCase())) {
+        return 'keypress'
+      }
+      if (name.startsWith('on')) {
+        const n = name.substring(2)
+        if (mouseActionNames.includes(n)) {
+          return n
+        }
+      }
+      return name.toLowerCase()
     }
-    return name.toLowerCase()
   }
 
   /**
@@ -241,9 +245,9 @@ export class ProgramElement extends Element {
     return this._component as T | undefined
   }
 
-  protected _ownerDocument: ProgramDocument
-  get ownerDocument() {
-    return this._ownerDocument
+  // protected _ownerDocument: ProgramDocument
+  get ownerDocument() : ProgramDocument{
+    return this._ownerDocument as ProgramDocument
   }
 
   /**

@@ -37,10 +37,15 @@ interface ConcreteScrollableProps {
   fastScrollDownKeys?: string[]
   fastScrollUpKeys?: string[]
   fastVerticalScrollStep?: number
+  /**
+   * What to do when user actionates while the widget is still in an animation. 
+   */
   interruptAnimation?: boolean
-  // scrollVerticalEndKeys?: string[]
-  // scrollVerticalBeginningKeys?: string[]
-  // scrollUpBeginningKeys?: string[]
+verticalGotoEndKeys?: string[]
+  verticalGotoStartKeys?: string[]
+  horizontalGotoEndKeys?: string[]
+  horizontalGotoStartKeys?: string[]
+
 }
 interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
 
@@ -70,13 +75,16 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       throttleVertical: 0, 
       verticalAnimation: easing.bounceEasyOut(), 
       verticalAnimationDuration: 2000,
-       onScroll(e) { }
+       onScroll(e) { },
+       verticalGotoEndKeys:  [''],
+         verticalGotoStartKeys:  [''],
+         horizontalGotoEndKeys:  [''],
+         horizontalGotoStartKeys:  [''],
   }
 
   protected p: Required<ConcreteScrollableProps>
   constructor(p: ScrollableProps, s: {}) {
     super(p, s)
-    // this.p.verticalStepvStep = this.props.verticalStep || 1
     this.onKeyPressed = this.onKeyPressed.bind(this)
     this.renderChildren = this.renderChildren.bind(this)
     this.p = { ...this.defaultProps, ...p }

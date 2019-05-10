@@ -6,7 +6,49 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
 
 <!-- tocstop -->
 
+# PROGRESS
 
+* Program DOM - like implementation
+  * ProgramElement - analog to HTML Node and Element: supports lots of properties 
+  props: hierarchized model for properties (attributes) - all will end up being like blessed options or JSX props
+    * AttrsProps : base class supporting only terminal character attr (bg, fg, ch, bold, ect - only native things 
+    * StyleProps extends AttrsProps - core non native properties: top, left, width, height, border, padding, 
+       * Border support extensibility and alreay has more than 8 border styles. border has its own style
+    * ElementProps
+       * all handlers for events, extensibility, rendering hooks, and 
+
+
+## Renderer
+  * the most important class
+  * limiting the rendering to just a partial region
+  * very flexibile API, for hooking in on rendering moments. 
+    * renderElementBody, renderChildren, renderTextNode, renderChild, renderBorder, etc. Elements can override using props. 
+  * text nodes renderization supporting word wrap. very basic.
+  * renders Elements and their children and text nodes in the program
+  * supports element props cascading / propagation. currently 2 modes
+  * central method for writing
+  * in memory representation of whet's in the screen so we can query / assert in tests. Optional but dont affecct performance
+  * border drawing
+
+
+## Core component library 
+ * <Input> and input()  like html input - single line. Base abstract class designed to build up input els from there
+ * <Scrollable> / scrollable() : initial design and impl
+    * well tested vertical scroll for its children. 
+    * fast and lightweight
+    * no flickering 
+    * animations for fast scroll actions!
+     * configurable keys for up, down, fastUp, fastDown, 
+
+## JSX
+* important for docmentation and props contract 
+ * components, one intrinsic element since, like html, all elements end up being the same thing: ``<box>``
+ EventManager - handle centralixed all core events (keys, mouse)
+ FocusManager - centralized flexible focus manager  focused, focusable, focusNext - initial design for a generic/flexible API
+  
+
+
+  
 # WIP
 
  * Based on the core of [blessed](https://github.com/chjj/blessed): `tput.js` and `program`. 
