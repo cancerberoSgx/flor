@@ -1,6 +1,6 @@
 import { isObject } from 'misc-utils-of-mine-generic'
-import { nextTick } from './misc';
-export type Animation = Timing | (()=>Timing)| TimingObject
+import { nextTick } from './misc'
+export type Animation = Timing | (() => Timing) | TimingObject
 type Timing = (n: number, c?: number, d?: number, x?: number, y?: number) => number
 type TimingObject = { fn: (duration: number) => Timing }
 export function animate({
@@ -14,8 +14,8 @@ export function animate({
   duration: number
   draw: (n: number) => void
   timing: Animation
-  onEnd?: ()=>void
-  onStop?: (l: ()=>void)=>void
+  onEnd?: () => void
+  onStop?: (l: () => void) => void
   lapse?: number
 }) {
   if (isObject(timing)) {
@@ -24,26 +24,26 @@ export function animate({
   let start = Date.now()
   let progress = 0
   let stopped = false
-  onStop && onStop(()=>{stopped=true})
+  onStop && onStop(() => {stopped = true})
   requestAnimationFrame(function anim(time) {
-    if(stopped){
-      onEnd &&onEnd()
+    if (stopped) {
+      onEnd && onEnd()
       return
     }
     let timeFraction = (time - start) / duration
     if (timeFraction > 1) timeFraction = 1
     progress = (timing as Timing)(timeFraction, time - start, duration)
     draw(progress)
-    if (timeFraction < 1&&!stopped) {
+    if (timeFraction < 1 && !stopped) {
       requestAnimationFrame(anim, lapse)
-    }else {
-      onEnd &&onEnd()
+    } else {
+      onEnd && onEnd()
     }
   })
 }
 
 function requestAnimationFrame(f: (...args: any[]) => any, lapse = 0) {
-  nextTick(()=>f(Date.now()))
+  nextTick(() => f(Date.now()))
   // setTimeout(() => f(Date.now()), lapse)
 }
 

@@ -1,10 +1,10 @@
+import { Node } from '../dom'
 import { TextNode } from '../dom/text'
 import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../render'
 import { BlurEvent, FocusEvent } from '../render/focusManager'
 import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps } from './types'
-import { Node } from '../dom';
 
 export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements Partial<ElementProps> {
 

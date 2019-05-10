@@ -130,7 +130,7 @@ export class ProgramElement extends Element {
   }
 
   onBoundsChange(arg0: () => void): any {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.')
   }
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
@@ -167,24 +167,22 @@ export class ProgramElement extends Element {
   getBounds(relative = false): Rectangle {
     if (!relative) {
       return { yi: this.absoluteTop, xi: this.absoluteLeft, yl: this.absoluteTop + this.props.height, xl: this._absoluteLeft + this.props.width }
-    }
-    else {
-      throw 'TODO'
+    } else {
+      throw new Error('TODO')
     }
   }
 
   getContentBounds(relative = false): Rectangle {
     if (!relative) {
       return { yi: this.absoluteContentTop, xi: this.absoluteContentLeft, yl: this.absoluteContentTop + this.contentHeight, xl: this._absoluteLeft + this.contentWidth }
-    }
-    else {
-      throw 'TODO'
+    } else {
+      throw new Error('TODO')
     }
   }
 
   /**
    * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if `descendant` argument is passed also recursively for all descendants.
-   * 
+   *
    * on render() , descendants doesn't need to be calculated since they are rendered after the parent and updateBounds will be called for them individually
    */
   protected updateBounds(descendants?: boolean) {
@@ -246,7 +244,7 @@ export class ProgramElement extends Element {
   }
 
   // protected _ownerDocument: ProgramDocument
-  get ownerDocument() : ProgramDocument{
+  get ownerDocument(): ProgramDocument {
     return this._ownerDocument as ProgramDocument
   }
 

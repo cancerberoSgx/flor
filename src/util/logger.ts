@@ -2,16 +2,16 @@ import { appendFileSync } from 'fs'
 import { inspect } from 'util'
 import { inBrowser } from './misc'
 
-export function addLogger(l: Logger){
+export function addLogger(l: Logger) {
   loggers.push(l)
 }
 const loggers: Logger[] = []
 interface Logger {
-  log(...args: any[]) : void
+  log(...args: any[]): void
 }
 
 export function debug(...args: any[]) {
-  loggers.forEach(l=>{
+  loggers.forEach(l => {
     l.log(...args)
   })
 }

@@ -90,12 +90,12 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
   /**
    * With [[markDirty===false]] it can be used to change position without marking the elemnt position dirty, which eill cause to recalculate its absolute coords on next getter. By default [[markDirty]] is true.
    */
-  setTop(value: number, markDirty=true) {
+  setTop(value: number, markDirty= true) {
     // if (this._data.top !== value) {
-      if(markDirty){
+    if (markDirty) {
         this.owner._positionDirty = true
       }
-      this._data.top = value
+    this._data.top = value
     // }
   }
   public get layout(): LayoutOptions | undefined {

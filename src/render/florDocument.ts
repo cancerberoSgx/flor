@@ -1,14 +1,14 @@
 import { isObject } from 'misc-utils-of-mine-generic'
+import { inspect } from 'util'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
 import { ElementProps, FullProps, isElement, ProgramDocument, ProgramElement } from '../programDom'
+import { addLogger, Layout } from '../util'
 import { installExitKeys } from '../util/util'
+import { CursorManager } from './cursorManager'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
-import { CursorManager } from './cursorManager';
-import { addLogger, Layout } from '../util';
-import { inspect } from 'util';
 
 interface FlorDocumentOptions extends ProgramOptions, RendererCreateOptions {
   program?: Program
@@ -29,25 +29,24 @@ const mainBox = flor.create({bg: 'red', fg: 'black', left: 0, top: 0, width: .5,
 TODO: probably this should extend ProgramDocument and handle all registerListener call here directly.
 */
 
-
 export class FlorDocument {
- 
+
   private _renderer: ProgramDocumentRenderer
   private _program: Program = undefined as any
   private _document: ProgramDocument
   private _events: EventManager
   private _focus: FocusManager
-  private _cursor: CursorManager;
+  private _cursor: CursorManager
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
-      // if(o.useAnsiDiff){        
+      // if(o.useAnsiDiff){
   // let differ = require('ansi-diff-stream')
   // let diff = differ()
   // this._program = new Program({...o, input: diff})
   // diff.pipe(program.output)
       // }
 // else {C
-  this._program = new Program(o)
+      this._program = new Program(o)
 // }
       this._program.enableMouse()
       installExitKeys(this._program)
@@ -65,7 +64,7 @@ export class FlorDocument {
     this._cursor.enter()
     this.createTextNode = this.createTextNode.bind(this)
     this.debug = this.debug.bind(this)
-    addLogger({log: (...args: any[])=>{
+    addLogger({log: (...args: any[]) => {
       this.debug('', undefined, ...args)
     }})
   }
@@ -115,7 +114,7 @@ export class FlorDocument {
    * Gets the cursor manager instance
    */
   public get cursor(): CursorManager {
-    return this._cursor;
+    return this._cursor
   }
 
   /**
@@ -174,7 +173,7 @@ export class FlorDocument {
    */
   debug(el: ProgramElement | string, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
     if (!this._debugEl) {
-      this._debugEl = this.create({   top: .7, left: .7, width: .5, height: .3, ...props, children: [], layout: {layout: Layout.justifiedRows} })
+      this._debugEl = this.create({   top: .7, left: .7, width: .5, height: .3, ...props, children: [], layout: { layout: Layout.justifiedRows } })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
@@ -184,7 +183,7 @@ export class FlorDocument {
         this._debugEl!.appendChild(this.create({ top: i, left: 0, children: [l] }))
       })
     }
-    args.map(a=>typeof a === 'string' ? a: inspect(a, {sorted: true, compact: true,maxArrayLength: 4, breakLength: 120})).map(s=>`   ||||   ${s}`).map(this.createTextNode).forEach(c=>{
+    args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 4, breakLength: 120 })).map(s => `   ||||   ${s}`).map(this.createTextNode).forEach(c => {
       this._debugEl!.appendChild(c)
     })
     this.renderer.renderElement(this._debugEl)
@@ -206,4 +205,3 @@ export class FlorDocument {
   }
 
 }
-

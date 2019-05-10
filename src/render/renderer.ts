@@ -2,7 +2,7 @@ import { array } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import * as wrap from 'word-wrap'
 import { Program, ProgramOptions } from '../declarations/program'
-import { Node, Element } from '../dom'
+import { Node } from '../dom'
 import { isText } from '../dom/nodeUtil'
 import { TextNode } from '../dom/text'
 import { isElement, Rectangle } from '../programDom'
@@ -105,12 +105,11 @@ export class ProgramDocumentRenderer {
     preventChildrenCascade: false,
     __onRecursion: false
   }
-  private _writeArea: Rectangle;
+  private _writeArea: Rectangle
 
   private lastAbsLeft: number = 0
   private lastAbsTop: number = 0
   private renderCounter = 0
-
 
   constructor(options: RendererCreateOptions) {
     this._program = options.program || createProgram(options.programOptions)
@@ -185,14 +184,14 @@ export class ProgramDocumentRenderer {
   }
 
   /**
-    * Limit writing only inside this writeArea. By default all the screen. 
+    * Limit writing only inside this writeArea. By default all the screen.
     */
   public get writeArea(): Rectangle {
-    return this._writeArea;
+    return this._writeArea
   }
 
   public set writeArea(value: Rectangle) {
-    this._writeArea = value;
+    this._writeArea = value
   }
 
   /**
@@ -214,26 +213,25 @@ export class ProgramDocumentRenderer {
    *
    * IMPORTANT: all writings to program.output must be performed using this method, otherwise some features or
    * tests could fail.
-   * 
-   * TODO: 
-   * 
-    // TODO : test performance paint the rest of the line: 
+   *
+   * TODO:
+   *
+    // TODO : test performance paint the rest of the line:
           // out += this.tput.cup(y, x);
           // out += this.tput.el();
   'parm_insert_line':                                    ['il',                               'AL'], //                              insert #1 lines (P*)
 
-
    */
   write(y: number, x: number, s: string) {
     if (
-      // y<0 || 
-      // y>=this.program.rows || 
-      y <  this._writeArea.yi+1 || 
-      y >= this._writeArea.yl || 
-      // x<0|| 
-      // x>=this.program.cols || 
-      x<this._writeArea.xi || 
-      x >= this._writeArea.xl-1
+      // y<0 ||
+      // y>=this.program.rows ||
+      y <  this._writeArea.yi + 1 ||
+      y >= this._writeArea.yl ||
+      // x<0||
+      // x>=this.program.cols ||
+      x < this._writeArea.xi ||
+      x >= this._writeArea.xl - 1
       ) {
       // debug('outside area ', x, y)
       return
@@ -251,7 +249,6 @@ export class ProgramDocumentRenderer {
       }
     }
   }
-
 
   /**
    * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
@@ -472,7 +469,7 @@ export class ProgramDocumentRenderer {
     //   debug('eraseElement else ', ( el._data && el._data.renderLocation ||[]));
 
     //   ( el._data && el._data.renderLocation ||[]).forEach(([yi, yl, xi, xl]: number[])=>{
-    //   this.fillRectangle(Math.round(yi)||1, Math.round(xi)||1, Math.round(yl-yi)||1, Math.round(xl-xi)||1, ' ') 
+    //   this.fillRectangle(Math.round(yi)||1, Math.round(xi)||1, Math.round(yl-yi)||1, Math.round(xl-xi)||1, ' ')
     //   })
     // }
   }

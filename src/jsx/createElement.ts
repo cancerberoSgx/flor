@@ -64,7 +64,7 @@ class FlorJsxImpl implements FlorJsx {
         el._addEventListener(attr, val)
       }
       //  else {
-        (el.props as any)[attr] = val
+      (el.props as any)[attr] = val
       // }
     })
     if (e.children) {

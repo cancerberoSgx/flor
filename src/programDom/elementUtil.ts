@@ -26,25 +26,25 @@ export interface Rectangle {
   xi: number, yi: number, yl: number, xl: number
 }
 type R = Rectangle
-export function rectangleIntersects(a:R, b:R) {
-    return (a.xi <= b.xl &&
+export function rectangleIntersects(a: R, b: R) {
+  return (a.xi <= b.xl &&
             b.xi <= a.xl &&
             a.yi <= b.yl &&
             b.yi <= a.yl)
-  }
+}
 
-  export function rectanglePlusOffsets(r: R,xOffset=0, yOffset=0) {
-return {yi: r.yi+yOffset, yl: r.yl+yOffset, xi:r.xi+xOffset, xl: r.xl+xOffset}
+export function rectanglePlusOffsets(r: R,xOffset= 0, yOffset= 0) {
+    return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
   }
   // // function intersectRect(r1, r2) {
-  //   return !(r2.xi > r1.xl || 
-  //            r2.xl < r1.xi || 
+  //   return !(r2.xi > r1.xl ||
+  //            r2.xl < r1.xi ||
   //            r2.yi > r1.yl ||
   //            r2.yl < r1.yi)
   // }
   // function intersectRect(r1, r2) {
-  //   return !(r2.left > r1.right || 
-  //            r2.right < r1.left || 
+  //   return !(r2.left > r1.right ||
+  //            r2.right < r1.left ||
   //            r2.top > r1.bottom ||
   //            r2.bottom < r1.top);
   // }

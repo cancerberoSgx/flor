@@ -1,5 +1,9 @@
 
+import { ansi } from 'cli-driver'
+import { createPatch } from 'diff'
 import { appendFileSync } from 'fs'
+import { DisplayProcessor, SpecReporter } from 'jasmine-spec-reporter'
+import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter'
 import { rm } from 'shelljs'
 import { format, inspect } from 'util'
 
@@ -42,15 +46,10 @@ j.onComplete(function(passed: boolean) {
   }
 })
 
-import { ansi } from 'cli-driver'
-import { createPatch } from 'diff'
-import { DisplayProcessor, SpecReporter } from 'jasmine-spec-reporter'
-import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter'
-
 class CustomProcessor extends DisplayProcessor {
   displayFailedSpec(spec: CustomReporterResult, log: string): string {
     const colored: string[] = []
-      if (spec.failedExpectations && spec.failedExpectations.length) {
+    if (spec.failedExpectations && spec.failedExpectations.length) {
         spec.failedExpectations.forEach(s => {
           const p = createPatch(s.message, s.actual, s.expected)
           const c = p
@@ -60,8 +59,8 @@ class CustomProcessor extends DisplayProcessor {
           colored.push(c)
         })
       }
-      return colored.join('\n\n\n')
-    }
+    return colored.join('\n\n\n')
+  }
   // displaySpecErrorMessages(spec: CustomReporterResult, log: string): string {
   //     return ''
   //   }

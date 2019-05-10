@@ -10,7 +10,7 @@ interface Info {
 }
 export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
 
-  if(o.size) {
+  if (o.size) {
     o.neverResizeContainer = undefined
   }
 
@@ -27,7 +27,7 @@ export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
     i.meta.props.width = i.width
     i.meta.props.height = i.height
   })
-  if (!o.neverResizeContainer&&!o.size) {
+  if (!o.neverResizeContainer && !o.size) {
     o.el.props.width = info.width + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.left + o.el.props.padding.right : 0)
     o.el.props.height = info.height + + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.top + o.el.props.padding.bottom : 0)
   }

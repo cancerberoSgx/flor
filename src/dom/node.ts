@@ -111,7 +111,7 @@ export abstract class Node extends EventTarget {
   }
 
   /** miscellaneous data */
-  _data: {[s: string]: any }= {}
+  _data: {[s: string]: any } = {}
 }
 
 export type NodeType = 10 | 3 | 1
