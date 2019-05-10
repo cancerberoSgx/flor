@@ -30,7 +30,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     if (!this._data.width) {
       return 0
     }
-    if (this._data.width > 0 && this._data.width < 1) {
+    if (this._data.width > -1 && this._data.width < 1) {
       return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentWidth * this._data.width) || this._data.width
     }
     return this._data.width || 0
@@ -45,7 +45,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     if (!this._data.height) {
       return 0
     }
-    if (this._data.height > 0 && this._data.height < 1) {
+    if (this._data.height > -1 && this._data.height < 1) {
       return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentHeight * this._data.height) || this._data.height
     }
     return this._data.height || 0
@@ -60,7 +60,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     if (!this._data.left) {
       return 0
     }
-    if (this._data.left > 0 && this._data.left < 1) {
+    if (this._data.left > -1 && this._data.left < 1) {
       return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentWidth * this._data.left) || this._data.left
     }
     return this._data.left || 0
@@ -76,7 +76,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     if (!this._data.top) {
       return 0
     }
-    if (this._data.top > 0 && this._data.top < 1) {
+    if (this._data.top > -1 && this._data.top < 1) {
       return isElement(this.owner.parentNode) &&  Math.round(this.owner.parentNode.contentHeight * this._data.top) || this._data.top
     }
     return this._data.top || 0

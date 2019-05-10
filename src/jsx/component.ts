@@ -23,7 +23,7 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
 
   /**
    * Called from `Flor.render` when [[element]] is ready, this is, with its attributes and children
-   * initialized and rendered as [[ProgramElement]]s. 
+   * initialized and rendered as [[ProgramElement]]s.
    *
    * @internal
    */

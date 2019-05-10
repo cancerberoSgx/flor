@@ -29,14 +29,14 @@ export interface RendererOptions {
 
 See spec/rendererCascadeSpec.ts
 
-There are two modes in which properties can be propagated across the element's document: 
+There are two modes in which properties can be propagated across the element's document:
 
- * from parent to children, or 
- * from sibling to next sibling. 
+ * from parent to children, or
+ * from sibling to next sibling.
 
-This behavior can be customized using [[renderElement]] options parameter or using Element's [[preventChildrenCascade]] and [[preventSiblingCascade]] properties in element definitions. This means that you can have different policies declared for different fragments of the document is needed. 
+This behavior can be customized using [[renderElement]] options parameter or using Element's [[preventChildrenCascade]] and [[preventSiblingCascade]] properties in element definitions. This means that you can have different policies declared for different fragments of the document is needed.
 
-Below are the different behaviors supported currently: 
+Below are the different behaviors supported currently:
 
 ## `{  preventChildrenCascade: false,  preventSiblingCascade: true  } `
 
@@ -44,11 +44,11 @@ This is the default behavior. Properties are propagated like in HTML/CSS, only f
 
 ## `{ preventChildrenCascade: false,  preventSiblingCascade: false }`
 
-If both are false properties will be propagated both from parent to children and from sibling to next sibling. The base props for an element will be the mix between its parent's and its previous sibling's. The parent's has priority and of course element's own property declarations will override any of these. 
+If both are false properties will be propagated both from parent to children and from sibling to next sibling. The base props for an element will be the mix between its parent's and its previous sibling's. The parent's has priority and of course element's own property declarations will override any of these.
 
 ## `{ preventChildrenCascade: true,  preventSiblingCascade: false }`
 
-Then base props for an element will be [[currentAttrs]], this is, the state of the attrs that previous siblings (and descendants) leave in the renderer instance. If the previous sibling declared a border or background, then the next sibling will have that border or background by default. 
+Then base props for an element will be [[currentAttrs]], this is, the state of the attrs that previous siblings (and descendants) leave in the renderer instance. If the previous sibling declared a border or background, then the next sibling will have that border or background by default.
 
 ## `{ preventChildrenCascade: true,  preventSiblingCascade: true }`
    * if both If [[preventChildrenCascade]] and [[[preventSiblingCascade]] are true, then there will be no property propagation at all. The base props for an element will always be [[defaultAttrs]] and this means elements will always need to declare **all** its properties explicitly.
@@ -61,11 +61,10 @@ interface RenderElementOptions {
   preventChildrenCascade?: boolean
   /**
    * Default value: `true` in which an element's properties are totally independent on the properties of its siblings. If `false`, properties defined by previous siblings or their descendants will be propagated to the element. See [[RenderElementOptions]] description for details.
-   * 
+   *
    */
   preventSiblingCascade?: boolean
 }
-
 
 /**
  * Responsibilities:
@@ -185,8 +184,6 @@ export class ProgramDocumentRenderer {
   private lastAbsTop: number = 0
   private renderCounter = 0
 
-
-
   /**
    * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
    * only applied if not falsy. Boolean properties are applied only if not undefined.
@@ -255,9 +252,6 @@ export class ProgramDocumentRenderer {
     this._currentAttrs = value
   }
 
-
-
-
   /**
    * Main public function to render given element in the screen. Element's props character attributes will me
    * merged with [[currentAttrs]] and that will be used to render the element's pixels.
@@ -266,13 +260,9 @@ export class ProgramDocumentRenderer {
     , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions
     ) {
     el._beforeRender()
-    const preventChildrenCascadeOriginal = options.preventChildrenCascade
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade })
-    // if (typeof preventChildrenCascadeOriginal !== 'undefined') {
-    //     options.preventChildrenCascade = preventChildrenCascadeOriginal
-    //   }
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
@@ -352,41 +342,31 @@ export class ProgramDocumentRenderer {
       el.props.renderContent(this)
     } else {
       if (!attrs.noFill) {
-        this.setAttrs(attrs) // TODO: merge with all ancestors ? or there should bealready merged ? 
+        this.setAttrs(attrs)
         let yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
         let xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
         let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
         let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
-        // let y0 = yi
-        if(isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow!=='visible') {
-          
-          height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop : height
-          
+        if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
 
-          width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft : width
-          
-          // y0 = el.parentNode.absoluteContentTop>
+          height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
 
-
-          // xi = el.parentNode.absoluteContentLeft
-          if(xi < el.parentNode.absoluteContentLeft){
+          width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1  : width
+          if (xi < el.parentNode.absoluteContentLeft) {
             width = width - (el.parentNode.absoluteContentLeft - xi)
             xi = el.parentNode.absoluteContentLeft;
             (attrs as any).xi = xi
           }
-          if(yi < el.parentNode.absoluteContentTop){
+          if (yi < el.parentNode.absoluteContentTop) {
             height = height - (el.parentNode.absoluteContentTop - yi)
             yi = el.parentNode.absoluteContentTop;
             (attrs as any).yi = yi
           }
-          attrs.height=height
-          attrs.width=width;
-      // xi =  ?  xi + el.parentNode.absoluteContentLeft - xi : xi
+          attrs.height = height
+          attrs.width = width
         }
         for (let i = 0; i < height; i++) {
-          // if(yi+i>=y0  ){
-            this.write(yi + i, xi, this._program.repeat(el.props.ch || this._currentAttrs.ch, width))
-          // }
+          this.write(yi + i, xi, this._program.repeat(el.props.ch || this._currentAttrs.ch, width))
         }
       }
     }
@@ -425,10 +405,10 @@ export class ProgramDocumentRenderer {
     const type = border.type || BorderStyle.light
     this.setAttrs({ ...elProps, ...border })
     const { xi, xl, yi, yl } = {
-      xi: (elProps as any).xi ||el.absoluteLeft,
-      xl: ((elProps as any).xi||el.absoluteLeft) + (elProps.width || el.props.width),
+      xi: (elProps as any).xi || el.absoluteLeft,
+      xl: ((elProps as any).xi || el.absoluteLeft) + (elProps.width || el.props.width),
       yi: (elProps as any).yi || el.absoluteTop,
-      yl: ((elProps as any).yi||el.absoluteTop) + (elProps.height || el.props.height)
+      yl: ((elProps as any).yi || el.absoluteTop) + (elProps.height || el.props.height)
     }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))

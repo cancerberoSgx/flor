@@ -10,7 +10,7 @@
     "build": "tsc && npm run copy && echo 'build successful'",
     "copy": " rm -rf dist/src/blessed && cp -r src/blessed dist/src && cp -r usr dist",
     "test": "ts-node -T spec/support/customJasmine && echo $?",
-    "test-debug": "node --inspect-brk node_modules/ts-node/dist/bin node_modules/jasmine/bin/jasmine.js",
+    "test-debug": "node --inspect-brk node_modules/ts-node/dist/bin spec/support/customJasmine",
     "prepare": "npm run build",
     "test-performance": "ts-node -T spec/performance/animElementTest.ts",
     "clean": "rm -rf dist",
@@ -29,6 +29,7 @@
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
+    "@types/diff": "^4.0.2",
     "@types/jasmine": "^3.3.12",
     "@types/node": "^12.0.0",
     "@types/shelljs": "^0.8.5",
@@ -36,7 +37,10 @@
     "ansi-diff-stream": "^1.2.1",
     "browserify": "^16.2.3",
     "cli-driver": "^0.2.1",
+    "diff": "^4.0.1",
     "jasmine": "^3.4.0",
+    "jasmine-diff": "^0.1.3",
+    "jasmine-spec-reporter": "^4.2.1",
     "markdown-toc": "^1.2.0",
     "shelljs": "^0.8.3",
     "terser": "^3.17.0",

@@ -1,11 +1,11 @@
 import { ProgramMouseEvent } from '../declarations/program'
 import { Event } from '../dom/event'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
-import { isElement, ProgramDocument, ProgramElement, isVisible, isAttached } from '../programDom'
+import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '../programDom'
 import { EventManager, notifyListener } from './eventManager'
 
 /**
- * 
+ *
  * TODO: focusNext and focusPrev element order policy customization
  */
 export class FocusManager {
@@ -80,7 +80,7 @@ export class FocusManager {
       throw new Error('Element must be visible and attached and have property focusable on true.')
     }
   }
-  
+
   /**
    * Add a listener t be notified when a new element gain focus.
    */
@@ -98,7 +98,7 @@ export class FocusManager {
   }
 
   /**
-   * Change [[focused]] element to the next element visible element in the document with property [[focusable]] value true. By default there is no policy to find it  but the calls `focusNext() ; focusPrevious` should return to the previous focused element. 
+   * Change [[focused]] element to the next element visible element in the document with property [[focusable]] value true. By default there is no policy to find it  but the calls `focusNext() ; focusPrevious` should return to the previous focused element.
    */
   focusNext() {
     if (this.locked) {
@@ -111,7 +111,7 @@ export class FocusManager {
   }
 
   /**
-   * Change [[focused]] element to the previous element visible element in the document with property [[focusable]] value true. By default there is no policy to find it but the calls `focusNext() ; focusPrevious` should return to the previous focused element. 
+   * Change [[focused]] element to the previous element visible element in the document with property [[focusable]] value true. By default there is no policy to find it but the calls `focusNext() ; focusPrevious` should return to the previous focused element.
    */
   focusPrevious() {
     if (this.locked) {
@@ -123,15 +123,15 @@ export class FocusManager {
     this.dispatchFocusChanged(target)
   }
 
-  private _locked = false;
+  private _locked = false
   /**
-   * if true the focus won't change. 
+   * if true the focus won't change.
    */
   public get locked() {
-    return this._locked;
+    return this._locked
   }
   public set locked(value) {
-    this._locked = value;
+    this._locked = value
   }
 }
 

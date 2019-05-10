@@ -5,22 +5,16 @@ import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { Color } from './styleProps'
 
-// export abstract class AbstractPropsImpl implements AbstractProps {
-
-// }
 export interface Padding {
   top: number
   left: number
   right: number
   bottom: number
 }
-export interface AbstractProps {
-}
 /**
- * This represents the native styles attrs that are set direcyly udinh tput (the axioms)
+ * This represents the native styles attrs that are set directly using tput (the axioms)
  */
 export interface Attrs {
-// extends AbstractProps {
   bg: Color
   fg: Color
   ch: string
@@ -33,21 +27,46 @@ export interface Attrs {
 
 export interface StyleProps extends Attrs {
     /**
-   * Width of the element. If the value is a number between 0 and 1 (non inclusive) then it will be the parent's contentHeight multiplied for that number. For example, width==0.5 will be half the parent's height. Otherwise is columns
+   * Width of the element (number of columns or fraction).
+   *
+   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentHeight]]
+   * multiplied for that number. For example, width==0.5 will be half the parent's [[contentHeight]].
+   * Otherwise is columns.
    */
   width: number
   /**
-   * Height of the element. If the value is a number between 0 and 1 (non inclusive) then it will be the parent's contentHeight multiplied for that number. For example, height==0.5 will be half the parent's height. Otherwise is rows.
+   * Height of the element (number of rows or fraction).
+   *
+   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentHeight]]
+   * multiplied for that number. For example, height==0.5 will be half the parent's [[contentHeight]].
+   * Otherwise is rows.
    */
   height: number
   /**
-   * top coordinate (row number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute top position multiplied for that number. For example, top==0.5 will be position the element at the middle of the parent. Otherwise is rows.
+   * Top coordinate (row number), relative to the parent.
+   *
+   * Can be negative number in which case the element will be outside parent's viewport.
+   *
+   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute top
+   * position multiplied for that number. For example, top==0.5 will be position the element at the middle of
+   * the parent. Otherwise is rows.
    */
   top: number
   /**
-   * left coordinate (column number), relative to the parent.  If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute left position multiplied for that number. For example, left==0.5 will be position the element at the middle of the parent. Otherwise is columns.
+   * Left coordinate (column number, negative column number or fraction), relative to the parent's
+   * [[absoluteLeft]] coordinate.
+   *
+   * Can be negative number in which case the element will be outside parent's viewport.
+   *
+   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute left
+   * position multiplied for that number. For example, left==0.5 will be position the element at the middle of
+   * the parent. Otherwise is columns.
    */
   left: number
+
+  /**
+   * If true child text nodes will be wrapped into element's [[contentWidth]]. Default value: false
+   */
   textWrap: boolean
 
   /**
@@ -64,7 +83,10 @@ export interface StyleProps extends Attrs {
   border: Partial<BorderProps>
 
   /**
-   * It will prevent painting the background so back elements will be visible. IMPORTANT: if true then `bg` property must be undefined. NOTE: to preserve parent's background color, just don't `bg` instead using this. This whould rarely used, probably useful fo rcustom elements that need to manage the rendering 100% their self.
+   * It will prevent painting the background so back elements will be visible. IMPORTANT: if true then `bg`
+   * property must be undefined. NOTE: to preserve parent's background color, just don't `bg` instead using
+   * this. This whould rarely used, probably useful fo rcustom elements that need to manage the rendering 100%
+   * their self.
    */
   noFill: boolean
 }
@@ -77,7 +99,7 @@ export interface ElementProps extends StyleProps {
 
   focusable: boolean
   focused: boolean
-  overflow: 'visible'|'scroll'|'hidden'  
+  overflow: 'visible' | 'scroll' | 'hidden'
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
 
@@ -100,26 +122,28 @@ export interface ElementProps extends StyleProps {
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
    *
-   * Returning true will prevent the default implementation to execute. Currently the layout
-   * calculation for children is done here so it can be prevented by returning true.
+   * Returning true will prevent the default implementation to execute. Currently the layout calculation for
+   * children is done here so it can be prevented by returning true.
    */
   beforeRender?(): boolean
   /**
    * Called by  `Flor.render()` after all children ProgramElement instances are created and appended to this
    * node.
    *
-   * Returning true will prevent the default implementation to execute. Currently the layout
-   * calculation for children is done here so it can be prevented by returning true.
+   * Returning true will prevent the default implementation to execute. Currently the layout calculation for
+   * children is done here so it can be prevented by returning true.
    */
   childrenReady?(): boolean
 
   /**
-   * Listener for when the element is clicked. The program must have the mouse enabled (`Program.enableMouse()`)
+   * Listener for when the element is clicked. The program must have the mouse enabled
+   * (`Program.enableMouse()`)
    */
   onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
-   * Listener for when the element is clicked. The program must have the mouse enabled (`Program.enableMouse()`)
+   * Listener for when the element is clicked. The program must have the mouse enabled
+   * (`Program.enableMouse()`)
    */
   onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void | boolean
 
@@ -144,22 +168,29 @@ export interface ElementProps extends StyleProps {
   onFocus?(e: FocusEvent): void | boolean
 
   /**
-   * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared, the content and border won't be rendered, and implementation is responsible of them.
+   * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared,
+   * the content and border won't be rendered, and implementation is responsible of them.
    */
   render?(renderer: ProgramDocumentRenderer): void
 
   /**
-   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content.
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
+   * method. If declared, the content   won't be rendered but the border will. The implementation is
+   * responsible of drawing the content.
    */
   renderContent?(renderer: ProgramDocumentRenderer): void
 
   /**
-   * Custom element content draw function. Can be declared by subclasses that need custom content drawing method. If declared, the content   won't be rendered but the border will. The implementation is responsible of drawing the content.
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
+   * method. If declared, the content   won't be rendered but the border will. The implementation is
+   * responsible of drawing the content.
    */
   renderBorder?(renderer: ProgramDocumentRenderer): void
 
   /**
-   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses that need custom children drawing method. If declared, children   won't be rendered but the content and border will. The implementation is responsible of drawing the children.
+   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses
+   * that need custom children drawing method. If declared, children   won't be rendered but the content and
+   * border will. The implementation is responsible of drawing the children.
    */
   renderChildren?(renderer: ProgramDocumentRenderer): void
 
