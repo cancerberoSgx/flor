@@ -1,7 +1,7 @@
 import { tryTo } from 'misc-utils-of-mine-generic'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
+import { trimRightLines } from '../src/util/misc'
 import { installExitKeys } from '../src/util/util'
-import { trimRightLines } from '../src/util/misc';
 
 describe('styleProps', () => {
   let program: Program
@@ -14,7 +14,7 @@ describe('styleProps', () => {
     program.reset()
     jasmine.addMatchers(require('jasmine-diff')(jasmine, {
       colors: true, inline: true
-        }))
+    }))
     doc = new ProgramDocument()
     renderer = new ProgramDocumentRenderer({ program })
   })
@@ -31,7 +31,7 @@ describe('styleProps', () => {
       { top: -2, left: -3, width: 22, height: 4, ch: '1' }
       ]})
     renderer.renderElement(el)
-    expect(renderer.printBuffer(true)).toEqual(`
+    expect(renderer.printBuffer(true)).toContain(`
 
 
          1111111111111111111111
@@ -46,8 +46,7 @@ describe('styleProps', () => {
     done()
   })
 
- 
-  fit('top left can be negative fractions', async done => {
+  it('top left can be negative fractions', async done => {
     const el = doc.create({top: 10, left: 14, width: 24, height: 15, ch: '0',
       children: [
       { top: .7, left: .7, width: .4, height: .4, ch: '1' },
@@ -56,7 +55,7 @@ describe('styleProps', () => {
       ]})
     renderer.renderElement(el)
     expect(renderer.printBuffer(true)).toContain(trimRightLines(`
-    
+
 
 
                                     3333333

@@ -1,8 +1,7 @@
+
 import { appendFileSync } from 'fs'
 import { rm } from 'shelljs'
 import { format, inspect } from 'util'
-import { ansi } from 'cli-driver'
-import { createPatch } from 'diff'
 
 rm('-rf', 'test_output.txt')
 
@@ -43,61 +42,35 @@ j.onComplete(function(passed: boolean) {
   }
 })
 
-import {DisplayProcessor, SpecReporter} from "jasmine-spec-reporter";
-// import SuiteInfo = jasmine.SuiteInfo;
-import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter';
-// import { NamedNodeMap } from '../../src';
+import { ansi } from 'cli-driver'
+import { createPatch } from 'diff'
+import { DisplayProcessor, SpecReporter } from 'jasmine-spec-reporter'
+import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter'
 
 class CustomProcessor extends DisplayProcessor {
-    // public displayJasmineStarted(info: SuiteInfo, log: string): string {
-    //     return ``;
-    // }
-    // displaySuite(suite: CustomReporterResult, log: string): string{return ''}
-    // displaySpecStarted(spec: CustomReporterResult, log: string): string{return ''}
-    // displaySuccessfulSpec(specC: CustomReporterResult, log: string): string;
-    displayFailedSpec(spec: CustomReporterResult, log: string): string{
-      if(spec.failedExpectations && spec.failedExpectations.length){
-        spec.failedExpectations.forEach(s=>{
-          // debugger
-          const p = createPatch(s.message, s.actual, s.expected)//, '', '', {context: 20, newlineIsToken: true})
-          showDiff({name: '', diff: p})
+  displayFailedSpec(spec: CustomReporterResult, log: string): string {
+    const colored: string[] = []
+      if (spec.failedExpectations && spec.failedExpectations.length) {
+        spec.failedExpectations.forEach(s => {
+          const p = createPatch(s.message, s.actual, s.expected)
+          const c = p
+          .split('\n')
+          .map(l => (l.startsWith('-') ? ansi.format(l, ['red']) : l.startsWith('+') ? ansi.format(l, ['green']) : l))
+          .join('\n')
+          colored.push(c)
         })
       }
-      //  && 
-      return log
-
-// return 'displayFailedSpec'
+      return colored.join('\n\n\n')
     }
-    displaySpecErrorMessages(spec: CustomReporterResult, log: string): string{
-    //     // console.log(spec, log);
-    //     // spec.failedExpectations && spec.failedExpectations.forEach(s=>{
-    //     //   debugger
-    //     //   const p = createPatch('name', s.actual, s.expected, '', '', {context: 20, newlineIsToken: true})
-    //     //   showDiff({name: '', diff: p})
-    //     // })
-    //     // createPatch('name', spec.failedExpectations[0]., spec.c.file.oldText, file.newText)
-    //     return log
-    //     // return 'displaySpecErrorMessages'
-return ''
+  displaySpecErrorMessages(spec: CustomReporterResult, log: string): string {
+      return ''
     }
-    // displaySummaryErrorMessages(spec: CustomReporterResult, log: string): string{
-    //   return ''
-    // }
-    // displayPendingSpec(spec: CustomReporterResult, log: string): string;
+    displaySummaryErrorMessages(){return ''}
 }
 
-jasmine.getEnv().clearReporters();
+jasmine.getEnv().clearReporters()
 jasmine.getEnv().addReporter(new SpecReporter({
-    customProcessors: [CustomProcessor],
-}));
+  customProcessors: [CustomProcessor]
+}))
 
 j.execute()
-
-
-function showDiff(f: { name: string; diff: string }) {
-  const colorized = f.diff
-    .split('\n')
-    .map(l => (l.startsWith('-') ? ansi.format(l, ['red']) : l.startsWith('+') ? ansi.format(l, ['green']) : l))
-    .join('\n')
-  console.log(`${colorized}`)
-}
