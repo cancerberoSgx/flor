@@ -4,13 +4,14 @@ import { BlurEvent, FocusEvent } from '../render/focusManager'
 import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps } from './types'
+import { Node } from '../dom';
 
 export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements Partial<ElementProps> {
 
-  public get overflow(): 'visible' | 'scroll' | 'hidden' | undefined {
+  public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow
   }
-  public set overflow(value: 'visible' | 'scroll' | 'hidden' | undefined) {
+  public set overflow(value: 'visible' | 'hidden' | undefined) {
     this._data.overflow = value
   }
 
@@ -91,7 +92,7 @@ export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements P
    * won't be rendered but the child text nodes, content and border will. The implementation is responsible of
    * drawing the child elements and its children's children.
    */
-  renderChildElement?(renderer: ProgramDocumentRenderer, child: ProgramElement, index: number): void
+  renderChildElement?(renderer: ProgramDocumentRenderer, child: ProgramElement, index: number, children: Node[]): void
 
   /**
    * Custom element child text node draw function. Child text nodes are child  text but not child elements.

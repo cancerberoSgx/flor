@@ -62,9 +62,10 @@ class FlorJsxImpl implements FlorJsx {
       const val = (e as any).props[attr]
       if (typeof val === 'function') {
         el._addEventListener(attr, val)
-      } else {
-        (el.props as any)[attr] = val
       }
+      //  else {
+        (el.props as any)[attr] = val
+      // }
     })
     if (e.children) {
       if (Array.isArray(e.children)) {

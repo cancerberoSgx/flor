@@ -265,6 +265,7 @@ export class ProgramDocumentRenderer {
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade })
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
+    debugger
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
     } else {
@@ -279,7 +280,7 @@ export class ProgramDocumentRenderer {
           }
         } else if (c instanceof ProgramElement) {
           if (el.props.renderChildElement) {
-            el.props.renderChildElement(this, c, i)
+            el.props.renderChildElement(this, c, i, a)
           } else {
             this.renderElement(c, { ...options, __onRecursion: true })
           }

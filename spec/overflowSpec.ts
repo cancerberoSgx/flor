@@ -2,6 +2,7 @@ import { tryTo } from 'misc-utils-of-mine-generic'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 import { BorderStyle } from '../src/util/border'
 import { installExitKeys } from '../src/util/util'
+import { scrollable } from '../src/component/scrollable';
 
 describe('overflow', () => {
   let program: Program
@@ -94,6 +95,8 @@ describe('overflow', () => {
 `)
     done()
   })
+
+
 
   xit('test with padding and multiple levels', () => {
 

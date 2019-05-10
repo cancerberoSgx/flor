@@ -99,7 +99,7 @@ export interface ElementProps extends StyleProps {
 
   focusable: boolean
   focused: boolean
-  overflow: 'visible' | 'scroll' | 'hidden'
+  overflow: 'visible' | 'hidden'
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
 
