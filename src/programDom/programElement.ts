@@ -96,7 +96,9 @@ export class ProgramElement extends Element {
   get parentNode(): ProgramElement | ProgramDocument {
     return this._parentNode as any
   }
-
+  get parentElement(): ProgramElement|undefined {
+    return isElement(this._parentNode) ? this._parentNode : undefined// as any
+  }
   private _absoluteLeft = 0
   get absoluteLeft() {
     if (this._positionDirty) {

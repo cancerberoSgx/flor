@@ -110,6 +110,8 @@ export abstract class Node extends EventTarget {
         ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
   }
 
+  /** miscellaneous data */
+  _data: {[s: string]: any }= {}
 }
 
 export type NodeType = 10 | 3 | 1

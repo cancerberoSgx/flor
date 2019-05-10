@@ -2,7 +2,7 @@ import { array } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import * as wrap from 'word-wrap'
 import { Program, ProgramOptions } from '../declarations/program'
-import { Node } from '../dom'
+import { Node, Element } from '../dom'
 import { isText } from '../dom/nodeUtil'
 import { TextNode } from '../dom/text'
 import { isElement } from '../programDom'
@@ -298,19 +298,19 @@ export class ProgramDocumentRenderer {
     // TODO: correct char width for unicode.
     let s = (c.textContent || '')
     const parent = c.parentNode as ProgramElement
+    // c._data.renderLocation = []
     if (parent.props.textWrap) {
       const cutIndex = Math.min(s.length, this.lastAbsLeft - parent.absoluteContentLeft)
       const s1 = s.substring(0, cutIndex)
       const s2 = s.substring(cutIndex, s.length)
       if (s1) {
         this.write(this.lastAbsTop, this.lastAbsLeft, s1)
+        // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+s1.length||1)
         this.lastAbsTop = this.lastAbsTop + 1
-        this.lastAbsLeft = parent.absoluteContentLeft
-      }
+        this.lastAbsLeft = parent.absoluteContentLeft      }
       wrap(s2.replace(/\n/g, ' '), { width: parent.contentWidth - 1 }).split('\n').map(l => l.trim()).forEach(l => {
-        if (s1) {
-        }
         this.write(this.lastAbsTop, this.lastAbsLeft, l)
+        // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+(l.length||1))
         this.lastAbsTop = this.lastAbsTop + 1
         this.lastAbsLeft = parent.absoluteContentLeft
       })
@@ -318,6 +318,7 @@ export class ProgramDocumentRenderer {
       const nextChildIsText = isText(nextNode)
       // Heads up : if next child is also text, we keep writing on the same line, if not, on a new  line.
       this.write(this.lastAbsTop, this.lastAbsLeft, s)
+      // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+(nextChildIsText ? s.length : 1))
       this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
       this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)
     }
@@ -381,15 +382,36 @@ export class ProgramDocumentRenderer {
   /**
    * Writes [[currentAttrs]] in all pixels of the area of given el.
    */
-  eraseElement(el: ProgramElement): any {
+  eraseElement(el:ProgramElement
+    // el: Node
+    // , forceChildrenErase=false
+    ) {
     this.setAttrs(this._defaultAttrs)
-    this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
+    // if(isElement(el)){
+      this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
+      // if(forceChildrenErase){
+      // debug('eraseElement if ', ( Array.from(el.childNodes||[])))
+
+        // Array.from(el.childNodes||[]).filter(c=>c).forEach(c=>this.eraseElement(c, forceChildrenErase))
+        // // for(let n of el.childNodes||[]){
+        //   // this.eraseElement(n, forceChildrenErase)
+        // // }
+      // }
+    // }
+    // else if(el) {
+    //   debug('eraseElement else ', ( el._data && el._data.renderLocation ||[]));
+      
+    //   ( el._data && el._data.renderLocation ||[]).forEach(([yi, yl, xi, xl]: number[])=>{
+    //   this.fillRectangle(Math.round(yi)||1, Math.round(xi)||1, Math.round(yl-yi)||1, Math.round(xl-xi)||1, ' ') 
+    //   })
+    // }
   }
 
   /**
    * Writes given [[ch]] with [[currentAttrs]] in all pixels of given rectangle.
    */
   fillRectangle(top: number, left: number, height: number, width: number, ch = this._currentAttrs.ch) {
+    // debug(top, left, height, width)
     for (let i = 0; i < height; i++) {
       this.write(top + i, left, this._program.repeat(ch, width))
     }
@@ -411,6 +433,11 @@ export class ProgramDocumentRenderer {
       yi: (elProps as any).yi || el.absoluteTop,
       yl: ((elProps as any).yi || el.absoluteTop) + (elProps.height || el.props.height)
     }
+    // const parentEl = el.parentElement
+    // if(parentEl && Math.abs(yi- (parentEl.absoluteTop+parentEl.props.height)) <=1){
+    //   return
+    // }
+    // debug({xi, xl, yi, yl, 'p': el.parentElement && el.parentElement!.absoluteTop, h: el.parentElement && el.parentElement!.absoluteTop+el.parentElement!.props.height})
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
     this.write(yl - 1, xi, getBoxStyleChar(type, BorderSide.bottomLeft))
