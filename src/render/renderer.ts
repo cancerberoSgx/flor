@@ -5,7 +5,7 @@ import { Program, ProgramOptions } from '../declarations/program'
 import { Node, Element } from '../dom'
 import { isText } from '../dom/nodeUtil'
 import { TextNode } from '../dom/text'
-import { isElement } from '../programDom'
+import { isElement, Rectangle } from '../programDom'
 import { ProgramElement } from '../programDom/programElement'
 import { PAttrs } from '../programDom/styleProps'
 import { Attrs, ElementProps } from '../programDom/types'
@@ -14,13 +14,14 @@ import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
 import { createProgram, destroyProgram } from '../util/util'
 
-export interface RendererOptions {
+export interface RendererCreateOptions {
   program?: Program
   /**
    * Program options for if I have to create it
    */
   programOptions?: ProgramOptions
   noBuffer?: boolean
+  writeArea?: Rectangle
 }
 
 /**
@@ -64,8 +65,20 @@ interface RenderElementOptions {
    *
    */
   preventSiblingCascade?: boolean
-}
+  /**@internal. Indicates if we are inside descendant recursion loop */
+  __onRecursion?: boolean
 
+  // /**
+  //  * if passed the write area will be applied only temporarily for the current frament being rendered. After the renderElement() call finished, it will be reseted. For a permanent write area use the setter [[writeArea]] or the method [[setElementWriteArea]]
+  //  */
+  // writeArea?: Rectangle
+}
+/**
+ * TODO. should eb PAttrs for completness
+ */
+interface BufferData {
+  ch: string, bg: string, fg: string
+}
 /**
  * Responsibilities:
  *
@@ -84,15 +97,22 @@ interface RenderElementOptions {
 export class ProgramDocumentRenderer {
   private useBuffer: boolean
   private _program: Program
-  private buffer: PAttrs[][] = []
+  private buffer: BufferData[][] = []
   private _defaultAttrs: Attrs
   private _currentAttrs: Attrs
   private _defaultRenderOptions: RenderElementOptions = {
     preventSiblingCascade: true,
-    preventChildrenCascade: false
+    preventChildrenCascade: false,
+    __onRecursion: false
   }
+  private _writeArea: Rectangle;
 
-  constructor(options: RendererOptions) {
+  private lastAbsLeft: number = 0
+  private lastAbsTop: number = 0
+  private renderCounter = 0
+
+
+  constructor(options: RendererCreateOptions) {
     this._program = options.program || createProgram(options.programOptions)
     this.useBuffer = !options.noBuffer || true
     this._defaultAttrs = {
@@ -108,6 +128,7 @@ export class ProgramDocumentRenderer {
     this._currentAttrs = { ...this._defaultAttrs }
     this.resetAttrs()
     this.resetBuffer()
+    this._writeArea = options.writeArea || { yi: 0, xi: 0, yl: this.program.rows, xl: this.program.cols }
   }
 
   /**
@@ -122,13 +143,14 @@ export class ProgramDocumentRenderer {
    * styles.
    */
   destroy() {
+    this.resetWriteArea()
     this.resetAttrs()
     this.resetBuffer()
     destroyProgram(this.program)
   }
 
   /**
-   * Fill the entire screen with given character and current attrs.
+   * Fill the entire screen with given character and current attrs or the write writeArea if one.
    */
   fillAll(ch = ' ') {
     this.fillRectangle(0, 0, this.program.rows, this.program.cols, ch)
@@ -163,12 +185,62 @@ export class ProgramDocumentRenderer {
   }
 
   /**
+    * Limit writing only inside this writeArea. By default all the screen. 
+    */
+  public get writeArea(): Rectangle {
+    return this._writeArea;
+  }
+
+  public set writeArea(value: Rectangle) {
+    this._writeArea = value;
+  }
+
+  /**
+   * Reset write writeArea to whole screen
+   */
+  resetWriteArea() {
+    this._writeArea = { yi: 0, xi: 0, yl: this.program.rows, xl: this.program.cols }
+  }
+
+  /**
+   * Sets write writeArea to given element bounds.
+   */
+  setElementWriteArea(el: ProgramElement) {
+    this._writeArea = el.getBounds()
+  }
+
+  /**
    * Writes given string at given coordinates.
    *
    * IMPORTANT: all writings to program.output must be performed using this method, otherwise some features or
    * tests could fail.
+   * 
+   * TODO: 
+   * 
+    // TODO : test performance paint the rest of the line: 
+          // out += this.tput.cup(y, x);
+          // out += this.tput.el();
+  'parm_insert_line':                                    ['il',                               'AL'], //                              insert #1 lines (P*)
+
+
    */
   write(y: number, x: number, s: string) {
+    if (
+      // y<0 || 
+      y>=this.program.rows || 
+      y < this._writeArea.yi || 
+      y >= this._writeArea.yl || 
+      x<0|| 
+      // x>=this.program.cols || 
+      x<this._writeArea.xi || 
+      x >= this._writeArea.xl
+      ) {
+      // debug('outside area ', x, y)
+      return
+    }
+    if (x + s.length > this._writeArea.xl) {
+      s = s.substring(x + s.length - this._writeArea.xl - 1)
+    }
     this._program.cursorPos(y, x)
     this._program._write(s)
     if (this.useBuffer) {
@@ -180,9 +252,6 @@ export class ProgramDocumentRenderer {
     }
   }
 
-  private lastAbsLeft: number = 0
-  private lastAbsTop: number = 0
-  private renderCounter = 0
 
   /**
    * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
@@ -257,15 +326,19 @@ export class ProgramDocumentRenderer {
    * merged with [[currentAttrs]] and that will be used to render the element's pixels.
    */
   renderElement(el: ProgramElement
-    , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions
-    ) {
+    , options: RenderElementOptions = this._defaultRenderOptions
+  ) {
     el._beforeRender()
+    // if (!options.__onRecursion && options.writeArea) {
+    //   this.writeArea = options.writeArea!
+    // }
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
-      preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade })
+      preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
+    })
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
-    debugger
+    // debugger
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
     } else {
@@ -289,6 +362,9 @@ export class ProgramDocumentRenderer {
         }
       })
     }
+    // if (!options.__onRecursion && options.writeArea) {
+    //   this.resetWriteArea()
+    // }
     el._afterRender()
     el._renderCounter = this.renderCounter++
     return el
@@ -307,7 +383,8 @@ export class ProgramDocumentRenderer {
         this.write(this.lastAbsTop, this.lastAbsLeft, s1)
         // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+s1.length||1)
         this.lastAbsTop = this.lastAbsTop + 1
-        this.lastAbsLeft = parent.absoluteContentLeft      }
+        this.lastAbsLeft = parent.absoluteContentLeft
+      }
       wrap(s2.replace(/\n/g, ' '), { width: parent.contentWidth - 1 }).split('\n').map(l => l.trim()).forEach(l => {
         this.write(this.lastAbsTop, this.lastAbsLeft, l)
         // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+(l.length||1))
@@ -327,9 +404,9 @@ export class ProgramDocumentRenderer {
   /**
    * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement  , options: RenderElementOptions & {__onRecursion?: boolean} = this._defaultRenderOptions) {
+  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions & { __onRecursion?: boolean } = this._defaultRenderOptions) {
 
-    const attrs: Partial<ElementProps> =  {
+    const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
       ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data : {}) : {},
@@ -353,7 +430,7 @@ export class ProgramDocumentRenderer {
 
           height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
 
-          width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1  : width
+          width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1 : width
           if (xi < el.parentNode.absoluteContentLeft) {
             width = width - (el.parentNode.absoluteContentLeft - xi)
             xi = el.parentNode.absoluteContentLeft;
@@ -382,25 +459,25 @@ export class ProgramDocumentRenderer {
   /**
    * Writes [[currentAttrs]] in all pixels of the area of given el.
    */
-  eraseElement(el:ProgramElement
+  eraseElement(el: ProgramElement
     // el: Node
     // , forceChildrenErase=false
-    ) {
+  ) {
     this.setAttrs(this._defaultAttrs)
     // if(isElement(el)){
-      this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
-      // if(forceChildrenErase){
-      // debug('eraseElement if ', ( Array.from(el.childNodes||[])))
+    this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
+    // if(forceChildrenErase){
+    // debug('eraseElement if ', ( Array.from(el.childNodes||[])))
 
-        // Array.from(el.childNodes||[]).filter(c=>c).forEach(c=>this.eraseElement(c, forceChildrenErase))
-        // // for(let n of el.childNodes||[]){
-        //   // this.eraseElement(n, forceChildrenErase)
-        // // }
-      // }
+    // Array.from(el.childNodes||[]).filter(c=>c).forEach(c=>this.eraseElement(c, forceChildrenErase))
+    // // for(let n of el.childNodes||[]){
+    //   // this.eraseElement(n, forceChildrenErase)
+    // // }
+    // }
     // }
     // else if(el) {
     //   debug('eraseElement else ', ( el._data && el._data.renderLocation ||[]));
-      
+
     //   ( el._data && el._data.renderLocation ||[]).forEach(([yi, yl, xi, xl]: number[])=>{
     //   this.fillRectangle(Math.round(yi)||1, Math.round(xi)||1, Math.round(yl-yi)||1, Math.round(xl-xi)||1, ' ') 
     //   })

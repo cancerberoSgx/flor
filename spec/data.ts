@@ -9,6 +9,7 @@ export const string = (length: number = int(10, 20)) =>
     )
     .reduce((a, b) => a.concat(b))
 
+export const char = ()=>String.fromCharCode(int('a'.charCodeAt(0), 'a'.charCodeAt(0)+25))
 export const words = (
   wordCount = int(10, 20),
   wordLength = int(5, 10),

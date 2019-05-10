@@ -1,16 +1,19 @@
 import { isObject } from 'misc-utils-of-mine-generic'
-
+import { nextTick } from './misc';
+export type Animation = Timing | (()=>Timing)| TimingObject
 type Timing = (n: number, c?: number, d?: number, x?: number, y?: number) => number
 type TimingObject = { fn: (duration: number) => Timing }
 export function animate({
   duration,
   draw,
   timing,
+  onEnd,
   lapse
 }: {
   duration: number
   draw: (n: number) => void
-  timing: Timing | TimingObject
+  timing: Animation
+  onEnd?: ()=>void
   lapse?: number
 }) {
   if (isObject(timing)) {
@@ -25,12 +28,15 @@ export function animate({
     draw(progress)
     if (timeFraction < 1) {
       requestAnimationFrame(anim, lapse)
+    }else {
+      onEnd &&onEnd()
     }
   })
 }
 
 function requestAnimationFrame(f: (...args: any[]) => any, lapse = 0) {
-  setTimeout(() => f(Date.now()), lapse)
+  nextTick(()=>f(Date.now()))
+  // setTimeout(() => f(Date.now()), lapse)
 }
 
 export namespace easing {

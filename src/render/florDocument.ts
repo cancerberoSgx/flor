@@ -5,10 +5,14 @@ import { ElementProps, FullProps, isElement, ProgramDocument, ProgramElement } f
 import { installExitKeys } from '../util/util'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
-import { ProgramDocumentRenderer, RendererOptions } from './renderer'
+import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
+import { CursorManager } from './cursorManager';
+import { addLogger, Layout } from '../util';
+import { inspect } from 'util';
 
-interface FlorDocumentOptions extends ProgramOptions, RendererOptions {
+interface FlorDocumentOptions extends ProgramOptions, RendererCreateOptions {
   program?: Program
+  useAnsiDiff?: boolean
 }
 /**
  * Main entry point for the library. When calling `new FlorDocument()`, a new [[Program]] instance is created along with a new [[ProgramDocumentRenderer]], [[ProgramDocument]], [[EventManager]] and [[FocusManager]].
@@ -24,16 +28,28 @@ const mainBox = flor.create({bg: 'red', fg: 'black', left: 0, top: 0, width: .5,
 ```
 TODO: probably this should extend ProgramDocument and handle all registerListener call here directly.
 */
+
+
 export class FlorDocument {
+ 
   private _renderer: ProgramDocumentRenderer
   private _program: Program = undefined as any
   private _document: ProgramDocument
   private _events: EventManager
   private _focus: FocusManager
-
+  private _cursor: CursorManager;
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
-      this._program = new Program(o)
+      if(o.useAnsiDiff){
+        
+  let differ = require('ansi-diff-stream')
+  let diff = differ()
+  diff.pipe(process.stdout)
+  this._program = new Program({...o, output: diff})
+      }
+else {
+  this._program = new Program(o)
+}
       this._program.enableMouse()
       installExitKeys(this._program)
     }
@@ -44,6 +60,15 @@ export class FlorDocument {
     this._focus = new FocusManager(this._events, this._document)
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._document._setManagers(this)
+    this._cursor = new CursorManager({program: this._program, cursor: {
+      color: 'red'
+    }})
+    this._cursor.enter()
+    this.createTextNode = this.createTextNode.bind(this)
+    this.debug = this.debug.bind(this)
+    // addLogger({log: (...args: any[])=>{
+    //   this.debug('', undefined, ...args)
+    // }})
   }
 
   /**
@@ -85,6 +110,13 @@ export class FlorDocument {
    */
   get document() {
     return this._document
+  }
+
+  /**
+   * Gets the cursor manager instance
+   */
+  public get cursor(): CursorManager {
+    return this._cursor;
   }
 
   /**
@@ -141,9 +173,9 @@ export class FlorDocument {
   /**
    * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
-  debug(el: ProgramElement | string, props: Partial<ElementProps> & {hideTimeout?: number} = {}) {
+  debug(el: ProgramElement | string, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
     if (!this._debugEl) {
-      this._debugEl = this.create({   top: .7, left: .7, width: .3, height: .3, ...props, children: [] })
+      this._debugEl = this.create({   top: .7, left: .7, width: .5, height: .3, ...props, children: [], layout: {layout: Layout.justifiedRows} })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
@@ -153,6 +185,9 @@ export class FlorDocument {
         this._debugEl!.appendChild(this.create({ top: i, left: 0, children: [l] }))
       })
     }
+    args.map(a=>typeof a === 'string' ? a: inspect(a, {sorted: true, compact: true,maxArrayLength: 4, breakLength: 120})).map(s=>`   ||||   ${s}`).map(this.createTextNode).forEach(c=>{
+      this._debugEl!.appendChild(c)
+    })
     this.renderer.renderElement(this._debugEl)
     if (props.hideTimeout) {
       setTimeout(() => {
@@ -172,3 +207,4 @@ export class FlorDocument {
   }
 
 }
+

@@ -670,7 +670,7 @@ this.program.csr(0, this.height - 1);
   /**
    * set's cursor color.
    */
-  cursorColor(color: string): boolean
+  cursorColor(color: string|number): boolean
 
   /**
    * Reset all tput current modes.
@@ -1093,6 +1093,8 @@ same as CSI Ps B ?
   NOTE: In xterm terminfo:  cnorm stops blinking cursor   cvvis starts blinking cursor
  */
   showCursor(): boolean
+  // /** alias for [[showCursor]] - legacy - @internal */
+  // showCursor_old(): boolean
   alternateBuffer(): boolean
   smcup(): boolean
   alternate(): boolean

@@ -9,6 +9,11 @@ interface Info {
   items: { height: number, width: number, x: number, y: number, meta: ProgramElement }[]
 }
 export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
+
+  if(o.size) {
+    o.neverResizeContainer = undefined
+  }
+
   let layer: any = layout(o.layout, { sort: !!o.sort })
   for (let c of o.el.childNodes) {
     if (isElement(c)) {
@@ -22,7 +27,7 @@ export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
     i.meta.props.width = i.width
     i.meta.props.height = i.height
   })
-  if (!o.neverResizeContainer) {
+  if (!o.neverResizeContainer&&!o.size) {
     o.el.props.width = info.width + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.left + o.el.props.padding.right : 0)
     o.el.props.height = info.height + + (o.el.props.border ? 2 : 0) + (o.el.props.padding ? o.el.props.padding.top + o.el.props.padding.bottom : 0)
   }

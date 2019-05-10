@@ -6,12 +6,11 @@ import { Component } from '../jsx'
 import { layoutChildren } from '../util'
 import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
-import { isElement } from './elementUtil'
+import { isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
 
 export class ProgramElement extends Element {
-
   private static counter = 1
 
   props: ElementPropsImpl
@@ -49,12 +48,14 @@ export class ProgramElement extends Element {
    * @internal
    */
   protected layout() {
-    if (this.props.layout && this._positionDirty) {
+    if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce) && this._positionDirty) {
       layoutChildren({
         el: this, ...this.props.layout
       })
+      this._layoutOnce = true
     }
   }
+  private _layoutOnce = false
 
   /**
    * Called by the rendered just after the element all all its children were rendered to the screen
@@ -96,7 +97,7 @@ export class ProgramElement extends Element {
   get parentNode(): ProgramElement | ProgramDocument {
     return this._parentNode as any
   }
-  get parentElement(): ProgramElement|undefined {
+  get parentElement(): ProgramElement | undefined {
     return isElement(this._parentNode) ? this._parentNode : undefined// as any
   }
   private _absoluteLeft = 0
@@ -128,11 +129,11 @@ export class ProgramElement extends Element {
   }
 
   get absoluteContentTop() {
-    return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top  : 0)
+    return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
   }
 
   get absoluteContentLeft() {
-    return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left  : 0)
+    return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left : 0)
   }
 
   get contentHeight() {
@@ -156,6 +157,23 @@ export class ProgramElement extends Element {
           e._positionDirty = true
         })
       }
+    }
+  }
+
+  getBounds(relative = false): Rectangle {
+    if (!relative) {
+      return { yi: this.absoluteTop, xi: this.absoluteLeft, yl: this.absoluteTop + this.props.height, xl: this._absoluteLeft + this.props.width }
+    }
+    else {
+      throw 'TODO'
+    }
+  }
+  getContentBounds(relative = false): Rectangle {
+    if (!relative) {
+      return { yi: this.absoluteContentTop, xi: this.absoluteContentLeft, yl: this.absoluteContentTop + this.contentHeight, xl: this._absoluteLeft + this.contentWidth }
+    }
+    else {
+      throw 'TODO'
     }
   }
 

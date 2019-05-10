@@ -62,10 +62,10 @@ class CustomProcessor extends DisplayProcessor {
       }
       return colored.join('\n\n\n')
     }
-  displaySpecErrorMessages(spec: CustomReporterResult, log: string): string {
-      return ''
-    }
-    displaySummaryErrorMessages(){return ''}
+  // displaySpecErrorMessages(spec: CustomReporterResult, log: string): string {
+  //     return ''
+  //   }
+  //   displaySummaryErrorMessages(){return ''}
 }
 
 jasmine.getEnv().clearReporters()

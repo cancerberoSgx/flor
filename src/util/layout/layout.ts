@@ -18,6 +18,12 @@ export interface LayoutOptions {
    */
   justifiedLayout?: JustifiedLayoutOptions
 
+size?: {
+  width: number
+  height: number
+}
+
+manualLayout?: boolean
 }
 export enum Layout {
   /**
