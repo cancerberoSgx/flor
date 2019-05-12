@@ -9,75 +9,130 @@ import { nextTick } from '../util/misc'
 
 interface ScrollEvent {
   currentTarget: ProgramElement,
-  /** number of rows considered to build the vertical offset. in other words the height ot the scrolled area. */
-  rows: number,
-  /** number of  cols considered to build the horizontal offset. in other words the height ot the scrolled area. */
-  cols: number,
-  /** current horizontal scroll position. [[cols]] / [[xOffset]] is the horizontal scrolled current percentage */
+  //  /** 
+  //  * Number of rows considered to build the vertical offset. in other words the height ot the scrolled
+  //    area. 
+  //    */
+  //  rows: number,
+  //  /** 
+  //  * Number of  cols considered to build the horizontal offset. in other words the height ot the scrolled
+  //  * area. 
+  //    */
+  //  cols: number,
+  /** 
+   * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current percentage 
+   */
   xOffset: number
-  /** current vertical scroll position. [[rows]] / [[yOffset]] is the vertical scrolled current percentage */
+  /** 
+   * Current vertical scroll position. `rows` / [[yOffset]] is the vertical scrolled current percentage, where `rows` is `scrollArea.yl -  scrollArea.yi`. 
+   */
   yOffset: number
-  /** Bounds of the scrolled region */
-  bounds: Rectangle
+  //  /** 
+  //  * Bounds of the scrolled region 
+  //    */
+  //  bounds: Rectangle
 }
+
 interface ConcreteScrollableProps {
-  onScroll?: (e: ScrollEvent) => void
-  verticalStep?: number
-  horizontalStep?: number
-  topExtraOffset?: number
-  leftExtraOffset?: number
-  bottomExtraOffset?: number
-  throttleVertical?: number
-  verticalAnimation?: Animation
-  verticalAnimationDuration?: number
-  normalScrollDownKeys?: string[]
-  normalScrollUpKeys?: string[]
-  fastScrollDownKeys?: string[]
-  fastScrollUpKeys?: string[]
-  fastVerticalScrollStep?: number
   /**
-   * What to do when user actionates while the widget is still in an animation.
+   * Listener notified when a scroll event happens. 
+   */
+  onScroll?: (e: ScrollEvent) => void
+  /**
+   * Number of rows to advance / retrocede on a normal vertical  scroll. 
+   */
+  normalVerticalStep?: number
+  /**
+   * Number of cols to advance / retrocede on a normal horizontal scroll. 
+   */
+  normalHorizontalStep?: number
+  /**
+   * Extra rows as scrolled area top padding. By default 5. 
+   */
+  topExtraOffset?: number
+  /**
+   * Extra cols as scrolled area left padding. By default 5. 
+   */
+  leftExtraOffset?: number
+  /**
+   * Extra rows as scrolled area bottom padding. By default 5. 
+   */
+  bottomExtraOffset?: number
+  /**
+   * If given, vertical scroll will be throttled by [[throttleVertical]] milliseconds. Use it only if really
+   * necessary since it adds flickering.
+   */
+  throttleVertical?: number
+  /**
+   * Vertical easing animation to perform on fast scrolls or when scrolling to the end or start. By default
+   * `bounceEasyOut`. Example: `largeScrollAnimation: easing.bounceEasyOut()`.
+   */
+  largeScrollAnimation?: Animation
+  /**
+   * Duration in milliseconds, for [[verticalAnimation]].
+   */
+  verticalAnimationDuration?: number
+  /**
+   * Keys that activate normal scroll down. Default: `['down']`.
+   */
+  normalScrollDownKeys?: string[]
+  /**
+   * Keys that activate normal scroll up. Default: `['up']`.
+   */
+  normalScrollUpKeys?: string[]
+  largeScrollDownKeys?: string[]
+  largeScrollUpKeys?: string[]
+  largeVerticalScrollStep?: number
+  /**
+   * What to do when user activates while the widget is still in an animation. By default `true`.
    */
   interruptAnimation?: boolean
   verticalGotoEndKeys?: string[]
   verticalGotoStartKeys?: string[]
   horizontalGotoEndKeys?: string[]
   horizontalGotoStartKeys?: string[]
-
 }
+
 interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
 
 }
+
+/**
+ * Scrollable box to  add vertical and/or horizontal scroll support for its children. Supports:
+ *  * keyboard and mouse events with configurable keys 
+ *  * different size scroll actions like normal, large, and going to the end/beginning. 
+ *  * animations for large scroll
+ */
 export class Scrollable extends Component<ScrollableProps, {}> {
   protected yOffset: number
   protected xOffset: number
-  // protected vStep: number;
   protected yi: number = +Infinity
   protected yl: number = -Infinity
   protected xi: number = +Infinity
   protected xl: number = -Infinity
   protected renderer: ProgramDocumentRenderer | undefined
   /**
-   * Children currently "inside" the viewport, The "inside" predicate is [[elementInViewportPredicate]]
+   * Children currently "inside" the viewport, The "inside" predicate is implemented in method
+   * [[elementInViewportPredicate]] and currently are those children that intersects the viewport area.
    */
   protected vChildren: Node[] = []
   protected scrolling: boolean = false
 
   protected defaultProps: Required<ConcreteScrollableProps> = {
-    fastVerticalScrollStep: 20,
-    fastScrollDownKeys: ['s'],
-    interruptAnimation: false,
-    fastScrollUpKeys: ['a'],
+    largeVerticalScrollStep: 20,
+    largeScrollUpKeys: ['a'],
+    largeScrollDownKeys: ['s'],
+    interruptAnimation: true,
     leftExtraOffset: 5,
     normalScrollDownKeys: ['down'],
     normalScrollUpKeys: ['up'],
-    verticalStep: 2,
-    horizontalStep: 2,
+    normalVerticalStep: 2,
+    normalHorizontalStep: 2,
     topExtraOffset: 5,
     bottomExtraOffset: 5,
     throttleVertical: 0,
-    verticalAnimation: easing.bounceEasyOut(),
-    verticalAnimationDuration: 2000,
+    largeScrollAnimation: easing.bounceEasyOut(),
+    verticalAnimationDuration: 1000,
     onScroll(e) { },
     verticalGotoEndKeys: [''],
     verticalGotoStartKeys: [''],
@@ -98,27 +153,24 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.handleScrollEnd = this.handleScrollEnd.bind(this)
   }
 
-  /** called from rendered to render our children. Delegates to [[_renderChildren]] */
+  /** 
+   * Called from rendered to render our children. Delegates to [[_renderChildren]].
+   */
   protected renderChildren(r: ProgramDocumentRenderer) {
     return this.props.throttleVertical ?
       throttle(this._renderChildren, this.props.throttleVertical, { trailing: true, leading: true }) :
       nextTick(this._renderChildren, r)
   }
 
-  elArea: Rectangle = null as any
-
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
-    let forceCalcArea = false
+    // let forceCalcArea = false
     if (!this.renderer) {
-      this.elArea = this.element!.getBounds()
       this.renderer = renderer
-      this.renderer.writeArea = this.elArea
-      // forceCalcArea = true
-      // this.element!.onBoundsChange(()=>{
+      this.renderer.writeArea = this.element!.getBounds()
+      // forceCalcArea = true this.element!.onBoundsChange(()=>{
       // })
     }
-    // TODO: clean this, remove first, last, use some() , performance
-    // this.calcScrollArea(forceCalcArea);
+    // TODO: clean this, remove first, last, use some() , performance this.calcScrollArea(forceCalcArea);
     this.calcScrollArea()
     // TODO: assuming children ordered top-down!!!
     this.vChildren.forEach(c => {
@@ -137,11 +189,11 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   }
 
   /**
-   * iterate children to get: 1) the current children in the current viewport. The predicate to if child is or not inside is
-   * [[elementInViewportPredicate]]. 2) . The while Rect area being scrolled [[yi]], [[yl]], [[xi]], [[xl]]. Heads up,
-   * this function is called on each render.
+   * Iterate children to get: 1) the current children in the current viewport. The predicate to if child is or
+   * not inside is [[elementInViewportPredicate]]. 2) . The while Rect area being scrolled [[yi]], [[yl]],
+   * [[xi]], [[xl]]. Heads up, this function is called on each render.
    */
-  private calcScrollArea(forceCalc = false) {
+  protected calcScrollArea(forceCalc = false) {
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
     this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
@@ -150,8 +202,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       }
       let r
       if (isElement(c)) {
-        // forceCalc && this.addChildToScrollAreaCalc(c);
-        // this.addChildToScrollAreaCalc(c);
+        // forceCalc && this.addChildToScrollAreaCalc(c); this.addChildToScrollAreaCalc(c);
         const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
         if (this.yi > cyi) {
           this.yi = cyi
@@ -161,7 +212,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
           this.yl = cyl
         }
         // TODO: the same for xi xl
-
         r = this.elementInViewportPredicate(c, this.element!)
         if (r && !first) {
           first = c
@@ -178,118 +228,99 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     })
   }
 
-  // private addChildToScrollAreaCalc(c: ProgramElement) {
-  //   const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
-  //   if (this.yi > cyi) {
-  //     this.yi = cyi
-  //   }
-  //   const cyl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
-  //   if (this.yl < cyl) {
-  //     this.yl = cyl
-  //   }
-  //   //TODO: the same for xi xl
-  // }
-
   protected elementInViewportPredicate(c: ProgramElement, el: ProgramElement): any {
+    const isContained = (c: ProgramElement, e: ProgramElement, ratio: number) => {
+      return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= 
+      this.yOffset + e.absoluteTop + e.props.height
+    }
     return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), 0, this.yOffset))
   }
-  private isContained(c: ProgramElement, e: ProgramElement, ratio: number) {
-    return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= this.yOffset + e.absoluteTop + e.props.height
-  }
 
-  stopAnimation: () => void = () => { }
+  /** 
+   * Overridden by animate implementation. Don't call.  
+   */
+  private _stopAnimation: () => void = () => { }
 
-  handleScrollEnd() {
+  protected handleScrollEnd() {
     this.scrolling = false
-    this.stopAnimation && this.stopAnimation()
-    // const e = {
-    //   currentTarget: this,
-    //   // /** number of rows considered to build the vertical offset. in other words the height ot the scrolled area. */
-    //   // rows: this.yl-this.,
-    //   // /** number of  cols considered to build the horizontal offset. in other words the height ot the scrolled area. */
-    //   // cols: number,
-    //   /** current horizontal scroll position. [[cols]] / [[xOffset]] is the horizontal scrolled current percentage */
-    //   xOffset: 0,
-    //   /** current vertical scroll position. [[rows]] / [[yOffset]] is the vertical scrolled current percentage */
-    //   yOffset: this.yOffset,
-    //   bounds: this.getScrollArea()
-    // }
+    this._stopAnimation && this._stopAnimation()
+    if(this.props.onScroll) {
+      nextTick(()=>{
+        const e = {currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset }
+        this.p.onScroll(e)
+      })
+    }
   }
-
-  // /** Gets the current whole scrolled area, optionally recalculating it. */
-  // getScrollArea(forceCalc?: boolean): Rectangle {
-  //   return { yi: this.yi, yl: this.yl, xi: this.xi, xl: this.xl }
-  // }
 
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
     if (!this.element!.props.focused) {
-      return //
+      return  
     } else if (this.scrolling) {
-      if (this.props.interruptAnimation) {
+      if (this.p.interruptAnimation) {
         this.handleScrollEnd()
       } else {
         this.renderer!.program.bell()
         this.handleScrollEnd()
         return
       }
-    } else if (this.p.fastScrollUpKeys.includes(e.name)) {
-      this.scrolling = true
-      const start = this.yOffset
-      animate({
-        duration: this.p.verticalAnimationDuration,
-        draw: t => {
-          const final = Math.round(Math.max(this.yi, start + this.p.fastVerticalScrollStep * t))
-          if (this.yOffset !== final) {
-            this.yOffset = Math.max(this.yi, final)
-            this.renderElement()
-          }
-        },
-        timing: this.p.verticalAnimation,
-        onEnd: () => {
-          this.handleScrollEnd()
-        },
-        onStop: (l => this.stopAnimation = l)
-      })
+    } else if (this.p.largeScrollUpKeys.includes(e.name)) {
+      this.handleLargeScroll(-1);
       return
-    } else if (this.p.fastScrollDownKeys.includes(e.name)) {
-      this.scrolling = true
-      const start = this.yOffset
-      animate({
-        duration: this.p.verticalAnimationDuration,
-        draw: t => {
-          const final = Math.round(Math.max(this.yi, start - this.p.fastVerticalScrollStep * t))
-          if (this.yOffset !== final) {
-            this.yOffset = Math.max(this.yi, final)
-            this.renderElement()
-          }
-        },
-        timing: this.p.verticalAnimation,
-        onEnd: () => {
-
-          this.handleScrollEnd()
-        },
-        onStop: (l => this.stopAnimation = l)
-      })
+    } else if (this.p.largeScrollDownKeys.includes(e.name)) {
+      this.handleLargeScroll(1);
       return
     } else if (this.p.normalScrollUpKeys.includes(e.name)) {
-      this.yOffset = Math.min(this.yl, this.yOffset + this.p.verticalStep)
+      this.yOffset = Math.max(this.yi, this.yOffset - this.p.normalVerticalStep)
       this.renderElement()
-      // this.handleScrollEnd()
-      // nextTick(this.handleScrollEnd)C
+      this.handleScrollEnd()
     } else if (this.p.normalScrollDownKeys.includes(e.name)) {
-      this.yOffset = Math.max(this.yi, this.yOffset - this.p.verticalStep)
+      this.yOffset = Math.min(this.yl, this.yOffset + this.p.normalVerticalStep)
       this.renderElement()
-      // this.handleScrollEnd()
-      nextTick(this.handleScrollEnd)
+      this.handleScrollEnd()
     }
   }
 
-  private renderElement(c = this.element!.parentNode as ProgramElement) {
-    this.renderer!.renderElement(c
-      //    , {
-      //   writeArea: this.element!.getBounds()
-      // }
-    )
+  protected handleLargeScroll (multiplier: number) {
+    this.scrolling = true;
+    if(this.props.largeScrollAnimation){
+      const start = this.yOffset;
+      animate({
+        duration: this.p.verticalAnimationDuration,
+        draw: t => {
+          const final = Math.round(Math.max(this.yi, start + this.p.largeVerticalScrollStep * t * multiplier));
+          if (this.yOffset !== final) {
+            this.yOffset = Math.max(this.yi, final);
+            this.renderElement();
+          }
+        },
+        timing: this.p.largeScrollAnimation,
+        onEnd: () => {
+          this.handleScrollEnd();
+        },
+        onStop: (l => this._stopAnimation = l)
+      });
+    }
+    else {
+      if(multiplier<0){
+      this.yOffset = Math.max(this.yi, this.yOffset - this.p.largeVerticalScrollStep)
+      }
+      else {
+        this.yOffset = Math.min(this.yl, this.yOffset + this.p.largeVerticalScrollStep)
+      }
+    this.renderElement()
+    this.handleScrollEnd()
+    }
+  }
+
+  protected renderElement(c = this.element!.parentNode as ProgramElement) {
+    this.renderer!.renderElement(c)
+  }
+
+  /** 
+   * Gets the current whole scrolled area, optionally recalculating it. TODO: forceCalc.
+   */
+  getScrollArea(forceCalc: boolean=false): Rectangle {
+    return { yi: this.yi, yl: this.yl, xi: this.xi, xl: this.xl }
   }
 
   render() {
@@ -304,6 +335,9 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   }
 }
 
+/**
+ * Create a new [[Scrollable]].
+ */
 export function scrollable(props: ScrollableProps & { document: ProgramDocument }) {
   return Flor.render(<Scrollable {...props} />, { document: props.document })
 }
