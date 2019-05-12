@@ -34,8 +34,8 @@ export function rectangleIntersects(a: R, b: R) {
 }
 
 export function rectanglePlusOffsets(r: R,xOffset= 0, yOffset= 0) {
-    return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
-  }
+  return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
+}
   // // function intersectRect(r1, r2) {
   //   return !(r2.xi > r1.xl ||
   //            r2.xl < r1.xi ||

@@ -326,18 +326,39 @@ export declare class Program extends TPut  implements  EventEmitter {
   input: Readable
   output: Writable
   /**
+   * true if program is currently using the alternateBuffer
+   */
+  alt: boolean
+  /**
    * Is zero-based indexes for col, row values.
    */
   zero: boolean
   useBuffer: boolean
+  /** 
+   * alias for ç
+   * [[cols]] 
+   */
   x: number
+/**
+ * alias for [[rows]]
+ */
   y: number
+
   savedX: number
   savedY: number
+  /**
+   * current terminal columns
+   */
   cols: number
+  /**
+   * current terminal rows
+   */
   rows: number
+  
   tput: TPut
+
   scrollTop: number
+  
   /** 
    * Examples usage: 
    * 
@@ -568,7 +589,18 @@ this.program.csr(0, this.height - 1);
   write(text: string): boolean
 
    /**
-   * Writes given string to [[output]] to the buffer. It doesn't parse given parameters
+Writes given string to [[output]] to the buffer. It doesn't parse given parameters. Example: write : `ESC # 3 `DEC line height/width`
+
+```
+
+program._write('\x1b#3');
+```
+
+  Example writing a CSI secuence `CSI Ps A` Cursor Up Ps Times (default = 1) (CUU):
+
+```
+this._write('\x1b[' + (param || '') + 'A');
+```
    */
   _write(text: string): boolean
 
@@ -968,23 +1000,33 @@ same as CSI Ps B ?
 
   cursorCharAbsolute(param?: number): boolean
   cha(param?: number): boolean
+
   insertLines(param?: number): boolean
   il(param?: number): boolean
+
   deleteLines(param?: number): boolean
   dl(param?: number): boolean
+
   deleteChars(param?: number): boolean
   dch(param?: number): boolean
+
   eraseChars(param?: number): boolean
   ech(param?: number): boolean
+
   charPosAbsolute(param?: number): boolean
   hpa(param?: number): boolean
+
   HPositionRelative(param?: number): boolean
+
   sendDeviceAttributes(param?: number, callback?: ProgramResponseCallback): boolean
   da(param?: number, callback?: Function): boolean
+
   linePosAbsolute(param?: number): boolean
   vpa(param?: number): boolean
+
   VPositionRelative(param?: number): boolean
   vpr(param?: number): boolean
+  
   HVPosition(row?: number, col?: number): boolean
   hvp(row?: number, col?: number): boolean
   /**
@@ -996,7 +1038,9 @@ same as CSI Ps B ?
      Ps = 2 0  -> Automatic Newline (LNM).
  CSI ? Pm h
    DEC Private Mode Set (DECSET).
+
      Ps = 1  -> Application Cursor Keys (DECCKM).
+
      Ps = 2  -> Designate USASCII for character sets G0-G3
      (DECANM), and set VT100 mode.
      Ps = 3  -> 132 Column Mode (DECCOLM).
@@ -1075,17 +1119,37 @@ same as CSI Ps B ?
    http://vt100.net/docs/vt220-rm/chapter4.html
 ```
 
-   Example: Show cursor:
+   Example: Show cursor: (Ps = 2 5  -> Show Cursor (DECTCEM)
 ```
   return this.setMode('?25', (error, data)=>{
 
   });
+```
+
+Example: set 4.6.12 Screen Mode (DECSCNM) - Screen mode selects either a dark or light (reverse) display background on the screen.This doesn't seemt to be present in blessed... and is kind of cool:
+
+```
+program.setMode('?5h', (error, data)=>{
+
+});
+
 ```
    */
   setMode(args: string, callback: ProgramResponseCallback): boolean
   /** @see [[setMode]]  */
   sm(...args: string[]): boolean
 
+  /**
+   * alternative syntax for setMode
+   * 
+   *  return this._write('\x1b[' + (param || '') + 'h');
+};
+
+Program.prototype.decset = function() {
+  var param = slice.call(arguments).join(';');
+  return this.setMode('?' + param);
+
+   */
   decset(...args: string[]): boolean
 
   /**
@@ -1093,8 +1157,6 @@ same as CSI Ps B ?
   NOTE: In xterm terminfo:  cnorm stops blinking cursor   cvvis starts blinking cursor
  */
   showCursor(): boolean
-  // /** alias for [[showCursor]] - legacy - @internal */
-  // showCursor_old(): boolean
   alternateBuffer(): boolean
   smcup(): boolean
   alternate(): boolean

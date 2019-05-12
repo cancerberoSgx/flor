@@ -1,5 +1,5 @@
 import { ProgramElement } from './programElement'
-import { Color, PAttrs } from './styleProps'
+import { ColorString, PAttrs } from './styleProps'
 
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs, owner: ProgramElement) {
@@ -38,16 +38,16 @@ export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   public set bold(value: boolean | undefined) {
     this._data.bold = !!value
   }
-  public get bg(): Color | undefined {
+  public get bg(): ColorString | undefined {
     return this._data.bg
   }
-  public set bg(value: Color | undefined) {
+  public set bg(value: ColorString | undefined) {
     this._data.bg = value
   }
-  public get fg(): Color | undefined {
+  public get fg(): ColorString | undefined {
     return this._data.fg
   }
-  public set fg(value: Color | undefined) {
+  public set fg(value: ColorString | undefined) {
     this._data.fg = value
   }
   public get ch(): string | undefined {

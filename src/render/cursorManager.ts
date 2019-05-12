@@ -1,5 +1,6 @@
 import { Color, colors } from '../declarations/colors'
 import { Program } from '../declarations/program'
+import { enterProgram, leaveProgram } from '../util/programUtil'
 type CursorShape = 'block' | 'underline' | 'line'
 interface Cursor {
   // /**
@@ -31,8 +32,10 @@ interface Options {
  * Manages the cursor. Adapted from blessed screen.
  */
 export class CursorManager {
+
   cursor: Cursor
   program: Program
+
   constructor(options: Options) {
     options.cursor = options.cursor || {} as any
     // const c: Cursor = options.cursor || {shape: 'block'}
@@ -85,38 +88,7 @@ export class CursorManager {
     // }
     // return this.program.cursorShape(this.cursor.shape, this.cursor.blink);
   }
-  enter(): any {
-    // Screen.prototype.enter = function() {
-    if (this.program.isAlt) {
-      return
-    }
-    if (!this.cursor._set) {
-      if (this.cursor.shape) {
-        this.cursorShape(this.cursor.shape, this.cursor.blink)
-      }
-      if (this.cursor.color) {
-        this.cursorColor(this.cursor.color)
-      }
-    }
-    if (process.platform === 'win32') {
-      try {
-        require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 })
-      } catch (e) {
-        
-      }
-    }
-    this.program.alternateBuffer()
-    this.program.put.keypad_xmit()
-    this.program.csr(0, this.program.rows - 1)
-    this.program.hideCursor()
-    this.program.cup(0, 0)
-    // We need this for tmux now:
-    if (this.program.tput.strings.ena_acs) {
-      this.program._write(this.program.tput.enacs())
-    }
-    // this.alloc();
-    // };
-  }
+
   cursorColor(color: Color): any {
     this.cursor.color = color != null
     ? colors.convert(color)
@@ -130,35 +102,29 @@ export class CursorManager {
     return this.program.cursorColor((colors.ncolors as any)[this.cursor.color! as any])
   }
 
-  leave() {
-    if (!this.program.isAlt) {
+/**
+ * frees unlock keyboard and mouse resources. Don't destroy de program or event listeners but the terminal is reset. To use it again, use [[enterProgram]]
+ */
+  leave(): any {
+
+    leaveProgram(this.program)
+  }
+
+  enter(): any {
+    if (this.program.isAlt) {
       return
     }
-    this.program.put.keypad_local()
-    if (this.program.scrollTop !== 0
-      || this.program.scrollBottom !== this.program.rows - 1) {
-      this.program.csr(0, this.program.rows - 1)
-    }
-    // XXX For some reason if alloc/clear() is before this
-    // line, it doesn't work on linux console.
-    this.program.showCursor()
-    // this.alloc();
-    // if (this._listenedMouse) {
-    this.program.disableMouse()
-    // }
-    this.program.normalBuffer()
-    // if (this.cursor._set)
-    this.resetCursor()
-    this.program.flush()
-    if (process.platform === 'win32') {
-      try {
-        require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 })
-      } catch (e) {
-        
+    if (!this.cursor._set) {
+      if (this.cursor.shape) {
+        this.cursorShape(this.cursor.shape, this.cursor.blink)
+      }
+      if (this.cursor.color) {
+        this.cursorColor(this.cursor.color)
       }
     }
+    enterProgram(this.program)
   }
-  
+
   resetCursor() {
     this.cursor.shape = 'block'
     this.cursor.blink = false
@@ -180,6 +146,6 @@ export class CursorManager {
     //   }
     //   return true;
     // }
-    return this.program.cursorReset()
+    return this.program.resetCursor()
   }
 }

@@ -1,11 +1,9 @@
 
-import { ansi } from 'cli-driver'
-import { createPatch } from 'diff'
 import { appendFileSync } from 'fs'
-import { DisplayProcessor, SpecReporter } from 'jasmine-spec-reporter'
-import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter'
+import { SpecReporter } from 'jasmine-spec-reporter'
 import { rm } from 'shelljs'
 import { format, inspect } from 'util'
+import { CustomProcessor } from './errorDiffProcessor'
 
 rm('-rf', 'test_output.txt')
 
@@ -21,15 +19,15 @@ j.configureDefaultReporter({
     appendFileSync(
       'test_output.txt',
       'print: ' +
-        args
-          .map(a => {
-            if (a instanceof Error) {
-              return `${a}\n${a && a.stack && a.stack.split('\n').join('\n')}`
-            } else {
-              return inspect(a)
-            }
-          })
-          .join(', ')
+      args
+        .map(a => {
+          if (a instanceof Error) {
+            return `${a}\n${a && a.stack && a.stack.split('\n').join('\n')}`
+          } else {
+            return inspect(a)
+          }
+        })
+        .join(', ')
     )
     process.stdout.write(format.apply(this, arguments as any))
   }
@@ -45,27 +43,6 @@ j.onComplete(function(passed: boolean) {
     process.exit(1)
   }
 })
-
-class CustomProcessor extends DisplayProcessor {
-  displayFailedSpec(spec: CustomReporterResult, log: string): string {
-    const colored: string[] = []
-    if (spec.failedExpectations && spec.failedExpectations.length) {
-        spec.failedExpectations.forEach(s => {
-          const p = createPatch(s.message, s.actual, s.expected)
-          const c = p
-          .split('\n')
-          .map(l => (l.startsWith('-') ? ansi.format(l, ['red']) : l.startsWith('+') ? ansi.format(l, ['green']) : l))
-          .join('\n')
-          colored.push(c)
-        })
-      }
-    return colored.join('\n\n\n')
-  }
-  // displaySpecErrorMessages(spec: CustomReporterResult, log: string): string {
-  //     return ''
-  //   }
-  //   displaySummaryErrorMessages(){return ''}
-}
 
 jasmine.getEnv().clearReporters()
 jasmine.getEnv().addReporter(new SpecReporter({

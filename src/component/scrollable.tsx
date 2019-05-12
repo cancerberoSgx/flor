@@ -54,7 +54,12 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   // protected vStep: number;
   protected yi: number = +Infinity
   protected yl: number = -Infinity
+  protected xi: number = +Infinity
+  protected xl: number = -Infinity
   protected renderer: ProgramDocumentRenderer | undefined
+  /**
+   * Children currently "inside" the viewport, The "inside" predicate is [[elementInViewportPredicate]]
+   */
   protected vChildren: Node[] = []
   protected scrolling: boolean = false
 
@@ -74,13 +79,14 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     verticalAnimation: easing.bounceEasyOut(),
     verticalAnimationDuration: 2000,
     onScroll(e) { },
-    verticalGotoEndKeys:  [''],
-    verticalGotoStartKeys:  [''],
-    horizontalGotoEndKeys:  [''],
-    horizontalGotoStartKeys:  ['']
+    verticalGotoEndKeys: [''],
+    verticalGotoStartKeys: [''],
+    horizontalGotoEndKeys: [''],
+    horizontalGotoStartKeys: ['']
   }
 
   protected p: Required<ConcreteScrollableProps>
+
   constructor(p: ScrollableProps, s: {}) {
     super(p, s)
     this.onKeyPressed = this.onKeyPressed.bind(this)
@@ -89,33 +95,73 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.yOffset = 0 - this.p.topExtraOffset
     this._renderChildren = this._renderChildren.bind(this)
     this.xOffset = 0 - this.p.leftExtraOffset
+    this.handleScrollEnd = this.handleScrollEnd.bind(this)
   }
-  protected renderChildren(r: ProgramDocumentRenderer) {return this.props.throttleVertical ? throttle(this._renderChildren, this.props.throttleVertical, { trailing: true, leading: true }) : nextTick(this._renderChildren, r)}
-  elArea: Rectangle = null as any
-  protected _renderChildren(renderer: ProgramDocumentRenderer) {
 
+  /** called from rendered to render our children. Delegates to [[_renderChildren]] */
+  protected renderChildren(r: ProgramDocumentRenderer) {
+    return this.props.throttleVertical ?
+      throttle(this._renderChildren, this.props.throttleVertical, { trailing: true, leading: true }) :
+      nextTick(this._renderChildren, r)
+  }
+
+  elArea: Rectangle = null as any
+
+  protected _renderChildren(renderer: ProgramDocumentRenderer) {
+    let forceCalcArea = false
     if (!this.renderer) {
       this.elArea = this.element!.getBounds()
       this.renderer = renderer
-      this.renderer.  writeArea = this.elArea
-
-    // this.element!.onBoundsChange(()=>{
-
-    // })
+      this.renderer.writeArea = this.elArea
+      // forceCalcArea = true
+      // this.element!.onBoundsChange(()=>{
+      // })
     }
     // TODO: clean this, remove first, last, use some() , performance
+    // this.calcScrollArea(forceCalcArea);
+    this.calcScrollArea()
+    // TODO: assuming children ordered top-down!!!
+    this.vChildren.forEach(c => {
+      if (isElement(c)) {
+        const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
+        if (y >= -this.element!.absoluteTop) {
+          const top = c.props.top
+          // c.props.setTop(y, true)
+          c.props.top = y // we need to make position dirty
+          this.renderElement(c) // and call render so it get's updated
+          // c.props.setTop(top, true)
+          c.props.top = top
+        }
+      }
+    })
+  }
+
+  /**
+   * iterate children to get: 1) the current children in the current viewport. The predicate to if child is or not inside is
+   * [[elementInViewportPredicate]]. 2) . The while Rect area being scrolled [[yi]], [[yl]], [[xi]], [[xl]]. Heads up,
+   * this function is called on each render.
+   */
+  private calcScrollArea(forceCalc = false) {
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
     this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
-      if (last) { return false }
+      if (last) {// } && !forceCalc) {
+        return false
+      }
       let r
       if (isElement(c)) {
-        if (this.yi > c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset) {
-          this.yi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
+        // forceCalc && this.addChildToScrollAreaCalc(c);
+        // this.addChildToScrollAreaCalc(c);
+        const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
+        if (this.yi > cyi) {
+          this.yi = cyi
         }
-        if (this.yl < c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset) {
-          this.yl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
+        const cyl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
+        if (this.yl < cyl) {
+          this.yl = cyl
         }
+        // TODO: the same for xi xl
+
         r = this.elementInViewportPredicate(c, this.element!)
         if (r && !first) {
           first = c
@@ -126,23 +172,23 @@ export class Scrollable extends Component<ScrollableProps, {}> {
           return true
         }
         return r
-      } else {
-        if (first && (!last || !r)) return true
-      }
-    })
-    // TODO: assuming children ordered top-down!!!
-    this.vChildren.forEach(c => {
-      if (isElement(c)) {
-        const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
-        if (y >= -this.element!.absoluteTop) {
-          const top = c.props.top
-          c.props.setTop(y, true)
-          this.renderElement(c)
-          c.props.setTop(top, true)
-        }
+      } else if (first && (!last || !r)) {
+        return true
       }
     })
   }
+
+  // private addChildToScrollAreaCalc(c: ProgramElement) {
+  //   const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
+  //   if (this.yi > cyi) {
+  //     this.yi = cyi
+  //   }
+  //   const cyl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
+  //   if (this.yl < cyl) {
+  //     this.yl = cyl
+  //   }
+  //   //TODO: the same for xi xl
+  // }
 
   protected elementInViewportPredicate(c: ProgramElement, el: ProgramElement): any {
     return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), 0, this.yOffset))
@@ -151,19 +197,39 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= this.yOffset + e.absoluteTop + e.props.height
   }
 
-  stopAnimation: () => void = () => {}
+  stopAnimation: () => void = () => { }
+
+  handleScrollEnd() {
+    this.scrolling = false
+    this.stopAnimation && this.stopAnimation()
+    // const e = {
+    //   currentTarget: this,
+    //   // /** number of rows considered to build the vertical offset. in other words the height ot the scrolled area. */
+    //   // rows: this.yl-this.,
+    //   // /** number of  cols considered to build the horizontal offset. in other words the height ot the scrolled area. */
+    //   // cols: number,
+    //   /** current horizontal scroll position. [[cols]] / [[xOffset]] is the horizontal scrolled current percentage */
+    //   xOffset: 0,
+    //   /** current vertical scroll position. [[rows]] / [[yOffset]] is the vertical scrolled current percentage */
+    //   yOffset: this.yOffset,
+    //   bounds: this.getScrollArea()
+    // }
+  }
+
+  // /** Gets the current whole scrolled area, optionally recalculating it. */
+  // getScrollArea(forceCalc?: boolean): Rectangle {
+  //   return { yi: this.yi, yl: this.yl, xi: this.xi, xl: this.xl }
+  // }
 
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
     if (!this.element!.props.focused) {
       return //
     } else if (this.scrolling) {
       if (this.props.interruptAnimation) {
-        this.stopAnimation()
-        this.scrolling = false
+        this.handleScrollEnd()
       } else {
-        this.scrolling = false
-        this.stopAnimation()
         this.renderer!.program.bell()
+        this.handleScrollEnd()
         return
       }
     } else if (this.p.fastScrollUpKeys.includes(e.name)) {
@@ -172,7 +238,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       animate({
         duration: this.p.verticalAnimationDuration,
         draw: t => {
-          const final =  Math.round(Math.max(this.yi,start + this.p.fastVerticalScrollStep * t))
+          const final = Math.round(Math.max(this.yi, start + this.p.fastVerticalScrollStep * t))
           if (this.yOffset !== final) {
             this.yOffset = Math.max(this.yi, final)
             this.renderElement()
@@ -180,8 +246,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         },
         timing: this.p.verticalAnimation,
         onEnd: () => {
-          this.scrolling = false
-          this.stopAnimation()
+          this.handleScrollEnd()
         },
         onStop: (l => this.stopAnimation = l)
       })
@@ -192,16 +257,16 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       animate({
         duration: this.p.verticalAnimationDuration,
         draw: t => {
-          const final =  Math.round(Math.max(this.yi,start - this.p.fastVerticalScrollStep * t))
+          const final = Math.round(Math.max(this.yi, start - this.p.fastVerticalScrollStep * t))
           if (this.yOffset !== final) {
-            this.yOffset = Math.max(this.yi,final)
+            this.yOffset = Math.max(this.yi, final)
             this.renderElement()
           }
         },
         timing: this.p.verticalAnimation,
         onEnd: () => {
-          this.scrolling = false
-          this.stopAnimation()
+
+          this.handleScrollEnd()
         },
         onStop: (l => this.stopAnimation = l)
       })
@@ -209,18 +274,22 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     } else if (this.p.normalScrollUpKeys.includes(e.name)) {
       this.yOffset = Math.min(this.yl, this.yOffset + this.p.verticalStep)
       this.renderElement()
+      // this.handleScrollEnd()
+      // nextTick(this.handleScrollEnd)C
     } else if (this.p.normalScrollDownKeys.includes(e.name)) {
       this.yOffset = Math.max(this.yi, this.yOffset - this.p.verticalStep)
       this.renderElement()
+      // this.handleScrollEnd()
+      nextTick(this.handleScrollEnd)
     }
   }
 
-  private renderElement(c= this.element!.parentNode as ProgramElement) {
+  private renderElement(c = this.element!.parentNode as ProgramElement) {
     this.renderer!.renderElement(c
-    //    , {
-    //   writeArea: this.element!.getBounds()
-    // }
-      )
+      //    , {
+      //   writeArea: this.element!.getBounds()
+      // }
+    )
   }
 
   render() {

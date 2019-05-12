@@ -53,3 +53,7 @@ export function enumerableMember(o: any, name: string) {
 }
 
 export type RemoveProperties<O, K extends keyof O> = Pick<O, Exclude<keyof O, K>>
+
+export function removeEmptyLines(c: string): string {
+  return c.split('\n').filter(l => !!l.trim()).join('\n')
+}

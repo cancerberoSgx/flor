@@ -1167,6 +1167,7 @@ Tput.prototype._compile = function(info, key, str) {
 };
 
 // See: ~/ncurses/ncurses/tinfo/lib_tputs.c
+// tputs(const char *string, int affcnt, int (*outc) (int))
 Tput.prototype._print = function(code, print, done) {
   var xon = !this.bools.needs_xon_xoff || this.bools.xon_xoff;
 
@@ -1241,6 +1242,7 @@ Tput.prototype._print = function(code, print, done) {
 
 // A small helper function if we want
 // to easily output text with setTimeouts.
+// tputs(const char *string, int affcnt, int (*outc) (int))
 Tput.print = function() {
   var fake = {
     padding: true,

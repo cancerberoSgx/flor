@@ -12,7 +12,7 @@ import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { trimRightLines } from '../util/misc'
-import { createProgram, destroyProgram } from '../util/util'
+import { createProgram, destroyProgram } from '../util/programUtil'
 
 export interface RendererCreateOptions {
   program?: Program

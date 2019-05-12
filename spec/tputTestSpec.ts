@@ -14,7 +14,7 @@ describe('tputTest', () => {
   })
 
   afterAll(async done => {
-    await helper.clear()
+    // await helper.clear()
     await client.destroy().catch()
     helper = null as any
     done()

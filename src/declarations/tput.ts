@@ -1070,4 +1070,37 @@ export declare class TPut implements   TputFeatures {
 
 }
 
+/**
+```
+sprintf ("Characters: %c %c \n", 'a', 65);
+sprintf ("Decimals: %d %ld\n", 1977, 650000L);
+sprintf ("Preceding with blanks: %10d \n", 1977);
+sprintf ("Preceding with zeros: %010d \n", 1977);
+sprintf ("Some different radices: %d %x %o %#x %#o \n", 100, 100, 100, 100, 100);
+sprintf ("floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
+sprintf ("Width trick: %*d \n", 5, 10);
+sprintf ("%s \n", "A string");
+return 0;
+}
+```
+Edi`t & Run
+
+
+Output:
+
+```
+Characters: a A
+Decimals: 1977 650000
+Preceding with blanks:       1977
+Preceding with zeros: 0000001977
+Some different radices: 100 64 144 0x64 0144
+floats: 3.14 +3e+000 3.141600E+000
+Width trick:    10
+A string
+```
+` */
+export function sprintf(format:string, ...args: any[]){return ''}
+
 module.exports.TPut =  require('../blessed/tput')
+module.exports. sprintf = require('../blessed/tput').sprintf
+// exports.tryRead = tryRead;

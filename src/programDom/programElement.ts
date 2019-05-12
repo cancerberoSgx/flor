@@ -114,7 +114,9 @@ export class ProgramElement extends Element {
     }
     return this._absoluteLeft
   }
-
+  get absoluteRight() {
+  return this.absoluteLeft + this.props.width
+}
   private _absoluteTop = 0
   get absoluteTop() {
     if (this._positionDirty) {
@@ -129,9 +131,23 @@ export class ProgramElement extends Element {
     return this._absoluteTop
   }
 
+  // get yi() {
+  //   return this.absoluteTop
+  // }
+  // xl(){
+  //   this.absoluteRight
+  // }
+
+  get absoluteBottom() {
+    return this.absoluteTop + this.props.height
+  }
+// get yl() {
+//   return this.absoluteTop + this.props.height
+// }
   onBoundsChange(arg0: () => void): any {
     throw new Error('Method not implemented.')
   }
+
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
   }
@@ -166,7 +182,12 @@ export class ProgramElement extends Element {
 
   getBounds(relative = false): Rectangle {
     if (!relative) {
-      return { yi: this.absoluteTop, xi: this.absoluteLeft, yl: this.absoluteTop + this.props.height, xl: this._absoluteLeft + this.props.width }
+      return {
+        yi: this.absoluteTop,
+        xi: this.absoluteLeft,
+        yl: this.absoluteTop + this.props.height,
+        xl: this.absoluteLeft + this.props.width
+      }
     } else {
       throw new Error('TODO')
     }

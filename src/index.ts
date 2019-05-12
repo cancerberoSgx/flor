@@ -1,6 +1,5 @@
 export * from './component'
-export * from './declarations/program'
-export * from './declarations/tput'
+export * from './declarations'
 export * from './dom'
 export * from './jsx'
 export * from './programDom'

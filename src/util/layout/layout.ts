@@ -19,9 +19,9 @@ export interface LayoutOptions {
   justifiedLayout?: JustifiedLayoutOptions
 
   size?: {
-  width: number
-  height: number
-}
+    width: number
+    height: number
+  }
 
   manualLayout?: boolean
 }

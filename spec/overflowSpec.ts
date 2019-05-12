@@ -1,7 +1,7 @@
 import { tryTo } from 'misc-utils-of-mine-generic'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 import { BorderStyle } from '../src/util/border'
-import { installExitKeys } from '../src/util/util'
+import { installExitKeys } from '../src/util/programUtil'
 
 describe('overflow', () => {
   let program: Program

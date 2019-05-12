@@ -3,7 +3,7 @@ import { BlurEvent, FocusEvent } from '../render/focusManager'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
-import { Color } from './styleProps'
+import { ColorString } from './styleProps'
 
 export interface Padding {
   top: number
@@ -15,8 +15,8 @@ export interface Padding {
  * This represents the native styles attrs that are set directly using tput (the axioms)
  */
 export interface Attrs {
-  bg: Color
-  fg: Color
+  bg: ColorString
+  fg: ColorString
   ch: string
   bold: boolean
   underline: boolean

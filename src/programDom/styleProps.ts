@@ -26,6 +26,9 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     this._data.padding = value
   }
 
+  /**
+   * returns the calculated width. in cols. It always perform the calculation if the value was given as ratio.
+   */
   public get width(): number {
     if (!this._data.width) {
       return 0
@@ -41,6 +44,9 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     }
   }
 
+  /**
+   * returns the calculated Height. in rows. It always perform the calculation if the value was given as ratio.
+   */
   public get height(): number {
     if (!this._data.height) {
       return 0
@@ -87,17 +93,18 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
       this._data.top = value
     }
   }
-  /**
-   * With [[markDirty===false]] it can be used to change position without marking the elemnt position dirty, which eill cause to recalculate its absolute coords on next getter. By default [[markDirty]] is true.
-   */
-  setTop(value: number, markDirty= true) {
-    // if (this._data.top !== value) {
-    if (markDirty) {
-        this.owner._positionDirty = true
-      }
-    this._data.top = value
-    // }
-  }
+
+  // /**
+  //  * With [[markDirty===false]] it can be used to change position without marking the elemnt position dirty, which eill cause to recalculate its absolute coords on next getter. By default [[markDirty]] is true.
+  //  */
+  // setTop(value: number, markDirty= true) {
+  //   // if (this._data.top !== value) {
+  //   if (markDirty) {
+  //       this.owner._positionDirty = true
+  //     }
+  //   this._data.top = value
+  //   // }
+  // }
   public get layout(): LayoutOptions | undefined {
     return this._data.layout
   }
@@ -113,6 +120,6 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     this._data.noFill = value
   }
 }
-export type Color = string
+export type ColorString = string
 
 export type PAttrs = Partial<Attrs>

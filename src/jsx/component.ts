@@ -11,7 +11,9 @@ export interface ExtraProps {
  */
 export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
 
-  constructor(protected props: P, protected state: S) {}
+  constructor(protected props: P, protected state: S) {
+
+  }
 
   /**
    * Called from `Flor.render` when [[element]] was just created. Take into account that its attributes and
@@ -32,6 +34,13 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   }
 
   element: ProgramElement | undefined
+
+  // /**
+  //  * Shortcut for [[element]] with no undefined type. Use with care, make sure [[elementCreated]] was already called
+  //  */
+  // get el(): ProgramElement {
+  //   return this.el!
+  // }
 
   abstract render(): JSX.FlorJsxNode
 

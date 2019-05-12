@@ -4,7 +4,7 @@ import { Program, ProgramOptions } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
 import { ElementProps, FullProps, isElement, ProgramDocument, ProgramElement } from '../programDom'
 import { addLogger, Layout } from '../util'
-import { installExitKeys } from '../util/util'
+import { installExitKeys } from '../util/programUtil'
 import { CursorManager } from './cursorManager'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
@@ -39,15 +39,7 @@ export class FlorDocument {
   private _cursor: CursorManager
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
-      // if(o.useAnsiDiff){
-  // let differ = require('ansi-diff-stream')
-  // let diff = differ()
-  // this._program = new Program({...o, input: diff})
-  // diff.pipe(program.output)
-      // }
-// else {C
       this._program = new Program(o)
-// }
       this._program.enableMouse()
       installExitKeys(this._program)
     }
@@ -58,15 +50,19 @@ export class FlorDocument {
     this._focus = new FocusManager(this._events, this._document)
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._document._setManagers(this)
-    this._cursor = new CursorManager({program: this._program, cursor: {
-      // color: 'red'
-    }})
-    this._cursor.enter()
+    this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this.createTextNode = this.createTextNode.bind(this)
     this.debug = this.debug.bind(this)
-    addLogger({log: (...args: any[]) => {
+    this._cursor.enter()
+    this.installLoggers()
+  }
+
+  private installLoggers() {
+    addLogger({
+      log: (...args: any[]) => {
       this.debug('', undefined, ...args)
-    }})
+    }
+    })
   }
 
   /**
