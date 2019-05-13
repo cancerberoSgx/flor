@@ -47,6 +47,10 @@ interface ConcreteScrollableProps {
    */
   bottomExtraOffset?: number
   /**
+   * Extra cols as scrolled area right padding. By default 5.
+   */
+  rightExtraOffset?: number
+  /**
    * If given, vertical scroll will be throttled by [[throttleVertical]] milliseconds. Use it only if really
    * necessary since it adds flickering.
    */
@@ -61,13 +65,23 @@ interface ConcreteScrollableProps {
    */
   verticalAnimationDuration?: number
   /**
+  * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
+  */
+ normalScrollUpKeys?: KeyPredicate[]
+  /**
    * Keys that activate normal scroll down. Default: `[e => e.ctrl === false && e.name === 'down']`.
    */
   normalScrollDownKeys?: KeyPredicate[]
   /**
-   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
+   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'left']`.
    */
-  normalScrollUpKeys?: KeyPredicate[]
+  normalScrollLeftKeys?: KeyPredicate[]
+  /**
+   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'right']`.
+   */
+  normalScrollRightKeys?: KeyPredicate[]  
+
+
   /**
    * Keys that activate normal scroll down. Default: `[e => e.ctrl === true && e.name === 'down']`.
    */
@@ -122,11 +136,14 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     largeScrollUpKeys: [e => e.ctrl && e.name === 'w'],
     largeScrollDownKeys: [e => e.ctrl && e.name === 's'],
     interruptAnimation: true,
-    leftExtraOffset: 5,
+    leftExtraOffset: 0,
+    rightExtraOffset: 0,
     normalScrollUpKeys: [e => !e.ctrl && e.name === 'up' || !e.ctrl && e.name === 'w'],
     normalScrollDownKeys: [e => !e.ctrl && e.name === 'down' || !e.ctrl && e.name === 's'],
+    normalScrollLeftKeys: [e => !e.ctrl && e.name === 'left' || !e.ctrl && e.name === 'a'],
+    normalScrollRightKeys: [e => !e.ctrl && e.name === 'right' || !e.ctrl && e.name === 'd'],
     normalVerticalStep: 2,
-    normalHorizontalStep: 2,
+    normalHorizontalStep: 1,
     topExtraOffset: 5,
     bottomExtraOffset: 5,
     throttleVertical: 0,
@@ -170,16 +187,22 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.vChildren.forEach(c => {
       if (isElement(c)) {
         const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
-        if (y >= -this.element!.absoluteTop) {
+        const x = c.absoluteLeft - this.element!.absoluteLeft - this.xOffset
+        if (y >= -this.element!.absoluteTop && x >= -this.element!.absoluteLeft) {
           const top = c.props.top
+          const left = c.props.left
           c.props.top = y // we need to make position dirty
+          c.props.left = x
           this.renderElement(c) // and call render so it gets updated
           c.props.top = top
+          c.props.left = left
+
         }
       }
     })
   }
 
+  private _calcScrollAreaRun = false
   /**
    * Iterate children to get: 1) the current children in the current viewport. The predicate to if child is or
    * not inside is [[elementInViewportPredicate]]. 2) . The while Rect area being scrolled [[yi]], [[yl]],
@@ -189,18 +212,28 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
     this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
-      if (last) {
+      if (last && this._calcScrollAreaRun ) {
         return false
       }
       let r
       if (isElement(c)) {
-        const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
-        if (this.yi > cyi) {
-          this.yi = cyi
-        }
-        const cyl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
-        if (this.yl < cyl) {
-          this.yl = cyl
+        if(!this._calcScrollAreaRun) {
+          const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
+          if (this.yi > cyi) {
+            this.yi = cyi
+          }
+          const cyl = c.absoluteTop - this.element!.absoluteTop - this.element!.props.height + c.props.height + this.p.bottomExtraOffset
+          if (this.yl < cyl) {
+            this.yl = cyl
+          }
+          const cxi = c.absoluteLeft - this.element!.absoluteLeft - this.p.leftExtraOffset
+          if (this.xi > cxi) {
+            this.xi = cxi
+          }
+          const cxl = c.absoluteLeft - this.element!.absoluteLeft - this.element!.props.width + c.props.width + this.p.rightExtraOffset
+          if (this.xl < cxl) {
+            this.xl = cxl
+          }
         }
         // TODO: the same for xi xl
         r = this.elementInViewportPredicate(c, this.element!)
@@ -217,14 +250,15 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         return true
       }
     })
+    this._calcScrollAreaRun = true
   }
 
   protected elementInViewportPredicate(c: ProgramElement, el: ProgramElement): any {
-    const isContained = (c: ProgramElement, e: ProgramElement, ratio: number) => {
-      return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <=
-        this.yOffset + e.absoluteTop + e.props.height
-    }
-    return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), 0, this.yOffset))
+    // const isContained = (c: ProgramElement, e: ProgramElement, ratio: number) => {
+    //   return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <=
+    //     this.yOffset + e.absoluteTop + e.props.height
+    // }
+    return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), this.xOffset, this.yOffset))
   }
 
   /**
@@ -236,7 +270,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.scrolling = false
     this._stopAnimation()
     if (this.props.onScroll) {
-      this.p.onScroll({ currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset })
+      this.p.onScroll({ currentTarget: this.element!, xOffset: this.xOffset, yOffset: this.yOffset })
     }
   }
 
@@ -264,7 +298,16 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       this.yOffset = Math.min(this.yl, this.yOffset + this.p.normalVerticalStep)
       this.renderElement()
       this.handleScrollEnd()
-    }
+  } else if (this.p.normalScrollRightKeys.find(p => p(e))) {
+    this.xOffset = Math.min(this.xl, this.xOffset + this.p.normalHorizontalStep)
+    this.renderElement()
+    this.handleScrollEnd()
+  }
+  else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
+    this.xOffset = Math.max(this.xi, this.xOffset - this.p.normalHorizontalStep)
+    this.renderElement()
+    this.handleScrollEnd()
+  }
   }
 
   protected handleLargeScroll(multiplier: number) {
