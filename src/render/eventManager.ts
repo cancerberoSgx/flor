@@ -2,7 +2,7 @@ import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../dec
 import { Event, EventTarget, StopPropagation } from '../dom/event'
 import { ProgramElement } from '../programDom'
 import { debug } from '../util'
-import { RemoveProperties } from '../util/misc'
+import { RemoveProperties, PropertyOptional } from 'misc-utils-of-mine-generic'
 
 export type RegisteredEventListener = { el: ProgramElement, name: string; listener: MouseListener | KeyListener }
 
@@ -38,14 +38,6 @@ export interface MouseEvent<T extends ProgramElement= ProgramElement> extends Ab
  * Manager class responsible of registering and dispatching keyboard and mouse events.
  */
 export class EventManager {
-  click(el: ProgramElement): any {
-    this.triggerMouseEvent({
-      action: MouseAction.mouseup,
-      x: el.absoluteInnerLeft, 
-      y: el.absoluteInnerTop, 
-      button: 'left'
-    })
-  }
 
   constructor(protected _program: Program) {
     this.onKeyPress = this.onKeyPress.bind(this)
@@ -62,6 +54,14 @@ export class EventManager {
     this.keyListeners.some(l => {
       return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el, target: l.el }as any)
     })
+  }
+
+  // private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
+  private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'> )[] = []
+  addKeyListener(l: KeyListener) {
+    if (!this.keyListeners.find(k => k.listener === l)) {
+      this.keyListeners.push({ name: 'keypress', listener: l  })
+    }
   }
 
   private beforeAllMouseListeners: {name: string, listener: (e: ProgramMouseEvent & StopPropagation) => boolean | void}[] = []
@@ -148,12 +148,6 @@ export class EventManager {
   }
 
   private mouseListeners: RegisteredEventListener[] = []
-  private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
-  addKeyListener(l: KeyListener) {
-    if (!this.keyListeners.find(k => k.listener === l)) {
-      this.keyListeners.push({ name: 'keypress', listener: l  })
-    }
-  }
   _isMouseEventTarget(e: ProgramMouseEvent, el: ProgramElement) {
     return e.x >= el.absoluteLeft && e.x < el.absoluteLeft + el.props.width &&
       e.y >= el.absoluteTop && e.y < el.absoluteTop + el.props.height
@@ -164,25 +158,45 @@ export class EventManager {
     const n = o.name.toLowerCase()
     const keyPressed = n === 'keypress' || n === 'onkeypress' || n === 'onkeypressed'
     if (keyPressed || n.startsWith('key')
-    && !this.keyListeners.find(l => l.el === o.el)
+    // && !this.keyListeners.find(l => l.el === o.el)
     ) {
       this.keyListeners.push(keyPressed ? { ...o, name: 'keypress' } : o)
-    } else
-    if (!this.mouseListeners.find(l => l.el === o.el)) {
+    } else    if (true
+      // !this.mouseListeners.find(l => l.el === o.el)
+      ) {
       // TODO: verify is mouse event
-      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseup' } : o))
+      // debug(n, o.name)
+      const name = n.startsWith('on') ? n.substr(2) : n
+      
+      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseup' } :{...o, name}))
     } else {
-      debug('WARNING: ignoring event listener registration because already registered:', o)
+      debug('WARNING: ignoring event listener that is unknown or already registered:', o.name)
     }
   }
 
-  triggerMouseEvent(e: Partial<ProgramMouseEvent> & {action: MouseAction,
-    x: number, y: number}) {
+  /**
+   * Triggers a mouse element of given type and on given coordinates.
+   */
+  triggerMouseEvent(e: Partial<ProgramMouseEvent> & {action: MouseAction, x: number, y: number}) {
     this.onMouse({ ...e as ProgramMouseEvent, button: e.button || 'left' })
   }
 
+  /**
+   * Triggers a key event with given properties.
+   */
   triggerKeyEvent(ch: string | undefined, e: Partial<ProgramKeyEvent>= {}) {
     this.onKeyPress(ch, { ...e as ProgramKeyEvent })
+  }
+  /**
+   * Triggers a click event on given element
+   */
+  click(el: ProgramElement): any {
+    this.triggerMouseEvent({
+      action: MouseAction.mouseup,
+      x: el.absoluteInnerLeft, 
+      y: el.absoluteInnerTop, 
+      button: 'left'
+    })
   }
 }
 

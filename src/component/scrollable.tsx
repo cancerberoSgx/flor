@@ -3,8 +3,8 @@ import { animate, easing } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '../programDom'
-import { KeyEvent, ProgramDocumentRenderer } from '../render'
-import { Animation } from '../util'
+import { KeyEvent, ProgramDocumentRenderer, MouseEvent } from '../render'
+import { Animation, debug } from '../util'
 import { nextTick } from '../util/misc'
 
 interface ScrollEvent {
@@ -67,7 +67,7 @@ interface ConcreteScrollableProps {
   /**
   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
   */
- normalScrollUpKeys?: KeyPredicate[]
+  normalScrollUpKeys?: KeyPredicate[]
   /**
    * Keys that activate normal scroll down. Default: `[e => e.ctrl === false && e.name === 'down']`.
    */
@@ -79,7 +79,7 @@ interface ConcreteScrollableProps {
   /**
    * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'right']`.
    */
-  normalScrollRightKeys?: KeyPredicate[]  
+  normalScrollRightKeys?: KeyPredicate[]
 
 
   /**
@@ -102,6 +102,11 @@ interface ConcreteScrollableProps {
   verticalGotoStartKeys?: string[]
   horizontalGotoEndKeys?: string[]
   horizontalGotoStartKeys?: string[]
+  /**
+   * By default, mouse wheel will scroll vertical (or horizontal if used with control key). 
+   * If [[disableMouseWheel]] is false then this behavior will be disabled. 
+   */
+  disableMouseWheel?: boolean
 }
 
 type KeyPredicate = (e: KeyEvent) => boolean
@@ -135,16 +140,17 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     largeScrollUpKeys: [e => e.ctrl && e.name === 'w'],
     largeScrollDownKeys: [e => e.ctrl && e.name === 's'],
     interruptAnimation: true,
+    disableMouseWheel: false,
     leftExtraOffset: 0,
     rightExtraOffset: 0,
+    topExtraOffset: 0,
+    bottomExtraOffset: 0,
     normalScrollUpKeys: [e => !e.ctrl && e.name === 'up' || !e.ctrl && e.name === 'w'],
     normalScrollDownKeys: [e => !e.ctrl && e.name === 'down' || !e.ctrl && e.name === 's'],
     normalScrollLeftKeys: [e => !e.ctrl && e.name === 'left' || !e.ctrl && e.name === 'a'],
     normalScrollRightKeys: [e => !e.ctrl && e.name === 'right' || !e.ctrl && e.name === 'd'],
     normalVerticalStep: 2,
     normalHorizontalStep: 1,
-    topExtraOffset: 5,
-    bottomExtraOffset: 5,
     throttleVertical: 0,
     largeScrollAnimation: easing.bounceEasyOut(),
     verticalAnimationDuration: 1000,
@@ -160,6 +166,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   constructor(p: ScrollableProps, s: {}) {
     super(p, s)
     this.onKeyPressed = this.onKeyPressed.bind(this)
+    this.onWheelDown = this.onWheelDown.bind(this)
+    this.onWheelUp = this.onWheelUp.bind(this)
     this.renderChildren = this.renderChildren.bind(this)
     this.p = { ...this.defaultProps, ...p }
     this.yOffset = 0 - this.p.topExtraOffset
@@ -177,31 +185,44 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       nextTick(this._renderChildren, r)
   }
 
+  // dont=false
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
-    // if (!this.renderer) {
-    //   this.renderer = renderer
+    // if(this.dont){
+    //   return
     // }
-    // TODO: clean this, remove first, last, use some() , performance this.calcScrollArea(forceCalcArea);
+    // let firstTime = this._calcScrollAreaRun
+    // this.renderer!.writeArea = this.element!.getBounds()
     this.calcScrollArea()
     this.vChildren.forEach(c => {
       if (isElement(c)) {
+        // if(!firstTime && c.props.layout){
+        //   c.props.layout.neverResizeContainer=true
+        //   c.props.layout.manualLayout=true
+        // }
         const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
         const x = c.absoluteLeft - this.element!.absoluteLeft - this.xOffset
-        if (y >= -this.element!.absoluteTop && x >= -this.element!.absoluteLeft) {
-          const top = c.props.top
-          const left = c.props.left
-          c.props.top = y // we need to make position dirty
-          c.props.left = x
-          this.renderElement(c) // and call render so it gets updated
+        const top = c.props.top
+        const left = c.props.left
+        // const width = c.props.width
+        c.props.top = y // we need to make position dirty
+        // c.props.width =c.props.width - (c.props.left-x)
+        c.props.left = x
+        // this.renderer!.renderChildren(c)
+        this.renderElement(c) // and call render so it gets updated but on the children, if calling on this.element will get infinite recursion
+        // debug(c.props.width, c.getBounds(), this.renderer!.writeArea)
+          // debug(c.props.width, c.getBounds())
+          // c.props.top = width
           c.props.top = top
           c.props.left = left
-
-        }
       }
     })
+    // this.dont=true
+    // this.renderElement(this.element! )
+    // this.dont=false
   }
 
   private _calcScrollAreaRun = false
+
   /**
    * Iterate children to get: 1) the current children in the current viewport. The predicate to if child is or
    * not inside is [[elementInViewportPredicate]]. 2) . The while Rect area being scrolled [[yi]], [[yl]],
@@ -210,13 +231,15 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected calcScrollArea() {
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
+    const viewportArea = this.getViewportArea()
     this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
-      if (last && this._calcScrollAreaRun ) {
+      if (last && this._calcScrollAreaRun) {
         return false
       }
       let r
       if (isElement(c)) {
-        if(!this._calcScrollAreaRun) {
+        if (!this._calcScrollAreaRun) {
+          c.update(true)
           const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
           if (this.yi > cyi) {
             this.yi = cyi
@@ -229,13 +252,12 @@ export class Scrollable extends Component<ScrollableProps, {}> {
           if (this.xi > cxi) {
             this.xi = cxi
           }
-          const cxl = c.absoluteLeft - this.element!.absoluteLeft - this.element!.props.width + c.props.width + this.p.rightExtraOffset
+          const cxl = c.absoluteLeft - this.element!.absoluteLeft  - this.element!.props.width + c.props.width + this.p.rightExtraOffset
           if (this.xl < cxl) {
             this.xl = cxl
           }
         }
-        // TODO: the same for xi xl
-        r = this.elementInViewportPredicate(c, this.element!)
+        const r = rectangleIntersects(c.getBounds(), viewportArea)
         if (r && !first) {
           first = c
           return true
@@ -252,18 +274,17 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this._calcScrollAreaRun = true
   }
 
-  protected elementInViewportPredicate(c: ProgramElement, el: ProgramElement): any {
-    // const isContained = (c: ProgramElement, e: ProgramElement, ratio: number) => {
-    //   return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <=
-    //     this.yOffset + e.absoluteTop + e.props.height
-    // }
-    return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), this.xOffset, this.yOffset))
-  }
-
   /**
    * Overridden by animate implementation. Don't call.
    */
   private _stopAnimation: () => void = () => { }
+
+  /**
+   * Bounds of current viewport in absolute coordinates.
+   */
+  getViewportArea() {
+    return rectanglePlusOffsets(this.element!.getBounds(), this.xOffset, this.yOffset);
+  }
 
   protected handleScrollEnd() {
     this.scrolling = false
@@ -284,39 +305,70 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         this.handleScrollEnd()
       }
     } else if (this.p.largeScrollUpKeys.find(p => p(e))) {
-      this.handleLargeScroll(-1)
-      return
+      this.handleLargeVerticalScroll(-1)
     } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
-      this.handleLargeScroll(1)
-      return
+      this.handleLargeVerticalScroll(1)
     } else if (this.p.normalScrollUpKeys.find(p => p(e))) {
-      this.yOffset = Math.max(this.yi, this.yOffset - this.p.normalVerticalStep)
-      this.renderElement()
-      this.handleScrollEnd()
+      this.handleNormalVerticalScroll(-1);
     } else if (this.p.normalScrollDownKeys.find(p => p(e))) {
-      this.yOffset = Math.min(this.yl, this.yOffset + this.p.normalVerticalStep)
-      this.renderElement()
-      this.handleScrollEnd()
-  } else if (this.p.normalScrollRightKeys.find(p => p(e))) {
-    this.xOffset = Math.min(this.xl, this.xOffset + this.p.normalHorizontalStep)
-    this.renderElement()
-    this.handleScrollEnd()
-  }
-  else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
-    this.xOffset = Math.max(this.xi, this.xOffset - this.p.normalHorizontalStep)
-    this.renderElement()
-    this.handleScrollEnd()
-  }
+      this.handleNormalVerticalScroll(1);
+    } else if (this.p.normalScrollRightKeys.find(p => p(e))) {
+      this.handleNormalHorizontalScroll(1);
+    }
+    else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
+      this.handleNormalHorizontalScroll(-1);
+    }
+    this.props.onKeyPressed && this.props.onKeyPressed(e)
   }
 
-  protected handleLargeScroll(multiplier: number) {
+  protected handleNormalHorizontalScroll(direction: 1 | -1) {
+    if (direction === 1) {
+      this.xOffset = Math.min(this.xl, this.xOffset + this.p.normalHorizontalStep);
+    }
+    else {
+      this.xOffset = Math.max(this.xi, this.xOffset - this.p.normalHorizontalStep)
+    }
+    this.renderElement();
+    this.handleScrollEnd();
+  }
+
+  protected handleNormalVerticalScroll(direction: 1 | -1) {
+    if (direction === 1) {
+      this.yOffset = Math.min(this.yl, this.yOffset + this.p.normalVerticalStep);
+    }
+    else {
+      this.yOffset = Math.max(this.yi, this.yOffset - this.p.normalVerticalStep)
+    }
+    this.renderElement();
+    this.handleScrollEnd();
+  }
+
+  protected onWheelUp<T extends ProgramElement = ProgramElement>(e: MouseEvent<T>) {
+    if (!e.ctrl) {
+      this.handleNormalVerticalScroll(-1)
+    } else {
+      this.handleNormalHorizontalScroll(-1)
+    }
+    this.props.onWheelUp && this.props.onWheelUp(e)
+  }
+
+  protected onWheelDown<T extends ProgramElement = ProgramElement>(e: MouseEvent<T>) {
+    if (!e.ctrl) {
+      this.handleNormalVerticalScroll(1)
+    } else {
+      this.handleNormalHorizontalScroll(1)
+    }
+    this.props.onWheelDown && this.props.onWheelDown(e)
+  }
+
+  protected handleLargeVerticalScroll(direction: 1|-1) {
     this.scrolling = true
     if (this.props.largeScrollAnimation) {
       const start = this.yOffset
       animate({
         duration: this.p.verticalAnimationDuration,
         draw: t => {
-          const final = Math.round(Math.max(this.yi, start + this.p.largeVerticalScrollStep * t * multiplier))
+          const final = Math.round(Math.max(this.yi, start + this.p.largeVerticalScrollStep * t * direction))
           if (this.yOffset !== final) {
             this.yOffset = Math.max(this.yi, final)
             this.renderElement()
@@ -329,7 +381,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         onStop: (l => this._stopAnimation = l)
       })
     } else {
-      if (multiplier < 0) {
+      if (direction < 0) {
         this.yOffset = Math.max(this.yi, this.yOffset - this.p.largeVerticalScrollStep)
       } else {
         this.yOffset = Math.min(this.yl, this.yOffset + this.p.largeVerticalScrollStep)
@@ -341,7 +393,9 @@ export class Scrollable extends Component<ScrollableProps, {}> {
 
   protected renderElement(c = this.element!.parentNode as ProgramElement) {
     const p = this.renderer!.writeArea
-    this.renderer!.writeArea = this.element!.getBounds()
+    this.renderer!.writeArea = this.element!.getContentBounds()
+    // c.update()
+    // this.renderer!.renderChildren(c)
     this.renderer!.renderElement(c)
     this.renderer!.writeArea = p
   }
@@ -350,15 +404,25 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * Gets the current whole scrolled area, optionally recalculating it. TODO: forceCalc.
    */
   getScrollArea(forceCalc: boolean = false): Rectangle {
-    return { yi: this.yi, yl: this.yl, xi: this.xi, xl: this.xl }
+    return { 
+      yi: this.yi, 
+      yl: this.yl, 
+      xi: this.xi, 
+      xl: this.xl 
+    }
   }
 
   render() {
+    const layout = this.props.layout ? {...this.props.layout, neverResizeContainer: true}: undefined
     return <box focusable={true}
       {...{ ...this.props, onScroll: undefined, children: undefined }}
+      layout={layout}
       onKeyPressed={this.onKeyPressed}
+      onWheelUp={this.props.disableMouseWheel ? this.props.onWheelUp : this.onWheelUp}
+      onWheelDown={this.props.disableMouseWheel ? this.props.onWheelDown : this.onWheelDown}
       renderChildren={this.renderChildren}
       overflow="hidden"
+      preventChildrenCascade={true}
     >
       {...Array.isArray(this.props.children) ? this.props.children : asArray(this.props.children)}
     </box>

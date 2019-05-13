@@ -129,6 +129,9 @@ export class ProgramElement extends Element {
   get absoluteRight() {
     return this.absoluteLeft + this.props.width
   }
+  // get absoluteWidth(){
+  //   const l = this.absoluteLeft
+  // }
   private _absoluteTop = 0
   get absoluteTop() {
     if (this._positionDirty) {

@@ -25,7 +25,7 @@
   "dependencies": {
     "justified-layout": "^2.1.2",
     "layout": "^2.2.0",
-    "misc-utils-of-mine-generic": "0.2.0",
+    "misc-utils-of-mine-generic": "0.2.1",
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {

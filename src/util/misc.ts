@@ -1,19 +1,5 @@
 import { execSync } from 'child_process'
 
-export function trimRightLines(s: string) {
-  return s.split('\n').map(l => l.trimRight()).join('\n')
-}
-
-export function serial<T = any>(p: (() => Promise<T>)[]): Promise<T[]> {
-  return new Promise(resolve => {
-    p.reduce((promiseChain: any, currentTask: () => Promise<T>) => {
-      return promiseChain.then((chainResults: T[]) => currentTask().then(currentResult => [...chainResults, currentResult]))
-    }, Promise.resolve([])).then((arrayOfResults: T[]) => {
-      resolve(arrayOfResults)
-    })
-  })
-}
-
 export const nextTick = global.setImmediate || process.nextTick.bind(process)
 
 export function nowHash() {
@@ -34,26 +20,16 @@ export function getCurrentCommit() {
     .trim()
 }
 
-export function inBrowser() {
-  // @ts-ignore
-  return typeof window !== 'undefined' && typeof document !== 'undefined'
-}
-
 export function nonEnumerableMember(o: any, name: string) {
   Object.defineProperty(o, name, {
     enumerable: false,
     writable: true
   })
 }
+
 export function enumerableMember(o: any, name: string) {
   Object.defineProperty(o, name, {
     enumerable: true,
     writable: true
   })
-}
-
-export type RemoveProperties<O, K extends keyof O> = Pick<O, Exclude<keyof O, K>>
-
-export function removeEmptyLines(c: string): string {
-  return c.split('\n').filter(l => !!l.trim()).join('\n')
 }

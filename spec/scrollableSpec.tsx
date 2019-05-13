@@ -49,27 +49,56 @@ describe('scrollable', () => {
 
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     flor.debug('start')
-    const a = <Scrollable {...{
-      top: 3, left: 3, width: 55, height: 23,
-      border: { type: BorderStyle.double }
-    }}
+    const a = <Scrollable
+        top={10} left={20} 
+        width={55} height={23}
+        border={{ type: BorderStyle.double }}
         preventChildrenCascade={true}
         layout={{
           layout: Layout.topDown,
-          manualLayout: true,
-          neverResizeContainer: true
+          // manualLayout: true,
+          // neverResizeContainer: true
         }}
         normalVerticalStep={2}
+        overflow="hidden"
         largeVerticalScrollStep={40}
         verticalAnimationDuration={1400}
         largeScrollAnimation={easing.easeOutBounce()}
-        onScroll={e => { debug('scroll ' + e) }}
+        onScroll={e => { flor.debug('scroll '+JSON.stringify( e.currentTarget.getChildrenElements()[0].getBounds()))}}// , e.xOffset, e.yOffset)}}//, e.currentTarget.getChildrenElements()[0].getBounds() ) }}
       >
-        {array(80).map(i => <box {...{ width: int(40, 85), height: int(7, 14), bg: color(), ch: ' ' }}>{i} - - {words(4).join(', ')}</box>)}
-        sf{words(3).join(' ')}sdf
-        <box {...{ width: int(20, 45), height: int(7, 14), bg: color(), ch: char() }}>last one top el</box>
+        {array(int(4, 11)).map(i =>  
+        <box ch=" " 
+        layout={{
+          layout: Layout.leftRight,
+          // manualLayout: true,
+          // neverResizeContainer: true 
+        }} 
+    //  noFill={true}
+        // overflow="hidden"
+        // preventChildrenCascade={true}
+        bg={color()} 
+        height={int(7, 11)} 
+        width={ int(40, 85)}
+        // width={ 70}
+         >{i} - - {words(4).join(', ')}
+        {/* {array(int(10,20)).map(j=> */}
+        {array(10).map(j=>
+
+        <box        
+        ch=" " bg={color()} 
+        height={int(3, 7)} 
+        width={ int(14, 20)}
+        // width={ 12}
+        >
+        {i}, {j}
+        </box>)}
+        </box>)}
       </Scrollable>
 
+
+    
+; 
+// setInterval(flor.render,2000)
     flor.create(<box>Hello</box>)
     const el = flor.create(a)
     flor.render()

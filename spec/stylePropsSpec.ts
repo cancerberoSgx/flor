@@ -1,6 +1,6 @@
 import { tryTo } from 'misc-utils-of-mine-generic'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
-import { trimRightLines } from '../src/util/misc'
+import { trimRightLines } from 'misc-utils-of-mine-generic'
 import { installExitKeys } from '../src/util/programUtil'
 
 describe('styleProps', () => {

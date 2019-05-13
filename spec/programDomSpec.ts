@@ -1,5 +1,5 @@
 import { BorderStyle, Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
-import { trimRightLines } from '../src/util/misc'
+import { trimRightLines } from 'misc-utils-of-mine-generic'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 describe('programDom', () => {

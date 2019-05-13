@@ -48,6 +48,7 @@ export class FlorDocument {
       // this._program.enter
       installExitKeys(this._program)
     }
+    this.render = this.render.bind(this)
     this._events = new EventManager(this._program)
     this._document = new ProgramDocument()
     Flor.setDocument(this._document)
@@ -167,7 +168,7 @@ export class FlorDocument {
    */
   debug(el: any, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
     if (!this._debugEl) {
-      this._debugEl = this.create({   top: .7, left: .01, width: .99, height: .3, ...props, children: ['LOG']
+      this._debugEl = this.create({   top: .7, left: .01, width: 200, height: .3, ...props, children: ['LOG']
       , layout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
       })
     }
@@ -181,7 +182,7 @@ export class FlorDocument {
     } else {
       args.push(el)
     }
-    args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 4, breakLength: 120 }))
+    args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 44, breakLength: 120 }))
     // .map(s => `   ||||   ${s}`)
     // .map(this.createTextNode)
     .forEach(c => {

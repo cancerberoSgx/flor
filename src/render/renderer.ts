@@ -11,7 +11,7 @@ import { PAttrs } from '../programDom/styleProps'
 import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
-import { trimRightLines } from '../util/misc'
+import { trimRightLines } from 'misc-utils-of-mine-generic'
 import { createProgram, destroyProgram } from '../util/programUtil'
 
 export interface RendererCreateOptions {
@@ -223,11 +223,13 @@ export class ProgramDocumentRenderer {
     if (
       y < yi  ||
       y >= yl  ||
-     (x < xi && x + s.length < xi) ||
+      (x < xi && x + s.length < xi) ||
       x > xl
       ) {
-      return
-    }
+        return
+      }
+        x = x<0?0:x>this.program.cols-1 ? this.program.cols-1: x
+        y=y<0?0:y>this.program.rows-1 ? this.program.rows-1: y
     if (x + s.length > xl) {
       s = s.substring(x + s.length - xl - 1)
     }
@@ -340,25 +342,7 @@ export class ProgramDocumentRenderer {
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
     } else {
-      this.lastAbsLeft = el.absoluteContentLeft
-      this.lastAbsTop = el.absoluteContentTop
-      Array.from(el.childNodes).forEach((c, i, a) => {
-        if (c instanceof TextNode) {
-          if (el.props.renderChildText) {
-            el.props.renderChildText(this, c, i)
-          } else {
-            this.renderText(c, a[i + 1])
-          }
-        } else if (c instanceof ProgramElement) {
-          if (el.props.renderChildElement) {
-            el.props.renderChildElement(this, c, i, a)
-          } else {
-            this.renderElement(c, { ...options })
-          }
-        } else {
-          debug('Element type invalid: ' + inspect(c))
-        }
-      })
+      this.renderChildren(el, options);
     }
     el._afterRender()
     el._renderCounter = this.renderCounter++
@@ -368,7 +352,33 @@ export class ProgramDocumentRenderer {
     return el
   }
 
-  protected renderText(c: TextNode, nextNode: Node) {
+  renderChildren(el: ProgramElement, options: RenderElementOptions) {
+    this.lastAbsLeft = el.absoluteContentLeft;
+    this.lastAbsTop = el.absoluteContentTop;
+    Array.from(el.childNodes).forEach((c, i, a) => {
+      if (c instanceof TextNode) {
+        if (el.props.renderChildText) {
+          el.props.renderChildText(this, c, i);
+        }
+        else {
+          this.renderText(c, a[i + 1]);
+        }
+      }
+      else if (c instanceof ProgramElement) {
+        if (el.props.renderChildElement) {
+          el.props.renderChildElement(this, c, i, a);
+        }
+        else {
+          this.renderElement(c, { ...options });
+        }
+      }
+      else {
+        debug('Element type invalid: ' + inspect(c));
+      }
+    });
+  }
+
+  renderText(c: TextNode, nextNode: Node) {
     let s = (c.textContent || '')
     const parent = c.parentNode as ProgramElement
     if (parent.props.textWrap) {
@@ -416,7 +426,7 @@ export class ProgramDocumentRenderer {
         const { xi, xl, yi, yl } = el.getInnerBounds()
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, xl - xi)
         for (let i = yi; i <  yl; i++) {
-          this.write(0 + i, xi, s)
+          this.write(i, xi, s)
         }
       }
     }

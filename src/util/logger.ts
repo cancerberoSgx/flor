@@ -1,6 +1,6 @@
 import { appendFileSync } from 'fs'
 import { inspect } from 'util'
-import { inBrowser } from './misc'
+import { inBrowser } from 'misc-utils-of-mine-generic'
 
 export function addLogger(l: Logger) {
   loggers.push(l)

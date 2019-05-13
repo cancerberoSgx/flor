@@ -1,7 +1,5 @@
 import { Flor, FlorDocument, Layout } from '../src'
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
-
 describe('focus', () => {
 
   let flor: FlorDocument

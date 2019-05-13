@@ -2,7 +2,7 @@ import { ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'
 import { isElement } from '../src/programDom/elementUtil'
-import { trimRightLines } from '../src/util/misc'
+import { trimRightLines } from 'misc-utils-of-mine-generic'
 import { createProgramRendererDocument } from '../src/util/programUtil'
 
 describe('jsx', () => {
