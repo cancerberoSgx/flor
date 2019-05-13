@@ -1,0 +1,52 @@
+[
+  {
+    "label": "buffer_true-debug_false",
+    "result": [
+      502,
+      535,
+      543,
+      530,
+      560
+    ]
+  },
+  {
+    "label": "buffer_false-debug_false",
+    "result": [
+      335,
+      356,
+      365,
+      336,
+      350
+    ]
+  },
+  {
+    "label": "buffer_true-debug_false-diff_true",
+    "result": [
+      529,
+      544,
+      539,
+      586,
+      559
+    ]
+  },
+  {
+    "label": "buffer_true-debug_true",
+    "result": [
+      536,
+      559,
+      565,
+      550,
+      544
+    ]
+  },
+  {
+    "label": "buffer_false-debug_true",
+    "result": [
+      358,
+      352,
+      343,
+      359,
+      357
+    ]
+  }
+]

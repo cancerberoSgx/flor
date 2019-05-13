@@ -8,12 +8,12 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
 
 # PROGRESS
 
-* Program DOM - like implementation
+## Program DOM 
   * ProgramElement - analog to HTML Node and Element: supports lots of properties 
-  props: hierarchized model for properties (attributes) - all will end up being like blessed options or JSX props
+  props: hierarchical model for properties (attributes) - all will end up being like blessed options or JSX props
     * AttrsProps : base class supporting only terminal character attr (bg, fg, ch, bold, ect - only native things 
     * StyleProps extends AttrsProps - core non native properties: top, left, width, height, border, padding, 
-       * Border support extensibility and alreay has more than 8 border styles. border has its own style
+       * Border support extensibility and already has more than 8 border styles. border has its own style
     * ElementProps
        * all handlers for events, extensibility, rendering hooks, and 
 
@@ -21,9 +21,9 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
 ## Renderer
   * the most important class
   * limiting the rendering to just a partial region
-  * very flexibile API, for hooking in on rendering moments. 
+  * very flexible API, for hooking in on rendering moments. 
     * renderElementBody, renderChildren, renderTextNode, renderChild, renderBorder, etc. Elements can override using props. 
-  * text nodes renderization supporting word wrap. very basic.
+  * text nodes render supports word wrap. very basic.
   * renders Elements and their children and text nodes in the program
   * supports element props cascading / propagation. currently 2 modes
   * central method for writing
