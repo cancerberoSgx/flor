@@ -230,7 +230,7 @@ export class ProgramDocumentRenderer {
       return
     }
     if (x + s.length > this._writeArea.xl) {
-      s = s.substring(x + s.length - this._writeArea.xl + 1)
+      s = s.substring(x + s.length - this._writeArea.xl )
     }
     this._program.cursorPos(y, x)
     this._program._write(s)
