@@ -157,10 +157,10 @@ export class ProgramElement extends Element {
     return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left : 0)
   }
   get contentHeight() {
-    return this.props.height - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.top + this.props.padding.bottom) : 0)
+    return this.props.height - (this.props.border ? 2 : 0) - (this.props.padding ? (this.props.padding.top + this.props.padding.bottom) : 0)
   }
   get contentWidth() {
-    return this.props.width - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.left + this.props.padding.right) : 0)
+    return this.props.width - (this.props.border ? 2 : 0) - (this.props.padding ? (this.props.padding.left + this.props.padding.right) : 0)
   }
 
   get absoluteInnerTop() {
@@ -207,7 +207,12 @@ export class ProgramElement extends Element {
 
   getContentBounds(relative = false): Rectangle {
     if (!relative) {
-      return { yi: this.absoluteContentTop, xi: this.absoluteContentLeft, yl: this.absoluteContentTop + this.contentHeight, xl: this._absoluteLeft + this.contentWidth }
+      return { 
+        yi: this.absoluteContentTop, 
+        xi: this.absoluteContentLeft, 
+        yl: this.absoluteContentTop + this.contentHeight, 
+        xl: this._absoluteLeft + this.contentWidth 
+      }
     } else {
       throw new Error('TODO')
     }

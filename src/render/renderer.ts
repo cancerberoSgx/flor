@@ -68,9 +68,7 @@ interface RenderElementOptions {
   /**
    * Ensures writings only happen inside given element's area by temporarily changing [[writeArea]].
    */
-  writeInsideOnly?: boolean
-  /**@internal. Indicates if we are inside descendant recursion loop */
-  __onRecursion?: boolean
+  writeInsideOnly?: boolean 
 
   // /**
   //  * if passed the write area will be applied only temporarily for the current frament being rendered. After the renderElement() call finished, it will be reseted. For a permanent write area use the setter [[writeArea]] or the method [[setElementWriteArea]]
@@ -107,7 +105,7 @@ export class ProgramDocumentRenderer {
   private _defaultRenderOptions: RenderElementOptions = {
     preventSiblingCascade: true,
     preventChildrenCascade: false,
-    __onRecursion: false
+    
   }
   private _writeArea: Rectangle
 
@@ -221,16 +219,21 @@ export class ProgramDocumentRenderer {
    *  // TODO : test performance paint the rest of the line:  out += this.tput.cup(y, x); out += this.tput.el();  'parm_insert_line'
    */
   write(y: number, x: number, s: string) {
+    const {xi, xl, yi, yl} = this._writeArea
     if (
-      y < this._writeArea.yi  ||
-      y >= this._writeArea.yl - 1 ||
-      x < this._writeArea.xi ||
-      x > this._writeArea.xl
+      y < yi  ||
+      y >= yl  ||
+     ( x < xi && x + s.length<xi) ||
+      x > xl
       ) {
       return
     }
-    if (x + s.length > this._writeArea.xl) {
-      s = s.substring(x + s.length - this._writeArea.xl )
+    if (x + s.length > xl) {
+      s = s.substring(x + s.length - xl -1)
+    }
+    if(x<xi){
+      s = s.substring(Math.max(0, s.length-(xi-x) -1), s.length)
+      x = xi
     }
     this._program.cursorPos(y, x)
     this._program._write(s)
@@ -350,7 +353,7 @@ export class ProgramDocumentRenderer {
           if (el.props.renderChildElement) {
             el.props.renderChildElement(this, c, i, a)
           } else {
-            this.renderElement(c, { ...options, __onRecursion: true })
+            this.renderElement(c, { ...options, })
           }
         } else {
           debug('Element type invalid: ' + inspect(c))
@@ -394,7 +397,7 @@ export class ProgramDocumentRenderer {
   /**
    * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions & { __onRecursion?: boolean } = this._defaultRenderOptions) {
+  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions = this._defaultRenderOptions) {
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},

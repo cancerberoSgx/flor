@@ -10,7 +10,6 @@ describe('scrollable', () => {
   let flor: FlorDocument
 
   beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
     flor = new FlorDocument({ buffer: true })
     process.on('uncaughtException', function(err) {
       flor.destroy()

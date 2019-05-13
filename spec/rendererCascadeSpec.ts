@@ -1,39 +1,33 @@
 import { tryTo } from 'misc-utils-of-mine-generic'
-import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
+import { Program, ProgramDocument, ProgramDocumentRenderer, FlorDocument } from '../src'
 import { BorderStyle } from '../src/util/border'
 import { installExitKeys } from '../src/util/programUtil'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
 describe('props cascade', () => {
-  let program: Program
-  let doc: ProgramDocument
-  let renderer: ProgramDocumentRenderer
+  let flor: FlorDocument
 
   beforeEach(() => {
-    program = new Program()
-    installExitKeys(program)
-    program.reset()
-    doc = new ProgramDocument()
-    renderer = new ProgramDocumentRenderer({ program })
-  })
-
-  afterEach(() => {
-    tryTo(() => {
-      program.showCursor()
-      program.disableMouse()
-      program.normalBuffer()
-      program.reset()
-      program.destroy()
+    flor = new FlorDocument({ buffer: true })
+    flor.render()
+    process.on('uncaughtException', function(err) {
+      flor.destroy()
+      console.log('Caught exception: ' + err, err, err.stack)
+      process.exit(1)
     })
   })
 
-  it('renderer.renderElement options, default( {preventChildrenCascade: false}), children to inherits parent\'s attrs', async done => {
-    const el = doc.create({top: 2, left: 4, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, children: [
+  afterEach(() => {
+    flor.destroy()
+  })
+
+  it('flor.renderer.renderElement options, default( {preventChildrenCascade: false}), children to inherits parent\'s attrs', async done => {
+    const el = flor.document.create({top: 2, left: 4, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, children: [
       { top: 2, left: 3, width: 12, height: 9, bg: 'red', border: { type: BorderStyle.double } }
     ]})
-    renderer.renderElement(el)
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el)
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
     ╔══════════════════════╗
     ║0000000000000000000000║
@@ -55,12 +49,12 @@ describe('props cascade', () => {
     done()
   })
 
-  it('renderer.renderElement options, {preventChildrenCascade: true} prevents children to inherits parent\'s attrs', async done => {
-    const el = doc.create({top: 2, left: 4, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, children: [
+  it('flor.renderer.renderElement options, {preventChildrenCascade: true} prevents children to inherits parent\'s attrs', async done => {
+    const el = flor.document.create({top: 2, left: 4, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, children: [
       { top: 2, left: 3, width: 12, height: 9, bg: 'red', border: { type: BorderStyle.double } }
     ]})
-    renderer.renderElement(el, { preventChildrenCascade: true, preventSiblingCascade: true })
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el, { preventChildrenCascade: true, preventSiblingCascade: true })
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
     ╔══════════════════════╗
     ║0000000000000000000000║
@@ -83,12 +77,12 @@ describe('props cascade', () => {
   })
 
   it('{preventSiblingCascade: false, preventChildrenCascade: true} children inherits previous sibling\'s attrs independently of parent', async done => {
-    const el = doc.create({top: 2, left: 4, width: 27, height: 12, ch: '0', border: { type: BorderStyle.double }, children: [
+    const el = flor.document.create({top: 2, left: 4, width: 27, height: 12, ch: '0', border: { type: BorderStyle.double }, children: [
       { top: 1, left: 1, width: 4, height: 3, ch: '1' },
       { top: 3, left: 18, width: 4, height: 3 }
     ]})
-    renderer.renderElement(el, { preventSiblingCascade: false, preventChildrenCascade: true })
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el, { preventSiblingCascade: false, preventChildrenCascade: true })
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
     ╔═════════════════════════╗
     ║0000000000000000000000000║
@@ -107,12 +101,12 @@ describe('props cascade', () => {
   })
 
   it('{preventSiblingCascade: false, preventChildrenCascade: false} children inherits parents and sibling - parent takes precedence', async done => {
-    const el = doc.create({top: 2, left: 4, width: 27, height: 12, border: { type: BorderStyle.double }, children: [
+    const el = flor.document.create({top: 2, left: 4, width: 27, height: 12, border: { type: BorderStyle.double }, children: [
       { top: 1, left: 1, width: 7, height: 4, ch: '1', border: { type: BorderStyle.round } },
       { top: 3, left: 11, width: 7, height: 4 }
     ]})
-    renderer.renderElement(el, { preventSiblingCascade: false, preventChildrenCascade: false })
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el, { preventSiblingCascade: false, preventChildrenCascade: false })
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
     ╔═════════════════════════╗
     ║                         ║
@@ -131,12 +125,12 @@ describe('props cascade', () => {
   })
 
   it('default behavior is {preventSiblingCascade: true, preventChildrenCascade: false} children inherits only from parent and never from sibling', async done => {
-    const el = doc.create({top: 2, left: 4, width: 27, height: 12, border: { type: BorderStyle.double }, children: [
+    const el = flor.document.create({top: 2, left: 4, width: 27, height: 12, border: { type: BorderStyle.double }, children: [
       { top: 1, left: 1, width: 7, height: 4, ch: '1', border: { type: BorderStyle.round } },
       { top: 3, left: 11, width: 7, height: 4 }
     ]})
-    renderer.renderElement(el)
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el)
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
     ╔═════════════════════════╗
     ║                         ║
@@ -155,7 +149,7 @@ describe('props cascade', () => {
   })
 
   it('should declare as element props', async done => {
-    const el = doc.create({top: 2, left: 4, width: 37, height: 22, border: { type: BorderStyle.double }, ch: 'P', preventChildrenCascade: true, children: [
+    const el = flor.document.create({top: 2, left: 4, width: 37, height: 22, border: { type: BorderStyle.double }, ch: 'P', preventChildrenCascade: true, children: [
       { // This child won't inherit from parent
         top: 1, left: 1, width: 33, height: 10, ch: '1',
         preventSiblingCascade: false,
@@ -174,8 +168,8 @@ describe('props cascade', () => {
             top: 1, left: 14, width: 8, height: 4}
         ]}
     ]})
-    renderer.renderElement(el)
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el)
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
     ╔═══════════════════════════════════╗
     ║PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP║

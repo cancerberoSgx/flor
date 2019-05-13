@@ -38,7 +38,9 @@ export class ProgramDocument extends Document {
 
   _setManagers(managers: {events: EventManager, focus: FocusManager}) {
     this.managers = managers
-    this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white', border: { type: BorderStyle.round } })
+    this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white', 
+    // border: { type: BorderStyle.round }
+   })
     this._emptyListenerQueue()
   }
 
