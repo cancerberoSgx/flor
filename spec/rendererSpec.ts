@@ -1,25 +1,14 @@
 import { FlorDocument } from '../src'
 import { BorderStyle } from '../src/util/border'
 import { createElement } from '../src/util/util'
+import { defaultTestSetup } from './testUtil'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
 describe('renderer', () => {
+
   let flor: FlorDocument
-
-  beforeEach(() => {
-    flor = new FlorDocument({ buffer: true })
-    flor.render()
-    process.on('uncaughtException', function(err) {
-      flor.destroy()
-      console.log('Caught exception: ' + err, err, err.stack)
-      process.exit(1)
-    })
-  })
-
-  afterEach(() => {
-    flor.destroy()
-  })
+  defaultTestSetup(f => flor = f || flor)
 
   it('renderElementWithoutChildren', async done => {
     const div1 = flor.document.createElement('Div')

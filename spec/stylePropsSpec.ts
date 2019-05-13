@@ -1,37 +1,18 @@
-import { tryTo } from 'misc-utils-of-mine-generic'
-import { Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 import { trimRightLines } from 'misc-utils-of-mine-generic'
-import { installExitKeys } from '../src/util/programUtil'
+import { FlorDocument } from '../src'
+import { defaultTestSetup } from './testUtil'
 
 describe('styleProps', () => {
-  let program: Program
-  let doc: ProgramDocument
-  let renderer: ProgramDocumentRenderer
-
-  beforeEach(() => {
-    program = new Program()
-    installExitKeys(program)
-    program.reset()
-    jasmine.addMatchers(require('jasmine-diff')(jasmine, {
-      colors: true, inline: true
-    }))
-    doc = new ProgramDocument()
-    renderer = new ProgramDocumentRenderer({ program })
-  })
-
-  afterEach(() => {
-    tryTo(() => {
-      renderer.destroy()
-    })
-  })
+  let flor: FlorDocument
+  defaultTestSetup(f => flor = f || flor)
 
   it('top left can be negative', async done => {
-    const el = doc.create({top: 5, left: 12, width: 24, height: 6, ch: '0',
+    const el = flor.document.create({top: 5, left: 12, width: 24, height: 6, ch: '0',
       children: [
       { top: -2, left: -3, width: 22, height: 4, ch: '1' }
       ]})
-    renderer.renderElement(el)
-    expect(renderer.printBuffer(true)).toContain(`
+    flor.renderer.renderElement(el)
+    expect(flor.renderer.printBuffer(true)).toContain(`
 
 
          1111111111111111111111
@@ -47,14 +28,14 @@ describe('styleProps', () => {
   })
 
   it('top left can be negative fractions', async done => {
-    const el = doc.create({top: 10, left: 14, width: 24, height: 15, ch: '0',
+    const el = flor.document.create({top: 10, left: 14, width: 24, height: 15, ch: '0',
       children: [
       { top: .7, left: .7, width: .4, height: .4, ch: '1' },
       { top: -.2, left: -.2, width: .4, height: .4, ch: '2' },
       { top: -.4, left: .9, width: .3, height: .3, ch: '3' }
       ]})
-    renderer.renderElement(el)
-    expect(renderer.printBuffer(true)).toContain(trimRightLines(`
+    flor.renderer.renderElement(el)
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
 
 
 

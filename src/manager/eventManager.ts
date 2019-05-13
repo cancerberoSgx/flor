@@ -1,8 +1,8 @@
+import { PropertyOptional, RemoveProperties } from 'misc-utils-of-mine-generic'
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
 import { Event, EventTarget, StopPropagation } from '../dom/event'
 import { ProgramElement } from '../programDom'
 import { debug } from '../util'
-import { RemoveProperties, PropertyOptional } from 'misc-utils-of-mine-generic'
 
 export type RegisteredEventListener = { el: ProgramElement, name: string; listener: MouseListener | KeyListener }
 
@@ -50,13 +50,28 @@ export class EventManager {
     return this._program
   }
 
+  private _ignoreKeys = false
+  public get ignoreKeys() {
+    return this._ignoreKeys
+  }
+  public set ignoreKeys(value) {
+    this._ignoreKeys = value
+  }
   protected onKeyPress(ch: string | undefined, e: ProgramKeyEvent) {
+    if (this.ignoreKeys) {
+      return
+    }
     this.keyListeners.some(l => {
       return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el, target: l.el }as any)
     })
   }
-  // private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
+  private beforeAllKeyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
   private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'>)[] = []
+  addBeforeAllKeyListener(l: KeyListener) {
+    if (!this.beforeAllKeyListeners.find(k => k.listener === l)) {
+      this.keyListeners.push({ name: 'keypress', listener: l  })
+    }
+  }
   addKeyListener(l: KeyListener) {
     if (!this.keyListeners.find(k => k.listener === l)) {
       this.keyListeners.push({ name: 'keypress', listener: l  })
@@ -64,7 +79,6 @@ export class EventManager {
   }
 
   private beforeAllMouseListeners: {name: string, listener: (e: ProgramMouseEvent & StopPropagation) => boolean | void}[] = []
-
   addBeforeAllMouseListener(l: {name: string, listener: (e: ProgramMouseEvent & StopPropagation) => boolean | void}) {
     if (!this.beforeAllMouseListeners.find(ll => l !== ll)) {
       this.beforeAllMouseListeners.push(l.name === 'click' ? { ...l, name: 'mouseout' } : l)
@@ -80,7 +94,9 @@ export class EventManager {
   }
 
   onMouse(e: ProgramMouseEvent) {
-    if (this._ignoreMouse) return
+    if (this.ignoreMouse) {
+      return
+    }
     const r = this.beforeAllMouseListeners.filter(l => l.name === e.action).some(l => {
       const ev = {  ...e }
       return notifyListener(l.listener as any, ev as any)

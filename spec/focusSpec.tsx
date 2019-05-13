@@ -1,19 +1,9 @@
 import { Flor, FlorDocument, Layout } from '../src'
+import { defaultTestSetup } from './testUtil'
 
 describe('focus', () => {
-
   let flor: FlorDocument
-  beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
-
-    flor = new FlorDocument()
-    flor.renderer.program.enableMouse()
-    flor.renderer.program.hideCursor()
-    flor.render()
-  })
-  afterEach(() => {
-    flor.destroy()
-  })
+  defaultTestSetup(f => flor = f || flor)
 
   it('should visit focusable elements', async done => {
     function msg(s: string) {

@@ -1,6 +1,6 @@
 import { Document } from '../dom'
-import { EventManager, ProgramDocumentRenderer } from '../render'
-import { FocusManager } from '../render/focusManager'
+import { EventManager, ProgramDocumentRenderer } from '../manager'
+import { FocusManager } from '../manager/focusManager'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'

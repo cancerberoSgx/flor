@@ -1,4 +1,4 @@
-import { array, repeat } from 'misc-utils-of-mine-generic'
+import { array, repeat, trimRightLines } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import * as wrap from 'word-wrap'
 import { Program, ProgramOptions } from '../declarations/program'
@@ -11,7 +11,6 @@ import { PAttrs } from '../programDom/styleProps'
 import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
-import { trimRightLines } from 'misc-utils-of-mine-generic'
 import { createProgram, destroyProgram } from '../util/programUtil'
 
 export interface RendererCreateOptions {

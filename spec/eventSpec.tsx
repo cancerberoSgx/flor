@@ -1,12 +1,12 @@
 import { FlorDocument, MouseAction } from '../src'
 import { Flor } from '../src/jsx/createElement'
+import { defaultTestSetup } from './testUtil'
 
 describe('events', () => {
+  let flor: FlorDocument
+  defaultTestSetup(f => flor = f || flor)
 
   it('click', async done => {
-
-    const flor = new FlorDocument()
-
     let counter = 0
     const p = <box width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClick={e => {
       e.currentTarget!.childNodes.item(0)!.textContent = 'clicked_' + counter++
@@ -43,7 +43,6 @@ describe('events', () => {
       x: le.absoluteContentLeft + 20, y: le.absoluteContentTop + 20, button: 'left'
     })
     expect(flor.renderer.printBuffer(true).trim()).toContain('clicked_2')
-    flor.renderer.destroy()
     done()
   })
 })

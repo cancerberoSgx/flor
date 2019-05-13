@@ -1,5 +1,5 @@
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../render'
-import { BlurEvent, FocusEvent } from '../render/focusManager'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
+import { BlurEvent, FocusEvent } from '../manager/focusManager'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'

@@ -1,6 +1,5 @@
 import { Component, Flor } from '../jsx'
 import { ElementProps, ProgramDocument, ProgramElement } from '../programDom'
-import { debug } from '../util'
 
 interface InputProps extends Partial<ElementProps> {
   onInput?: (e: { currentTarget: ProgramElement, input: string }) => void

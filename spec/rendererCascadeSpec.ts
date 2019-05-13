@@ -1,24 +1,11 @@
 import { FlorDocument } from '../src'
 import { BorderStyle } from '../src/util/border'
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
+import { defaultTestSetup } from './testUtil'
 
 describe('props cascade', () => {
+
   let flor: FlorDocument
-
-  beforeEach(() => {
-    flor = new FlorDocument({ buffer: true })
-    flor.render()
-    process.on('uncaughtException', function(err) {
-      flor.destroy()
-      console.log('Caught exception: ' + err, err, err.stack)
-      process.exit(1)
-    })
-  })
-
-  afterEach(() => {
-    flor.destroy()
-  })
+  defaultTestSetup(f => flor = f || flor)
 
   it('flor.renderer.renderElement options, default( {preventChildrenCascade: false}), children to inherits parent\'s attrs', async done => {
     const el = flor.document.create({top: 2, left: 4, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, children: [

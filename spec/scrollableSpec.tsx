@@ -1,26 +1,14 @@
 import { array } from 'misc-utils-of-mine-generic'
-import { BorderStyle, debug, easing, FlorDocument, Layout } from '../src'
+import { BorderStyle, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
+import { defaultTestSetup } from './testUtil'
 
 describe('scrollable', () => {
 
   let flor: FlorDocument
-
-  beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
-    flor = new FlorDocument({ buffer: true })
-    process.on('uncaughtException', function(err) {
-      flor.destroy()
-      console.log('Caught exception: ' + err, err, err.stack)
-      process.exit(1)
-    })
-  })
-
-  afterEach(() => {
-    flor.destroy()
-  })
+  defaultTestSetup(f => flor = f || flor)
 
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     const el = <Scrollable {...{
