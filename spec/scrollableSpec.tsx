@@ -80,19 +80,6 @@ describe('scrollable', () => {
       const el = flor.create(a)
       flor.render()
 
-// await sleep(2000)      
-//       flor.render()
-// flor.debug('hehehhe1')
-// flor.render()
-// await sleep(2000)
-//   flor.debug('hehehhe2')
-//   flor.render()
-
-//   await sleep(2000)
-//   flor.debug('hehehhe3')
-//   flor.render()
-
-
   expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
       done()
 

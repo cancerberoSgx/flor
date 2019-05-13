@@ -56,8 +56,8 @@ export class ProgramElement extends Element {
     }
   }
   private _layoutOnce = false
-  
-  public update(force=false){
+
+  public update(force = false) {
     this._layoutOnce = false
     this._positionDirty = true
     this.updateBounds(force)
@@ -76,7 +76,8 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * Called by the renderer just after rendering this element. It's children were not yet rendered and will be next.
+   * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
+   * next.
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
    *
@@ -101,8 +102,8 @@ export class ProgramElement extends Element {
     }
   }
 
-  toString(){
-    return 'ProgramElement '+this.tagName
+  toString() {
+    return 'ProgramElement ' + this.tagName
   }
 
   get parentNode(): ProgramElement | ProgramDocument {
@@ -152,37 +153,28 @@ export class ProgramElement extends Element {
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
   }
-
   get absoluteContentLeft() {
     return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left : 0)
   }
-
   get contentHeight() {
     return this.props.height - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.top + this.props.padding.bottom) : 0)
   }
-
   get contentWidth() {
     return this.props.width - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.left + this.props.padding.right) : 0)
   }
 
-
   get absoluteInnerTop() {
-    return this.absoluteTop + (this.props.border ? 1 : 0) 
+    return this.absoluteTop + (this.props.border ? 1 : 0)
   }
-
   get absoluteInnerLeft() {
-    return this.absoluteLeft + (this.props.border ? 1 : 0) 
+    return this.absoluteLeft + (this.props.border ? 1 : 0)
   }
-
   get innerHeight() {
     return this.props.height - (this.props.border ? 1 : 0)
   }
-
   get innerWidth() {
     return this.props.width - (this.props.border ? 1 : 0)
   }
-
-
 
   protected __positionDirty: boolean
   get _positionDirty() {
@@ -233,9 +225,11 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if `descendant` argument is passed also recursively for all descendants.
+   * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if
+   * `descendant` argument is passed also recursively for all descendants.
    *
-   * on render() , descendants doesn't need to be calculated since they are rendered after the parent and updateBounds will be called for them individually
+   * on render() , descendants doesn't need to be calculated since they are rendered after the parent and
+   * updateBounds will be called for them individually
    */
   protected updateBounds(descendants?: boolean) {
     if (this._positionDirty) {
@@ -295,7 +289,6 @@ export class ProgramElement extends Element {
     return this._component as T | undefined
   }
 
-  // protected _ownerDocument: ProgramDocument
   get ownerDocument(): ProgramDocument {
     return this._ownerDocument as ProgramDocument
   }

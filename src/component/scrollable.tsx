@@ -8,29 +8,17 @@ import { Animation, debug } from '../util'
 import { nextTick } from '../util/misc'
 
 interface ScrollEvent {
-  currentTarget: ProgramElement,
-  //  /** 
-  //  * Number of rows considered to build the vertical offset. in other words the height ot the scrolled
-  //    area. 
-  //    */
-  //  rows: number,
-  //  /** 
-  //  * Number of  cols considered to build the horizontal offset. in other words the height ot the scrolled
-  //  * area. 
-  //    */
-  //  cols: number,
+  currentTarget: ProgramElement
   /** 
-   * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current percentage 
+   * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current
+   * percentage 
    */
   xOffset: number
   /** 
-   * Current vertical scroll position. `rows` / [[yOffset]] is the vertical scrolled current percentage, where `rows` is `scrollArea.yl -  scrollArea.yi`. 
+   * Current vertical scroll position. `rows` / [[yOffset]] is the vertical scrolled current percentage, where
+   * `rows` is `scrollArea.yl -  scrollArea.yi`. 
    */
   yOffset: number
-  //  /** 
-  //  * Bounds of the scrolled region 
-  //    */
-  //  bounds: Rectangle
 }
 
 interface ConcreteScrollableProps {
@@ -121,6 +109,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected xi: number = +Infinity
   protected xl: number = -Infinity
   protected renderer: ProgramDocumentRenderer | undefined
+
   /**
    * Children currently "inside" the viewport, The "inside" predicate is implemented in method
    * [[elementInViewportPredicate]] and currently are those children that intersects the viewport area.
@@ -173,25 +162,18 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   }
 
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
-    // let forceCalcArea = false
     if (!this.renderer) {
       this.renderer = renderer
-      // this.renderer.writeArea = this.element!.getBounds()
-      // forceCalcArea = true this.element!.onBoundsChange(()=>{
-      // })
     }
     // TODO: clean this, remove first, last, use some() , performance this.calcScrollArea(forceCalcArea);
     this.calcScrollArea()
-    // TODO: assuming children ordered top-down!!!
     this.vChildren.forEach(c => {
       if (isElement(c)) {
         const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
         if (y >= -this.element!.absoluteTop) {
           const top = c.props.top
-          // c.props.setTop(y, true)
           c.props.top = y // we need to make position dirty
           this.renderElement(c) // and call render so it gets updated
-          // c.props.setTop(top, true)
           c.props.top = top
         }
       }
@@ -203,16 +185,15 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * not inside is [[elementInViewportPredicate]]. 2) . The while Rect area being scrolled [[yi]], [[yl]],
    * [[xi]], [[xl]]. Heads up, this function is called on each render.
    */
-  protected calcScrollArea(forceCalc = false) {
+  protected calcScrollArea() {
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
     this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
-      if (last) {// } && !forceCalc) {
+      if (last) {
         return false
       }
       let r
       if (isElement(c)) {
-        // forceCalc && this.addChildToScrollAreaCalc(c); this.addChildToScrollAreaCalc(c);
         const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
         if (this.yi > cyi) {
           this.yi = cyi
@@ -253,17 +234,13 @@ export class Scrollable extends Component<ScrollableProps, {}> {
 
   protected handleScrollEnd() {
     this.scrolling = false
-    // this._stopAnimation && 
     this._stopAnimation()
     if (this.props.onScroll) {
-      // nextTick(() => {
         this.p.onScroll({ currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset })
-      // })
     }
   }
 
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
-    // debug({...e, currentTarget: null, target: null})  
     if (!this.element!.props.focused) {
     } else if (this.scrolling) {
       if (this.p.interruptAnimation) {

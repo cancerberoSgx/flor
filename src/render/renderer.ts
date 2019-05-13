@@ -218,13 +218,7 @@ export class ProgramDocumentRenderer {
    * IMPORTANT: all writings to program.output must be performed using this method, otherwise some features or
    * tests could fail.
    *
-   * TODO:
-   *
-    // TODO : test performance paint the rest of the line:
-          // out += this.tput.cup(y, x);
-          // out += this.tput.el();
-  'parm_insert_line':                                    ['il',                               'AL'], //                              insert #1 lines (P*)
-
+   *  // TODO : test performance paint the rest of the line:  out += this.tput.cup(y, x); out += this.tput.el();  'parm_insert_line'
    */
   write(y: number, x: number, s: string) {
     if (
@@ -416,32 +410,10 @@ export class ProgramDocumentRenderer {
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
-        const bounds = el.getInnerBounds()
-        // let yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
-        // let xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
-        // let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
-        // let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
-
-        // if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
-          // TODO instead of doing calculations here, use writeArea
-          // height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
-          // width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1 : width
-          // if (xi < el.parentNode.absoluteContentLeft) {
-          //   // width = width - (el.parentNode.absoluteContentLeft - xi)
-          //   xi = el.parentNode.absoluteContentLeft;
-          //   (attrs as any).xi = xi
-          // }
-          // if (yi < el.parentNode.absoluteContentTop) {
-          //   // height = height - (el.parentNode.absoluteContentTop - yi)
-          //   yi = el.parentNode.absoluteContentTop;
-          //   (attrs as any).yi = yi
-          // }
-          // attrs.height = height
-          // attrs.width = width
-        // }
-        const s= this._program.repeat(el.props.ch || this._currentAttrs.ch, bounds.xl-bounds.xi)
-        for (let i = bounds.yi; i <  bounds.yl; i++) {
-          this.write(0 + i, bounds.xi, s)
+        const {xi, xl, yi, yl} = el.getInnerBounds()
+        const s= this._program.repeat(el.props.ch || this._currentAttrs.ch, xl-xi)
+        for (let i = yi; i <  yl; i++) {
+          this.write(0 + i, xi, s)
         }
       }
     }
@@ -455,29 +427,9 @@ export class ProgramDocumentRenderer {
   /**
    * Writes [[currentAttrs]] in all pixels of the area of given el.
    */
-  eraseElement(el: ProgramElement
-    // el: Node
-    // , forceChildrenErase=false
-  ) {
+  eraseElement(el: ProgramElement  ) {
     this.setAttrs(this._defaultAttrs)
-    // if(isElement(el)){
     this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
-    // if(forceChildrenErase){
-    // debug('eraseElement if ', ( Array.from(el.childNodes||[])))
-
-    // Array.from(el.childNodes||[]).filter(c=>c).forEach(c=>this.eraseElement(c, forceChildrenErase))
-    // // for(let n of el.childNodes||[]){
-    //   // this.eraseElement(n, forceChildrenErase)
-    // // }
-    // }
-    // }
-    // else if(el) {
-    //   debug('eraseElement else ', ( el._data && el._data.renderLocation ||[]));
-
-    //   ( el._data && el._data.renderLocation ||[]).forEach(([yi, yl, xi, xl]: number[])=>{
-    //   this.fillRectangle(Math.round(yi)||1, Math.round(xi)||1, Math.round(yl-yi)||1, Math.round(xl-xi)||1, ' ')
-    //   })
-    // }
   }
 
   /**
