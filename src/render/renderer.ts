@@ -68,7 +68,7 @@ interface RenderElementOptions {
   /**
    * Ensures writings only happen inside given element's area by temporarily changing [[writeArea]].
    */
-  writeInsideOnly?: boolean 
+  writeInsideOnly?: boolean
 
   // /**
   //  * if passed the write area will be applied only temporarily for the current frament being rendered. After the renderElement() call finished, it will be reseted. For a permanent write area use the setter [[writeArea]] or the method [[setElementWriteArea]]
@@ -104,8 +104,8 @@ export class ProgramDocumentRenderer {
   private _currentAttrs: Attrs
   private _defaultRenderOptions: RenderElementOptions = {
     preventSiblingCascade: true,
-    preventChildrenCascade: false,
-    
+    preventChildrenCascade: false
+
   }
   private _writeArea: Rectangle
 
@@ -219,20 +219,20 @@ export class ProgramDocumentRenderer {
    *  // TODO : test performance paint the rest of the line:  out += this.tput.cup(y, x); out += this.tput.el();  'parm_insert_line'
    */
   write(y: number, x: number, s: string) {
-    const {xi, xl, yi, yl} = this._writeArea
+    const { xi, xl, yi, yl } = this._writeArea
     if (
       y < yi  ||
       y >= yl  ||
-     ( x < xi && x + s.length<xi) ||
+     (x < xi && x + s.length < xi) ||
       x > xl
       ) {
       return
     }
     if (x + s.length > xl) {
-      s = s.substring(x + s.length - xl -1)
+      s = s.substring(x + s.length - xl - 1)
     }
-    if(x<xi){
-      s = s.substring(Math.max(0, s.length-(xi-x) -1), s.length)
+    if (x < xi) {
+      s = s.substring(Math.max(0, s.length - (xi - x) - 1), s.length)
       x = xi
     }
     this._program.cursorPos(y, x)
@@ -353,7 +353,7 @@ export class ProgramDocumentRenderer {
           if (el.props.renderChildElement) {
             el.props.renderChildElement(this, c, i, a)
           } else {
-            this.renderElement(c, { ...options, })
+            this.renderElement(c, { ...options })
           }
         } else {
           debug('Element type invalid: ' + inspect(c))

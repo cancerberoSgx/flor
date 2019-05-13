@@ -25,9 +25,9 @@ describe('scrollable', () => {
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     // try {
     const el = <Scrollable {...{
-        top: 8, left: 12, width: 24, height: 26, ch: char(),
-        border: { type: BorderStyle.double }
-      }}
+      top: 8, left: 12, width: 24, height: 26, ch: char(),
+      border: { type: BorderStyle.double }
+    }}
         normalVerticalStep={3}
       >
         {words(3).join(' ')}sdf
@@ -54,9 +54,9 @@ describe('scrollable', () => {
     flor.debug('start')
     // try {
     const a = <Scrollable {...{
-        top: 3, left: 3, width: 55, height: 23,
-        border: { type: BorderStyle.double }
-      }}
+      top: 3, left: 3, width: 55, height: 23,
+      border: { type: BorderStyle.double }
+    }}
         preventChildrenCascade={true}
         layout={{
           layout: Layout.topDown,

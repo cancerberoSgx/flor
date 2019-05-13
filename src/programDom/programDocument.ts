@@ -1,7 +1,6 @@
 import { Document } from '../dom'
 import { EventManager } from '../render'
 import { FocusManager } from '../render/focusManager'
-import { BorderStyle } from '../util'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
@@ -38,9 +37,9 @@ export class ProgramDocument extends Document {
 
   _setManagers(managers: {events: EventManager, focus: FocusManager}) {
     this.managers = managers
-    this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white', 
+    this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white'
     // border: { type: BorderStyle.round }
-   })
+    })
     this._emptyListenerQueue()
   }
 

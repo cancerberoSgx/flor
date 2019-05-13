@@ -1,7 +1,5 @@
-import { tryTo } from 'misc-utils-of-mine-generic'
-import { Program, ProgramDocument, ProgramDocumentRenderer, FlorDocument } from '../src'
+import { FlorDocument } from '../src'
 import { BorderStyle } from '../src/util/border'
-import { installExitKeys } from '../src/util/programUtil'
 import { createElement } from '../src/util/util'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999

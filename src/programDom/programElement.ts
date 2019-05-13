@@ -207,11 +207,11 @@ export class ProgramElement extends Element {
 
   getContentBounds(relative = false): Rectangle {
     if (!relative) {
-      return { 
-        yi: this.absoluteContentTop, 
-        xi: this.absoluteContentLeft, 
-        yl: this.absoluteContentTop + this.contentHeight, 
-        xl: this._absoluteLeft + this.contentWidth 
+      return {
+        yi: this.absoluteContentTop,
+        xi: this.absoluteContentLeft,
+        yl: this.absoluteContentTop + this.contentHeight,
+        xl: this._absoluteLeft + this.contentWidth
       }
     } else {
       throw new Error('TODO')

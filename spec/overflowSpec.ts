@@ -95,7 +95,7 @@ describe('overflow', () => {
   })
 
   it('test with padding and multiple levels', async done => {
-    const el = doc.create({top: 8, left: 12, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, padding: {top: 1, left: 1, right: 1, bottom: 1}, overflow: 'hidden',
+    const el = doc.create({top: 8, left: 12, width: 24, height: 16, ch: '0', border: { type: BorderStyle.double }, padding: { top: 1, left: 1, right: 1, bottom: 1 }, overflow: 'hidden',
       children: [
       { top: 5, left: 13, width: 22, height: 4, bg: 'red', ch: '2' },
       { top: 10, left: 8, width: 3, height: 8, ch: 'K', fg: 'cyan' },

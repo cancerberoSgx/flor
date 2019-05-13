@@ -273,8 +273,8 @@ export class Rect {
     if (this.top <= other.top) {
       offsetY = other.top - this.top
     } else if (this.bottom > other.bottom) {
-     offsetY = other.bottom - this.bottom
-   }
+      offsetY = other.bottom - this.bottom
+    }
     return this.translate(offsetX, offsetY)
   }
 
