@@ -337,16 +337,15 @@ export class ProgramDocumentRenderer {
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
     let originalWriteArea: Rectangle | undefined
-    let parentBounds: Rectangle | undefined
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
     }
     else if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
-      parentBounds = this._writeArea = el.parentNode.getContentBounds()
+      this._writeArea = el.parentNode.getContentBounds()
     }
-    this.renderElementWithoutChildren(el, { ...options, parentBounds })
+    this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
@@ -411,7 +410,7 @@ export class ProgramDocumentRenderer {
   /**
    * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions & {parentBounds?: Rectangle} = this._defaultRenderOptions) {
+  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions = this._defaultRenderOptions) {
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
@@ -428,7 +427,7 @@ export class ProgramDocumentRenderer {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
         const { xi, xl, yi, yl } = el.getInnerBounds()
-        const width = xl - xi// - (options.parentBounds && xi < options.parentBounds.xi ? options.parentBounds.xi - xi : 0)
+        const width = xl - xi
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi; i <  yl; i++) {
           this.write(i, xi, s)
