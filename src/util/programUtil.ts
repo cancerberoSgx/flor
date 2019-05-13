@@ -92,6 +92,9 @@ export function leaveProgram(program: Program) {
  * enters again in the reset program by  [[leaveProgram]]. installing internal configuration and enabling mouse, and keys.
  */
 export function enterProgram(program: Program): any {
+  if (program.isAlt) {
+    return
+  }
   if (process.platform === 'win32') {
     try {
       require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 })

@@ -36,30 +36,27 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   }
 
   element: ProgramElement | undefined
-
-  // /**
-  //  * Shortcut for [[element]] with no undefined type. Use with care, make sure [[elementCreated]] was already called
-  //  */
-  // get el(): ProgramElement {
-  //   return this.el!
-  // }
-
+ 
   abstract render(): JSX.FlorJsxNode
 
   protected get program() {
     return this.element && this.element.ownerDocument.program
   }
 
+  protected get cursor() {
+    return this.element && this.element.ownerDocument.cursor
+  }
+
   protected get renderer() {
     return this.element && this.element.ownerDocument.renderer
   }
 
+  protected get events() {
+    return this.element && this.element.ownerDocument.events
+  }
+
   protected renderElement(e: ProgramElement | undefined = this.element) {
     if (e && this.renderer) {
-    //   const p = this.renderer!.writeArea
-    // this.renderer!.writeArea = this.element!.getBounds()
-    // this.renderer!.renderElement(c)
-    // this.renderer!.writeArea = p
       this.renderer.renderElement(e)
     }
   }

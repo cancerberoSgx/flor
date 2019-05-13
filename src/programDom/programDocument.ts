@@ -4,28 +4,37 @@ import { FocusManager } from '../manager/focusManager'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
+import { CursorManager } from '../manager/cursorManager';
 
-interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer}
+interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
+
 export class ProgramDocument extends Document {
-
+  
   body: ProgramElement
-
+  
   protected managers: Managers | undefined
-  // /** @internal */
-  // _getEventManager() {
-  //   return this.events
-  // }
-  get program() {
-    return this.managers &&  this.managers.events.program
-  }
-  get renderer() {
-    return this.managers &&  this.managers.renderer
-  }
+  private registerListenerQueue: {type: 'event' | 'blur' | 'focus', listener: any}[] = []
 
   constructor() {
     super()
     this.body =  this.createElement('body')
     this.appendChild(this.body)
+  }
+
+  get program() {
+    return this.managers &&  this.managers.events.program
+  }
+  
+  get renderer() {
+    return this.managers &&  this.managers.renderer
+  }
+
+  get cursor() {
+    return this.managers &&  this.managers.cursor
+  }
+
+  get events() {
+    return this.managers &&  this.managers.events
   }
 
   createElement(t: string) {
@@ -41,16 +50,22 @@ export class ProgramDocument extends Document {
     return el
   }
 
+  /**
+   * @internal
+   */
   _setManagers(managers: Managers) {
     this.managers = managers
-    this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white'
-    // border: { type: BorderStyle.round }
+    this.program && this.body.props.assign({ 
+      top: 0, left: 0, width: this.program.cols, 
+      height: this.program.rows, bg: 'black', fg: 'white'
     })
     this._emptyListenerQueue()
   }
 
-  private registerListenerQueue: {type: 'event' | 'blur' | 'focus', listener: any}[] = []
 
+  /**
+   * @internal
+   */
   _registerListener(l: {type: 'event' | 'blur' | 'focus' , listener: any}) {
     this.registerListenerQueue.push(l)
     if (this.managers) {
