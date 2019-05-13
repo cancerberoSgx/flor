@@ -33,6 +33,10 @@ export class ProgramDocument extends Document {
     return this.managers &&  this.managers.cursor
   }
 
+  get focus() {
+    return this.managers &&  this.managers.focus
+  }
+
   get events() {
     return this.managers &&  this.managers.events
   }

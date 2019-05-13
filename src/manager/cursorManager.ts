@@ -28,6 +28,7 @@ interface Options {
  * Manages the cursor. Adapted from blessed screen.
  */
 export class CursorManager {
+  
 
   cursor: Cursor
   program: Program
@@ -53,7 +54,7 @@ export class CursorManager {
     this.program.cursorShape(this.cursor.shape, this.cursor.blink);
   }
 
-  cursorColor(color: Color): any {
+  cursorColor(color: Color) {
     this.cursor.color = color != null
       ? colors.convert(color)
       : undefined
@@ -66,12 +67,12 @@ export class CursorManager {
    * frees / unlock keyboard and mouse resources. Don't destroy de program or event listeners but the terminal is
    * reset. To use it again, use [[enterProgram]]
    */
-  leave(): any {
+  leave() {
     leaveProgram(this.program)
   }
 
   /** restore terminal control after [[leave]] was called */
-  enter(): any {
+  enter() {
     if (!this.cursor._set) {
       if (this.cursor.shape) {
         this.cursorShape(this.cursor.shape, this.cursor.blink)
@@ -108,4 +109,11 @@ export class CursorManager {
     this.program!.showCursor()
   }
 
+  left(n: number) {
+    this.program.left(n)
+  }
+
+  right(n: number) {
+    this.program.right(n)
+  }
 }

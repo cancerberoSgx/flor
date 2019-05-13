@@ -9,6 +9,7 @@ import { EventManager, notifyListener } from './eventManager'
  * TODO: focusNext and focusPrev element order policy customization
  */
 export class FocusManager {
+ 
 
   constructor(private events: EventManager, protected document: ProgramDocument) {
     this.onMouseUp = this.onMouseUp.bind(this)
@@ -79,6 +80,13 @@ export class FocusManager {
     } else {
       throw new Error('Element must be visible and attached and have property focusable on true.')
     }
+  }
+  
+  /**
+   * Makes [[el]] to loose focus (if have it) and optionally makes [[focused]] the new focused element.
+   */
+  blur(el: ProgramElement, focused?: ProgramElement) {
+    this.focused = focused
   }
 
   /**

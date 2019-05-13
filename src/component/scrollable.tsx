@@ -6,6 +6,7 @@ import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
 import { ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '../programDom'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
+import { KeyPredicate } from './types';
 
 interface ScrollEvent {
   currentTarget: ProgramElement
@@ -108,7 +109,6 @@ interface ConcreteScrollableProps {
   disableMouseWheel?: boolean
 }
 
-type KeyPredicate = (e: KeyEvent) => boolean
 interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
 
 }

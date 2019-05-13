@@ -47,6 +47,9 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
     return this.element && this.element.ownerDocument.cursor
   }
 
+  protected get focus() {
+    return this.element && this.element.ownerDocument.focus
+  }
   protected get renderer() {
     return this.element && this.element.ownerDocument.renderer
   }

@@ -321,6 +321,26 @@ export class ProgramElement extends Element {
         .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 
+  /** 
+   * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus. 
+   */
+  blur(focused?: ProgramElement) {
+    this.ownerDocument.focus && this.ownerDocument.focus.blur(this, focused)
+  }
+  /**
+   * Triggers a click event on this element.
+   */
+  click(){
+    this.ownerDocument.events && this.ownerDocument.events.click(this)
+  }
+  /**
+   * Focus this element.
+   */
+  focus(){
+    if(this.ownerDocument.focus ){
+      this.ownerDocument.focus.focused = this
+    }
+  }
 }
 
 interface DebugOptions {
