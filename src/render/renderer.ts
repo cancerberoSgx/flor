@@ -340,8 +340,7 @@ export class ProgramDocumentRenderer {
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
-    }
-    else if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
+    } else if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
       this._writeArea = el.parentNode.getContentBounds()
     }
