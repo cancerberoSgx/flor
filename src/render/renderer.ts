@@ -226,14 +226,14 @@ export class ProgramDocumentRenderer {
       (x + s.length < xi) ||
       x > xl
       ) {
-        return
+      return
+    }
+    if (x < 0) {
+        s = s + repeat(-1 * x, s[0])
+        x = 0
       }
-      if(x<0){
-        s = s+repeat(-1*x, s[0])
-        x=0
-      }
-      if(y<0){
-        y=0
+    if (y < 0) {
+        y = 0
       }
       // else if(x>this.program.cols-1){
 
@@ -241,12 +241,12 @@ export class ProgramDocumentRenderer {
       // }
         // x = x<0?0:x>this.program.cols-1 ? : x
         // y=y<0?0:y>this.program.rows-1 ? this.program.rows-1: y
-        if (x + s.length > xl) {
+    if (x + s.length > xl) {
           s = s.substring(x + s.length - xl - 1)
         }
-        if (x < xi) {
+    if (x < xi) {
           s = s.substring(Math.max(0, s.length - (xi - x) - 1), s.length)
-          // s = s+repeat(xi-x, s[0])          
+          // s = s+repeat(xi-x, s[0])
           x = xi
         }
         // if (x + s.length > xl) {
@@ -348,17 +348,17 @@ export class ProgramDocumentRenderer {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
     }
-    let parentBounds : Rectangle|undefined
+    let parentBounds: Rectangle | undefined
     if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
       parentBounds = this._writeArea = el.parentNode.getContentBounds()
     }
-    this.renderElementWithoutChildren(el, {...options, parentBounds})
+    this.renderElementWithoutChildren(el, { ...options, parentBounds })
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
     } else {
-      this.renderChildren(el, options);
+      this.renderChildren(el, options)
     }
     el._afterRender()
     el._renderCounter = this.renderCounter++
@@ -369,29 +369,25 @@ export class ProgramDocumentRenderer {
   }
 
   renderChildren(el: ProgramElement, options: RenderElementOptions) {
-    this.lastAbsLeft = el.absoluteContentLeft;
-    this.lastAbsTop = el.absoluteContentTop;
+    this.lastAbsLeft = el.absoluteContentLeft
+    this.lastAbsTop = el.absoluteContentTop
     Array.from(el.childNodes).forEach((c, i, a) => {
       if (c instanceof TextNode) {
         if (el.props.renderChildText) {
-          el.props.renderChildText(this, c, i);
+          el.props.renderChildText(this, c, i)
+        } else {
+          this.renderText(c, a[i + 1])
         }
-        else {
-          this.renderText(c, a[i + 1]);
-        }
-      }
-      else if (c instanceof ProgramElement) {
+      } else if (c instanceof ProgramElement) {
         if (el.props.renderChildElement) {
-          el.props.renderChildElement(this, c, i, a);
+          el.props.renderChildElement(this, c, i, a)
+        } else {
+          this.renderElement(c, { ...options })
         }
-        else {
-          this.renderElement(c, { ...options });
-        }
+      } else {
+        debug('Element type invalid: ' + inspect(c))
       }
-      else {
-        debug('Element type invalid: ' + inspect(c));
-      }
-    });
+    })
   }
 
   renderText(c: TextNode, nextNode: Node) {
@@ -423,7 +419,7 @@ export class ProgramDocumentRenderer {
   /**
    * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions&{parentBounds?: Rectangle} = this._defaultRenderOptions) {
+  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions & {parentBounds?: Rectangle} = this._defaultRenderOptions) {
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
@@ -441,7 +437,7 @@ export class ProgramDocumentRenderer {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
         const { xi, xl, yi, yl } = el.getInnerBounds()
-        let width = xl - xi - (options.parentBounds && xi<options.parentBounds!.xi ? options.parentBounds!.xi - xi : 0)
+        let width = xl - xi - (options.parentBounds && xi < options.parentBounds.xi ? options.parentBounds.xi - xi : 0)
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi; i <  yl; i++) {
           this.write(i, xi, s)

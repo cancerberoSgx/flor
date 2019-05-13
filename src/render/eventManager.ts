@@ -56,7 +56,7 @@ export class EventManager {
     })
   }
   // private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
-  private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'> )[] = []
+  private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'>)[] = []
   addKeyListener(l: KeyListener) {
     if (!this.keyListeners.find(k => k.listener === l)) {
       this.keyListeners.push({ name: 'keypress', listener: l  })
@@ -166,8 +166,8 @@ export class EventManager {
       // TODO: verify is mouse event
       // debug(n, o.name)
       const name = n.startsWith('on') ? n.substr(2) : n
-      
-      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseup' } :{...o, name}))
+
+      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseup' } : { ...o, name }))
     } else {
       debug('WARNING: ignoring event listener that is unknown or already registered:', o.name)
     }
@@ -192,8 +192,8 @@ export class EventManager {
   click(el: ProgramElement): any {
     this.triggerMouseEvent({
       action: MouseAction.mouseup,
-      x: el.absoluteInnerLeft, 
-      y: el.absoluteInnerTop, 
+      x: el.absoluteInnerLeft,
+      y: el.absoluteInnerTop,
       button: 'left'
     })
   }

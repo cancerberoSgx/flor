@@ -4,13 +4,12 @@ import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
 
-
 describe('scrollable', () => {
 
   let flor: FlorDocument
 
   beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL=99999
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
     flor = new FlorDocument({ buffer: true })
     process.on('uncaughtException', function(err) {
       flor.destroy()
@@ -50,12 +49,12 @@ describe('scrollable', () => {
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     flor.debug('start')
     const a = <Scrollable
-        top={10} left={20} 
+        top={10} left={20}
         width={55} height={23}
         border={{ type: BorderStyle.double }}
         preventChildrenCascade={true}
         layout={{
-          layout: Layout.topDown,
+          layout: Layout.topDown
         }}
         normalVerticalStep={2}
         overflow="hidden"
@@ -63,20 +62,20 @@ describe('scrollable', () => {
         verticalAnimationDuration={1400}
         largeScrollAnimation={easing.easeOutBounce()}
       >
-        {array(int(4, 11)).map(i =>  
-        <box ch=" " 
+        {array(int(4, 11)).map(i =>
+        <box ch=" "
         layout={{
-          layout: Layout.leftRight,
-        }} 
-        bg={color()} 
-        height={int(7, 11)} 
+          layout: Layout.leftRight
+        }}
+        bg={color()}
+        height={int(7, 11)}
         width={ int(40, 85)}
          >{i} - - {words(4).join(', ')}
-        {array(10).map(j=>
+        {array(10).map(j =>
 
-        <box        
-        ch=" " bg={color()} 
-        height={int(3, 7)} 
+        <box
+        ch=" " bg={color()}
+        height={int(3, 7)}
         width={ int(14, 20)}
         >
         {i}, {j}

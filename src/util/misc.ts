@@ -11,7 +11,7 @@ export function formatDate(d: Date) {
 }
 
 export function nowFormat() {
-  return Math.trunc(Date.now()/1000/1000)+''
+  return Math.trunc(Date.now() / 1000 / 1000) + ''
 }
 
 export function getCurrentCommit() {

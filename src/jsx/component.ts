@@ -51,9 +51,9 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
   protected get renderer() {
     return this.element && this.element.ownerDocument.renderer
   }
-  
-  protected renderElement(e: ProgramElement|undefined = this.element) {
-    if(e&&this.renderer){
+
+  protected renderElement(e: ProgramElement | undefined = this.element) {
+    if (e && this.renderer) {
     //   const p = this.renderer!.writeArea
     // this.renderer!.writeArea = this.element!.getBounds()
     // this.renderer!.renderElement(c)

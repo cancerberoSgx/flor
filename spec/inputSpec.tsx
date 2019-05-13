@@ -52,14 +52,14 @@ describe('input component', () => {
   it('plain input should grab user input', async done => {
     const p = input({ top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => {
       flor.debug('*value===' + e.value + '*')
-  } , document: flor.document })
+    } , document: flor.document })
     flor.render()
     test(p, flor)
     done()
   })
 
   xit('Input should grab user input', async done => {
-    const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.round }} bg="blue" 
+    const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.round }} bg="blue"
       onChange={e => flor.debug('*value===' + e.value + '*')} />
     const el = flor.create(p)
     flor.render()

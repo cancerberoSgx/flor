@@ -81,7 +81,6 @@ interface ConcreteScrollableProps {
    */
   normalScrollRightKeys?: KeyPredicate[]
 
-
   /**
    * Keys that activate normal scroll down. Default: `[e => e.ctrl === true && e.name === 'down']`.
    */
@@ -103,8 +102,8 @@ interface ConcreteScrollableProps {
   horizontalGotoEndKeys?: string[]
   horizontalGotoStartKeys?: string[]
   /**
-   * By default, mouse wheel will scroll vertical (or horizontal if used with control key). 
-   * If [[disableMouseWheel]] is false then this behavior will be disabled. 
+   * By default, mouse wheel will scroll vertical (or horizontal if used with control key).
+   * If [[disableMouseWheel]] is false then this behavior will be disabled.
    */
   disableMouseWheel?: boolean
 }
@@ -212,8 +211,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         // debug(c.props.width, c.getBounds(), this.renderer!.writeArea)
           // debug(c.props.width, c.getBounds())
           // c.props.top = width
-          c.props.top = top
-          c.props.left = left
+        c.props.top = top
+        c.props.left = left
       }
     })
     // this.dont=true
@@ -283,7 +282,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * Bounds of current viewport in absolute coordinates.
    */
   getViewportArea() {
-    return rectanglePlusOffsets(this.element!.getBounds(), this.xOffset, this.yOffset);
+    return rectanglePlusOffsets(this.element!.getBounds(), this.xOffset, this.yOffset)
   }
 
   protected handleScrollEnd() {
@@ -309,38 +308,35 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
       this.handleLargeVerticalScroll(1)
     } else if (this.p.normalScrollUpKeys.find(p => p(e))) {
-      this.handleNormalVerticalScroll(-1);
+      this.handleNormalVerticalScroll(-1)
     } else if (this.p.normalScrollDownKeys.find(p => p(e))) {
-      this.handleNormalVerticalScroll(1);
+      this.handleNormalVerticalScroll(1)
     } else if (this.p.normalScrollRightKeys.find(p => p(e))) {
-      this.handleNormalHorizontalScroll(1);
-    }
-    else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
-      this.handleNormalHorizontalScroll(-1);
+      this.handleNormalHorizontalScroll(1)
+    } else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
+      this.handleNormalHorizontalScroll(-1)
     }
     this.props.onKeyPressed && this.props.onKeyPressed(e)
   }
 
   protected handleNormalHorizontalScroll(direction: 1 | -1) {
     if (direction === 1) {
-      this.xOffset = Math.min(this.xl, this.xOffset + this.p.normalHorizontalStep);
-    }
-    else {
+      this.xOffset = Math.min(this.xl, this.xOffset + this.p.normalHorizontalStep)
+    } else {
       this.xOffset = Math.max(this.xi, this.xOffset - this.p.normalHorizontalStep)
     }
-    this.renderElement();
-    this.handleScrollEnd();
+    this.renderElement()
+    this.handleScrollEnd()
   }
 
   protected handleNormalVerticalScroll(direction: 1 | -1) {
     if (direction === 1) {
-      this.yOffset = Math.min(this.yl, this.yOffset + this.p.normalVerticalStep);
-    }
-    else {
+      this.yOffset = Math.min(this.yl, this.yOffset + this.p.normalVerticalStep)
+    } else {
       this.yOffset = Math.max(this.yi, this.yOffset - this.p.normalVerticalStep)
     }
-    this.renderElement();
-    this.handleScrollEnd();
+    this.renderElement()
+    this.handleScrollEnd()
   }
 
   protected onWheelUp<T extends ProgramElement = ProgramElement>(e: MouseEvent<T>) {
@@ -361,7 +357,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.props.onWheelDown && this.props.onWheelDown(e)
   }
 
-  protected handleLargeVerticalScroll(direction: 1|-1) {
+  protected handleLargeVerticalScroll(direction: 1 | -1) {
     this.scrolling = true
     if (this.props.largeScrollAnimation) {
       const start = this.yOffset
@@ -404,16 +400,16 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * Gets the current whole scrolled area, optionally recalculating it. TODO: forceCalc.
    */
   getScrollArea(forceCalc: boolean = false): Rectangle {
-    return { 
-      yi: this.yi, 
-      yl: this.yl, 
-      xi: this.xi, 
-      xl: this.xl 
+    return {
+      yi: this.yi,
+      yl: this.yl,
+      xi: this.xi,
+      xl: this.xl
     }
   }
 
   render() {
-    const layout = this.props.layout ? {...this.props.layout, neverResizeContainer: true}: undefined
+    const layout = this.props.layout ? { ...this.props.layout, neverResizeContainer: true } : undefined
     return <box focusable={true}
       {...{ ...this.props, onScroll: undefined, children: undefined }}
       layout={layout}
