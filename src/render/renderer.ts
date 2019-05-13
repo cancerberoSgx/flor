@@ -227,7 +227,7 @@ export class ProgramDocumentRenderer {
       y <  this._writeArea.yi + 1 ||
       y >= this._writeArea.yl ||
       x < this._writeArea.xi ||
-      x >= this._writeArea.xl - 1
+      x >= this._writeArea.xl
       ) {
       return
     }
@@ -464,9 +464,9 @@ export class ProgramDocumentRenderer {
    * Writes given [[ch]] with [[currentAttrs]] in all pixels of given rectangle.
    */
   fillRectangle(top: number, left: number, height: number, width: number, ch = this._currentAttrs.ch) {
-    // debug(top, left, height, width)
+    const s = this._program.repeat(ch, width)
     for (let i = 0; i < height; i++) {
-      this.write(top + i, left, this._program.repeat(ch, width))
+      this.write(top + i, left, s)
     }
   }
 

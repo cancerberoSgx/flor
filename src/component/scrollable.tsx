@@ -190,7 +190,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
           const top = c.props.top
           // c.props.setTop(y, true)
           c.props.top = y // we need to make position dirty
-          this.renderElement(c) // and call render so it get's updated
+          this.renderElement(c) // and call render so it gets updated
           // c.props.setTop(top, true)
           c.props.top = top
         }
@@ -274,7 +274,9 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         this.handleScrollEnd()
         return
       }
-    } else if (this.p.largeScrollUpKeys.find(p => p(e))) {
+    } 
+    
+    if (this.p.largeScrollUpKeys.find(p => p(e))) {
       this.handleLargeScroll(-1);
       return
     } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
