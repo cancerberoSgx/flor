@@ -3,6 +3,7 @@ describe('input component', () => {
 
   let flor: FlorDocument
   beforeEach(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
     flor = new FlorDocument()
     flor.renderer.program.enableMouse()
     flor.renderer.program.hideCursor()
@@ -17,10 +18,7 @@ describe('input component', () => {
     expect(!!el.props.value).toBe(false)
     expect(flor.renderer.program.cursorHidden).toBe(true)
     expect(flor.renderer.printBuffer()).not.toContain('value===')
-    flor.events.triggerMouseEvent({
-      action: MouseAction.mouseup,
-      x: 9, y: 11, button: 'left'
-    })
+    flor.events.click(el)
     expect(flor.renderer.program.cursorHidden).toBe(false)
     expect(!!el.props.input).toBe(false)
     expect(!!el.props.value).toBe(false)
@@ -52,10 +50,20 @@ describe('input component', () => {
   })
 
   it('plain input should grab user input', async done => {
-    const p = input({ top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => flor.debug('*value===' + e.value + '*') , document: flor.document })
-    flor.render(p)
+    const p = input({ top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => {
+      flor.debug('*value===' + e.value + '*')
+  } , document: flor.document })
     flor.render()
     test(p, flor)
     done()
+  })
+
+  xit('Input should grab user input', async done => {
+    const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.round }} bg="blue" 
+      onChange={e => flor.debug('*value===' + e.value + '*')} />
+    const el = flor.create(p)
+    flor.render()
+    // test(el, flor)
+    // done()
   })
 })

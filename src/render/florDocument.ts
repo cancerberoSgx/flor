@@ -182,7 +182,7 @@ export class FlorDocument {
       args.push(el)
     }
     args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 4, breakLength: 120 }))
-    .map(s => `   ||||   ${s}`)
+    // .map(s => `   ||||   ${s}`)
     // .map(this.createTextNode)
     .forEach(c => {
       this._debugEl!.appendChild(this.create({  children: [c] }))

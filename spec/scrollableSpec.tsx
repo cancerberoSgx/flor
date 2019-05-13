@@ -3,7 +3,7 @@ import { BorderStyle, debug, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
+
 
 describe('scrollable', () => {
 
@@ -47,7 +47,7 @@ describe('scrollable', () => {
     done()
   })
 
-  fit('should hide overflow and scroll vertical with up and down arrows by default', async done => {
+  it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     flor.debug('start')
     const a = <Scrollable {...{
       top: 3, left: 3, width: 55, height: 23,

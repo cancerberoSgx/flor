@@ -122,7 +122,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected yl: number = -Infinity
   protected xi: number = +Infinity
   protected xl: number = -Infinity
-  protected renderer: ProgramDocumentRenderer | undefined
 
   /**
    * Children currently "inside" the viewport, The "inside" predicate is implemented in method
@@ -179,9 +178,9 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   }
 
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
-    if (!this.renderer) {
-      this.renderer = renderer
-    }
+    // if (!this.renderer) {
+    //   this.renderer = renderer
+    // }
     // TODO: clean this, remove first, last, use some() , performance this.calcScrollArea(forceCalcArea);
     this.calcScrollArea()
     this.vChildren.forEach(c => {

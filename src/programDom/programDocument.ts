@@ -1,14 +1,16 @@
 import { Document } from '../dom'
-import { EventManager } from '../render'
+import { EventManager, ProgramDocumentRenderer } from '../render'
 import { FocusManager } from '../render/focusManager'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
 
+interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer}
 export class ProgramDocument extends Document {
 
   body: ProgramElement
-  protected managers: { events: EventManager; focus: FocusManager; } | undefined
+
+  protected managers: Managers | undefined
   // /** @internal */
   // _getEventManager() {
   //   return this.events
@@ -16,6 +18,10 @@ export class ProgramDocument extends Document {
   get program() {
     return this.managers &&  this.managers.events.program
   }
+  get renderer() {
+    return this.managers &&  this.managers.renderer
+  }
+
   constructor() {
     super()
     this.body =  this.createElement('body')
@@ -35,7 +41,7 @@ export class ProgramDocument extends Document {
     return el
   }
 
-  _setManagers(managers: {events: EventManager, focus: FocusManager}) {
+  _setManagers(managers: Managers) {
     this.managers = managers
     this.program && this.body.props.assign({ top: 0, left: 0, width: this.program.cols, height: this.program.rows, bg: 'black', fg: 'white'
     // border: { type: BorderStyle.round }

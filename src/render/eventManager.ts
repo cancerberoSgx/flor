@@ -38,6 +38,14 @@ export interface MouseEvent<T extends ProgramElement= ProgramElement> extends Ab
  * Manager class responsible of registering and dispatching keyboard and mouse events.
  */
 export class EventManager {
+  click(el: ProgramElement): any {
+    this.triggerMouseEvent({
+      action: MouseAction.mouseup,
+      x: el.absoluteInnerLeft, 
+      y: el.absoluteInnerTop, 
+      button: 'left'
+    })
+  }
 
   constructor(protected _program: Program) {
     this.onKeyPress = this.onKeyPress.bind(this)

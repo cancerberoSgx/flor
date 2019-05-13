@@ -61,7 +61,7 @@ export class ProgramElement extends Element {
     this._layoutOnce = false
     this._positionDirty = true
     this.updateBounds(force)
-    this.layout()
+    // this.layout()
   }
 
   /**
@@ -240,6 +240,7 @@ export class ProgramElement extends Element {
     if (this._positionDirty) {
       let a = this.absoluteLeft - this.absoluteTop
       this.layout()
+      a = this.absoluteLeft - this.absoluteTop
       this._positionDirty = false
     }
     if (descendants) {
