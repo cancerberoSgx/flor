@@ -1,7 +1,6 @@
 import { Component, Flor } from '../jsx'
 import { ElementProps, ProgramDocument, ProgramElement } from '../programDom'
-import { KeyPredicate } from './types';
-import { KeyEvent } from '../manager';
+import { KeyEvent, KeyPredicate } from '../manager';
 import { keys } from '../declarations/keys';
 
 interface InputProps extends Partial<ElementProps>, ConcreteInputProps {
@@ -42,8 +41,8 @@ interface ConcreteInputProps {
    * Keys that will disable the input without making the element to loose focus and without changing the value. This only applies when [[blurOnChange]] is false. By default is ESC.
    */
   disableInputKeys?: KeyPredicate
-
 }
+
 /**
  * A single line input text box. Will show the cursor and let the user input text when focused. When user
  * writes or deletes text it will emit [[onInput]] and when the user explicitly changes the value (like when
@@ -179,4 +178,6 @@ export class Input extends Component<InputProps, {}> {
 export function input(props: InputProps & { document: ProgramDocument }) {
   return Flor.render(<Input {...props} />, { document: props.document })
 }
+
+
 

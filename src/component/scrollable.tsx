@@ -2,11 +2,10 @@ import { asArray, throttle } from 'misc-utils-of-mine-generic'
 import { animate, easing } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer, KeyPredicate } from '../manager'
 import { ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '../programDom'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
-import { KeyPredicate } from './types';
 
 interface ScrollEvent {
   currentTarget: ProgramElement

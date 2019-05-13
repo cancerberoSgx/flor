@@ -1,7 +1,9 @@
 import { Color, colors } from '../declarations/colors'
 import { Program } from '../declarations/program'
 import { enterProgram, leaveProgram } from '../util/programUtil'
+
 type CursorShape = 'block' | 'underline' | 'line'
+
 interface Cursor {
   /**
    * Shape of the cursor. Can be: block, underline, or line.
@@ -27,7 +29,7 @@ interface Options {
 /**
  * Manages the cursor. Adapted from blessed screen.
  */
-export class CursorManager {
+export class CursorManager implements CursorHandler {
   
 
   cursor: Cursor
@@ -116,4 +118,12 @@ export class CursorManager {
   right(n: number) {
     this.program.right(n)
   }
+}
+
+/**
+ * Can move the cursor
+ */
+export interface CursorHandler {
+  left(n: number) : void
+  right(n: number) : void
 }

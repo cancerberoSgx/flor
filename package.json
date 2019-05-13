@@ -10,7 +10,7 @@
     "build": "tsc && npm run copy && echo 'build successful'",
     "copy": " rm -rf dist/src/blessed && cp -r src/blessed dist/src && cp -r usr dist",
     "test": "ts-node -T spec/support/customJasmine && echo $?",
-    "test-quick": "ts-node -T spec/support/customJasmine spec/support/jasmine-quick.json && echo $?",
+    "test-quick": "rm -rf log2.txt; ts-node -T spec/support/customJasmine spec/support/jasmine-quick.json && exit 0; tail -n 20 log2.txt",
     "test-watch": "npx watch  \"npm run test-quick\" src spec",
     "test-debug": "node --inspect-brk node_modules/ts-node/dist/bin spec/support/customJasmine",
     "prepare": "npm run build",

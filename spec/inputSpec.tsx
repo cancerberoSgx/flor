@@ -51,11 +51,11 @@ describe('input component', () => {
     done()
   })
 
-  xit('Input should grab user input', async done => {
-    const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.round }} bg="blue"
-      onChange={e => flor.debug('*value===' + e.value + '*')} />
+  xit('test', async done => {
+    const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />
     const el = flor.create(p)
-
+    flor.debug('test')
+    flor.render()
     // test(el, flor)
     // done()
   })

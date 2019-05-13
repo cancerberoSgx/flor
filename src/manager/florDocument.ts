@@ -30,7 +30,6 @@ TODO: probably this should extend ProgramDocument and handle all registerListene
 */
 
 export class FlorDocument {
-
   private _renderer: ProgramDocumentRenderer
   private _program: Program = undefined as any
   private _document: ProgramDocument
@@ -212,6 +211,10 @@ export class FlorDocument {
    */
   destroy(): any {
     this.renderer.destroy()
+  }
+
+  printBuffer(linesTrimRight= true)  {
+    return this.renderer.printBuffer(linesTrimRight)
   }
 
 }

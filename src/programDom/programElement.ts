@@ -1,5 +1,5 @@
 import { indent } from 'misc-utils-of-mine-generic'
-import { mouseActionNames } from '../declarations/program'
+import { mouseActionNames, ProgramKeyEvent } from '../declarations/program'
 import { Element } from '../dom'
 import { EventListener } from '../dom/event'
 import { Component } from '../jsx'
@@ -9,8 +9,10 @@ import { ElementPropsImpl } from './elementProps'
 import { isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
+import { KeyEvent } from '../manager';
 
 export class ProgramElement extends Element {
+
   private static counter = 1
 
   props: ElementPropsImpl
@@ -303,6 +305,12 @@ export class ProgramElement extends Element {
   }
 
   /**
+   * If the owner document has a renderer available it request to render this element on the screen.
+   */
+  render(){
+    this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this)
+  }
+  /**
    * Gets only childNodes that are elements.
    */
   getChildrenElements() {
@@ -332,6 +340,12 @@ export class ProgramElement extends Element {
    */
   click(){
     this.ownerDocument.events && this.ownerDocument.events.click(this)
+  }
+  /**
+   * Triggers a key event on this element.
+   */
+  key( e: string|Partial<KeyEvent>){
+    this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e==='string' ? e : undefined, typeof e === 'string' ? {name: e}: e)
   }
   /**
    * Focus this element.

@@ -25,6 +25,8 @@ export interface KeyEvent<T extends ProgramElement= ProgramElement> extends Abst
   ch: string
 }
 
+export type KeyPredicate = (e: KeyEvent) => boolean
+
 export interface MouseEvent<T extends ProgramElement= ProgramElement> extends AbstractEvent<T> {
   x: number
   y: number
