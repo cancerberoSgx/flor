@@ -10,13 +10,35 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
 
 ## Program DOM 
   * ProgramElement - analog to HTML Node and Element: supports lots of properties 
-  props: hierarchical model for properties (attributes) - all will end up being like blessed options or JSX props
-    * AttrsProps : base class supporting only terminal character attr (bg, fg, ch, bold, ect - only native things 
-    * StyleProps extends AttrsProps - core non native properties: top, left, width, height, border, padding, 
+  * ElementProps: hierarchical model for properties (attributes). Hierarchy:
+    * AttrsProps : base class supporting only terminal character attrs (bg, fg, ch, bold, ect - only native things)
+    * StyleProps extends AttrsProps - core non native properties: top, left, width, height, border, padding, layout, overflow, textWrap
        * Border support extensibility and already has more than 8 border styles. border has its own style
-    * ElementProps
-       * all handlers for events, extensibility, rendering hooks, and 
-
+       * Layout: 
+    * left, top, width, height: 
+      * relative to the parent
+      * Support integer values (cols/rows)
+      * Support percent/ratio values `-1 < x < 1`
+      * top and left support negative values
+    * overflow: 
+      * By default overflow==='visible' children outside parent viewport are shown
+      * if overflow==='hidden', children parts outside the parent viewport won't be drawn (the parts inside the parent viewport will)
+  * ElementProps: extends StyleProps
+    * event handlers, extensibility, rendering hooks, property propagation hooks, etc
+  * derived properties are optimally auto calculated:
+    * getBounds() 
+      * absolute outer bounds including border 
+      * (and margin in the future if added. 
+      * Properties: absoluteLeft, absoluteTop, props.height, props.width
+    * getContentBounds()
+      * calculated from getBounds()
+      * absolute coords inside padding
+      * includes excludes border and padding
+      * absolute bounds where children coordinates are relative to
+      * Properties: absoluteContentTop, absoluteContentLeft, contentWidth, contentHeight
+    * getInnerBounds()
+      * similar to getContentBounds but including the padding and excluding the border. 
+      * Where the background is painted.
 
 ## Renderer
   * the most important class
@@ -27,9 +49,12 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
   * renders Elements and their children and text nodes in the program
   * supports element props cascading / propagation. currently 2 modes
   * central method for writing
-  * in memory representation of whet's in the screen so we can query / assert in tests. Optional but dont affecct performance
+  * screen buffer: in memory representation of what's currently printed on the screen
+    * Optional
+    * Tests to verify it doesn't affect performance. 
+    * Necessary to tests so we can query / assert against printed output.
   * border drawing
-
+  * writeArea attribute to ensure writing only on a certain area at a given time.
 
 ## Core component library 
  * <Input> and input()  like html input - single line. Base abstract class designed to build up input els from there
@@ -41,13 +66,30 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
      * configurable keys for up, down, fastUp, fastDown, 
 
 ## JSX
-* important for docmentation and props contract 
- * components, one intrinsic element since, like html, all elements end up being the same thing: ``<box>``
- EventManager - handle centralixed all core events (keys, mouse)
- FocusManager - centralized flexible focus manager  focused, focusable, focusNext - initial design for a generic/flexible API
-  
+ * standard JSX rules and behavior supported
+ * one intrinsic element since, like html, all elements end up being the same thing: ``<box>``
+ * Features beyond JSX, component life cycle, context, state, etc are not supported
+ * ClassElement (Components) and FunctionElement supported 
+ * Component class with props associated with a ProgramElement that implements it.
+   * State is declared but not implemented.
+ * refs for intrinsic elements and component instances.
+ * 
 
-
+## Managers
+ * EventManager - handle centralized all core events (keys, mouse)
+ * FocusManager - centralized flexible focus manager  focused, focusable, focusNext - initial design for a generic/flexible API
+ * CursorManager - responsible of the cursor. 
+   * Currently it doesn't do much
+ * FlorDocument - a Home object with an easy to use API
+   * initialize all the managers
+   * easy api for:
+     * start a new program with default configuration
+     * create elements, manipulate document
+     * listen events
+     * trigger events
+     * render life cycle
+     * manage cursor
+     * manage focus.
   
 # WIP
 

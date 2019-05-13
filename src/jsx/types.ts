@@ -6,16 +6,18 @@ declare global {
   export namespace JSX {
     export interface IntrinsicElements {
       box: OptionsProps<ElementProps>
-      text: OptionsProps<ElementProps>
+      // text: OptionsProps<ElementProps>
     }
 
-    /** Adds extra props to Blessed options, like refs. TODO: we could add children here too ? and perhaps
-     * unify the rest in one place (onClick, etc) */
+    /** 
+     * Adds extra props to Blessed options, like refs. TODO: we could add children here too ? and perhaps
+     * unify the rest in one place (onClick, etc) 
+     */
     type OptionsProps<T> = PropsWithRef<Partial<T>>
 
     type PropsWithRef<P> = P & {
       children?: FlorJsxNode ,
-      ref?: P extends { ref?: infer R } ? R : undefined
+      ref?: P extends { ref?: infer R } ? R : RefObject<ProgramElement>
     }
 
     export interface Element<P extends { children?: FlorJsxNode } = {}> {
@@ -24,7 +26,6 @@ declare global {
       children?: FlorJsxNode
     }
 
-    // TODO: we are using class Component directly while we should use a interface here
     export type ElementType<P extends { children?: FlorJsxNode } = {}> =
       | undefined
       | string
@@ -35,8 +36,6 @@ declare global {
       (props: P & { children?: FlorJsxNode }, context?: any): Element<any> | null
     }
 
-    // and the following is basically for typings props.children
-
     type BlessedJsxText = string | number
 
     type BlessedJsxChild<P extends { children?: FlorJsxNode } = {}>  = Element<P>  | BlessedJsxText
@@ -45,28 +44,11 @@ declare global {
 
     export type BlessedJsxFragment = {} | ReactNodeArray
 
-    // Heads up: we are forcing blessed node to be a JSX node !
     export type FlorJsxNode<P extends { children?: FlorJsxNode } = {}>  =
       | BlessedJsxChild<P>
       | BlessedJsxFragment
       | boolean
       | null
-      // | ProgramElement[]
-      // | ProgramElement
-      // |ProgramTextNode
-      // | ProgramTextNode[]
-
-    // export interface ElementAttributesProperty {
-    //   props: {}
-    // }
-
-    // export interface ElementChildrenAttribute {
-    //   children: {}
-    // }
-    // interface PropsChildren extends ElementProps {
-    //   children?: BlessedJsxNode
-    // }
-
   }
 }
 
@@ -93,76 +75,13 @@ export interface FlorJsx {
 
   setDocument(doc: ProgramDocument): void
 
-  // /** add listeners that will be notifies just after the Blessed Element instance is created. Attributes and
-  //  * children have not yet been set, besides blessed options native ones.*/
-  // addAfterElementCreatedListener(l: AfterElementCreatedListener): void
+  /**
+   * Creates reference object that will be associated with a [[ProgramElement]] or with a [[Component]] instance at render-time.
+   * Similar to https://reactjs.org/docs/refs-and-the-dom.html.
+   */
+  createRef<T extends ProgramElement | Component = ProgramElement>(callback?: (current: T | undefined) => void): RefObject<T>
 
-  // /** add listeners that will be notified just before a child is appended to its parent blessed element even
-  //  * for notes created from JSXText. If any listener return true the notification chain will stop, the
-  //  * children won't be appended to the element. */
-  // addBeforeAppendChildListener(l: BeforeAppendChildListener): void
-
-  // /**
-  //  * add listeners that will be notified just before the blessed.foo() function is call with all the options
-  //  *  as they are (normalized and valid).Children are blessed elements unless the TextNodes that are still
-  //  *  literals so be careful!. If any of the listeners returns a blessed element, it will interrupt the
-  //  *  listener chain and that instance will be used instead of calling the blessed function.
-  //  * */
-  // addBeforeElementCreatedListener(l: BeforeElementCreatedListener): void
-
-  // /**
-  //  * Add listeners that will be called after React.render() call finished rendering a whole hierarchy of items
-  //  */
-  // addAfterRenderListener(l: AfterRenderListener): void
-
-  // /**
-  //  * Creates a react-like Ref object to associate blessed elements with variables in the code at render-time.
-  //  * See https://reactjs.org/docs/refs-and-the-dom.html.
-  //  */
-  // createRef<T extends Element | Component>(callback?: (current: T | undefined) => void): RefObject<T>
-
-  // /**
-  //  * By default, accursed supports only blessed element intrinsic elements, and the creator functions for a
-  //  * gigen tag name is taken from the blessed namespace as in `require('blessed').button({...})`. With this
-  //  * method, users users can mix third party blessed object creators, like  blessed--contrib for creating more
-  //  * intrinsic elements. If so they should also augment the global JSX namespace if they want to support
-  //  * TypeScript.
-  //  */
-  // addIntrinsicElementConstructors(blessedElementConstructors: { [type: string]: blessedElementConstructor }): void
 }
-
-// /** @internal */
-// export type AfterElementCreatedListener = (event: AfterElementCreatedEvent) => void
-// /** @internal */
-// export interface AfterElementCreatedEvent {
-//   el: Element
-//   tag: JSX.ElementType
-//   attrs: BlessedJsxAttrs
-//   children: JSX.BlessedJsxNode[]
-//   component?: Component
-// }
-// /** @internal */
-// export type BeforeAppendChildListener = (event: BeforeAppendChildEvent) => boolean
-// /** @internal */
-// export interface BeforeAppendChildEvent {
-//   el: Element
-//   child: Element
-// }
-// /** @internal */
-// export type BeforeElementCreatedListener = (event: BeforeElementCreatedEvent) => Element | undefined
-// /** @internal */
-// export interface BeforeElementCreatedEvent<Options extends ElementOptions = BoxOptions> {
-//   fn: (options: Options) => Element
-//   options: Options
-//   name: keyof JSX.IntrinsicElements
-//   children: (Element | JSX.BlessedJsxText)[]
-// }
-// /** @internal */
-// export interface AfterRenderEvent {
-//   el: Element
-// }
-// /** @internal */
-// export type AfterRenderListener = (event: AfterRenderEvent) => void
 
 interface RenderOptions {
   document: ProgramDocument
@@ -170,33 +89,11 @@ interface RenderOptions {
 
 /** @internal */
 export type BlessedJsxAttrs = { [a: string]: any } | undefined
-
-// type On<T> =
-//   | Parameters<(event: NodeMouseEventType, callback: (arg: IMouseEventArg) => void) => T>
-//   | Parameters<(event: 'keypress', callback: (ch: string, key: IKeyEventArg) => void) => T>
-//   | Parameters<(event: string, listener: (...args: any[]) => void) => T>
-//   | Parameters<(event: 'warning', callback: (text: string) => void) => T>
-//   | Parameters<(event: NodeGenericEventType, callback: () => void) => T>
-//   | Parameters<(event: 'select', callback: (item: BlessedElement, index: number) => void) => T>
-//   | Parameters<(event: 'select item', callback: (item: BlessedElement, index: number) => void) => T>
-
-// export interface EventOptions<T extends Element> extends BlessedEventOptions, ArtificialEventOptions<T> {
-//   children?: JSX.BlessedJsxNode
-// }
-
-// export interface ArtificialEvent<T extends Element> {
-//   // TODO : should be JSX.ElementType not ELent cause targets can be also components, etc
-//   currentTarget: T
-// }
-
-// export type OnClickHandler<T extends Element> = (this: T, e: IMouseEventArg & ArtificialEvent<T>) => void
-
-// export interface RefObject<T = any> {
-//   /* when the RefObject is resolved, if provided, this call back will be called. */
-//   callback?(current: T | undefined): any
-//   current: T | undefined
-// }
-// /** @internal */
-// export type blessedElementConstructor<O extends ElementOptions = ElementOptions, T extends Element = Element> = (
-//   options?: O
-// ) => T
+ 
+export interface RefObject<T = any> {
+  /* 
+   * When the RefObject is resolved and [[current]] attribute is set, this callback is called if provided.  
+   */
+  callback?(current: T | undefined): any
+  current: T | undefined
+}

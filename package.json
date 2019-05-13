@@ -1,6 +1,6 @@
 {
   "name": "flor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Command line user interface JavaScript toolkit",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

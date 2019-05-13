@@ -176,7 +176,7 @@ export class FlorDocument {
     if (typeof el === 'string') {
       this._debugEl.appendChild(this.create({  children: [el] }))
     } else if (isElement(el)) {
-      el.debug().split('\n').forEach((l, i) => {
+      (el.debug()||'').split('\n').forEach((l, i) => {
         this._debugEl!.appendChild(this.create({   children: [l] }))
       })
     } else {

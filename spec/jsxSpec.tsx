@@ -79,9 +79,9 @@ describe('jsx', () => {
     class C extends Component<{ name: string, colors: string[] }> {
       render() {
         return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
-            <text top={1}>hello {this.props.name}</text>
+            <box top={1}>hello {this.props.name}</box>
             Your colors:
-        {this.props.colors.map((c, i) => <text width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</text>)}
+        {this.props.colors.map((c, i) => <box width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</box>)}
           </box>
       }
     }
@@ -131,7 +131,7 @@ describe('jsx', () => {
         elementCreated = true
       }
       render() {
-        return <box><text>hello</text><text>my parent</text><text>will get me</text><text>an empty line</text></box>
+        return <box><box>hello</box><box>my parent</box><box>will get me</box><box>an empty line</box></box>
       }
     }
     const { renderer } = createProgramRendererDocument()

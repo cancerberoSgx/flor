@@ -2,7 +2,8 @@ import { ProgramDocument } from '..'
 import { Node } from '../dom'
 import { ProgramElement } from '../programDom'
 import { Component } from './component'
-import { BlessedJsxAttrs, FlorJsx } from './types'
+import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
+import { debug } from '../util';
 
 interface RenderOptions {
   document?: ProgramDocument
@@ -32,21 +33,12 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
 }
 
 /**
- * This implementation has a trivial createElement() and a heavier render(). This means that : "parsing" the jsx will be fast. render() will be slower. PRO: createElement doesn't create any Elements so we are able to modify the nodes and visit all of them bfore creating the ProgramElements. (implement Providers, etc.)
+ * This implementation has a trivial createElement() and a heavier render(). This means that : "parsing" the
+ * jsx will be fast. render() will be slower. PRO: createElement doesn't create any Elements so we are able to
+ * modify the nodes and visit all of them bfore creating the ProgramElements. (implement Providers, etc.)
  */
 class FlorJsxImpl implements FlorJsx {
   protected doc: ProgramDocument | undefined
-
-  render(e: JSX.Element, options: RenderOptions = {}) {
-    if (!this.doc && !options.document) {
-      throw new Error('Need to provide a document with setDocument() before render')
-    }
-    const wrapInElement = options.wrapTextInElement ? typeof options.wrapTextInElement === 'boolean' ? 'text' : options.wrapTextInElement : undefined
-    const document = options.document || this.doc!
-    const el =  this._render({ e, document, wrapInElement })
-    ;(options.parent || document.body).appendChild(el)
-    return el
-  }
 
   private _render({ e, document, wrapInElement }: {e: JSX.Element<{}>, document: ProgramDocument, wrapInElement?: string}) {
     if (typeof e.type !== 'string') {
@@ -63,10 +55,9 @@ class FlorJsxImpl implements FlorJsx {
       if (typeof val === 'function') {
         el._addEventListener(attr, val)
       }
-      //  else {
       (el.props as any)[attr] = val
-      // }
     })
+    this.installRefs(el, (el as any)._component)
     if (e.children) {
       if (Array.isArray(e.children)) {
         e.children.forEach(c => {
@@ -98,6 +89,77 @@ class FlorJsxImpl implements FlorJsx {
     return el
   }
 
+  /**
+   * all children blessed nodes, even from text  are appended to the blessed element using this method, so
+   * subclasses can override to do something about it. will notify beforeAppendChildListeners and if any
+   * return true the child won't be appended
+   */
+  protected appendChild(el: JSXElementImpl, child: JSXElementImpl): any {
+    if (el && el.props && el.children) {
+      el.children.push(child)
+    }
+  }
+
+  /**
+   * Default blessed Node factory for text like "foo" in <box>foo</box>
+   */
+  protected createTextNode(c: JSX.BlessedJsxText, el: JSXElementImpl) {
+    const t = { type: '__text', props: { textContent: c + '', children: [] }, children: [], _type: 'string' as any }
+    this.appendChild(el, t)
+    return t
+  }
+
+  private installAttributesAndChildren(
+    el: JSXElementImpl,
+    children: any[]
+  ): any {
+    children.forEach(c => {
+      if (isJSXElementImpl(c)) {
+        this.appendChild(el, c)
+      } else if (Array.isArray(c)) {
+        this._addChildrenArray(c, el)
+      } else {
+        this.createTextNode(c, el)
+      }
+    })
+  }
+
+  private _addChildrenArray(c: any[], el: JSXElementImpl) {
+    c.forEach(c2 => {
+      if (isJSXElementImpl(c2)) {
+        this.appendChild(el, c2)
+      } else if (Array.isArray(c2)) {
+        this._addChildrenArray(c2, el)
+      } else {
+        this.createTextNode(c2, el)
+      }
+    })
+  }
+
+  protected installRefs(el: JSX.FlorJsxNode, component?: Component): any {
+    // debug('installRefs', component && (component as any).props && (component as any).props.ref, (el! as any) && (el! as any).props && (el! as any).props.ref)
+    if (component && (component as any).props && (component as any).props.ref) {
+      (component as any).props.ref.current = component
+      ;(component as any).props.ref.callback && (component as any).props.ref.callback(component)
+    }
+    // HEADS UP: if the component has a ref, then element's is not resolved. thats why it's an else if
+    else if ((el! as any) && (el! as any).props && (el! as any).props.ref && !(el! as any).props.ref.current) {
+      ;(el! as any).props.ref.current = el! as any
+      ;(el! as any).props.ref.callback && (el! as any).props.ref.callback(el)
+    }
+  }
+
+  render(e: JSX.Element, options: RenderOptions = {}) {
+    if (!this.doc && !options.document) {
+      throw new Error('Need to provide a document with setDocument() before render')
+    }
+    const wrapInElement = options.wrapTextInElement ? typeof options.wrapTextInElement === 'boolean' ? 'text' : options.wrapTextInElement : undefined
+    const document = options.document || this.doc!
+    const el =  this._render({ e, document, wrapInElement })
+    ;(options.parent || document.body).appendChild(el)
+    return el
+  }
+
   setDocument(doc: ProgramDocument) {
     this.doc = doc
   }
@@ -124,53 +186,12 @@ class FlorJsxImpl implements FlorJsx {
     }
     return el!
   }
-
-  private installAttributesAndChildren(
-    el: JSXElementImpl,
-    children: any[]
-  ): any {
-    children.forEach(c => {
-      if (isJSXElementImpl(c)) {
-        this.appendChild(el, c)
-      } else if (Array.isArray(c)) {
-        this._addChildrenArray(c, el)
-      } else {
-        this.createTextNode(c, el)
-      }
-    })
-  }
-
-  private _addChildrenArray(c: any[], el: JSXElementImpl) {
-    c.forEach(c2 => {
-      if (isJSXElementImpl(c2)) {
-        this.appendChild(el, c2)
-        // }
-      } else if (Array.isArray(c2)) {
-        this._addChildrenArray(c2, el)
-      } else {
-        this.createTextNode(c2, el)
-      }
-    })
-  }
-
-  /**
-   * all children blessed nodes, even from text  are appended to the blessed element using this method, so
-   * subclasses can override to do something about it. will notify beforeAppendChildListeners and if any
-   * return true the child won't be appended
-   */
-  protected appendChild(el: JSXElementImpl, child: JSXElementImpl): any {
-    if (el && el.props && el.children) {
-      el.children.push(child)
-    }
-  }
-
-  /**
-   * Default blessed Node factory for text like "foo" in <box>foo</box>
-   */
-  protected createTextNode(c: JSX.BlessedJsxText, el: JSXElementImpl) {
-    const t = { type: '__text', props: { textContent: c + '', children: [] }, children: [], _type: 'string' as any }
-    this.appendChild(el, t)
-    return t
+  
+  createRef<T extends ProgramElement | Component>(callback?: (current: T | undefined) => any): RefObject<T> {
+    return ({
+      current: undefined,
+      callback
+    } as any) as RefObject<T>
   }
 
 }
