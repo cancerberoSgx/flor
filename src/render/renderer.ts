@@ -229,29 +229,22 @@ export class ProgramDocumentRenderer {
       return
     }
     if (x < 0) {
-        s = s + repeat(-1 * x, s[0])
-        x = 0
-      }
+      s = s + repeat(-1 * x, s[0])
+      x = 0
+    }
     if (y < 0) {
-        y = 0
-      }
-      // else if(x>this.program.cols-1){
-
-      //   x=this.program.cols-1
-      // }
-        // x = x<0?0:x>this.program.cols-1 ? : x
-        // y=y<0?0:y>this.program.rows-1 ? this.program.rows-1: y
+      y = 0
+    }
     if (x + s.length > xl) {
-          s = s.substring(x + s.length - xl - 1)
-        }
+      s = s.substring(x + s.length - xl - 1)
+    }
     if (x < xi) {
-          s = s.substring(Math.max(0, s.length - (xi - x) - 1), s.length)
-          // s = s+repeat(xi-x, s[0])
-          x = xi
-        }
-        // if (x + s.length > xl) {
-        //   s = s.substring(x + s.length - xl - 1)
-        // }
+      s = s.substring(Math.min(s.length, xi - x), s.length)
+      // s = s.substring(Math.min(s.length, Math.abs(s.length - (xi - x) - 1)), s.length)
+
+      // s = s+repeat(Math.min(xi-x, xl-xi-s.length), s[0])
+      x = xi
+    }
     this._program.cursorPos(y, x)
     this._program._write(s)
     if (this.useBuffer) {
@@ -343,13 +336,13 @@ export class ProgramDocumentRenderer {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
-    let originalWriteArea
+    let originalWriteArea: Rectangle | undefined
+    let parentBounds: Rectangle | undefined
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
     }
-    let parentBounds: Rectangle | undefined
-    if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
+    else if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
       parentBounds = this._writeArea = el.parentNode.getContentBounds()
     }
@@ -409,7 +402,6 @@ export class ProgramDocumentRenderer {
       })
     } else {
       const nextChildIsText = isText(nextNode)
-      // Heads up : if next child is also text, we keep writing on the same line, if not, on a new  line.
       this.write(this.lastAbsTop, this.lastAbsLeft, s)
       this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
       this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)
@@ -430,14 +422,13 @@ export class ProgramDocumentRenderer {
       el.props.render(this)
       return
     }
-    // const parentBounds = isElement(el.parentNode) && el.parentNode.props.overflowel.parentNode.getContentBounds
     if (el.props.renderContent) {
       el.props.renderContent(this)
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
         const { xi, xl, yi, yl } = el.getInnerBounds()
-        let width = xl - xi - (options.parentBounds && xi < options.parentBounds.xi ? options.parentBounds.xi - xi : 0)
+        const width = xl - xi// - (options.parentBounds && xi < options.parentBounds.xi ? options.parentBounds.xi - xi : 0)
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi; i <  yl; i++) {
           this.write(i, xi, s)
