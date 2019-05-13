@@ -82,8 +82,17 @@ export declare class TPut implements   TputFeatures {
   insert_null_glitch: boolean
   memory_above: boolean
   memory_below: boolean
+  /**
+   * safe to move while in insert mode
+   */
   move_insert_mode: boolean
+  /**
+   * safe to move while in standout mode
+   */
   move_standout_mode: boolean
+  /**
+   * terminal can overstrike.
+   */
   over_strike: boolean
   status_line_esc_ok: boolean
   dest_tabs_magic_smso: boolean
@@ -97,6 +106,7 @@ export declare class TPut implements   TputFeatures {
   no_pad_char: boolean
   non_dest_scroll_region: boolean
   can_change: boolean
+  /**  screen erased with background color */
   back_color_erase: boolean
   hue_lightness_saturation: boolean
   col_addr_glitch: boolean
@@ -119,8 +129,17 @@ export declare class TPut implements   TputFeatures {
   beehive_glitch: boolean
   xhp: boolean
   xenl: boolean
+  /**
+   * 	Flag whose presence means that outputting a space erases a character position even if the terminal supports overstriking. If this flag is not present and overstriking is supported, output of a space has no effect except to move the cursor. (On terminals that do not support overstriking, you can always assume that outputting a space at a position erases whatever character was previously displayed there.)
+   */
   eo: boolean
+  /**
+   * Flag whose presence means that this terminal type is a generic type which does not really describe any particular terminal. Generic types are intended for use as the default type assigned when the user connects to the system, with the intention that the user should specify what type he really has. One example of a generic type is the type network. Since the generic type cannot say how to do anything interesting with the terminal, termcap-using programs will always find that the terminal is too weak to be supported if the user has failed to specify a real terminal type in place of the generic one. The gnflag directs these programs to use a different error message: “You have not specified your real terminal type”, rather than “Your terminal is not powerful enough to be used”.
+   */
   gn: boolean
+  /**
+   * 	Flag whose presence means this is a hardcopy terminal.
+   */
   hc: boolean
   km: boolean
   hs: boolean
@@ -129,6 +148,9 @@ export declare class TPut implements   TputFeatures {
   db: boolean
   mir: boolean
   msgr: boolean
+  /** 
+   * Flag whose presence means that the terminal can overstrike. This means that outputting a graphic character does not erase whatever was present in the same character position before. The terminals that can overstrike include printing terminals, storage tubes (all obsolete nowadays), and many bit-map displays.
+   */
   os: boolean
   eslok: boolean
   xt: boolean
@@ -142,7 +164,9 @@ export declare class TPut implements   TputFeatures {
   nrrmc: boolean
   npc: boolean
   ndscr: boolean
+  /**  terminal can re- define existing colors */
   ccc: boolean
+  /**  screen erased with background color */
   bce: boolean
   hls: boolean
   xhpa: boolean
@@ -289,6 +313,7 @@ export declare class TPut implements   TputFeatures {
   enter_insert_mode(...args: any[]): any
   enter_secure_mode(...args: any[]): any
   enter_reverse_mode(...args: any[]): any
+
   enter_standout_mode(...args: any[]): any
   enter_underline_mode(...args: any[]): any
   erase_chars(...args: any[]): any
@@ -473,6 +498,9 @@ export declare class TPut implements   TputFeatures {
   pkey_key(...args: any[]): any
   pkey_local(...args: any[]): any
   pkey_xmit(...args: any[]): any
+  /**
+   * String of commands to output a graphic character c, repeated n times. The first parameter value is the ASCII code for the desired character, and the second parameter is the number of times to repeat the character. Often this command requires padding proportional to the number of times the character is repeated. This effect can be had by using parameter arithmetic with <samp>%</samp>-sequences to compute the amount of padding, then generating the result as a number at the front of the string so that tputs will treat it as padding.
+   */
   repeat_char(...args: any[]): any
   reset_3string(...args: any[]): any
   reset_file(...args: any[]): any

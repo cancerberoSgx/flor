@@ -224,16 +224,11 @@ export class ProgramDocumentRenderer {
    */
   write(y: number, x: number, s: string) {
     if (
-      // y<0 ||
-      // y>=this.program.rows ||
       y <  this._writeArea.yi + 1 ||
       y >= this._writeArea.yl ||
-      // x<0||
-      // x>=this.program.cols ||
       x < this._writeArea.xi ||
       x >= this._writeArea.xl - 1
       ) {
-      // debug('outside area ', x, y)
       return
     }
     if (x + s.length > this._writeArea.xl) {
@@ -361,23 +356,19 @@ export class ProgramDocumentRenderer {
   }
 
   protected renderText(c: TextNode, nextNode: Node) {
-    // TODO: correct char width for unicode.
     let s = (c.textContent || '')
     const parent = c.parentNode as ProgramElement
-    // c._data.renderLocation = []
     if (parent.props.textWrap) {
       const cutIndex = Math.min(s.length, this.lastAbsLeft - parent.absoluteContentLeft)
       const s1 = s.substring(0, cutIndex)
       const s2 = s.substring(cutIndex, s.length)
       if (s1) {
         this.write(this.lastAbsTop, this.lastAbsLeft, s1)
-        // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+s1.length||1)
         this.lastAbsTop = this.lastAbsTop + 1
         this.lastAbsLeft = parent.absoluteContentLeft
       }
       wrap(s2.replace(/\n/g, ' '), { width: parent.contentWidth - 1 }).split('\n').map(l => l.trim()).forEach(l => {
         this.write(this.lastAbsTop, this.lastAbsLeft, l)
-        // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+(l.length||1))
         this.lastAbsTop = this.lastAbsTop + 1
         this.lastAbsLeft = parent.absoluteContentLeft
       })
@@ -385,7 +376,6 @@ export class ProgramDocumentRenderer {
       const nextChildIsText = isText(nextNode)
       // Heads up : if next child is also text, we keep writing on the same line, if not, on a new  line.
       this.write(this.lastAbsTop, this.lastAbsLeft, s)
-      // c._data.renderLocation.push(this.lastAbsTop, this.lastAbsTop+1, this.lastAbsLeft, this.lastAbsLeft+(nextChildIsText ? s.length : 1))
       this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
       this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)
     }
@@ -395,14 +385,12 @@ export class ProgramDocumentRenderer {
    * Renders just the content area of this element and its borders, without children elements or text.
    */
   renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions & { __onRecursion?: boolean } = this._defaultRenderOptions) {
-
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
       ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data : {}) : {},
       ...el.props.data
     }
-
     if (el.props.render) {
       el.props.render(this)
       return
@@ -417,9 +405,7 @@ export class ProgramDocumentRenderer {
         let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
         let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
         if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
-
           height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
-
           width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1 : width
           if (xi < el.parentNode.absoluteContentLeft) {
             width = width - (el.parentNode.absoluteContentLeft - xi)
@@ -500,11 +486,6 @@ export class ProgramDocumentRenderer {
       yi: (elProps as any).yi || el.absoluteTop,
       yl: ((elProps as any).yi || el.absoluteTop) + (elProps.height || el.props.height)
     }
-    // const parentEl = el.parentElement
-    // if(parentEl && Math.abs(yi- (parentEl.absoluteTop+parentEl.props.height)) <=1){
-    //   return
-    // }
-    // debug({xi, xl, yi, yl, 'p': el.parentElement && el.parentElement!.absoluteTop, h: el.parentElement && el.parentElement!.absoluteTop+el.parentElement!.props.height})
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
     this.write(yl - 1, xi, getBoxStyleChar(type, BorderSide.bottomLeft))

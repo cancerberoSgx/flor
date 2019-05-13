@@ -1,4 +1,4 @@
-import { array } from 'misc-utils-of-mine-generic'
+import { array, sleep } from 'misc-utils-of-mine-generic'
 import { BorderStyle, debug, FlorDocument, Layout, animate, easing } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
@@ -52,7 +52,8 @@ describe('scrollable', () => {
   })
   
   
-  it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
+  fit('should hide overflow and scroll vertical with up and down arrows by default', async done => {
+    flor.debug('start')
     // try {
       const a = <Scrollable {...{
         top: 3, left: 3, width: 55, height: 23,
@@ -78,8 +79,23 @@ describe('scrollable', () => {
         flor.create(<box>Hello</box>)
       const el = flor.create(a)
       flor.render()
-      expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
-      done()
+
+// await sleep(2000)      
+//       flor.render()
+// flor.debug('hehehhe1')
+// flor.render()
+// await sleep(2000)
+//   flor.debug('hehehhe2')
+//   flor.render()
+
+//   await sleep(2000)
+//   flor.debug('hehehhe3')
+//   flor.render()
+
+
+  // expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
+      // done()
+
     // } catch (error) {
     //   debug('ERROR', error)
     // }

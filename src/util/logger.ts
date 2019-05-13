@@ -5,7 +5,9 @@ import { inBrowser } from './misc'
 export function addLogger(l: Logger) {
   loggers.push(l)
 }
+
 const loggers: Logger[] = []
+
 interface Logger {
   log(...args: any[]): void
 }
@@ -15,6 +17,7 @@ export function debug(...args: any[]) {
     l.log(...args)
   })
 }
+
 addLogger({
   log(...args: any[]) {
     if (inBrowser()) {

@@ -56,6 +56,13 @@ export class ProgramElement extends Element {
     }
   }
   private _layoutOnce = false
+  
+  public update(force=false){
+    this._layoutOnce = false
+    this._positionDirty = true
+    this.updateBounds(force)
+    this.layout()
+  }
 
   /**
    * Called by the rendered just after the element all all its children were rendered to the screen
@@ -92,6 +99,10 @@ export class ProgramElement extends Element {
         this.updateBounds()
       }
     }
+  }
+
+  toString(){
+    return 'ProgramElement '+this.tagName
   }
 
   get parentNode(): ProgramElement | ProgramDocument {

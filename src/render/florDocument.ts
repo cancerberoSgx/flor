@@ -37,10 +37,15 @@ export class FlorDocument {
   private _events: EventManager
   private _focus: FocusManager
   private _cursor: CursorManager
+
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
       this._program = new Program(o)
+      this._program.setMouse({
+        allMotion: true,
+      }, true);
       this._program.enableMouse()
+      // this._program.enter
       installExitKeys(this._program)
     }
     this._events = new EventManager(this._program)
@@ -55,14 +60,6 @@ export class FlorDocument {
     this.debug = this.debug.bind(this)
     this._cursor.enter()
     this.installLoggers()
-  }
-
-  private installLoggers() {
-    addLogger({
-      log: (...args: any[]) => {
-      this.debug('', undefined, ...args)
-    }
-    })
   }
 
   /**
@@ -158,39 +155,57 @@ export class FlorDocument {
   /**
    * Draw given element in the terminal. If none provided, it will draw [[body]]
    */
-  render(el?: ProgramElement) {
-    this.renderer.eraseElement(el || this.body)
-    this.renderer.renderElement(el || this.body)
+  render(el: ProgramElement= this.body) {
+    this.renderer.eraseElement(el )
+    this.renderer.renderElement(el )
   }
 
+
   private _debugEl: ProgramElement | undefined
+
   /**
    * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
-  debug(el: ProgramElement | string, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
+  debug(el: any, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
     if (!this._debugEl) {
-      this._debugEl = this.create({   top: .7, left: .7, width: .5, height: .3, ...props, children: [], layout: { layout: Layout.justifiedRows } })
+      this._debugEl = this.create({   top: .7, left: .01, width: .99, height: .3, ...props, children: ['LOG']
+      , layout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
+     })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
-      this._debugEl.appendChild(this.create({ top: 0, left: 0, children: [el] }))
-    } else if (this._debugEl) {
+      this._debugEl.appendChild(this.create({  children: [el] }))
+    } else if(isElement(el)) {
       el.debug().split('\n').forEach((l, i) => {
-        this._debugEl!.appendChild(this.create({ top: i, left: 0, children: [l] }))
+        this._debugEl!.appendChild(this.create({   children: [l] }))
       })
     }
-    args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 4, breakLength: 120 })).map(s => `   ||||   ${s}`).map(this.createTextNode).forEach(c => {
-      this._debugEl!.appendChild(c)
+    else {
+      args.push(el)
+    }
+    args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 4, breakLength: 120 }))
+    .map(s => `   ||||   ${s}`)
+    // .map(this.createTextNode)
+    .forEach(c => {
+      this._debugEl!.appendChild(this.create({  children: [c] }))
     })
-    this.renderer.renderElement(this._debugEl)
+    this._debugEl.update(true)
+    this.render(this._debugEl)
     if (props.hideTimeout) {
       setTimeout(() => {
-        if (this._debugEl) {
-          this._debugEl.empty()
+          // this._debugEl!.empty()
+        this._debugEl!.update(true)
           this.render(this._debugEl)
-        }
       }, props.hideTimeout)
     }
+  }
+
+  private installLoggers() {
+    addLogger({
+      log: (...args: any[]) => {
+      this.debug('', undefined, ...args)
+    }
+    })
   }
 
   /**
