@@ -4,46 +4,46 @@ import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '../programDom'
 import { KeyEvent, ProgramDocumentRenderer } from '../render'
-import { Animation, debug } from '../util'
+import { Animation } from '../util'
 import { nextTick } from '../util/misc'
 
 interface ScrollEvent {
   currentTarget: ProgramElement
-  /** 
+  /**
    * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current
-   * percentage 
+   * percentage
    */
   xOffset: number
-  /** 
+  /**
    * Current vertical scroll position. `rows` / [[yOffset]] is the vertical scrolled current percentage, where
-   * `rows` is `scrollArea.yl -  scrollArea.yi`. 
+   * `rows` is `scrollArea.yl -  scrollArea.yi`.
    */
   yOffset: number
 }
 
 interface ConcreteScrollableProps {
   /**
-   * Listener notified when a scroll event happens. 
+   * Listener notified when a scroll event happens.
    */
   onScroll?: (e: ScrollEvent) => void
   /**
-   * Number of rows to advance / retrocede on a normal vertical  scroll. 
+   * Number of rows to advance / retrocede on a normal vertical  scroll.
    */
   normalVerticalStep?: number
   /**
-   * Number of cols to advance / retrocede on a normal horizontal scroll. 
+   * Number of cols to advance / retrocede on a normal horizontal scroll.
    */
   normalHorizontalStep?: number
   /**
-   * Extra rows as scrolled area top padding. By default 5. 
+   * Extra rows as scrolled area top padding. By default 5.
    */
   topExtraOffset?: number
   /**
-   * Extra cols as scrolled area left padding. By default 5. 
+   * Extra cols as scrolled area left padding. By default 5.
    */
   leftExtraOffset?: number
   /**
-   * Extra rows as scrolled area bottom padding. By default 5. 
+   * Extra rows as scrolled area bottom padding. By default 5.
    */
   bottomExtraOffset?: number
   /**
@@ -97,8 +97,8 @@ interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps>
 
 /**
  * Scrollable box to  add vertical and/or horizontal scroll support for its children. Supports:
- *  * keyboard and mouse events with configurable keys 
- *  * different size scroll actions like normal, large, and going to the end/beginning. 
+ *  * keyboard and mouse events with configurable keys
+ *  * different size scroll actions like normal, large, and going to the end/beginning.
  *  * animations for large scroll
  */
 export class Scrollable extends Component<ScrollableProps, {}> {
@@ -123,8 +123,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     largeScrollDownKeys: [e => e.ctrl && e.name === 's'],
     interruptAnimation: true,
     leftExtraOffset: 5,
-    normalScrollUpKeys: [e => !e.ctrl && e.name === 'up'||!e.ctrl && e.name === 'w'],
-    normalScrollDownKeys: [e => !e.ctrl && e.name === 'down'|| !e.ctrl && e.name === 's'],
+    normalScrollUpKeys: [e => !e.ctrl && e.name === 'up' || !e.ctrl && e.name === 'w'],
+    normalScrollDownKeys: [e => !e.ctrl && e.name === 'down' || !e.ctrl && e.name === 's'],
     normalVerticalStep: 2,
     normalHorizontalStep: 2,
     topExtraOffset: 5,
@@ -152,7 +152,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.handleScrollEnd = this.handleScrollEnd.bind(this)
   }
 
-  /** 
+  /**
    * Called from rendered to render our children. Delegates to [[_renderChildren]].
    */
   protected renderChildren(r: ProgramDocumentRenderer) {
@@ -227,8 +227,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     return rectangleIntersects(c.getBounds(), rectanglePlusOffsets(el.getBounds(), 0, this.yOffset))
   }
 
-  /** 
-   * Overridden by animate implementation. Don't call.  
+  /**
+   * Overridden by animate implementation. Don't call.
    */
   private _stopAnimation: () => void = () => { }
 
@@ -236,7 +236,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.scrolling = false
     this._stopAnimation()
     if (this.props.onScroll) {
-        this.p.onScroll({ currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset })
+      this.p.onScroll({ currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset })
     }
   }
 
@@ -245,17 +245,16 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     } else if (this.scrolling) {
       if (this.p.interruptAnimation) {
         this.handleScrollEnd()
-        nextTick(()=>this.onKeyPressed(e))
+        nextTick(() => this.onKeyPressed(e))
       } else {
         this.renderer!.program.bell()
         this.handleScrollEnd()
       }
-    }    
-    else if (this.p.largeScrollUpKeys.find(p => p(e))) {
-      this.handleLargeScroll(-1);
+    } else if (this.p.largeScrollUpKeys.find(p => p(e))) {
+      this.handleLargeScroll(-1)
       return
     } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
-      this.handleLargeScroll(1);
+      this.handleLargeScroll(1)
       return
     } else if (this.p.normalScrollUpKeys.find(p => p(e))) {
       this.yOffset = Math.max(this.yi, this.yOffset - this.p.normalVerticalStep)
@@ -269,30 +268,28 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   }
 
   protected handleLargeScroll(multiplier: number) {
-    this.scrolling = true;
+    this.scrolling = true
     if (this.props.largeScrollAnimation) {
-      const start = this.yOffset;
+      const start = this.yOffset
       animate({
         duration: this.p.verticalAnimationDuration,
         draw: t => {
-          const final = Math.round(Math.max(this.yi, start + this.p.largeVerticalScrollStep * t * multiplier));
+          const final = Math.round(Math.max(this.yi, start + this.p.largeVerticalScrollStep * t * multiplier))
           if (this.yOffset !== final) {
-            this.yOffset = Math.max(this.yi, final);
-            this.renderElement();
+            this.yOffset = Math.max(this.yi, final)
+            this.renderElement()
           }
         },
         timing: this.p.largeScrollAnimation,
         onEnd: () => {
-          this.handleScrollEnd();
+          this.handleScrollEnd()
         },
         onStop: (l => this._stopAnimation = l)
-      });
-    }
-    else {
+      })
+    } else {
       if (multiplier < 0) {
         this.yOffset = Math.max(this.yi, this.yOffset - this.p.largeVerticalScrollStep)
-      }
-      else {
+      } else {
         this.yOffset = Math.min(this.yl, this.yOffset + this.p.largeVerticalScrollStep)
       }
       this.renderElement()
@@ -307,7 +304,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this.renderer!.writeArea = p
   }
 
-  /** 
+  /**
    * Gets the current whole scrolled area, optionally recalculating it. TODO: forceCalc.
    */
   getScrollArea(forceCalc: boolean = false): Rectangle {

@@ -223,14 +223,14 @@ export class ProgramDocumentRenderer {
   write(y: number, x: number, s: string) {
     if (
       y < this._writeArea.yi  ||
-      y >= this._writeArea.yl -1 ||
+      y >= this._writeArea.yl - 1 ||
       x < this._writeArea.xi ||
       x > this._writeArea.xl
       ) {
       return
     }
-    if (x + s.length > this._writeArea.xl ) {
-      s = s.substring(x + s.length - this._writeArea.xl +1)
+    if (x + s.length > this._writeArea.xl) {
+      s = s.substring(x + s.length - this._writeArea.xl + 1)
     }
     this._program.cursorPos(y, x)
     this._program._write(s)
@@ -324,11 +324,11 @@ export class ProgramDocumentRenderer {
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
     let originalWriteArea
-    if(options.writeInsideOnly){
+    if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
     }
-    if(isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
+    if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
       this._writeArea = el.parentNode.getContentBounds()
     }
@@ -359,8 +359,8 @@ export class ProgramDocumentRenderer {
     }
     el._afterRender()
     el._renderCounter = this.renderCounter++
-    if( originalWriteArea){
-       this._writeArea = originalWriteArea
+    if (originalWriteArea) {
+      this._writeArea = originalWriteArea
     }
     return el
   }
@@ -410,8 +410,8 @@ export class ProgramDocumentRenderer {
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
-        const {xi, xl, yi, yl} = el.getInnerBounds()
-        const s= this._program.repeat(el.props.ch || this._currentAttrs.ch, xl-xi)
+        const { xi, xl, yi, yl } = el.getInnerBounds()
+        const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, xl - xi)
         for (let i = yi; i <  yl; i++) {
           this.write(0 + i, xi, s)
         }
@@ -427,7 +427,7 @@ export class ProgramDocumentRenderer {
   /**
    * Writes [[currentAttrs]] in all pixels of the area of given el.
    */
-  eraseElement(el: ProgramElement  ) {
+  eraseElement(el: ProgramElement) {
     this.setAttrs(this._defaultAttrs)
     this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
   }

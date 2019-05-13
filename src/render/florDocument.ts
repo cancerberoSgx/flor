@@ -42,8 +42,8 @@ export class FlorDocument {
     if (!o.program) {
       this._program = new Program(o)
       this._program.setMouse({
-        allMotion: true,
-      }, true);
+        allMotion: true
+      }, true)
       this._program.enableMouse()
       // this._program.enter
       installExitKeys(this._program)
@@ -156,10 +156,9 @@ export class FlorDocument {
    * Draw given element in the terminal. If none provided, it will draw [[body]]
    */
   render(el: ProgramElement= this.body) {
-    this.renderer.eraseElement(el )
-    this.renderer.renderElement(el )
+    this.renderer.eraseElement(el)
+    this.renderer.renderElement(el)
   }
-
 
   private _debugEl: ProgramElement | undefined
 
@@ -170,17 +169,16 @@ export class FlorDocument {
     if (!this._debugEl) {
       this._debugEl = this.create({   top: .7, left: .01, width: .99, height: .3, ...props, children: ['LOG']
       , layout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
-     })
+      })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
       this._debugEl.appendChild(this.create({  children: [el] }))
-    } else if(isElement(el)) {
+    } else if (isElement(el)) {
       el.debug().split('\n').forEach((l, i) => {
         this._debugEl!.appendChild(this.create({   children: [l] }))
       })
-    }
-    else {
+    } else {
       args.push(el)
     }
     args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 4, breakLength: 120 }))
@@ -195,7 +193,7 @@ export class FlorDocument {
       setTimeout(() => {
           // this._debugEl!.empty()
         this._debugEl!.update(true)
-          this.render(this._debugEl)
+        this.render(this._debugEl)
       }, props.hideTimeout)
     }
   }
@@ -203,8 +201,8 @@ export class FlorDocument {
   private installLoggers() {
     addLogger({
       log: (...args: any[]) => {
-      this.debug('', undefined, ...args)
-    }
+        this.debug('', undefined, ...args)
+      }
     })
   }
 

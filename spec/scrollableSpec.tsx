@@ -1,5 +1,5 @@
-import { array, sleep } from 'misc-utils-of-mine-generic'
-import { BorderStyle, debug, FlorDocument, Layout, animate, easing } from '../src'
+import { array } from 'misc-utils-of-mine-generic'
+import { BorderStyle, debug, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
@@ -11,7 +11,7 @@ describe('scrollable', () => {
 
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
-        flor = new FlorDocument({buffer: true})
+    flor = new FlorDocument({ buffer: true })
     process.on('uncaughtException', function(err) {
       flor.destroy()
       console.log('Caught exception: ' + err, err, err.stack)
@@ -25,7 +25,7 @@ describe('scrollable', () => {
 
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     // try {
-      const el = <Scrollable {...{
+    const el = <Scrollable {...{
         top: 8, left: 12, width: 24, height: 26, ch: char(),
         border: { type: BorderStyle.double }
       }}
@@ -42,7 +42,7 @@ describe('scrollable', () => {
         <box {...{ top: 120, left: 9, width: 11, height: 14, bg: color(), ch: char() }}> 8 {words(5).join(' ')}</box>{}
       </Scrollable>
     flor.create(<box>Hello</box>)
-   flor.create(el)
+    flor.create(el)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
     done()
@@ -50,12 +50,11 @@ describe('scrollable', () => {
     //   debug('ERROR', error)
     // }
   })
-  
-  
+
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     flor.debug('start')
     // try {
-      const a = <Scrollable {...{
+    const a = <Scrollable {...{
         top: 3, left: 3, width: 55, height: 23,
         border: { type: BorderStyle.double }
       }}
@@ -76,12 +75,12 @@ describe('scrollable', () => {
         <box {...{ width: int(20, 45), height: int(7, 14), bg: color(), ch: char() }}>last one top el</box>
       </Scrollable>
 
-        flor.create(<box>Hello</box>)
-      const el = flor.create(a)
-      flor.render()
+    flor.create(<box>Hello</box>)
+    const el = flor.create(a)
+    flor.render()
 
-  expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
-      done()
+    expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
+    done()
 
     // } catch (error) {
     //   debug('ERROR', error)

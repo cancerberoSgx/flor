@@ -7,12 +7,12 @@ import { Program } from '../../../../src'
 const program = new Program({
 })
 program.key(['q', 'escape', 'C-c'], function() {
-      program.showCursor()
-      program.disableMouse()
-      program.normalBuffer()
-      program.reset()
-      process.exit(0)
-    })
+  program.showCursor()
+  program.disableMouse()
+  program.normalBuffer()
+  program.reset()
+  process.exit(0)
+})
 
 let ESC = '\x1b'
 let a = `${ESC}[?7h`
