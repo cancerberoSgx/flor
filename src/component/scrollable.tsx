@@ -184,40 +184,21 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       nextTick(this._renderChildren, r)
   }
 
-  // dont=false
   protected _renderChildren(renderer: ProgramDocumentRenderer) {
-    // if(this.dont){
-    //   return
-    // }
-    // let firstTime = this._calcScrollAreaRun
-    // this.renderer!.writeArea = this.element!.getBounds()
     this.calcScrollArea()
     this.vChildren.forEach(c => {
       if (isElement(c)) {
-        // if(!firstTime && c.props.layout){
-        //   c.props.layout.neverResizeContainer=true
-        //   c.props.layout.manualLayout=true
-        // }
         const y = c.absoluteTop - this.element!.absoluteTop - this.yOffset
         const x = c.absoluteLeft - this.element!.absoluteLeft - this.xOffset
         const top = c.props.top
         const left = c.props.left
-        // const width = c.props.width
         c.props.top = y // we need to make position dirty
-        // c.props.width =c.props.width - (c.props.left-x)
         c.props.left = x
-        // this.renderer!.renderChildren(c)
         this.renderElement(c) // and call render so it gets updated but on the children, if calling on this.element will get infinite recursion
-        // debug(c.props.width, c.getBounds(), this.renderer!.writeArea)
-          // debug(c.props.width, c.getBounds())
-          // c.props.top = width
         c.props.top = top
         c.props.left = left
       }
     })
-    // this.dont=true
-    // this.renderElement(this.element! )
-    // this.dont=false
   }
 
   private _calcScrollAreaRun = false
@@ -390,8 +371,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected renderElement(c = this.element!.parentNode as ProgramElement) {
     const p = this.renderer!.writeArea
     this.renderer!.writeArea = this.element!.getContentBounds()
-    // c.update()
-    // this.renderer!.renderChildren(c)
     this.renderer!.renderElement(c)
     this.renderer!.writeArea = p
   }

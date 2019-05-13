@@ -105,60 +105,13 @@ export class EventManager {
       return
     }
     this.mouseListeners.filter(l => l.name === e.action).forEach(({ el, name, listener }) => {
-      // // for (; i < self.clickable.length; i++) {
-        // //   el = self.clickable[i];
-        // if(el.v)
-        // if (el.detached || !el.visible) {                                              ignore retached - invisible listeners
-        //   continue;
-        // }
-        //   // if (self.grabMouse && self.focused !== el                                       IGNORE FOCUSED
-        //   //     && !el.hasAncestor(self.focused)) continue;
-        //   pos = el.lpos;
-        //   if (!pos) continue;
-
+      // TODO: ignore detached, invisible and focused
       if (this._isMouseEventTarget(e, el)) {
         const ev = {  ...e, currentTarget: el, target: el, type: name }
         return notifyListener(listener, ev)
-        // if (e.action === 'mouseup' && name === 'click') {
-        //   if (notifyListener(listener, { ...ev, type: 'click' })) {
-        //     return
-        //   }
-        // }
-        //     el.emit('mouse', data);
-        //     if (data.action === 'mousedown') {
-        //       self.mouseDown = el;                                                         // DRAG
-        //     } else if (data.action === 'mouseup') {
-        //       (self.mouseDown || el).emit('click', data);
-        //       self.mouseDown = null;                                                       // DRAG
-        //     } else if (data.action === 'mousemove') {
-        //       if (self.hover && el.index > self.hover.index) {
-        //         set = false;
-        //       }
-        //       if (self.hover !== el && !set) {
-        //         if (self.hover) {
-        //           self.hover.emit('mouseout', data);                                     // MOUSEOUT
-        //         }
-        //         el.emit('mouseover', data);                                               // MOUSEOUT
-        //         self.hover = el;
-        //       }
-        //       set = true;
-        //     }
-        //     el.emit(data.action, data);
-        //     break;
-        //   }
       } else {
         return false
       }
-      // // Just mouseover?
-      // if ((data.action === 'mousemove'
-      //     || data.action === 'mousedown'
-      //     || data.action === 'mouseup')
-      //     && self.hover
-      //     && !set) {
-      //   self.hover.emit('mouseout', data);                                               // MOUSEOUT
-      //   self.hover = null;
-      // }
-
     })
   }
 
@@ -170,22 +123,14 @@ export class EventManager {
 
   /** @internal */
   _registerEventListener(o: RegisteredEventListener): any {
-    const n = o.name.toLowerCase()
-    const keyPressed = n === 'keypress' || n === 'onkeypress' || n === 'onkeypressed'
-    if (keyPressed || n.startsWith('key')
-    // && !this.keyListeners.find(l => l.el === o.el)
-    ) {
+    o.name = o.name.toLowerCase()
+    const name = o.name.startsWith('on') ? o.name.substr(2) : o.name
+    const keyPressed = name === 'keypress' || name === 'onkeypress' || name === 'onkeypressed'
+    if (keyPressed || name.startsWith('key')) {
+      // TODO: support on('key a')
       this.keyListeners.push(keyPressed ? { ...o, name: 'keypress' } : o)
-    } else    if (true
-      // !this.mouseListeners.find(l => l.el === o.el)
-      ) {
-      // TODO: verify is mouse event
-      // debug(n, o.name)
-      const name = n.startsWith('on') ? n.substr(2) : n
-
-      this.mouseListeners.push((o.name === 'click' ? { ...o, name: 'mouseup' } : { ...o, name }))
-    } else {
-      debug('WARNING: ignoring event listener that is unknown or already registered:', o.name)
+    } else        {
+      this.mouseListeners.push((name === 'click' ? { ...o, name: 'mouseup' } : { ...o, name }))
     }
   }
 
@@ -193,7 +138,7 @@ export class EventManager {
    * Triggers a mouse element of given type and on given coordinates.
    */
   triggerMouseEvent(e: Partial<ProgramMouseEvent> & {action: MouseAction, x: number, y: number}) {
-    this.onMouse({ ...e as ProgramMouseEvent, button: e.button || 'left' })
+    this.onMouse({ ...e as ProgramMouseEvent, button: e.button || 'left', action: e.action === 'click' ? MouseAction.mouseup : e.action })
   }
 
   /**
@@ -202,6 +147,7 @@ export class EventManager {
   triggerKeyEvent(ch: string | undefined, e: Partial<ProgramKeyEvent>= {}) {
     this.onKeyPress(ch, { ...e as ProgramKeyEvent })
   }
+
   /**
    * Triggers a click event on given element
    */

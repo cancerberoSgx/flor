@@ -5,6 +5,9 @@ import { rm } from 'shelljs'
 import { format, inspect } from 'util'
 import { CustomProcessor } from './errorDiffProcessor'
 
+const argv = process.argv.slice(2)
+const configFile = argv.shift()
+
 rm('-rf', 'test_output.txt')
 
 let Jasmine = require('jasmine')
@@ -12,7 +15,7 @@ let Jasmine = require('jasmine')
 // @ts-ignore
 let j = new Jasmine()
 
-j.loadConfigFile('spec/support/jasmine.json')
+j.loadConfigFile(configFile || 'spec/support/jasmine.json')
 
 j.configureDefaultReporter({
   print: function(...args: any[]) {

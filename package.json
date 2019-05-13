@@ -10,6 +10,8 @@
     "build": "tsc && npm run copy && echo 'build successful'",
     "copy": " rm -rf dist/src/blessed && cp -r src/blessed dist/src && cp -r usr dist",
     "test": "ts-node -T spec/support/customJasmine && echo $?",
+    "test-quick": "ts-node -T spec/support/customJasmine spec/support/jasmine-quick.json && echo $?",
+    "test-watch": "npx watch  \"npm run test-quick\" src spec",
     "test-debug": "node --inspect-brk node_modules/ts-node/dist/bin spec/support/customJasmine",
     "prepare": "npm run build",
     "test-performance": "ts-node -T spec/performance/animElementTest.ts",
@@ -26,7 +28,7 @@
   "dependencies": {
     "justified-layout": "^2.1.2",
     "layout": "^2.2.0",
-    "misc-utils-of-mine-generic": "0.2.1",
+    "misc-utils-of-mine-generic": "^0.2.1",
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
@@ -52,7 +54,8 @@
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "watch": "^1.0.2"
   },
   "keywords": [
     "Command line",

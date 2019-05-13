@@ -5,11 +5,11 @@ import { createElement } from '../src/util/util'
 import { int } from './data'
 
 describe('layout', () => {
+
   it('all layouts should make all text visible if there is enough space - invoking layoutChildren manually', async done => {
     const { renderer, el, document } = createProgramRendererDocumentAndElement()
     document.body.props.assign({ width: renderer.program.cols, height: renderer.program.rows })
     renderer.renderElement(document.body)
-
     const N = 10
     await serial([
       'top-down', 'left-right', 'diagonal', 'alt-diagonal', 'binary-tree', 'justified-layout'

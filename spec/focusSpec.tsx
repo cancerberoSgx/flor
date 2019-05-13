@@ -22,8 +22,11 @@ describe('focus', () => {
     flor.create(a)
     flor.render()
     flor.events.addKeyListener(e => {
-      if (e.name === 'tab') {
+      if (!e.ctrl && e.name === 'tab') {
         flor.focus.focusNext()
+      }
+      if (e.ctrl && e.name === 'tab') {
+        flor.focus.focusPrevious()
       }
     })
     expect(flor.renderer.printBuffer(true)).not.toContain('msg:')
@@ -33,8 +36,13 @@ describe('focus', () => {
     expect(flor.renderer.printBuffer(true)).toContain('msg:button 2 focused')
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
     expect(flor.renderer.printBuffer(true)).toContain('msg:button 3 focused')
+    flor.events.triggerKeyEvent(undefined, { name: 'tab', ctrl: true })
+    expect(flor.renderer.printBuffer(true)).toContain('msg:button 2 focused')
+    flor.events.triggerKeyEvent(undefined, { name: 'tab' })
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
     expect(flor.renderer.printBuffer(true)).toContain('msg:button 1 focused')
+    flor.events.triggerKeyEvent(undefined, { name: 'tab', ctrl: true })
+    expect(flor.renderer.printBuffer(true)).toContain('msg:button 3 focused')
     done()
   })
 })

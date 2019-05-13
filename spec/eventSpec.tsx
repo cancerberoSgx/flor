@@ -14,7 +14,6 @@ describe('events', () => {
     }}>
       text
     </box>
-
     const le = flor.create(p)
     expect(flor.renderer.printBuffer(true).trim()).not.toContain('clicked_')
     flor.events.triggerMouseEvent({
@@ -32,7 +31,6 @@ describe('events', () => {
       x: le.absoluteContentLeft + 2, y: le.absoluteContentTop + 2, button: 'left'
     })
     expect(flor.renderer.printBuffer(true).trim()).toContain('clicked_1')
-
     flor.events.triggerMouseEvent({
       action: MouseAction.mouseup,
       x: le.absoluteContentLeft + 1, y: le.absoluteContentTop + 1, button: 'left'
@@ -43,6 +41,13 @@ describe('events', () => {
       x: le.absoluteContentLeft + 20, y: le.absoluteContentTop + 20, button: 'left'
     })
     expect(flor.renderer.printBuffer(true).trim()).toContain('clicked_2')
+    flor.events.click(le)
+    expect(flor.renderer.printBuffer(true).trim()).toContain('clicked_3')
+    flor.events.triggerMouseEvent({
+      action: MouseAction.click,
+      x: le.absoluteContentLeft + 1, y: le.absoluteContentTop + 1, button: 'left'
+    })
+    expect(flor.renderer.printBuffer(true).trim()).toContain('clicked_4')
     done()
   })
 })

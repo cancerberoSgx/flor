@@ -1,6 +1,5 @@
 import { Driver, InteractionSpecHelper } from 'cli-driver'
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 describe('tputTest', () => {
   let client: Driver
   let helper: InteractionSpecHelper
@@ -14,18 +13,17 @@ describe('tputTest', () => {
   })
 
   afterAll(async done => {
-    // await helper.clear()
     await client.destroy().catch()
     helper = null as any
     done()
   })
 
-  // it('npm run build', async done => {
-  //   await client.enter('npm run build')
-  //   expect(await helper.waitForStrippedDataToInclude('build successful'))
-  //   await helper.expectLastExitCode(true)
-  //   done()
-  // })
+  it('npm run build', async done => {
+    await client.enter('npm run build')
+    expect(await helper.waitForStrippedDataToInclude('build successful'))
+    await helper.expectLastExitCode(true)
+    done()
+  })
 
   it('node spec/assets/tputJsTest.js', async done => {
     await client.enter('node spec/assets/tputJsTest.js')
