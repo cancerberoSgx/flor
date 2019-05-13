@@ -253,30 +253,28 @@ export class Scrollable extends Component<ScrollableProps, {}> {
 
   protected handleScrollEnd() {
     this.scrolling = false
-    this._stopAnimation && this._stopAnimation()
+    // this._stopAnimation && 
+    this._stopAnimation()
     if (this.props.onScroll) {
-      nextTick(() => {
-        const e = { currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset }
-        this.p.onScroll(e)
-      })
+      // nextTick(() => {
+        this.p.onScroll({ currentTarget: this.element!, xOffset: 0, yOffset: this.yOffset })
+      // })
     }
   }
 
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
-    debug({...e, currentTarget: null, target: null})  
+    // debug({...e, currentTarget: null, target: null})  
     if (!this.element!.props.focused) {
-      return
     } else if (this.scrolling) {
       if (this.p.interruptAnimation) {
         this.handleScrollEnd()
+        nextTick(()=>this.onKeyPressed(e))
       } else {
         this.renderer!.program.bell()
         this.handleScrollEnd()
-        return
       }
-    } 
-    
-    if (this.p.largeScrollUpKeys.find(p => p(e))) {
+    }    
+    else if (this.p.largeScrollUpKeys.find(p => p(e))) {
       this.handleLargeScroll(-1);
       return
     } else if (this.p.largeScrollDownKeys.find(p => p(e))) {

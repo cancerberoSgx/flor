@@ -65,6 +65,10 @@ interface RenderElementOptions {
    *
    */
   preventSiblingCascade?: boolean
+  /**
+   * Ensures writings only happen inside given element's area by temporarily changing [[writeArea]].
+   */
+  writeInsideOnly?: boolean
   /**@internal. Indicates if we are inside descendant recursion loop */
   __onRecursion?: boolean
 
@@ -224,15 +228,15 @@ export class ProgramDocumentRenderer {
    */
   write(y: number, x: number, s: string) {
     if (
-      y <  this._writeArea.yi + 1 ||
-      y >= this._writeArea.yl ||
+      y < this._writeArea.yi + 1 ||
+      y >= this._writeArea.yl -1 ||
       x < this._writeArea.xi ||
-      x >= this._writeArea.xl
+      x >= this._writeArea.xl 
       ) {
       return
     }
-    if (x + s.length > this._writeArea.xl) {
-      s = s.substring(x + s.length - this._writeArea.xl - 1)
+    if (x + s.length > this._writeArea.xl ) {
+      s = s.substring(x + s.length - this._writeArea.xl +1)
     }
     this._program.cursorPos(y, x)
     this._program._write(s)
@@ -314,7 +318,7 @@ export class ProgramDocumentRenderer {
   }
 
   /**
-   * Main public function to render given element in the screen. Element's props character attributes will me
+   * Renders given element in the screen. Element's props character attributes will me
    * merged with [[currentAttrs]] and that will be used to render the element's pixels.
    */
   renderElement(el: ProgramElement
@@ -325,6 +329,11 @@ export class ProgramDocumentRenderer {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
+    let originalWriteArea
+    if(options.writeInsideOnly){
+      originalWriteArea = this._writeArea
+      this._writeArea = el.getBounds()
+    }
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
@@ -352,6 +361,9 @@ export class ProgramDocumentRenderer {
     }
     el._afterRender()
     el._renderCounter = this.renderCounter++
+    if( originalWriteArea){
+       this._writeArea = originalWriteArea
+    }
     return el
   }
 
@@ -404,24 +416,26 @@ export class ProgramDocumentRenderer {
         let xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
         let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
         let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
-        if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
-          height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
-          width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1 : width
-          if (xi < el.parentNode.absoluteContentLeft) {
-            width = width - (el.parentNode.absoluteContentLeft - xi)
-            xi = el.parentNode.absoluteContentLeft;
-            (attrs as any).xi = xi
-          }
-          if (yi < el.parentNode.absoluteContentTop) {
-            height = height - (el.parentNode.absoluteContentTop - yi)
-            yi = el.parentNode.absoluteContentTop;
-            (attrs as any).yi = yi
-          }
-          attrs.height = height
-          attrs.width = width
-        }
+        // if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
+          // TODO instead of doing calculations here, use writeArea
+          // height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
+          // width = el.absoluteLeft + width > el.parentNode.absoluteContentLeft + el.parentNode.contentWidth ? el.parentNode.absoluteContentLeft + el.parentNode.contentWidth - el.absoluteLeft - 1 : width
+          // if (xi < el.parentNode.absoluteContentLeft) {
+          //   // width = width - (el.parentNode.absoluteContentLeft - xi)
+          //   xi = el.parentNode.absoluteContentLeft;
+          //   (attrs as any).xi = xi
+          // }
+          // if (yi < el.parentNode.absoluteContentTop) {
+          //   // height = height - (el.parentNode.absoluteContentTop - yi)
+          //   yi = el.parentNode.absoluteContentTop;
+          //   (attrs as any).yi = yi
+          // }
+          // attrs.height = height
+          // attrs.width = width
+        // }
+        const s= this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = 0; i < height; i++) {
-          this.write(yi + i, xi, this._program.repeat(el.props.ch || this._currentAttrs.ch, width))
+          this.write(yi + i, xi, s)
         }
       }
     }
