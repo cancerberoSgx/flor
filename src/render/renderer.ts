@@ -1,4 +1,4 @@
-import { array } from 'misc-utils-of-mine-generic'
+import { array, repeat } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import * as wrap from 'word-wrap'
 import { Program, ProgramOptions } from '../declarations/program'
@@ -223,20 +223,35 @@ export class ProgramDocumentRenderer {
     if (
       y < yi  ||
       y >= yl  ||
-      (x < xi && x + s.length < xi) ||
+      (x + s.length < xi) ||
       x > xl
       ) {
         return
       }
-        x = x<0?0:x>this.program.cols-1 ? this.program.cols-1: x
-        y=y<0?0:y>this.program.rows-1 ? this.program.rows-1: y
-    if (x + s.length > xl) {
-      s = s.substring(x + s.length - xl - 1)
-    }
-    if (x < xi) {
-      s = s.substring(Math.max(0, s.length - (xi - x) - 1), s.length)
-      x = xi
-    }
+      if(x<0){
+        s = s+repeat(-1*x, s[0])
+        x=0
+      }
+      if(y<0){
+        y=0
+      }
+      // else if(x>this.program.cols-1){
+
+      //   x=this.program.cols-1
+      // }
+        // x = x<0?0:x>this.program.cols-1 ? : x
+        // y=y<0?0:y>this.program.rows-1 ? this.program.rows-1: y
+        if (x + s.length > xl) {
+          s = s.substring(x + s.length - xl - 1)
+        }
+        if (x < xi) {
+          s = s.substring(Math.max(0, s.length - (xi - x) - 1), s.length)
+          // s = s+repeat(xi-x, s[0])          
+          x = xi
+        }
+        // if (x + s.length > xl) {
+        //   s = s.substring(x + s.length - xl - 1)
+        // }
     this._program.cursorPos(y, x)
     this._program._write(s)
     if (this.useBuffer) {
@@ -333,11 +348,12 @@ export class ProgramDocumentRenderer {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
     }
+    let parentBounds : Rectangle|undefined
     if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
-      this._writeArea = el.parentNode.getContentBounds()
+      parentBounds = this._writeArea = el.parentNode.getContentBounds()
     }
-    this.renderElementWithoutChildren(el, options)
+    this.renderElementWithoutChildren(el, {...options, parentBounds})
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
       el.props.renderChildren(this)
@@ -407,7 +423,7 @@ export class ProgramDocumentRenderer {
   /**
    * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions = this._defaultRenderOptions) {
+  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions&{parentBounds?: Rectangle} = this._defaultRenderOptions) {
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
@@ -418,13 +434,15 @@ export class ProgramDocumentRenderer {
       el.props.render(this)
       return
     }
+    // const parentBounds = isElement(el.parentNode) && el.parentNode.props.overflowel.parentNode.getContentBounds
     if (el.props.renderContent) {
       el.props.renderContent(this)
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
         const { xi, xl, yi, yl } = el.getInnerBounds()
-        const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, xl - xi)
+        let width = xl - xi - (options.parentBounds && xi<options.parentBounds!.xi ? options.parentBounds!.xi - xi : 0)
+        const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi; i <  yl; i++) {
           this.write(i, xi, s)
         }

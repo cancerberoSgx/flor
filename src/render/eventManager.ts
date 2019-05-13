@@ -55,7 +55,6 @@ export class EventManager {
       return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el, target: l.el }as any)
     })
   }
-
   // private keyListeners: (RemoveProperties<RegisteredEventListener, 'el'> & {el?: ProgramElement})[] = []
   private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'> )[] = []
   addKeyListener(l: KeyListener) {

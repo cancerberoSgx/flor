@@ -56,49 +56,33 @@ describe('scrollable', () => {
         preventChildrenCascade={true}
         layout={{
           layout: Layout.topDown,
-          // manualLayout: true,
-          // neverResizeContainer: true
         }}
         normalVerticalStep={2}
         overflow="hidden"
         largeVerticalScrollStep={40}
         verticalAnimationDuration={1400}
         largeScrollAnimation={easing.easeOutBounce()}
-        onScroll={e => { flor.debug('scroll '+JSON.stringify( e.currentTarget.getChildrenElements()[0].getBounds()))}}// , e.xOffset, e.yOffset)}}//, e.currentTarget.getChildrenElements()[0].getBounds() ) }}
       >
         {array(int(4, 11)).map(i =>  
         <box ch=" " 
         layout={{
           layout: Layout.leftRight,
-          // manualLayout: true,
-          // neverResizeContainer: true 
         }} 
-    //  noFill={true}
-        // overflow="hidden"
-        // preventChildrenCascade={true}
         bg={color()} 
         height={int(7, 11)} 
         width={ int(40, 85)}
-        // width={ 70}
          >{i} - - {words(4).join(', ')}
-        {/* {array(int(10,20)).map(j=> */}
         {array(10).map(j=>
 
         <box        
         ch=" " bg={color()} 
         height={int(3, 7)} 
         width={ int(14, 20)}
-        // width={ 12}
         >
         {i}, {j}
         </box>)}
         </box>)}
       </Scrollable>
-
-
-    
-; 
-// setInterval(flor.render,2000)
     flor.create(<box>Hello</box>)
     const el = flor.create(a)
     flor.render()
