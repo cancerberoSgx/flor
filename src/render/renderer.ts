@@ -228,10 +228,10 @@ export class ProgramDocumentRenderer {
    */
   write(y: number, x: number, s: string) {
     if (
-      y < this._writeArea.yi + 1 ||
+      y < this._writeArea.yi  ||
       y >= this._writeArea.yl -1 ||
       x < this._writeArea.xi ||
-      x >= this._writeArea.xl 
+      x > this._writeArea.xl
       ) {
       return
     }
@@ -334,6 +334,10 @@ export class ProgramDocumentRenderer {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
     }
+    if(isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
+      originalWriteArea = this._writeArea
+      this._writeArea = el.parentNode.getContentBounds()
+    }
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
     if (el.props.renderChildren) {
@@ -412,10 +416,12 @@ export class ProgramDocumentRenderer {
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
-        let yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
-        let xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
-        let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
-        let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
+        const bounds = el.getInnerBounds()
+        // let yi = el.absoluteContentTop - (el.props.padding ? el.props.padding.top : 0)
+        // let xi = el.absoluteContentLeft - (el.props.padding ? el.props.padding.left : 0)
+        // let width = el.contentWidth + (el.props.padding ? el.props.padding.left + el.props.padding.right : 0)
+        // let height = el.contentHeight + (el.props.padding ? el.props.padding.top + el.props.padding.bottom : 0)
+
         // if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
           // TODO instead of doing calculations here, use writeArea
           // height = el.absoluteTop + height > el.parentNode.absoluteContentTop + el.parentNode.contentHeight ? el.parentNode.absoluteContentTop + el.parentNode.contentHeight - el.absoluteTop - 1 : height
@@ -433,9 +439,9 @@ export class ProgramDocumentRenderer {
           // attrs.height = height
           // attrs.width = width
         // }
-        const s= this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
-        for (let i = 0; i < height; i++) {
-          this.write(yi + i, xi, s)
+        const s= this._program.repeat(el.props.ch || this._currentAttrs.ch, bounds.xl-bounds.xi)
+        for (let i = bounds.yi; i <  bounds.yl; i++) {
+          this.write(0 + i, bounds.xi, s)
         }
       }
     }

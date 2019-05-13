@@ -52,7 +52,7 @@ describe('scrollable', () => {
   })
   
   
-  fit('should hide overflow and scroll vertical with up and down arrows by default', async done => {
+  it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
     flor.debug('start')
     // try {
       const a = <Scrollable {...{
@@ -93,8 +93,8 @@ describe('scrollable', () => {
 //   flor.render()
 
 
-  // expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
-      // done()
+  expect(flor.renderer.printBuffer(true)).toContain(`Hello`)
+      done()
 
     // } catch (error) {
     //   debug('ERROR', error)

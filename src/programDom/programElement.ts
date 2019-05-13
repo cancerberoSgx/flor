@@ -126,8 +126,8 @@ export class ProgramElement extends Element {
     return this._absoluteLeft
   }
   get absoluteRight() {
-  return this.absoluteLeft + this.props.width
-}
+    return this.absoluteLeft + this.props.width
+  }
   private _absoluteTop = 0
   get absoluteTop() {
     if (this._positionDirty) {
@@ -141,20 +141,10 @@ export class ProgramElement extends Element {
     }
     return this._absoluteTop
   }
-
-  // get yi() {
-  //   return this.absoluteTop
-  // }
-  // xl(){
-  //   this.absoluteRight
-  // }
-
   get absoluteBottom() {
     return this.absoluteTop + this.props.height
   }
-// get yl() {
-//   return this.absoluteTop + this.props.height
-// }
+
   onBoundsChange(arg0: () => void): any {
     throw new Error('Method not implemented.')
   }
@@ -174,6 +164,25 @@ export class ProgramElement extends Element {
   get contentWidth() {
     return this.props.width - (this.props.border ? 1 : 0) - (this.props.padding ? (this.props.padding.left + this.props.padding.right) : 0)
   }
+
+
+  get absoluteInnerTop() {
+    return this.absoluteTop + (this.props.border ? 1 : 0) 
+  }
+
+  get absoluteInnerLeft() {
+    return this.absoluteLeft + (this.props.border ? 1 : 0) 
+  }
+
+  get innerHeight() {
+    return this.props.height - (this.props.border ? 1 : 0)
+  }
+
+  get innerWidth() {
+    return this.props.width - (this.props.border ? 1 : 0)
+  }
+
+
 
   protected __positionDirty: boolean
   get _positionDirty() {
@@ -207,6 +216,17 @@ export class ProgramElement extends Element {
   getContentBounds(relative = false): Rectangle {
     if (!relative) {
       return { yi: this.absoluteContentTop, xi: this.absoluteContentLeft, yl: this.absoluteContentTop + this.contentHeight, xl: this._absoluteLeft + this.contentWidth }
+    } else {
+      throw new Error('TODO')
+    }
+  }
+
+  /**
+   * Similar to [[getContentBounds]] but without consider padding.
+   */
+  getInnerBounds(relative = false): Rectangle {
+    if (!relative) {
+      return { yi: this.absoluteInnerTop, xi: this.absoluteInnerLeft, yl: this.absoluteInnerTop + this.innerHeight, xl: this._absoluteLeft + this.innerWidth }
     } else {
       throw new Error('TODO')
     }
