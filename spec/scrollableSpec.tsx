@@ -1,4 +1,4 @@
-import { array, sleep, waitForPredicate } from 'misc-utils-of-mine-generic'
+import { array, waitForPredicate } from 'misc-utils-of-mine-generic'
 import { BorderStyle, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'

@@ -9,9 +9,9 @@ declare global {
       // text: OptionsProps<ElementProps>
     }
 
-    /** 
+    /**
      * Adds extra props to Blessed options, like refs. TODO: we could add children here too ? and perhaps
-     * unify the rest in one place (onClick, etc) 
+     * unify the rest in one place (onClick, etc)
      */
     type OptionsProps<T> = PropsWithRef<Partial<T>>
 
@@ -89,10 +89,10 @@ interface RenderOptions {
 
 /** @internal */
 export type BlessedJsxAttrs = { [a: string]: any } | undefined
- 
+
 export interface RefObject<T = any> {
-  /* 
-   * When the RefObject is resolved and [[current]] attribute is set, this callback is called if provided.  
+  /*
+   * When the RefObject is resolved and [[current]] attribute is set, this callback is called if provided.
    */
   callback?(current: T | undefined): any
   current: T | undefined

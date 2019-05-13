@@ -3,7 +3,6 @@ import { Node } from '../dom'
 import { ProgramElement } from '../programDom'
 import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
-import { debug } from '../util';
 
 interface RenderOptions {
   document?: ProgramDocument
@@ -141,10 +140,8 @@ class FlorJsxImpl implements FlorJsx {
     if (component && (component as any).props && (component as any).props.ref) {
       (component as any).props.ref.current = component
       ;(component as any).props.ref.callback && (component as any).props.ref.callback(component)
-    }
-    // HEADS UP: if the component has a ref, then element's is not resolved. thats why it's an else if
-    else if ((el! as any) && (el! as any).props && (el! as any).props.ref && !(el! as any).props.ref.current) {
-      ;(el! as any).props.ref.current = el! as any
+    } else if ((el! as any) && (el! as any).props && (el! as any).props.ref && !(el! as any).props.ref.current) {
+      (el! as any).props.ref.current = el! as any
       ;(el! as any).props.ref.callback && (el! as any).props.ref.callback(el)
     }
   }
@@ -186,7 +183,7 @@ class FlorJsxImpl implements FlorJsx {
     }
     return el!
   }
-  
+
   createRef<T extends ProgramElement | Component>(callback?: (current: T | undefined) => any): RefObject<T> {
     return ({
       current: undefined,

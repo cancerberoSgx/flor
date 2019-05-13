@@ -392,7 +392,7 @@ export class ProgramDocumentRenderer {
         this.lastAbsTop = this.lastAbsTop + 1
         this.lastAbsLeft = parent.absoluteContentLeft
       }
-     ( wrap(s2.replace(/\n/g, ' '), { width: parent.contentWidth - 1 })||'').split('\n').map(l => l.trim()).forEach(l => {
+      (wrap(s2.replace(/\n/g, ' '), { width: parent.contentWidth - 1 }) || '').split('\n').map(l => l.trim()).forEach(l => {
         this.write(this.lastAbsTop, this.lastAbsLeft, l)
         this.lastAbsTop = this.lastAbsTop + 1
         this.lastAbsLeft = parent.absoluteContentLeft

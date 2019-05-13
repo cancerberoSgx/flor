@@ -25,7 +25,7 @@ j.configureDefaultReporter({
       args
         .map(a => {
           if (a instanceof Error) {
-            return `${a}\n${a && a.stack &&( a.stack||'').split('\n').join('\n')}`
+            return `${a}\n${a && a.stack && (a.stack || '').split('\n').join('\n')}`
           } else {
             return inspect(a)
           }

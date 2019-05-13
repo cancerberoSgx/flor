@@ -1,9 +1,9 @@
 import { ProgramElement } from '../programDom/programElement'
-import { RefObject } from './types';
+import { RefObject } from './types'
 
 export interface ExtraProps {
   children?: JSX.FlorJsxNode
-  ref?: RefObject<Component>
+  ref?: RefObject
 }
 
 /**

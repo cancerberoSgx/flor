@@ -1,5 +1,4 @@
 import { FlorDocument } from '../src'
-import { BorderStyle } from '../src/util/border'
 import { createElement } from '../src/util/util'
 import { defaultTestSetup } from './testUtil'
 

@@ -1,6 +1,6 @@
-import { Flor, FlorDocument, Layout, ProgramElement, debug, Component } from '../src'
+import { waitForPredicate } from 'misc-utils-of-mine-generic'
+import { Component, Flor, FlorDocument, ProgramElement } from '../src'
 import { defaultTestSetup } from './testUtil'
-import { waitForPredicate, sleep } from 'misc-utils-of-mine-generic';
 
 describe('ref', () => {
   let flor: FlorDocument
@@ -27,10 +27,10 @@ describe('ref', () => {
   it('should reference components', async done => {
     let b2: C | undefined
     class C extends Component {
-      render(){
+      render() {
         return <box>hello</box>
       }
-      __mark=123
+      __mark = 123
     }
     const b = flor.create(<C ref={Flor.createRef<C>(c => { b2 = c })}>hello world</C>)
     flor.render()

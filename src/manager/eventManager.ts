@@ -2,7 +2,6 @@ import { PropertyOptional, RemoveProperties } from 'misc-utils-of-mine-generic'
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
 import { Event, EventTarget, StopPropagation } from '../dom/event'
 import { ProgramElement } from '../programDom'
-import { debug } from '../util'
 
 export type RegisteredEventListener = { el: ProgramElement, name: string; listener: MouseListener | KeyListener }
 

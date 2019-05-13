@@ -1,5 +1,5 @@
-import { FlorDocument, debug } from '../src'
-import { sleep } from 'misc-utils-of-mine-generic';
+import { sleep } from 'misc-utils-of-mine-generic'
+import { debug, FlorDocument } from '../src'
 export function defaultTestSetup(l: (flor?: FlorDocument) => FlorDocument) {
   beforeEach(() => {
     const flor = new FlorDocument()
