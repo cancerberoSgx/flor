@@ -15,7 +15,7 @@ export function defaultTestSetup(l: (flor?: FlorDocument) => FlorDocument) {
     } catch (error) {
       debug(error)
     }
-  
+
   })
   afterEach(() => {
     l().destroy()

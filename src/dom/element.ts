@@ -12,7 +12,7 @@ export class Element  extends Node  {
   }
 
   get textContent(): string | null {
-    return this._textContent//!this.childNodes || this.childNodes.length === 0 ? '' : Array.from(this.childNodes || []).map(c => c.textContent).join('')
+    return this._textContent// !this.childNodes || this.childNodes.length === 0 ? '' : Array.from(this.childNodes || []).map(c => c.textContent).join('')
   }
 
   set textContent(c: string | null) {

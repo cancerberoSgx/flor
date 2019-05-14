@@ -1,7 +1,6 @@
 
 import { appendFileSync } from 'fs'
 import { SpecReporter } from 'jasmine-spec-reporter'
-import { rm } from 'shelljs'
 import { format, inspect } from 'util'
 import { CustomProcessor } from './errorDiffProcessor'
 

@@ -1,8 +1,6 @@
 import { KeyEvent, KeyListener, KeyPredicate } from '.'
-import { CursorHandler, Pos } from './cursorManager'
-import { getPreviousMatchingPos } from 'misc-utils-of-mine-generic'
-import { ProgramElement } from '../programDom';
-import { debug } from '../util';
+import { ProgramElement } from '../programDom'
+import { Pos } from './cursorManager'
 
 interface TextInputCursorKeys {
   left: KeyPredicate
@@ -49,7 +47,7 @@ interface Options {
   // cursor: CursorHandler
 
   /**
-   * Initial enabled/disabled state. Default value: false. 
+   * Initial enabled/disabled state. Default value: false.
    */
   enabled?: boolean
 
@@ -90,7 +88,7 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
   controlDown: e => e.name === 'down' && e.ctrl && !e.shift && !e.meta,
   controlBackspace: e => e.name === 'backspace' && e.ctrl && !e.shift && !e.meta,
   controlDelete: e => e.name === 'delete' && e.ctrl && !e.shift && !e.meta,
-  shiftRight: e => e.name === 'right' && !e.ctrl && e.shift && !e.meta,
+  shiftRight: e => e.name === 'right' && !e.ctrl && e.shift && !e.meta
 }
 
 /**
@@ -98,12 +96,12 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
  */
 export class SingleLineTextInputCursor {
 
-  private _enabled: boolean = false;
+  private _enabled: boolean = false
   public get enabled(): boolean {
-    return this._enabled;
+    return this._enabled
   }
   public set enabled(value: boolean) {
-    this._enabled = value;
+    this._enabled = value
   }
 
   protected lineText: string
@@ -113,11 +111,11 @@ export class SingleLineTextInputCursor {
     return { col: this.x, row: this.row }
   }
   set pos(p: Pos) {
-    this.x = p.col//Math.max(this.text.length, p.col)
+    this.x = p.col// Math.max(this.text.length, p.col)
   }
 
   protected get row(): number {
-    return this.options.pos ? this.options.pos.row : 0;
+    return this.options.pos ? this.options.pos.row : 0
   }
 
   get value() {
@@ -142,22 +140,19 @@ export class SingleLineTextInputCursor {
    * Notification of a key press event. We update out internal state [[pos]] and [[text]] user is responsible of the rest (update the UI, render(), absolute position, etc)
    */
   onKey(e: KeyEvent) {
-    if(!this.enabled){
-        this.invalidAction({
-          key:e.name, reason: 'TextInputCursor disabled'
+    if (!this.enabled) {
+      this.invalidAction({
+          key: e.name, reason: 'TextInputCursor disabled'
         })
-    }
-    else  if (this.keys.right(e)) {
+    } else  if (this.keys.right(e)) {
       this.right()
     } else if (this.keys.controlRight(e)) {
       this.controlRight()
-    }
-    else if (this.keys.left(e)) {
+    } else if (this.keys.left(e)) {
       this.left()
     } else if (this.keys.controlLeft(e)) {
       this.controlLeft()
-    }
-    else if (this.keys.up(e)) {
+    } else if (this.keys.up(e)) {
       this.up()
     } else if (this.keys.down(e)) {
       this.down()
@@ -167,11 +162,10 @@ export class SingleLineTextInputCursor {
       this.backspace()
     } else if (this.keys.delete(e)) {
       this.delete()
-    }
-    else {
+    } else {
       const c = this.validInputChar(e)
-      if(c){
-      this.insertString(c || 'd')
+      if (c) {
+        this.insertString(c || 'd')
       } else {
         this.invalidAction({
           key: e.name, reason: 'key not implemented'
@@ -183,7 +177,7 @@ export class SingleLineTextInputCursor {
     if (e.ch) {
       return e.ch
     }
-    //TODO else {
+    // TODO else {
   }
 
   insertString(c: string) {
@@ -325,8 +319,6 @@ export class SingleLineTextInputCursor {
     }
   }
 
-  
-  
   protected invalidAction(a: Action) {
     this.options.onInvalidAction && this.options.onInvalidAction(a)
   }
@@ -348,59 +340,54 @@ export class SingleLineTextInputCursor {
  *
  */
 export class TextInputCursorMulti extends SingleLineTextInputCursor {
-  _lines: string[];
+  _lines: string[]
   constructor(options: Options) {
     super(options)
     this._lines = this.lineText.split('\n')
-    this.y = options.pos && options.pos.row||0
+    this.y = options.pos && options.pos.row || 0
   }
-  set value(v: string){
+  set value(v: string) {
     this._lines = v.split('\n')
-    const row = Math.max(this._lines.length-1, )
+    const row = Math.max(this._lines.length - 1)
     const col = Math.max(this.x)
   }
   protected y: number
- 
+
   get pos() {
     return { col: this.x, row: this.y }
   }
   set pos(p: Pos) {
-    this.x = p.col//Math.max(this.text.length, p.col)
+    this.x = p.col// Math.max(this.text.length, p.col)
     this.y = p.row
     this.lineText = this._lines[this.y]
   }
   get value() {
     return this.lines.join('\n')
   }
-  get lines(){
-    return [... this._lines.slice(0, this.y-1),  this.lineText, ...this._lines.slice(this.y, this._lines.length)]
+  get lines() {
+    return [...this._lines.slice(0, this.y - 1),  this.lineText, ...this._lines.slice(this.y, this._lines.length)]
   }
 
   onKey(e: KeyEvent) {
-    if(!this.enabled){
-        this.invalidAction({
-          key:e.name, reason: 'TextInputCursor disabled'
+    if (!this.enabled) {
+      this.invalidAction({
+          key: e.name, reason: 'TextInputCursor disabled'
         })
-    }
-    else if(this.keys.up(e)) {
-      if(this.pos.row===0){
+    } else if (this.keys.up(e)) {
+      if (this.pos.row === 0) {
         super.up()
+      } else {
+        this.pos = { row: this.pos.row - 1, col: Math.max(this.pos.col, this.lines[this.pos.row - 1].length) }
       }
-      else {
-        this.pos = {row: this.pos.row - 1, col: Math.max(this.pos.col, this.lines[this.pos.row-1].length)}
-      }
-    }
-    else if(this.keys.down(e)) {
-      if(this.pos.row===this.lines.length){
+    } else if (this.keys.down(e)) {
+      if (this.pos.row === this.lines.length) {
         super.down()
-      }
-      else {
-        this.pos = {row: this.pos.row + 1, col: Math.max(this.pos.col, this.lines[this.pos.row+1].length)}
-        this.x= this.pos.col
+      } else {
+        this.pos = { row: this.pos.row + 1, col: Math.max(this.pos.col, this.lines[this.pos.row + 1].length) }
+        this.x = this.pos.col
         this.lineText = this.lines[this.x]
       }
-    }
-    else {
+    } else {
       super.onKey(e)
     }
   }

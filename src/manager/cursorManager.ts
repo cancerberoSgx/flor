@@ -107,12 +107,12 @@ export class CursorManager implements CursorHandler {
    */
   show(options: {name: string, top: number, left: number}) {
     this.program.saveCursor(options.name)
-    this.setPosition({row: options.top, col: options.left});
+    this.setPosition({ row: options.top, col: options.left })
   }
 
   setPosition(options: Pos) {
-    this.program.cursorPos(options.row, options.col);
-    this.program.showCursor();
+    this.program.cursorPos(options.row, options.col)
+    this.program.showCursor()
   }
 
   left(n: number) {
@@ -133,7 +133,7 @@ export interface Pos {
  * Can move the cursor
  */
 export interface CursorHandler {
-  setPosition(pos: Pos):void
+  setPosition(pos: Pos): void
   left(n: number): void
   right(n: number): void
 }

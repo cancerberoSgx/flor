@@ -3,7 +3,6 @@ import { Node } from '../dom'
 import { ProgramElement } from '../programDom'
 import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
-import { debug } from '../util';
 
 interface RenderOptions {
   document?: ProgramDocument
@@ -62,9 +61,9 @@ class FlorJsxImpl implements FlorJsx {
           if (isJSXElementImpl(c)) {
             let r: Node
             if (c.type === '__text') {
-              
+
               r = document.createTextNode((c.props as any).textContent + '')
-            
+
             } else {
               r = this._render({ e: c, document, wrapInElement })
             }

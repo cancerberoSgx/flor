@@ -24,7 +24,7 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
    * @internal
    */
   _elementCreated() {
-   
+
   }
 
   /**
@@ -33,7 +33,7 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
    *
    * @internal
    */
-  _elementReady() {   
+  _elementReady() {
   }
 
   element: ProgramElement | undefined

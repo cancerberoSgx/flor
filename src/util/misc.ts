@@ -54,36 +54,36 @@ resolverActor(){
 }
 ```
 */
-export class ResolvablePromise<T> extends Promise<T>{
-  resolve:   ((t: T) => void) =null as any
-  constructor(executor: ( resolve: (value?: T | PromiseLike<T>) => void, reject?: (reason?: any) => void) => void) {
-    super(resolve=>{
-      this.resolve= resolve
+export class ResolvablePromise<T> extends Promise<T> {
+  resolve: ((t: T) => void) = null as any
+  constructor(executor: (resolve: (value?: T | PromiseLike<T>) => void, reject?: (reason?: any) => void) => void) {
+    super(resolve => {
+      this.resolve = resolve
       new Promise(executor.bind(this)).then(resolve)
     })
   }
 }
 
-export class Deferred<R, J=any> {
-  resolve: (r:R)=>void 
-  reject: (r:J)=>void 
+export class Deferred<R, J= any> {
+  resolve: (r: R) => void
+  reject: (r: J) => void
   private promise: Promise<R>
-  constructor(callback?: (this: Deferred<R, J>, resolve: (r:R)=>void, reject?: (r: J)=>void)=>void) {
-    var instance = this;
+  constructor(callback?: (this: Deferred<R, J>, resolve: (r: R) => void, reject?: (r: J) => void) => void) {
+    let instance = this
     this.resolve = null as any
     this.reject = null as any
-    this.promise = new Promise(function(resolve, reject){
-      instance.resolve = resolve;
-      instance.reject = reject;
-    });
-    if(typeof callback === 'function'){
+    this.promise = new Promise(function(resolve, reject) {
+      instance.resolve = resolve
+      instance.reject = reject
+    })
+    if (typeof callback === 'function') {
       callback.call(this, this.resolve, this.reject)
     }
   }
-  then(resolve:  (r:R)=>void){
-    return this.promise.then(resolve);
+  then(resolve: (r: R) => void) {
+    return this.promise.then(resolve)
   }
-  catch(r: (reject: J)=>void){
-    return this.promise.catch(r);
+  catch(r: (reject: J) => void) {
+    return this.promise.catch(r)
   }
 }

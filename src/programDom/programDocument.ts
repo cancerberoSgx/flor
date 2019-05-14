@@ -2,10 +2,10 @@ import { Document } from '../dom'
 import { EventManager, ProgramDocumentRenderer } from '../manager'
 import { CursorManager } from '../manager/cursorManager'
 import { FocusManager } from '../manager/focusManager'
+import { Deferred } from '../util/misc'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
-import { ResolvablePromise, nextTick, Deferred } from '../util/misc';
 
 interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
 
@@ -55,7 +55,7 @@ export class ProgramDocument extends Document {
     return el
   }
 
-  managersReady=  new Deferred<Managers>()
+  managersReady =  new Deferred<Managers>()
   /**
    * @internal
    */
@@ -66,16 +66,15 @@ export class ProgramDocument extends Document {
       height: this.program.rows, bg: 'black', fg: 'white'
     })
     this._emptyListenerQueue()
-    this._setManagersListeners.forEach(l=>l())
+    this._setManagersListeners.forEach(l => l())
     this._setManagersListeners = []
-    if(!this. managersReady){
+    if (!this. managersReady) {
       this.managersReady = new Deferred<Managers>()
     }
     this.managersReady.resolve(managers)
   }
 
-
-  private _setManagersListeners : (()=>void)[]= []
+  private _setManagersListeners: (() => void)[] = []
 
   /**
    * @internal
@@ -107,4 +106,4 @@ export class ProgramDocument extends Document {
   }
 }
 
-type Resolve<T> =  (value?: T)=>PromiseLike<T>
+type Resolve<T> =  (value?: T) => PromiseLike<T>

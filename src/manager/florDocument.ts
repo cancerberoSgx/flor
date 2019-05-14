@@ -210,7 +210,6 @@ export class FlorDocument {
     })
   }
 
-
   printBuffer(linesTrimRight= true)  {
     return this.renderer.printBuffer(linesTrimRight)
   }

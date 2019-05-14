@@ -1,5 +1,5 @@
 import { array, waitForPredicate } from 'misc-utils-of-mine-generic'
-import { BorderStyle, easing, FlorDocument, Layout, Input } from '../src'
+import { BorderStyle, easing, FlorDocument, Input, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
@@ -53,14 +53,14 @@ describe('scrollable', () => {
     await waitForPredicate(() => flor.renderer.printBuffer(true).includes('firstChild123'))
     expect(flor.renderer.printBuffer(true)).toContain('0, 0')
     done()
-  })  
+  })
 
   xit('should scroll text ', async done => {
-    const value = "hello scrolled world"
+    const value = 'hello scrolled world'
     const a = (
     <Scrollable top={1} left={2} width={15} height={5} leftExtraOffset={5}
       border={{ type: BorderStyle.double }}>
-     <Input 
+     <Input
      top={0} left={0} border={{ type: BorderStyle.double }}
      height={3} width={value.length + 4} value={value}></Input>
      </Scrollable>

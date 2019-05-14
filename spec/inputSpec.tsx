@@ -1,9 +1,7 @@
-import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement, debug } from '../src'
-import { defaultTestSetup } from './testUtil'
-import { waitForPredicate } from 'misc-utils-of-mine-generic';
+import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement } from '../src'
 
 describe('input', () => {
-  function test(f: (flor: FlorDocument)=> ProgramElement) {
+  function test(f: (flor: FlorDocument) => ProgramElement) {
     let flor: FlorDocument = null as any
     let el: ProgramElement
     beforeAll(() => {
@@ -62,11 +60,11 @@ describe('input', () => {
   }
 
   describe('component', () => {
-    test(flor=>    flor.create(<Input top={10} left={8} width={15} height={3} value={'initial'} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />)) })
+    test(flor =>    flor.create(<Input top={10} left={8} width={15} height={3} value={'initial'} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />)) })
 
   describe('plain function', () => {
- 
-    test(flor=> flor.create(input({
+
+    test(flor => flor.create(input({
       top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => {
         flor.debug('*value===' + e.value + '*')
       }, document: flor.document

@@ -1,10 +1,7 @@
-import { keys } from '../declarations/keys'
 import { Component, Flor } from '../jsx'
-import { KeyEvent, KeyPredicate, KeyListener } from '../manager'
+import { KeyEvent, KeyPredicate } from '../manager'
+import { SingleLineTextInputCursor } from '../manager/textInputCursor'
 import { ElementProps, ProgramDocument, ProgramElement } from '../programDom'
-import { SingleLineTextInputCursor } from '../manager/textInputCursor';
-import { debug } from '../util';
-import { cursor } from 'ansi-escape-sequences';
 
 interface InputProps extends Partial<ElementProps>, ConcreteInputProps {
 
@@ -58,7 +55,6 @@ export const defaultInputProps: Required<ConcreteInputProps> = {
   disableInputKeys: e => !e.ctrl && e.name === 'escape'
 }
 
-
 /**
  * A single line input text box. Will show the cursor and let the user input text when focused. When user
  * writes or deletes text it will emit [[onInput]] and when the user explicitly changes the value (like when
@@ -69,7 +65,7 @@ export const defaultInputProps: Required<ConcreteInputProps> = {
 export class Input extends Component<InputProps, {}> {
 
   protected p: Required<ConcreteInputProps>
-  protected boxEl: ProgramElement | undefined;
+  protected boxEl: ProgramElement | undefined
   protected textInputCursorManager: SingleLineTextInputCursor | undefined
 
   constructor(p: InputProps, s: {}) {
@@ -125,13 +121,13 @@ export class Input extends Component<InputProps, {}> {
     }
     // call text input cursor listener and then get the resulting state (pos and value) and update our state.
     this.textInputCursorListener && this.textInputCursorListener(e)
-    this.cursor!.setPosition({ row: this.element!.absoluteContentTop + this.textInputCursorManager!.pos.row, col: this.element!.absoluteContentLeft + this.textInputCursorManager!.pos.col });
+    this.cursor!.setPosition({ row: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row, col: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col })
     this.input = this.textInputCursorManager!.value
   }
 
   /** calling this method will passing an event will make the  textInputCursorManager to change its state (pos and value) */
   private textInputCursorListener(e: KeyEvent<ProgramElement>) {
-  
+
   }
 
   render() {
@@ -157,8 +153,8 @@ export class Input extends Component<InputProps, {}> {
         if (!this.textInputCursorManager) {
           this.textInputCursorManager = new SingleLineTextInputCursor({
             singleLine: true,
-            text: this.input, 
-            pos: { col: 0, row: 0 }, 
+            text: this.input,
+            pos: { col: 0, row: 0 },
             addKeyListener: l => this.textInputCursorListener = l,
             enabled: true
           })
@@ -169,7 +165,6 @@ export class Input extends Component<InputProps, {}> {
       {this.props.value || this.input || ''}
     </box>
   }
-
 
   /**
    * Makes the element to show the cursor and let the user input text. The element must be focused.

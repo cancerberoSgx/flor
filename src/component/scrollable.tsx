@@ -67,7 +67,7 @@ export interface ScrollHandlerProps {
    */
   disableMouseWheel?: boolean
 }
-interface ConcreteScrollableProps extends ScrollHandlerProps{
+interface ConcreteScrollableProps extends ScrollHandlerProps {
   /**
    * Listener notified when a scroll event happens.
    */
@@ -114,12 +114,12 @@ interface ConcreteScrollableProps extends ScrollHandlerProps{
   horizontalGotoStartKeys?: string[]
 
   /**
-   * If true, the scrollable won't listen to any mouse or key events. Also it won't be focusable. 
+   * If true, the scrollable won't listen to any mouse or key events. Also it won't be focusable.
    *
    * Instead it needs to be programmatically managed by an external actor. This is useful in cases where its
    * children are highly interactive and need to receive keyboard events themselves that might collapse with
    * scrollable keys. Example, a text area with scroll, the textarea itself is responsible of calling
-   * [[scroll]] methods when is needed. 
+   * [[scroll]] methods when is needed.
    */
   managed?: boolean
 }
@@ -128,7 +128,7 @@ export interface ScrollableProps extends ConcreteScrollableProps, Partial<Elemen
 
 }
 
-export const defaultScrollHandleProps : ()=>Required<ScrollHandlerProps> =()=> ({
+export const defaultScrollHandleProps: () => Required<ScrollHandlerProps> = () => ({
   largeVerticalScrollStep: 40,
   largeScrollUpKeys: [e => e.ctrl && e.name === 'w'],
   largeScrollDownKeys: [e => e.ctrl && e.name === 's'],
@@ -138,11 +138,11 @@ export const defaultScrollHandleProps : ()=>Required<ScrollHandlerProps> =()=> (
   normalScrollRightKeys: [e => !e.ctrl && e.name === 'right' || !e.ctrl && e.name === 'd'],
   normalVerticalStep: 2,
   normalHorizontalStep: 1,
-  disableMouseWheel: false,
+  disableMouseWheel: false
 })
 
-export const defaultScrollableProps : ()=> Required<ConcreteScrollableProps> = ()=> ({
-...defaultScrollHandleProps(),
+export const defaultScrollableProps: () => Required<ConcreteScrollableProps> = () => ({
+  ...defaultScrollHandleProps(),
   interruptAnimation: true,
   leftExtraOffset: 0,
   rightExtraOffset: 0,
@@ -165,14 +165,14 @@ export const defaultScrollableProps : ()=> Required<ConcreteScrollableProps> = (
  *  * different size scroll actions like normal, large, and going to the end/beginning.
  *  * animations for large scroll
  *
- * TODO resolve focus: 
- *   * how inner elemets get foused ? 
+ * TODO resolve focus:
+ *   * how inner elemets get foused ?
  *   * how the scrollable gets focus again ?
  *   * descendants need to receive  key and mouse events
  *
  * TODO (partially solves above problems): managed
  *   * if props.managed===true then the scrollable dont listen to any event and gets managed by another actor
- *     that 
+ *     that
  */
 export class Scrollable extends Component<ScrollableProps, {}> {
   protected yOffset: number

@@ -10,7 +10,6 @@ import { ElementPropsImpl } from './elementProps'
 import { isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
-import { Deferred } from '../util/misc';
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -324,11 +323,11 @@ export class ProgramElement extends Element {
         .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 
-  addKeyListener(l: KeyListener, name='keypress') {
-    this.ownerDocument.managersReady.then(({events})=>events.addKeyListener(l, this, name))
+  addKeyListener(l: KeyListener, name= 'keypress') {
+    this.ownerDocument.managersReady.then(({ events }) => events.addKeyListener(l, this, name))
   }
-  addMouseListener(l: MouseListener, name='click') {
-    this.ownerDocument.managersReady.then(({events})=>events.addMouseListener(l, this, name))
+  addMouseListener(l: MouseListener, name= 'click') {
+    this.ownerDocument.managersReady.then(({ events }) => events.addMouseListener(l, this, name))
   }
   /**
    * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus.

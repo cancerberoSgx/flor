@@ -1,16 +1,15 @@
-import { BorderStyle, Flor, FlorDocument, ProgramElement, KeyEvent, KeyListener } from '../src'
+import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement } from '../src'
 import { SingleLineTextInputCursor } from '../src/manager/textInputCursor'
-import { defaultTestSetup } from './testUtil';
-import { EventListener } from '../src/dom/event';
+import { defaultTestSetup } from './testUtil'
 
 describe('cursorTextEditor', () => {
 
   describe('single line', () => {
 
-      let editor: SingleLineTextInputCursor
-      let el: ProgramElement
-      let flor: FlorDocument
-    defaultTestSetup(f => {      
+    let editor: SingleLineTextInputCursor
+    let el: ProgramElement
+    let flor: FlorDocument
+    defaultTestSetup(f => {
       flor = f || flor;
       ({ el, editor } = build())
       return flor
@@ -110,28 +109,28 @@ describe('cursorTextEditor', () => {
 
     function build() {
       const initialValue = 'hello world'
-      el = flor.create(<box top={10} left={8} width={33} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e=>{
-       keyListener(e)
-        el.childNodes.item(0)!.textContent = editor.value;
-        el.render();
-        flor.program.cursorPos(11 + editor.pos.row, 9 + editor.pos.col);       
+      el = flor.create(<box top={10} left={8} width={33} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e => {
+        keyListener(e)
+        el.childNodes.item(0)!.textContent = editor.value
+        el.render()
+        flor.program.cursorPos(11 + editor.pos.row, 9 + editor.pos.col)
       }}
       >{initialValue}</box>)
       flor.render()
       flor.cursor.show({
         name: 'cursorTextEditorTest1', top: 11, left: 9
       })
-      
-      let keyListener: KeyListener = e=>{} // overrided by trextinputcursorr dont call!!
-        editor = new SingleLineTextInputCursor({
+
+      let keyListener: KeyListener = e => {} // overrided by trextinputcursorr dont call!!
+      editor = new SingleLineTextInputCursor({
           singleLine: true,
-          text: initialValue, 
-          pos: { col: 0, row: 0 }, 
-          addKeyListener: l=>keyListener = l,
+          text: initialValue,
+          pos: { col: 0, row: 0 },
+          addKeyListener: l => keyListener = l,
           enabled: true
-        })        
-        return { el, editor }
-      }      
-      
+        })
+      return { el, editor }
+    }
+
   })
 })
