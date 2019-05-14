@@ -23,7 +23,9 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
    *
    * @internal
    */
-  elementCreated() {}
+  _elementCreated() {
+   
+  }
 
   /**
    * Called from `Flor.render` when [[element]] is ready, this is, with its attributes and children
@@ -31,9 +33,17 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
    *
    * @internal
    */
-  elementReady() {
-    this.element && this.element._childrenReady()
+  _elementReady() {   
+    // this.element!.ownerDocument._onManagersReady(()=>this._managersReady())
   }
+  // /**
+  //  * Called when managers (like renderer, focus, events, etc) are ready in element's ownerDocument.
+  //  *
+  //  * @internal
+  //  */
+  //  _managersReady(){
+  
+  // }
 
   element: ProgramElement | undefined
 

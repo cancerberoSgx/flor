@@ -1,7 +1,7 @@
 import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement } from '../src'
 import { defaultTestSetup } from './testUtil'
 
-describe('input component', () => {
+xdescribe('input component', () => {
   let flor: FlorDocument
   defaultTestSetup(f => flor = f || flor)
 
@@ -35,10 +35,9 @@ describe('input component', () => {
   }
 
   it('Input should grab user input', async done => {
-    const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />
+    const p = <Input top={10} left={8} width={15} height={3} value={'initial'} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />
     const el = flor.create(p)
-    // flor.debug('test')
-    // flor.render()
+    flor.render()
     test(el, flor)
     done()
   })

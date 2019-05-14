@@ -1,6 +1,8 @@
 import { KeyEvent, KeyListener, KeyPredicate } from './'
-import { CursorHandler } from './cursorManager'
+import { CursorHandler, Pos } from './cursorManager'
 import { getPreviousMatchingPos } from 'misc-utils-of-mine-generic'
+import { ProgramElement } from '../programDom';
+import { debug } from '../util';
 
 interface TextInputCursorKeys {
   left: KeyPredicate
@@ -26,7 +28,7 @@ interface Options {
   /**
    * Absolute coordinates in the screen where the text begins rendering.
    */
-  origin: Pos
+  origin: Pos 
   /**
    * Initial text.
    */
@@ -43,7 +45,12 @@ interface Options {
    */
   addKeyListener(l: KeyListener): void
 
-  cursor: CursorHandler
+  // cursor: CursorHandler
+
+  /**
+   * Initial enabled/disabled state. Default value: false. 
+   */
+  enabled?: boolean
 
   // writer: TerminalWriter
 
@@ -84,32 +91,56 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
   controlDelete: e =>e.name==='delete' && e.ctrl &&!e.shift&&!e.meta,
 }
 
-interface Pos {
-  row: number
-  col: number
-}
-
 /**
  * Single line support for [[CursorTextInputCursor]].
  */
 export class SingleLineTextInputCursor {
+  
+  private _enabled: boolean = false;
+  public get enabled(): boolean {
+    return this._enabled;
+  }
+  public set enabled(value: boolean) {
+    this._enabled = value;
+  }
+
   protected text: string
   protected x: number
+
   get pos() {
-    return { col: this.x, row: 0 }
+    return { col: this.x, row:this.options.pos ? this.options.pos .row :  0}
+  }
+  set pos(p: Pos){
+    this.x =  p.col//Math.max(this.text.length, p.col)
   }
   get value() {
     return this.text + ''
   }
+  set value(v: string) {
+this.text = v
+//TODO: better guess for cursor pos
+// this.x = 0
+  }
+
   protected keys: TextInputCursorKeys
+
   constructor(protected options: Options) {
+    // debug('constructor', options)
     this.text = options.text || ''
-    this.x = options.pos ? options.pos.row : 0
+    this.enabled = !!options.enabled
+    this.x = options.pos ? options.pos.col : 0
     this.keys = { ...defaultTextInputCursorKeys, ...options.keys || {} }
     this.onKey = this.onKey.bind(this)
     options.addKeyListener(this.onKey)
   }
+
   protected onKey(e: KeyEvent) {
+    // if(!this.enabled){
+    //     this.invalidAction({
+    //       key:e.name, reason: 'TextInputCursor disabled'
+    //     })
+    // }
+    // else 
     if (this.keys.right(e)) {
       this.right()
     }else if (this.keys.controlRight(e)) {
@@ -130,13 +161,42 @@ export class SingleLineTextInputCursor {
       this.backspace()
     } else if (this.keys.delete(e)) {
       this.delete()
-    } else {
-      this.invalidAction({
-        key: e.name, reason: 'key not implemented'
-      })
+    }
+    else  {
+      const c = this.validInputChar(e)
+      // if(c){
+        this.insertString(c||'d')
+      // } else {
+      //   this.invalidAction({
+      //     key: e.name, reason: 'key not implemented'
+      //   })
+      // }
     }
   }
+  protected validInputChar(e: KeyEvent<ProgramElement>) {
+    if(e.ch){
+      return e.ch
+    }
+    //TODO
+    // else {
+    //   if(e.)
+    // }
+  }
+
+  insertString(c: string) {
+    // debug(c, this.text, this.pos)
+    // this.options.cursor.setPosition(this.pos)
+    this.text = this.text.substring(0, this.x)+c+this.text.substring(this.x, this.text.length)
+    this.x++
+    // cursor remains the same.
+  }
+
   right() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'right', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x < this.text.length) {
       this.x++
     } else {
@@ -145,7 +205,13 @@ export class SingleLineTextInputCursor {
       })
     }
   }
+
   left() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'left', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x > 0) {
       this.x--
     } else {
@@ -154,7 +220,13 @@ export class SingleLineTextInputCursor {
       })
     }
   }
+
   up() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'up', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x > 0) {
       this.x = 0
     } else {
@@ -163,7 +235,13 @@ export class SingleLineTextInputCursor {
       })
     }
   }
+
   down() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'down', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x >= this.text.length) {
       this.invalidAction({
         key: 'down', reason: 'cannot go further down when at the end of file'
@@ -172,12 +250,24 @@ export class SingleLineTextInputCursor {
       this.x = this.text.length
     }
   }
+
   enter() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'enter', reason: 'TextInputCursor disabled'
+      })
+    }
     this.invalidAction({
       key: 'enter', reason: 'enter not supposed by single line'
     })
   }
+
   backspace() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'backspace', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x > 0) {
       this.text = this.text.substring(0, this.x - 1) + this.text.substring(this.x, this.text.length)
       this.x--
@@ -187,7 +277,13 @@ export class SingleLineTextInputCursor {
       })
     }
   }
+
   delete() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'delete', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x < this.text.length) {
       this.text = this.text.substring(0, this.x) + this.text.substring(this.x + 1, this.text.length)
     } else {
@@ -198,6 +294,11 @@ export class SingleLineTextInputCursor {
   }
 
   controlRight() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'controlRight', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x < this.text.length) {
       this.x = this.text.split('').findIndex((s,i,a)=> i>this.x&&!s.trim())
       this.x = this.x===-1 ? this.text.length : this.x
@@ -207,16 +308,23 @@ export class SingleLineTextInputCursor {
       })
     }
   }
+
   controlLeft() {
+    if(!this.enabled){
+      return this.invalidAction({
+        key: 'controlLeft', reason: 'TextInputCursor disabled'
+      })
+    }
     if (this.x > 0) {
       this.x = this.text.split('').reverse().findIndex((s,i,a)=> i>a.length-this.x&&!s.trim())
       this.x = this.x===-1 ? 0: this.x
     } else {
       this.invalidAction({
-        key: 'controlRight', reason: 'cannot go further right when at the end of file'
+        key: 'controlLeft', reason: 'cannot go further left when at the beginning of file'
       })
     }
   }
+
   protected invalidAction(a: Action) {
     this.options.onInvalidAction && this.options.onInvalidAction(a)
   }

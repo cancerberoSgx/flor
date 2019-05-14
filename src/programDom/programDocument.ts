@@ -5,6 +5,7 @@ import { FocusManager } from '../manager/focusManager'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
+import { ResolvablePromise, nextTick, Deferred } from '../util/misc';
 
 interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
 
@@ -54,6 +55,12 @@ export class ProgramDocument extends Document {
     return el
   }
 
+  // managersReady = new ResolvablePromise<Managers>(resolve=>{
+  //   setTimeout(() => {
+  //     this.managersReady.resolve = resolve
+  //   }, 100)    
+  // })
+  managersReady=  new Deferred<Managers>()//= new Deferred<Managers>()// new Promise < (...args: any)=>void> (resolve=>resolve(resolve))
   /**
    * @internal
    */
@@ -64,7 +71,29 @@ export class ProgramDocument extends Document {
       height: this.program.rows, bg: 'black', fg: 'white'
     })
     this._emptyListenerQueue()
+    this._setManagersListeners.forEach(l=>l())
+    this._setManagersListeners = []
+    if(!this. managersReady){
+      this.managersReady = new Deferred<Managers>()
+    }
+    this.managersReady.resolve(managers)
+    // nextTick(()=>this.managersReady.resolve(managers))
+    
   }
+
+
+  private _setManagersListeners : (()=>void)[]= []
+// /**
+//  * Register to be notified when the document's managers (like cursor, renderer, focus, etc) are available. Notice that dependending on how the library is used this can happen or not. If using [[FlorDocument]] then this is guaranteed to happen
+//  */
+//   _onManagersReady(l: ()=>void):void{
+//     if(this.managers&&this.managers.renderer){
+//       l()
+//     }
+//     else {
+//       this._setManagersListeners.push(l)
+//     }
+//   }
 
   /**
    * @internal
@@ -95,3 +124,5 @@ export class ProgramDocument extends Document {
     return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create)
   }
 }
+
+type Resolve<T> =  (value?: T)=>PromiseLike<T>

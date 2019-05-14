@@ -47,7 +47,7 @@ export function destroyProgram(program: Program) {
   if (process.platform === 'win32') {
     tryTo(() => require('child_process').execSync('cls', { stdio: 'ignore', timeout: 1000 }))
   }
-  program.destroy()
+//  program.destroy()  - this causes windows terminal to hang 
   program.flush()
 }
 

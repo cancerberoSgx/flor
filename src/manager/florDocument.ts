@@ -44,7 +44,6 @@ export class FlorDocument {
         allMotion: true
       }, true)
       this._program.enableMouse()
-      // this._program.enter
       installExitKeys(this._program)
     }
     this.render = this.render.bind(this)
@@ -55,11 +54,19 @@ export class FlorDocument {
     this._focus = new FocusManager(this._events, this._document)
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._document._setManagers(this)
-    this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this.createTextNode = this.createTextNode.bind(this)
     this.debug = this.debug.bind(this)
+    this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this._cursor.enter()
     this.installLoggers()
+  }
+
+  /**
+   * Destroys the program.
+   */
+  destroy(): any {
+    // this.cursor.leave()
+    this.renderer.destroy()
   }
 
   /**
@@ -206,12 +213,6 @@ export class FlorDocument {
     })
   }
 
-  /**
-   * Destroys the program.
-   */
-  destroy(): any {
-    this.renderer.destroy()
-  }
 
   printBuffer(linesTrimRight= true)  {
     return this.renderer.printBuffer(linesTrimRight)

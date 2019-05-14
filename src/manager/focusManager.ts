@@ -12,7 +12,7 @@ export class FocusManager {
 
   constructor(private events: EventManager, protected document: ProgramDocument) {
     this.onMouseUp = this.onMouseUp.bind(this)
-    this.events.addBeforeAllMouseListener({ name: 'mouseup', listener: this.onMouseUp })
+    this.events.addBeforeAllMouseListener('mouseup',  this.onMouseUp )
   }
 
   private _focused: ProgramElement | undefined

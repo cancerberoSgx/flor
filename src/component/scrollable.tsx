@@ -102,10 +102,20 @@ interface ConcreteScrollableProps {
   horizontalGotoEndKeys?: string[]
   horizontalGotoStartKeys?: string[]
   /**
-   * By default, mouse wheel will scroll vertical (or horizontal if used with control key).
-   * If [[disableMouseWheel]] is false then this behavior will be disabled.
+   * By default, mouse wheel will scroll vertical (or horizontal if used with control key). If
+   * [[disableMouseWheel]] is false then this behavior will be disabled.
    */
   disableMouseWheel?: boolean
+
+  /**
+   * If true, the scrollable won't listen to any mouse or key events. Also it won't be focusable. 
+   *
+   * Instead it needs to be programmatically managed by an external actor. This is useful in cases where its
+   * children are highly interactive and need to receive keyboard events themselves that might collapse with
+   * scrollable keys. Example, a text area with scroll, the textarea itself is responsible of calling
+   * [[scroll]] methods when is needed. 
+   */
+  managed?: boolean
 }
 
 interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
@@ -117,6 +127,15 @@ interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps>
  *  * keyboard and mouse events with configurable keys
  *  * different size scroll actions like normal, large, and going to the end/beginning.
  *  * animations for large scroll
+ *
+ * TODO resolve focus: 
+ *   * how inner elemets get foused ? 
+ *   * how the scrollable gets focus again ?
+ *   * descendants need to receive  key and mouse events
+ *
+ * TODO (partially solves above problems): managed
+ *   * if props.managed===true then the scrollable dont listen to any event and gets managed by another actor
+ *     that 
  */
 export class Scrollable extends Component<ScrollableProps, {}> {
   protected yOffset: number
@@ -156,7 +175,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     verticalGotoEndKeys: [''],
     verticalGotoStartKeys: [''],
     horizontalGotoEndKeys: [''],
-    horizontalGotoStartKeys: ['']
+    horizontalGotoStartKeys: [''],
+    managed: false
   }
 
   protected p: Required<ConcreteScrollableProps>
@@ -231,7 +251,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
           if (this.xi > cxi) {
             this.xi = cxi
           }
-          const cxl = c.absoluteLeft - this.element!.absoluteLeft  - this.element!.props.width + c.props.width + this.p.rightExtraOffset
+          const cxl = c.absoluteLeft - this.element!.absoluteLeft - this.element!.props.width + c.props.width + this.p.rightExtraOffset
           if (this.xl < cxl) {
             this.xl = cxl
           }
@@ -257,13 +277,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * Overridden by animate implementation. Don't call.
    */
   private _stopAnimation: () => void = () => { }
-
-  /**
-   * Bounds of current viewport in absolute coordinates.
-   */
-  getViewportArea() {
-    return rectanglePlusOffsets(this.element!.getBounds(), this.xOffset, this.yOffset)
-  }
 
   protected handleScrollEnd() {
     this.scrolling = false
@@ -384,6 +397,32 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       xi: this.xi,
       xl: this.xl
     }
+  }
+
+  /**
+   * Bounds of current viewport in absolute coordinates.
+   */
+  getViewportArea() {
+    return rectanglePlusOffsets(this.element!.getBounds(), this.xOffset, this.yOffset)
+  }
+
+  /**
+   * Sets the [[xOffset]] and [[yOffset]] offsets of this scrollable programmatically. Offset i measure in
+   * columns and rows and independent on steps. It will respect [[xi]], [[xl]], [[yi]], [[yi]] limits. If
+   * [[x]] or [[y]] are not given it won't scroll on that direction. Use negative values to subtract offset
+   * (scroll left or scroll top.). If the scroll amount is greater than [[largeVerticalScrollStep]] then
+   * animation will be used if any.
+   */
+  scroll(offset: { x?: number, y?: number }) {
+    throw new Error('not implemented')
+  }
+  /**
+   * Similar to [[scroll]] but accepts offset ratios (percentages), that are numbers between 0 and 1. No
+   * negative values accepted. If the scroll amount is greater than [[largeVerticalScrollStep]] then animation
+   * will be used if any.
+   */
+  scrollRatio(offsetRatio: { x?: number, y?: number }) {
+    throw new Error('not implemented')
   }
 
   render() {

@@ -21,6 +21,7 @@ interface Cursor {
   _state?: number
   _hidden?: boolean
 }
+
 interface Options {
   cursor?: Cursor
   program: Program
@@ -106,8 +107,12 @@ export class CursorManager implements CursorHandler {
    */
   show(options: {name: string, top: number, left: number}) {
     this.program.saveCursor(options.name)
-    this.program.cursorPos(options.top, options.left)
-    this.program.showCursor()
+    this.setPosition({row: options.top, col: options.left});
+  }
+
+  setPosition(options: Pos) {
+    this.program.cursorPos(options.row, options.col);
+    this.program.showCursor();
   }
 
   left(n: number) {
@@ -119,10 +124,16 @@ export class CursorManager implements CursorHandler {
   }
 }
 
+export interface Pos {
+  row: number
+  col: number
+}
+
 /**
  * Can move the cursor
  */
 export interface CursorHandler {
+  setPosition(pos: Pos):void
   left(n: number): void
   right(n: number): void
 }

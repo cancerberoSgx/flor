@@ -47,7 +47,7 @@ class FlorJsxImpl implements FlorJsx {
     if (isJSXElementImpl(e) && e._component) {
       e._component.element = el;
       (el as any)._component = e._component
-      e._component.elementCreated()
+      e._component._elementCreated()
     }
     Object.keys(e.props || {}).forEach(attr => {
       const val = (e as any).props[attr]
@@ -56,7 +56,6 @@ class FlorJsxImpl implements FlorJsx {
       }
       (el.props as any)[attr] = val
     })
-    this.installRefs(el, (el as any)._component)
     if (e.children) {
       if (Array.isArray(e.children)) {
         e.children.forEach(c => {
@@ -83,8 +82,10 @@ class FlorJsxImpl implements FlorJsx {
       }
     }
     if (isJSXElementImpl(e) && e._component) {
-      e._component.elementReady()
+      e._component._elementReady()
+      e._component.element && e._component.element._childrenReady()
     }
+    this.installRefs(el, (el as any)._component)
     return el
   }
 

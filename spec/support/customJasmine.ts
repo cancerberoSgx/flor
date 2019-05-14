@@ -8,7 +8,7 @@ import { CustomProcessor } from './errorDiffProcessor'
 const argv = process.argv.slice(2)
 const configFile = argv.shift()
 
-rm('-rf', 'test_output.txt')
+// rm('-rf', 'test_output.txt')
 
 let Jasmine = require('jasmine')
 

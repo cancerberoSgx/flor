@@ -53,16 +53,18 @@ describe('scrollable', () => {
     await waitForPredicate(() => flor.renderer.printBuffer(true).includes('firstChild123'))
     expect(flor.renderer.printBuffer(true)).toContain('0, 0')
     done()
-  })
+  })  
 
   xit('should scroll text ', async done => {
     const value = "hello scrolled world"
-    const a = <Scrollable top={1} left={2} width={25} height={5}
+    const a = (
+    <Scrollable top={1} left={2} width={15} height={5} leftExtraOffset={5}
       border={{ type: BorderStyle.double }}>
      <Input 
-    //  top={0} left={0} 
+     top={0} left={0} border={{ type: BorderStyle.double }}
      height={3} width={value.length + 4} value={value}></Input>
-    </Scrollable>
+     </Scrollable>
+    )
     const el = flor.create(a)
     flor.render()
     // await waitForPredicate(() => flor.renderer.printBuffer(true).includes('hello'))

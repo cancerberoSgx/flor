@@ -121,13 +121,13 @@ describe('jsx', () => {
   it('should call  elementCreated and elementReady', async done => {
     let elementReady = false, elementCreated = false
     class C extends Component<{ name: string, colors: string[] }> {
-      elementReady() {
+      _elementReady() {
         elementReady = true
         Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
           c.props.top = i + 1
         })
       }
-      elementCreated() {
+      _elementCreated() {
         elementCreated = true
       }
       render() {

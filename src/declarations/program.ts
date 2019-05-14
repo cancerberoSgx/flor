@@ -11,7 +11,7 @@ export interface ProgramMouseEvent extends UIEvent {
   y: number
   action: MouseAction
   button: 'left' | 'right' | 'middle' | 'unknown'
-  name: 'mouse'
+  // name: 'mouse'
 }
 
 // export type TMouseAction = 'mousedown' | 'mouseup' | 'mousemove' | 'wheelup' | 'wheeldown'

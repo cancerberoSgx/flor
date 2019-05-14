@@ -3,16 +3,16 @@ import { mouseActionNames } from '../declarations/program'
 import { Element } from '../dom'
 import { EventListener } from '../dom/event'
 import { Component } from '../jsx'
-import { KeyEvent } from '../manager'
+import { KeyEvent, KeyListener, MouseListener } from '../manager'
 import { layoutChildren } from '../util'
 import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
 import { isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
+import { Deferred } from '../util/misc';
 
 export class ProgramElement extends Element {
-
   private static counter = 1
 
   props: ElementPropsImpl
@@ -76,7 +76,6 @@ export class ProgramElement extends Element {
   _afterRender(): any {
     this.props.afterRender && this.props.afterRender()
   }
-
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
@@ -329,6 +328,12 @@ export class ProgramElement extends Element {
         .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 
+  addKeyListener(l: KeyListener, name='keypress') {
+    this.ownerDocument.managersReady.then(({events})=>events.addKeyListener(l, this, name))
+  }
+  addMouseListener(l: MouseListener, name='click') {
+    this.ownerDocument.managersReady.then(({events})=>events.addMouseListener(l, this, name))
+  }
   /**
    * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus.
    */
