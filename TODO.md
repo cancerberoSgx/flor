@@ -1,4 +1,8 @@
 
+## ISSUES
+
+ * setting border: {fg: 'red'} sets the text fg
+
 ## TODO
 
  * renderer: erase text nodes outside parent viewport not possible unless the whole body is erased.

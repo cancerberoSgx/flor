@@ -241,9 +241,6 @@ export class ProgramDocumentRenderer {
     }
     if (x < xi) {
       s = s.substring(Math.min(s.length, xi - x), s.length)
-      // s = s.substring(Math.min(s.length, Math.abs(s.length - (xi - x) - 1)), s.length)
-
-      // s = s+repeat(Math.min(xi-x, xl-xi-s.length), s[0])
       x = xi
     }
     this._program.cursorPos(y, x)
@@ -255,7 +252,7 @@ export class ProgramDocumentRenderer {
         }
       }
     }
-  }
+  } 
 
   /**
    * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
@@ -437,7 +434,7 @@ export class ProgramDocumentRenderer {
     if (el.props.renderBorder) {
       el.props.renderBorder(this)
     } else {
-      this.drawElementBorder(el, attrs)
+      this.renderElementBorder(el, attrs)
     }
   }
 
@@ -462,7 +459,7 @@ export class ProgramDocumentRenderer {
   /**
    * Draw given element's border.
    */
-  protected drawElementBorder(el: ProgramElement, elProps: Partial<ElementProps> = el.props.data) {
+  renderElementBorder(el: ProgramElement, elProps: Partial<ElementProps> = el.props.data) {
     const border = elProps.border
     if (!border) {
       return

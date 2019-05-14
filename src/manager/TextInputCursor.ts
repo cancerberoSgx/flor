@@ -1,4 +1,4 @@
-import { KeyEvent, KeyListener, KeyPredicate } from './'
+import { KeyEvent, KeyListener, KeyPredicate } from '.'
 import { CursorHandler, Pos } from './cursorManager'
 import { getPreviousMatchingPos } from 'misc-utils-of-mine-generic'
 import { ProgramElement } from '../programDom';
@@ -18,6 +18,7 @@ interface TextInputCursorKeys {
   controlDown: KeyPredicate
   controlBackspace: KeyPredicate
   controlDelete: KeyPredicate
+  shiftRight: KeyPredicate
 }
 
 interface Options {
@@ -41,9 +42,9 @@ interface Options {
   keys?: Partial<TextInputCursorKeys>
 
   /**
-   * Is user responsibility to provide a key emitter that we can subscribe .
+   * Is user responsibility to provide a key emitter that we can subscribe . If not provided here, then method [[onKey]] must be called insteadl.
    */
-  addKeyListener(l: KeyListener): void
+  addKeyListener?(l: KeyListener): void
 
   // cursor: CursorHandler
 
@@ -89,6 +90,7 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
   controlDown: e => e.name === 'down' && e.ctrl && !e.shift && !e.meta,
   controlBackspace: e => e.name === 'backspace' && e.ctrl && !e.shift && !e.meta,
   controlDelete: e => e.name === 'delete' && e.ctrl && !e.shift && !e.meta,
+  shiftRight: e => e.name === 'right' && !e.ctrl && e.shift && !e.meta,
 }
 
 /**
@@ -104,34 +106,42 @@ export class SingleLineTextInputCursor {
     this._enabled = value;
   }
 
-  protected text: string
+  protected lineText: string
   protected x: number
 
   get pos() {
-    return { col: this.x, row: this.options.pos ? this.options.pos.row : 0 }
+    return { col: this.x, row: this.row }
   }
   set pos(p: Pos) {
     this.x = p.col//Math.max(this.text.length, p.col)
   }
+
+  protected get row(): number {
+    return this.options.pos ? this.options.pos.row : 0;
+  }
+
   get value() {
-    return this.text + ''
+    return this.lineText + ''
   }
   set value(v: string) {
-    this.text = v
+    this.lineText = v
   }
 
   protected keys: TextInputCursorKeys
 
   constructor(protected options: Options) {
-    this.text = options.text || ''
+    this.lineText = options.text || ''
     this.enabled = !!options.enabled
     this.x = options.pos ? options.pos.col : 0
     this.keys = { ...defaultTextInputCursorKeys, ...options.keys || {} }
     this.onKey = this.onKey.bind(this)
-    options.addKeyListener(this.onKey)
+    options.addKeyListener && options.addKeyListener(this.onKey)
   }
 
-  protected onKey(e: KeyEvent) {
+  /**
+   * Notification of a key press event. We update out internal state [[pos]] and [[text]] user is responsible of the rest (update the UI, render(), absolute position, etc)
+   */
+  onKey(e: KeyEvent) {
     if(!this.enabled){
         this.invalidAction({
           key:e.name, reason: 'TextInputCursor disabled'
@@ -177,7 +187,7 @@ export class SingleLineTextInputCursor {
   }
 
   insertString(c: string) {
-    this.text = this.text.substring(0, this.x) + c + this.text.substring(this.x, this.text.length)
+    this.lineText = this.lineText.substring(0, this.x) + c + this.lineText.substring(this.x, this.lineText.length)
     this.x++
   }
 
@@ -187,7 +197,7 @@ export class SingleLineTextInputCursor {
         key: 'right', reason: 'TextInputCursor disabled'
       })
     }
-    if (this.x < this.text.length) {
+    if (this.x < this.lineText.length) {
       this.x++
     } else {
       this.invalidAction({
@@ -232,12 +242,12 @@ export class SingleLineTextInputCursor {
         key: 'down', reason: 'TextInputCursor disabled'
       })
     }
-    if (this.x >= this.text.length) {
+    if (this.x >= this.lineText.length) {
       this.invalidAction({
         key: 'down', reason: 'cannot go further down when at the end of file'
       })
     } else {
-      this.x = this.text.length
+      this.x = this.lineText.length
     }
   }
 
@@ -259,7 +269,7 @@ export class SingleLineTextInputCursor {
       })
     }
     if (this.x > 0) {
-      this.text = this.text.substring(0, this.x - 1) + this.text.substring(this.x, this.text.length)
+      this.lineText = this.lineText.substring(0, this.x - 1) + this.lineText.substring(this.x, this.lineText.length)
       this.x--
     } else {
       this.invalidAction({
@@ -274,8 +284,8 @@ export class SingleLineTextInputCursor {
         key: 'delete', reason: 'TextInputCursor disabled'
       })
     }
-    if (this.x < this.text.length) {
-      this.text = this.text.substring(0, this.x) + this.text.substring(this.x + 1, this.text.length)
+    if (this.x < this.lineText.length) {
+      this.lineText = this.lineText.substring(0, this.x) + this.lineText.substring(this.x + 1, this.lineText.length)
     } else {
       this.invalidAction({
         key: 'delete', reason: 'cannot remove next character when at the end of the file.'
@@ -289,9 +299,9 @@ export class SingleLineTextInputCursor {
         key: 'controlRight', reason: 'TextInputCursor disabled'
       })
     }
-    if (this.x < this.text.length) {
-      this.x = this.text.split('').findIndex((s, i, a) => i > this.x && !s.trim())
-      this.x = this.x === -1 ? this.text.length : this.x
+    if (this.x < this.lineText.length) {
+      this.x = this.lineText.split('').findIndex((s, i, a) => i > this.x && !s.trim())
+      this.x = this.x === -1 ? this.lineText.length : this.x
     } else {
       this.invalidAction({
         key: 'controlRight', reason: 'cannot go further right when at the end of file'
@@ -306,7 +316,7 @@ export class SingleLineTextInputCursor {
       })
     }
     if (this.x > 0) {
-      this.x = this.text.split('').reverse().findIndex((s, i, a) => i > a.length - this.x && !s.trim())
+      this.x = this.lineText.split('').reverse().findIndex((s, i, a) => i > a.length - this.x && !s.trim())
       this.x = this.x === -1 ? 0 : this.x
     } else {
       this.invalidAction({
@@ -315,13 +325,15 @@ export class SingleLineTextInputCursor {
     }
   }
 
+  
+  
   protected invalidAction(a: Action) {
     this.options.onInvalidAction && this.options.onInvalidAction(a)
   }
 }
 
 /**
- * Synchronizes text being edited with cursor movement.
+ * Synchronizes text being edited with cursor movement. Based on [[SingleLineTextInputCursor]]
  *
  * It only moves the cursor but doesn't remove characters from the screen. Instead updates the internal text
  * and the cursor position.
@@ -335,8 +347,66 @@ export class SingleLineTextInputCursor {
  *    line up and append it to the previous one. The cursor will be in the middle of two.
  *
  */
-class CursorTextInputCursor extends SingleLineTextInputCursor {
+export class TextInputCursorMulti extends SingleLineTextInputCursor {
+  _lines: string[];
   constructor(options: Options) {
     super(options)
+    this._lines = this.lineText.split('\n')
+    this.y = options.pos && options.pos.row||0
+  }
+  set value(v: string){
+    this._lines = v.split('\n')
+    const row = Math.max(this._lines.length-1, )
+    const col = Math.max(this.x)
+  }
+  protected y: number
+ 
+  get pos() {
+    return { col: this.x, row: this.y }
+  }
+  set pos(p: Pos) {
+    this.x = p.col//Math.max(this.text.length, p.col)
+    this.y = p.row
+    this.lineText = this._lines[this.y]
+  }
+  get value() {
+    return this.lines.join('\n')
+  }
+  get lines(){
+    return [... this._lines.slice(0, this.y-1),  this.lineText, ...this._lines.slice(this.y, this._lines.length)]
+  }
+
+  onKey(e: KeyEvent) {
+    if(!this.enabled){
+        this.invalidAction({
+          key:e.name, reason: 'TextInputCursor disabled'
+        })
+    }
+    else if(this.keys.up(e)) {
+      if(this.pos.row===0){
+        super.up()
+      }
+      else {
+        this.pos = {row: this.pos.row - 1, col: Math.max(this.pos.col, this.lines[this.pos.row-1].length)}
+      }
+    }
+    else if(this.keys.down(e)) {
+      if(this.pos.row===this.lines.length){
+        super.down()
+      }
+      else {
+        this.pos = {row: this.pos.row + 1, col: Math.max(this.pos.col, this.lines[this.pos.row+1].length)}
+        this.x= this.pos.col
+        this.lineText = this.lines[this.x]
+      }
+    }
+    else {
+      super.onKey(e)
+    }
   }
 }
+
+// export function createCursorTextEditorManager(  p: Options) {
+//  const  editor = new SingleLineTextInputCursor(p);
+//   return {   editor}
+// }

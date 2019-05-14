@@ -16,11 +16,13 @@ export function isElementProps(e: any): e is ElementProps {
 }
 
 export function isVisible(e: ProgramElement): boolean {
-  throw new Error('not implemented')
+  return true; //TODO
+  // throw new Error('not implemented')
 }
 
 export function isAttached(e: ProgramElement): boolean {
-  throw new Error('not implemented')
+  return true//TODO
+  // throw new Error('not implemented')
 }
 
 export interface Rectangle {

@@ -1,5 +1,5 @@
 import { BorderStyle, Flor, FlorDocument, ProgramElement, KeyEvent, KeyListener } from '../src'
-import { SingleLineTextInputCursor } from '../src/manager/TextInputCursor'
+import { SingleLineTextInputCursor } from '../src/manager/textInputCursor'
 import { defaultTestSetup } from './testUtil';
 import { EventListener } from '../src/dom/event';
 

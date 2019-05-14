@@ -2,7 +2,7 @@ import { keys } from '../declarations/keys'
 import { Component, Flor } from '../jsx'
 import { KeyEvent, KeyPredicate, KeyListener } from '../manager'
 import { ElementProps, ProgramDocument, ProgramElement } from '../programDom'
-import { SingleLineTextInputCursor } from '../manager/TextInputCursor';
+import { SingleLineTextInputCursor } from '../manager/textInputCursor';
 import { debug } from '../util';
 import { cursor } from 'ansi-escape-sequences';
 

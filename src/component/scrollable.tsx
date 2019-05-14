@@ -21,11 +21,8 @@ interface ScrollEvent {
   yOffset: number
 }
 
-interface ConcreteScrollableProps {
-  /**
-   * Listener notified when a scroll event happens.
-   */
-  onScroll?: (e: ScrollEvent) => void
+export interface ScrollHandlerProps {
+
   /**
    * Number of rows to advance / retrocede on a normal vertical  scroll.
    */
@@ -34,36 +31,6 @@ interface ConcreteScrollableProps {
    * Number of cols to advance / retrocede on a normal horizontal scroll.
    */
   normalHorizontalStep?: number
-  /**
-   * Extra rows as scrolled area top padding. By default 5.
-   */
-  topExtraOffset?: number
-  /**
-   * Extra cols as scrolled area left padding. By default 5.
-   */
-  leftExtraOffset?: number
-  /**
-   * Extra rows as scrolled area bottom padding. By default 5.
-   */
-  bottomExtraOffset?: number
-  /**
-   * Extra cols as scrolled area right padding. By default 5.
-   */
-  rightExtraOffset?: number
-  /**
-   * If given, vertical scroll will be throttled by [[throttleVertical]] milliseconds. Use it only if really
-   * necessary since it adds flickering.
-   */
-  throttleVertical?: number
-  /**
-   * Vertical easing animation to perform on fast scrolls or when scrolling to the end or start. By default
-   * `bounceEasyOut`. Example: `largeScrollAnimation: easing.bounceEasyOut()`.
-   */
-  largeScrollAnimation?: Animation
-  /**
-   * Duration in milliseconds, for [[verticalAnimation]].
-   */
-  verticalAnimationDuration?: number
   /**
   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
   */
@@ -93,6 +60,50 @@ interface ConcreteScrollableProps {
    * Amount of rows to advance or retrocede on large scrolls. Default: 40.
    */
   largeVerticalScrollStep?: number
+
+  /**
+   * By default, mouse wheel will scroll vertical (or horizontal if used with control key). If
+   * [[disableMouseWheel]] is false then this behavior will be disabled.
+   */
+  disableMouseWheel?: boolean
+}
+interface ConcreteScrollableProps extends ScrollHandlerProps{
+  /**
+   * Listener notified when a scroll event happens.
+   */
+  onScroll?: (e: ScrollEvent) => void
+
+  /**
+   * If given, vertical scroll will be throttled by [[throttleVertical]] milliseconds. Use it only if really
+   * necessary since it adds flickering.
+   */
+  throttleVertical?: number
+  /**
+   * Vertical easing animation to perform on fast scrolls or when scrolling to the end or start. By default
+   * `bounceEasyOut`. Example: `largeScrollAnimation: easing.bounceEasyOut()`.
+   */
+  largeScrollAnimation?: Animation
+  /**
+   * Duration in milliseconds, for [[verticalAnimation]].
+   */
+  verticalAnimationDuration?: number
+
+  /**
+   * Extra rows as scrolled area top padding. By default 5.
+   */
+  topExtraOffset?: number
+  /**
+   * Extra cols as scrolled area left padding. By default 5.
+   */
+  leftExtraOffset?: number
+  /**
+   * Extra rows as scrolled area bottom padding. By default 5.
+   */
+  bottomExtraOffset?: number
+  /**
+   * Extra cols as scrolled area right padding. By default 5.
+   */
+  rightExtraOffset?: number
   /**
    * What to do when user activates while the widget is still in an animation. By default `true`.
    */
@@ -101,11 +112,6 @@ interface ConcreteScrollableProps {
   verticalGotoStartKeys?: string[]
   horizontalGotoEndKeys?: string[]
   horizontalGotoStartKeys?: string[]
-  /**
-   * By default, mouse wheel will scroll vertical (or horizontal if used with control key). If
-   * [[disableMouseWheel]] is false then this behavior will be disabled.
-   */
-  disableMouseWheel?: boolean
 
   /**
    * If true, the scrollable won't listen to any mouse or key events. Also it won't be focusable. 
@@ -118,9 +124,40 @@ interface ConcreteScrollableProps {
   managed?: boolean
 }
 
-interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
+export interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
 
 }
+
+export const defaultScrollHandleProps : ()=>Required<ScrollHandlerProps> =()=> ({
+  largeVerticalScrollStep: 40,
+  largeScrollUpKeys: [e => e.ctrl && e.name === 'w'],
+  largeScrollDownKeys: [e => e.ctrl && e.name === 's'],
+  normalScrollUpKeys: [e => !e.ctrl && e.name === 'up' || !e.ctrl && e.name === 'w'],
+  normalScrollDownKeys: [e => !e.ctrl && e.name === 'down' || !e.ctrl && e.name === 's'],
+  normalScrollLeftKeys: [e => !e.ctrl && e.name === 'left' || !e.ctrl && e.name === 'a'],
+  normalScrollRightKeys: [e => !e.ctrl && e.name === 'right' || !e.ctrl && e.name === 'd'],
+  normalVerticalStep: 2,
+  normalHorizontalStep: 1,
+  disableMouseWheel: false,
+})
+
+export const defaultScrollableProps : ()=> Required<ConcreteScrollableProps> = ()=> ({
+...defaultScrollHandleProps(),
+  interruptAnimation: true,
+  leftExtraOffset: 0,
+  rightExtraOffset: 0,
+  topExtraOffset: 0,
+  bottomExtraOffset: 0,
+  throttleVertical: 0,
+  largeScrollAnimation: easing.bounceEasyOut(),
+  verticalAnimationDuration: 1000,
+  onScroll(e) { },
+  verticalGotoEndKeys: [''],
+  verticalGotoStartKeys: [''],
+  horizontalGotoEndKeys: [''],
+  horizontalGotoStartKeys: [''],
+  managed: false
+})
 
 /**
  * Scrollable box to  add vertical and/or horizontal scroll support for its children. Supports:
@@ -152,42 +189,15 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected vChildren: Node[] = []
   protected scrolling: boolean = false
 
-  protected defaultProps: Required<ConcreteScrollableProps> = {
-    largeVerticalScrollStep: 40,
-    largeScrollUpKeys: [e => e.ctrl && e.name === 'w'],
-    largeScrollDownKeys: [e => e.ctrl && e.name === 's'],
-    interruptAnimation: true,
-    disableMouseWheel: false,
-    leftExtraOffset: 0,
-    rightExtraOffset: 0,
-    topExtraOffset: 0,
-    bottomExtraOffset: 0,
-    normalScrollUpKeys: [e => !e.ctrl && e.name === 'up' || !e.ctrl && e.name === 'w'],
-    normalScrollDownKeys: [e => !e.ctrl && e.name === 'down' || !e.ctrl && e.name === 's'],
-    normalScrollLeftKeys: [e => !e.ctrl && e.name === 'left' || !e.ctrl && e.name === 'a'],
-    normalScrollRightKeys: [e => !e.ctrl && e.name === 'right' || !e.ctrl && e.name === 'd'],
-    normalVerticalStep: 2,
-    normalHorizontalStep: 1,
-    throttleVertical: 0,
-    largeScrollAnimation: easing.bounceEasyOut(),
-    verticalAnimationDuration: 1000,
-    onScroll(e) { },
-    verticalGotoEndKeys: [''],
-    verticalGotoStartKeys: [''],
-    horizontalGotoEndKeys: [''],
-    horizontalGotoStartKeys: [''],
-    managed: false
-  }
-
   protected p: Required<ConcreteScrollableProps>
 
   constructor(p: ScrollableProps, s: {}) {
     super(p, s)
+    this.p = { ...defaultScrollableProps(), ...p }
     this.onKeyPressed = this.onKeyPressed.bind(this)
     this.onWheelDown = this.onWheelDown.bind(this)
     this.onWheelUp = this.onWheelUp.bind(this)
     this.renderChildren = this.renderChildren.bind(this)
-    this.p = { ...this.defaultProps, ...p }
     this.yOffset = 0 - this.p.topExtraOffset
     this._renderChildren = this._renderChildren.bind(this)
     this.xOffset = 0 - this.p.leftExtraOffset

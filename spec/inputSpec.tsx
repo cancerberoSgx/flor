@@ -3,10 +3,7 @@ import { defaultTestSetup } from './testUtil'
 import { waitForPredicate } from 'misc-utils-of-mine-generic';
 
 describe('input', () => {
-
-
   function test(f: (flor: FlorDocument)=> ProgramElement) {
-
     let flor: FlorDocument = null as any
     let el: ProgramElement
     beforeAll(() => {
@@ -76,12 +73,3 @@ describe('input', () => {
     })))
   })
 })
-
-  // xit('test', async done => {
-  //   const p = <Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />
-  //   const el = flor.create(p)
-  //   flor.debug('test')
-  //   flor.render()
-  //   // test(el, flor)
-  //   // done()
-  // })

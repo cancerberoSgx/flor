@@ -3,10 +3,10 @@ import { Node } from '../dom'
 import { ProgramElement } from '../programDom'
 import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
+import { debug } from '../util';
 
 interface RenderOptions {
   document?: ProgramDocument
-  wrapTextInElement?: boolean | string
   /**
    * parent element to attach the rendered elements. if not provided document.body
    */
@@ -62,13 +62,9 @@ class FlorJsxImpl implements FlorJsx {
           if (isJSXElementImpl(c)) {
             let r: Node
             if (c.type === '__text') {
-              const text  = document.createTextNode((c.props as any).textContent + '')
-              if (wrapInElement) {
-                r = document.createElement(wrapInElement)
-                r.appendChild(text)
-              } else {
-                r = text
-              }
+              
+              r = document.createTextNode((c.props as any).textContent + '')
+            
             } else {
               r = this._render({ e: c, document, wrapInElement })
             }
@@ -137,7 +133,6 @@ class FlorJsxImpl implements FlorJsx {
   }
 
   protected installRefs(el: JSX.FlorJsxNode, component?: Component): any {
-    // debug('installRefs', component && (component as any).props && (component as any).props.ref, (el! as any) && (el! as any).props && (el! as any).props.ref)
     if (component && (component as any).props && (component as any).props.ref) {
       (component as any).props.ref.current = component
       ;(component as any).props.ref.callback && (component as any).props.ref.callback(component)
@@ -151,9 +146,8 @@ class FlorJsxImpl implements FlorJsx {
     if (!this.doc && !options.document) {
       throw new Error('Need to provide a document with setDocument() before render')
     }
-    const wrapInElement = options.wrapTextInElement ? typeof options.wrapTextInElement === 'boolean' ? 'text' : options.wrapTextInElement : undefined
     const document = options.document || this.doc!
-    const el =  this._render({ e, document, wrapInElement })
+    const el =  this._render({ e, document })
     ;(options.parent || document.body).appendChild(el)
     return el
   }
