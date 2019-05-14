@@ -55,12 +55,7 @@ export class ProgramDocument extends Document {
     return el
   }
 
-  // managersReady = new ResolvablePromise<Managers>(resolve=>{
-  //   setTimeout(() => {
-  //     this.managersReady.resolve = resolve
-  //   }, 100)    
-  // })
-  managersReady=  new Deferred<Managers>()//= new Deferred<Managers>()// new Promise < (...args: any)=>void> (resolve=>resolve(resolve))
+  managersReady=  new Deferred<Managers>()
   /**
    * @internal
    */
@@ -77,23 +72,10 @@ export class ProgramDocument extends Document {
       this.managersReady = new Deferred<Managers>()
     }
     this.managersReady.resolve(managers)
-    // nextTick(()=>this.managersReady.resolve(managers))
-    
   }
 
 
   private _setManagersListeners : (()=>void)[]= []
-// /**
-//  * Register to be notified when the document's managers (like cursor, renderer, focus, etc) are available. Notice that dependending on how the library is used this can happen or not. If using [[FlorDocument]] then this is guaranteed to happen
-//  */
-//   _onManagersReady(l: ()=>void):void{
-//     if(this.managers&&this.managers.renderer){
-//       l()
-//     }
-//     else {
-//       this._setManagersListeners.push(l)
-//     }
-//   }
 
   /**
    * @internal

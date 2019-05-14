@@ -65,7 +65,7 @@ export class FlorDocument {
    * Destroys the program.
    */
   destroy(): any {
-    // this.cursor.leave()
+    this.cursor.leave()
     this.renderer.destroy()
   }
 
@@ -189,8 +189,6 @@ export class FlorDocument {
       args.push(el)
     }
     args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 44, breakLength: 120 }))
-    // .map(s => `   ||||   ${s}`)
-    // .map(this.createTextNode)
     .forEach(c => {
       this._debugEl!.appendChild(this.create({  children: [c] }))
     })
@@ -198,7 +196,6 @@ export class FlorDocument {
     this.render(this._debugEl)
     if (props.hideTimeout) {
       setTimeout(() => {
-          // this._debugEl!.empty()
         this._debugEl!.update(true)
         this.render(this._debugEl)
       }, props.hideTimeout)

@@ -6,7 +6,6 @@ declare global {
   export namespace JSX {
     export interface IntrinsicElements {
       box: OptionsProps<ElementProps>
-      // text: OptionsProps<ElementProps>
     }
 
     /**

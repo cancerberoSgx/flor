@@ -37,18 +37,3 @@ export function rectangleIntersects(a: R, b: R) {
 export function rectanglePlusOffsets(r: R,xOffset= 0, yOffset= 0) {
   return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
 }
-  // // function intersectRect(r1, r2) {
-  //   return !(r2.xi > r1.xl ||
-  //            r2.xl < r1.xi ||
-  //            r2.yi > r1.yl ||
-  //            r2.yl < r1.yi)
-  // }
-  // function intersectRect(r1, r2) {
-  //   return !(r2.left > r1.right ||
-  //            r2.right < r1.left ||
-  //            r2.top > r1.bottom ||
-  //            r2.bottom < r1.top);
-  // }
-// isContained(c: ProgramElement, e: ProgramElement, ratio: number) {
-//   return this.yOffset + e.absoluteTop - ratio <= c.absoluteTop && c.absoluteTop + c.props.height - ratio <= this.yOffset + e.absoluteTop + e.props.height
-// }

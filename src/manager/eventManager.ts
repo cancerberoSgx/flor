@@ -68,15 +68,7 @@ export class EventManager {
     })
   }
 
-  // private beforeAllKeyListeners: RegisteredGlobalEventListener[] = []
-
   private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'>)[] = []
-
-  // addBeforeAllKeyListener(l: KeyListener, name='keypress') {
-  //   if (!this.beforeAllKeyListeners.find(k => k.listener === l&&k.name===name)) {
-  //     this.keyListeners.push({ name , listener: l  })
-  //   }
-  // }
 
   /**
    * Adds a key event listener [[l]]. if [[el]] is passed it will be notified only when given element emits key events, otherwise on any key event.
@@ -96,7 +88,6 @@ export class EventManager {
    * Adds a mouse event listener that is notified before "common" mouse event listeners added with . Unlike addMouseListener, the listener accepts
    */
   addBeforeAllMouseListener(name: string, listener: (e: MouseEvent & StopPropagation) => boolean | void) {
- 
     // if (!this.beforeAllMouseListeners.find(ll => l !== ll)) {
       this.beforeAllMouseListeners.push({name: this.toProgramEventName(name).name, listener})//.name === 'click' ? { ...l, name: 'mouseout' } : l)
     // }

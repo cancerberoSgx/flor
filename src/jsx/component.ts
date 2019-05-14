@@ -34,16 +34,7 @@ export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
    * @internal
    */
   _elementReady() {   
-    // this.element!.ownerDocument._onManagersReady(()=>this._managersReady())
   }
-  // /**
-  //  * Called when managers (like renderer, focus, events, etc) are ready in element's ownerDocument.
-  //  *
-  //  * @internal
-  //  */
-  //  _managersReady(){
-  
-  // }
 
   element: ProgramElement | undefined
 

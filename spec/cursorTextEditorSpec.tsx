@@ -7,7 +7,6 @@ describe('cursorTextEditor', () => {
 
   describe('single line', () => {
 
-
       let editor: SingleLineTextInputCursor
       let el: ProgramElement
       let flor: FlorDocument
@@ -16,7 +15,6 @@ describe('cursorTextEditor', () => {
       ({ el, editor } = build())
       return flor
     })
-
 
     it('should render value and cursor pos initially', async done => {
       expect(flor.printBuffer()).toContain('hello world')
@@ -113,33 +111,25 @@ describe('cursorTextEditor', () => {
     function build() {
       const initialValue = 'hello world'
       el = flor.create(<box top={10} left={8} width={33} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e=>{
-        // flor.debug(e);
        keyListener(e)
         el.childNodes.item(0)!.textContent = editor.value;
         el.render();
         flor.program.cursorPos(11 + editor.pos.row, 9 + editor.pos.col);       
       }}
       >{initialValue}</box>)
-      // flor.debug('teCst')
       flor.render()
       flor.cursor.show({
         name: 'cursorTextEditorTest1', top: 11, left: 9
       })
       
       let keyListener: KeyListener = e=>{} // overrided by trextinputcursorr dont call!!
-      // const addKeyListener: (l:KeyListener)=>void = l=> {
-        //   keyListener = l
-        // }
         editor = new SingleLineTextInputCursor({
           singleLine: true,
           text: initialValue, 
           pos: { col: 0, row: 0 }, 
-          origin: { row: 11, col: 9 }, 
-          // cursor: flor.cursor, 
           addKeyListener: l=>keyListener = l,
           enabled: true
         })        
-        // el.addKeyListener()
         return { el, editor }
       }      
       

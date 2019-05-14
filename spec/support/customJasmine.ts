@@ -37,7 +37,7 @@ j.configureDefaultReporter({
 })
 
 j.onComplete(function(passed: boolean) {
-  console.log('RESULT FILE WAS WRITTEN TO test_output.txt')
+  console.log('RESULT FILE WAS WRITTEN TO test_output.txt', arguments)
   if (passed) {
     console.log('All specs have passed')
     process.exit(0)
