@@ -1,15 +1,15 @@
 import { indent } from 'misc-utils-of-mine-generic'
-import { mouseActionNames, ProgramKeyEvent } from '../declarations/program'
+import { mouseActionNames } from '../declarations/program'
 import { Element } from '../dom'
 import { EventListener } from '../dom/event'
 import { Component } from '../jsx'
+import { KeyEvent } from '../manager'
 import { layoutChildren } from '../util'
 import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
 import { isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
-import { KeyEvent } from '../manager';
 
 export class ProgramElement extends Element {
 
@@ -307,7 +307,7 @@ export class ProgramElement extends Element {
   /**
    * If the owner document has a renderer available it request to render this element on the screen.
    */
-  render(){
+  render() {
     this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this)
   }
   /**
@@ -329,8 +329,8 @@ export class ProgramElement extends Element {
         .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
   }
 
-  /** 
-   * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus. 
+  /**
+   * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus.
    */
   blur(focused?: ProgramElement) {
     this.ownerDocument.focus && this.ownerDocument.focus.blur(this, focused)
@@ -338,20 +338,20 @@ export class ProgramElement extends Element {
   /**
    * Triggers a click event on this element.
    */
-  click(){
+  click() {
     this.ownerDocument.events && this.ownerDocument.events.click(this)
   }
   /**
    * Triggers a key event on this element.
    */
-  key( e: string|Partial<KeyEvent>){
-    this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e==='string' ? e : undefined, typeof e === 'string' ? {name: e}: e)
+  key(e: string | Partial<KeyEvent>) {
+    this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e === 'string' ? e : undefined, typeof e === 'string' ? { name: e } : e)
   }
   /**
    * Focus this element.
    */
-  focus(){
-    if(this.ownerDocument.focus ){
+  focus() {
+    if (this.ownerDocument.focus) {
       this.ownerDocument.focus.focused = this
     }
   }

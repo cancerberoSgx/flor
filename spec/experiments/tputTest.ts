@@ -1,4 +1,3 @@
-import { array } from 'misc-utils-of-mine-generic'
 import { TPut } from '../../src'
 
 const tput = new TPut({
@@ -28,7 +27,6 @@ Back to normal`)
 // console.log(`adasd asdsad lfjksd lkfjlsdkj flskdj flskdj f asd asd as`)
 // console.log(`adasd asd asd asd as`)
 // console.log(`adasd asd asd asd as`)
-
 
 // // var ESC='\x1b'
 // console.log(`${ESC}[4;15s`)

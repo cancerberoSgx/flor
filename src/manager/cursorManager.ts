@@ -30,7 +30,6 @@ interface Options {
  * Manages the cursor. Adapted from blessed screen.
  */
 export class CursorManager implements CursorHandler {
-  
 
   cursor: Cursor
   program: Program
@@ -53,7 +52,7 @@ export class CursorManager implements CursorHandler {
     this.cursor.blink = blink || false
     this.cursor._set = true
 
-    this.program.cursorShape(this.cursor.shape, this.cursor.blink);
+    this.program.cursorShape(this.cursor.shape, this.cursor.blink)
   }
 
   cursorColor(color: Color) {
@@ -98,17 +97,17 @@ export class CursorManager implements CursorHandler {
    * API for component implementations to hide the cursor, restoring it to its previews state before [[show]] was called.
    */
   hide(options: {name: string}) {
-    this.program.hideCursor();
-    this.program.restoreCursor(options.name);
+    this.program.hideCursor()
+    this.program.restoreCursor(options.name)
   }
 
   /**
-   * API for component implementations to show the cursor on given coordinates, saving its current state under given name. 
+   * API for component implementations to show the cursor on given coordinates, saving its current state under given name.
    */
   show(options: {name: string, top: number, left: number}) {
-    this.program!.saveCursor(options.name)
-    this.program!.cursorPos(options.top, options.left)
-    this.program!.showCursor()
+    this.program.saveCursor(options.name)
+    this.program.cursorPos(options.top, options.left)
+    this.program.showCursor()
   }
 
   left(n: number) {
@@ -124,6 +123,6 @@ export class CursorManager implements CursorHandler {
  * Can move the cursor
  */
 export interface CursorHandler {
-  left(n: number) : void
-  right(n: number) : void
+  left(n: number): void
+  right(n: number): void
 }

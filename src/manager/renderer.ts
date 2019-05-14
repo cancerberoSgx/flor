@@ -94,7 +94,7 @@ interface BufferData {
  *  *  implements the attrs cascading policy
  *  * maintains an internal buffer with each screen pixel character attribute so it's capable of reconstitute
  *    the screen at any moment ([[printElement]])
- * 
+ *
  TODO: should we check if is neccesary to deactivate all modes bofore moving the cursor ? ms	Flag whose presence means that it is safe to move the cursor while the appearance modes are not in the normal state. If this flag is absent, programs should always reset the appearance modes to normal before moving the cursor.
  */
 export class ProgramDocumentRenderer {

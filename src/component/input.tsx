@@ -1,7 +1,7 @@
+import { keys } from '../declarations/keys'
 import { Component, Flor } from '../jsx'
+import { KeyEvent, KeyPredicate } from '../manager'
 import { ElementProps, ProgramDocument, ProgramElement } from '../programDom'
-import { KeyEvent, KeyPredicate } from '../manager';
-import { keys } from '../declarations/keys';
 
 interface InputProps extends Partial<ElementProps>, ConcreteInputProps {
 
@@ -46,8 +46,8 @@ interface ConcreteInputProps {
 /**
  * A single line input text box. Will show the cursor and let the user input text when focused. When user
  * writes or deletes text it will emit [[onInput]] and when the user explicitly changes the value (like when
- * pressing enter) it will call [[onChange]]. 
- * 
+ * pressing enter) it will call [[onChange]].
+ *
  * TODO: I should be able to create a form that auto-focus my element so is ready to input.
  */
 export class Input extends Component<InputProps, {}> {
@@ -60,7 +60,7 @@ export class Input extends Component<InputProps, {}> {
     blurOnChange: true,
     value: '',
     enableInputKeys: e => !e.ctrl && e.name === 'enter',
-    disableInputKeys: e => !e.ctrl && e.name === 'escape',
+    disableInputKeys: e => !e.ctrl && e.name === 'escape'
   }
 
   protected p: Required<ConcreteInputProps>
@@ -75,7 +75,7 @@ export class Input extends Component<InputProps, {}> {
     return this.props.value || ''
   }
   /**
-   * Setting this property will cause the element to loose focus 
+   * Setting this property will cause the element to loose focus
    */
   set value(i: string) {
     if (i !== this.props.value) {
@@ -101,40 +101,36 @@ export class Input extends Component<InputProps, {}> {
 
   private handleChangeValue() {
     if (this.element) {
-      this.element!.props.value = this.element!.props.input || ''
-      this.props.onChange && this.props.onChange({ currentTarget: this.element!, value: (this.element!.props.input || '') })
-      this.disableInput();
+      this.element.props.value = this.element.props.input || ''
+      this.props.onChange && this.props.onChange({ currentTarget: this.element, value: (this.element.props.input || '') })
+      this.disableInput()
     }
   }
 
   protected onKeyPressed(e: KeyEvent) {
     if (!this.element || !this.element.props.focused) {
-      return;
+      return
     }
     if (this.p.changeKeys(e)) {
-      this.handleChangeValue();
-    }
-    else if (e.name === keys.backspace) {
-      this.input = this.input.substring(0, this.input.length - 1);
-    }
-    else if (e.name === keys.left) {
+      this.handleChangeValue()
+    } else if (e.name === keys.backspace) {
+      this.input = this.input.substring(0, this.input.length - 1)
+    } else if (e.name === keys.left) {
       this.cursor && this.cursor.left(1)
-    }
-    else if (e.name === keys.right) {
+    } else if (e.name === keys.right) {
       this.cursor && this.cursor.right(1)
-    }
-    else if (e.ch || e.sequence) {
-      this.input = this.input + (e.ch || e.sequence);
+    } else if (e.ch || e.sequence) {
+      this.input = this.input + (e.ch || e.sequence)
     }
     if (this.props.onKeyPressed) {
-      this.props.onKeyPressed(e);
+      this.props.onKeyPressed(e)
     }
   }
 
   render() {
     return <box focusable={true} {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
       onFocus={e => {
-        this.inputEnable();
+        this.inputEnable()
         if (this.props.onFocus) {
           this.props.onFocus(e)
         }
@@ -154,30 +150,27 @@ export class Input extends Component<InputProps, {}> {
   }
 
   /**
-   * Makes the element to show the cursor and let the user input text. The element must be focused. 
+   * Makes the element to show the cursor and let the user input text. The element must be focused.
    */
   inputEnable() {
     this.element && this.element.props.focused && this.cursor && this.cursor.show({
       name: 'Input',
-      top: this.element!.absoluteContentTop,
-      left: this.element!.absoluteContentLeft + (this.element!.props.input || '').length
-    });
+      top: this.element.absoluteContentTop,
+      left: this.element.absoluteContentLeft + (this.element.props.input || '').length
+    })
   }
 
   /**
    * Will hide the cursor forbidding the user to keep writing input text. If this.props.blurOnChange (true by default) then it will also remove focus from the element.
    */
   disableInput() {
-      this.element && this.props.blurOnChange && this.element.props.focused && this.element.blur();
-      this.cursor && this.cursor.hide({ name: 'Input' });
-      this.renderElement();
+    this.element && this.props.blurOnChange && this.element.props.focused && this.element.blur()
+    this.cursor && this.cursor.hide({ name: 'Input' })
+    this.renderElement()
   }
-  
+
 }
 
 export function input(props: InputProps & { document: ProgramDocument }) {
   return Flor.render(<Input {...props} />, { document: props.document })
 }
-
-
-

@@ -1,17 +1,17 @@
 import { Document } from '../dom'
 import { EventManager, ProgramDocumentRenderer } from '../manager'
+import { CursorManager } from '../manager/cursorManager'
 import { FocusManager } from '../manager/focusManager'
 import { createElement } from '../util/util'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
-import { CursorManager } from '../manager/cursorManager';
 
 interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
 
 export class ProgramDocument extends Document {
-  
+
   body: ProgramElement
-  
+
   protected managers: Managers | undefined
   private registerListenerQueue: {type: 'event' | 'blur' | 'focus', listener: any}[] = []
 
@@ -24,7 +24,7 @@ export class ProgramDocument extends Document {
   get program() {
     return this.managers &&  this.managers.events.program
   }
-  
+
   get renderer() {
     return this.managers &&  this.managers.renderer
   }
@@ -59,13 +59,12 @@ export class ProgramDocument extends Document {
    */
   _setManagers(managers: Managers) {
     this.managers = managers
-    this.program && this.body.props.assign({ 
-      top: 0, left: 0, width: this.program.cols, 
+    this.program && this.body.props.assign({
+      top: 0, left: 0, width: this.program.cols,
       height: this.program.rows, bg: 'black', fg: 'white'
     })
     this._emptyListenerQueue()
   }
-
 
   /**
    * @internal

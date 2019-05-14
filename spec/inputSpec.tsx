@@ -1,4 +1,4 @@
-import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement, debug } from '../src'
+import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement } from '../src'
 import { defaultTestSetup } from './testUtil'
 
 describe('input component', () => {

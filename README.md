@@ -28,9 +28,10 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
     + [scroll](#scroll)
 - [WIP](#wip)
 - [Why ?](#why-)
-    + [Un maintained complex project](#un-maintained-complex-project)
-    + [Performance](#performance)
-    + [APIs / framework for extensions / composition / layouts, gestures.](#apis--framework-for-extensions--composition--layouts-gestures)
+  * [Un maintained complex project](#un-maintained-complex-project)
+  * [Performance](#performance)
+  * [APIs / framework for extensions / composition / layouts, gestures.](#apis--framework-for-extensions--composition--layouts-gestures)
+  * [also](#also)
 
 <!-- tocstop -->
 

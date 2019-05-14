@@ -1,11 +1,11 @@
-import { Program } from '../../../../src'
 import { sleep } from 'misc-utils-of-mine-generic'
-import { int } from '../../../data';
+import { Program } from '../../../../src'
+import { int } from '../../../data'
 
 const program = new Program({
 })
 
-program.key(['q', 'escape', 'C-c'], function () {
+program.key(['q', 'escape', 'C-c'], function() {
   program.showCursor()
   program.disableMouse()
   program.normalBuffer()
@@ -14,12 +14,10 @@ program.key(['q', 'escape', 'C-c'], function () {
 })
   ;
 
-
-
 // tslint:disable-next-line: no-floating-promises
-(async () => {
+(async() => {
 
-  for (var i = 0; i < program.cols; i++) {
+  for (let i = 0; i < program.cols; i++) {
     for (let j = 0; j < program.rows; j++) {
       program._write(program.setab(int(0, 7)) + 'X' + program.sgr0())
     }

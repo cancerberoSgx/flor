@@ -31,4 +31,3 @@ export enum keys {
   'escape' = 'escape',
   'space' = 'space'
 }
-
