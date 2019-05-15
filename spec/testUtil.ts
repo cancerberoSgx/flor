@@ -1,5 +1,5 @@
-import { sleep } from 'misc-utils-of-mine-generic'
-import { debug, FlorDocument } from '../src'
+import { sleep, waitForPredicate } from 'misc-utils-of-mine-generic'
+import { debug, FlorDocument, ProgramDocumentRenderer } from '../src'
 export function defaultTestSetup(l: (flor?: FlorDocument) => FlorDocument) {
   beforeEach(() => {
     try {
@@ -20,4 +20,10 @@ export function defaultTestSetup(l: (flor?: FlorDocument) => FlorDocument) {
   afterEach(() => {
     l().destroy()
   })
+}
+
+
+export async function expectWillContain(renderer: ProgramDocumentRenderer, text: string) {
+  await waitForPredicate(() => renderer.printBuffer(true).includes(text))
+  expect(renderer.printBuffer(true)).toContain(text)
 }

@@ -145,9 +145,9 @@ export const defaultScrollableProps: () => Required<ConcreteScrollableProps> = (
   ...defaultScrollHandleProps(),
   interruptAnimation: true,
   leftExtraOffset: 0,
-  rightExtraOffset: 0,
+  rightExtraOffset: 3,
   topExtraOffset: 0,
-  bottomExtraOffset: 0,
+  bottomExtraOffset: 3,
   throttleVertical: 0,
   largeScrollAnimation: easing.bounceEasyOut(),
   verticalAnimationDuration: 1000,
@@ -166,6 +166,7 @@ export const defaultScrollableProps: () => Required<ConcreteScrollableProps> = (
  *  * animations for large scroll
  *
  * TODO resolve focus:
+ *   * Doesn't work with self padding
  *   * how inner elemets get foused ?
  *   * how the scrollable gets focus again ?
  *   * descendants need to receive  key and mouse events
@@ -426,7 +427,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * animation will be used if any.
    */
   scroll(offset: { x?: number, y?: number }) {
-    throw new Error('not implemented')
+    this.xOffset = offset.x||this.xOffset
+    this.yOffset = offset.y||this.yOffset
   }
   /**
    * Similar to [[scroll]] but accepts offset ratios (percentages), that are numbers between 0 and 1. No

@@ -33,12 +33,16 @@ interface TextProps extends Partial<ElementProps> {
 /**
  * Component specialized on rendering text.
  * 
- * TODO: it never updates! update when bounds change and when textContent change. 
+ * TODO: 
+ *  * update when textContent changes
+ *  * update when bounds change
+ *  * getters and setters for wordsAlign, linesAlign,
  */
 export class Text extends Component<TextProps, {}> {
 
   protected yNode: yoga.YogaNode | undefined
   protected words: string[] | undefined
+  // protected words: {word: string}[] | undefined
 
   constructor(p: TextProps, s: {}) {
     super(p, s)
@@ -58,18 +62,21 @@ export class Text extends Component<TextProps, {}> {
       this.yNode.setAlignContent(alignItems)
     }
     if (!this.words) {
-      this.words = Array.from(this.element!.childNodes).filter(isText).map(t => t.textContent).join(' ').split(' ')
+      this.words = Array.from(this.element!.childNodes).filter(isText).map(t => t.textContent).join(' ').split(' ')//.map(word=>({word}))
       this.words.forEach((l, i) => {
         const node = yoga.Node.create()
         node.setWidth(l.length + (this.props.extraWidth || 1))
         node.setHeight(1 + ((this.props.extraHeight || 0)))
         this.yNode!.insertChild(node, i)
       })
+      this.yNode.calculateLayout(this.element!.contentWidth, this.element!.contentHeight, yoga.DIRECTION_LTR)
     }
-    this.yNode.calculateLayout(this.element!.contentWidth, this.element!.contentHeight, yoga.DIRECTION_LTR)
+    //TODO: if text changed we should extract words again and recalculate
+    // this.yNode.calculateLayout(this.element!.contentWidth, this.element!.contentHeight, yoga.DIRECTION_LTR)
     array(this.yNode.getChildCount()).forEach(i => {
       const c = this.yNode!.getChild(i)
-      const l  = c.getComputedLayout()
+      debugger
+      const l = {top: c.getComputedTop(), left: c.getComputedLeft()}
       this.renderer!.write(this.element!.absoluteContentTop + l.top, this.element!.absoluteContentLeft + l.left, this.words![i])
     })
   }

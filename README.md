@@ -74,6 +74,8 @@ In Summary, it takes tput.js and program.js from [blessed](https://github.com/ch
  * out of the box, these layouts are supported: 'top-down', 'left-right', 'diagonal',  'alt-diagonal', 'binary-tree',  'justified-layout'
  * All are very flexible with lots of configurations, in particular justifiedLayout
  * We want to add more, probably similar to html's
+ * Now integrating yoga-layout (flex-box implementation) which will solves a lot of needs both internal and user's 
+ 
 
 ##### Overflow
   * By default overflow==='visible' children outside parent viewport are shown

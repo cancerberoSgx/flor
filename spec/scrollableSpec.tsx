@@ -1,9 +1,10 @@
-import { array, waitForPredicate } from 'misc-utils-of-mine-generic'
-import { BorderStyle, easing, FlorDocument, Input, Layout } from '../src'
+import { array, waitForPredicate, sleep } from 'misc-utils-of-mine-generic'
+import { BorderStyle, easing, FlorDocument, Input, Layout, ProgramDocumentRenderer } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
-import { defaultTestSetup } from './testUtil'
+import { defaultTestSetup, expectWillContain } from './testUtil'
+import { Text } from '../src/component/text';
 
 describe('scrollable', () => {
 
@@ -11,8 +12,10 @@ describe('scrollable', () => {
   defaultTestSetup(f => flor = f || flor)
 
   it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
-    const el = <Scrollable {...{top: 8, left: 12, width: 24, height: 26, ch: char(),
-      border: { type: BorderStyle.double }}}normalVerticalStep={3}>
+    const el = <Scrollable {...{
+      top: 8, left: 12, width: 24, height: 26, ch: char(),
+      border: { type: BorderStyle.double }
+    }} normalVerticalStep={3}>
       {words(3).join(' ')}sdf
       <box {...{ top: -5, left: 9, width: 11, height: 14, bg: color(), ch: char() }}>firstEl88</box>
       <box {...{ top: 12, left: 1, width: 18, height: 14, bg: color(), ch: char(), layout: { layout: Layout.topDown } }}>
@@ -55,21 +58,25 @@ describe('scrollable', () => {
     done()
   })
 
-  xit('should scroll text ', async done => {
+  it('should scroll text ', async done => {
     const value = 'hello scrolled world'
     const a = (
-    <Scrollable top={1} left={2} width={15} height={5} leftExtraOffset={5}
-      border={{ type: BorderStyle.double }}>
-     <Input
-     top={0} left={0} border={{ type: BorderStyle.double }}
-     height={3} width={value.length + 4} value={value}></Input>
-     </Scrollable>
+      <Scrollable top={1} left={2} width={25} height={12} rightExtraOffset={3} bottomExtraOffset={3}
+        border={{ type: BorderStyle.double }} bg="green">
+        <Text bg="red" top={13} left={14} height={23} width={58}
+          linesAlign="center" wordsAlign="justify"  border={{ type: BorderStyle.round }}
+          padding={{ top: 1, right: 2, left: 3, bottom: 1 }}>
+          Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.</Text>
+      </Scrollable>
     )
     const el = flor.create(a)
+    el.getComponent<Scrollable>()!.scroll({ x: 0, y: 0 })
     flor.render()
-    // await waitForPredicate(() => flor.renderer.printBuffer(true).includes('hello'))
-    // expect(flor.renderer.printBuffer(true)).toContain('0, 0')
-    // done()
+    await expectWillContain(flor.renderer, '════════')
+    expect(flor.renderer.printBuffer(true)).not.toContain('Eiusmod nostrud')
+    el.getComponent<Scrollable>()!.scroll({ x: 18, y: 20 })
+    flor.render()
+    await expectWillContain(flor.renderer, 'Eiusmod nostrud')
+    done()
   })
-
 })
