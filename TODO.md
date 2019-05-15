@@ -12,7 +12,7 @@
 
 
 # out of topic
-
+<!-- 
 
 lotslots of items when locating clicked: https://github.com/mourner/rbush
 word wrap : 
@@ -68,4 +68,4 @@ cursor is moved to the top left hand corner of the newly-created
 region. The new region will now define the bounds of all scroll and
 cursor motion operations. 
 
-[ If only two parameters are specified, this behaves as DECSTBM ]
+[ If only two parameters are specified, this behaves as DECSTBM ] -->
