@@ -56,7 +56,7 @@ export class Point {
   }
 
   isZero() {
-    return this.x == 0 && this.y == 0
+    return this.x === 0 && this.y == 0
   }
 }
 
@@ -128,7 +128,7 @@ export class Rect {
   }
 
   equals(other?: Rect) {
-    return other != null &&
+    return other &&
       (this.isEmpty() && other.isEmpty() ||
         this.top == other.top &&
         this.left == other.left &&

@@ -34,33 +34,46 @@ There are two modes in which properties can be propagated across the element's d
  * from parent to children, or
  * from sibling to next sibling.
 
-This behavior can be customized using [[renderElement]] options parameter or using Element's [[preventChildrenCascade]] and [[preventSiblingCascade]] properties in element definitions. This means that you can have different policies declared for different fragments of the document is needed.
+This behavior can be customized using [[renderElement]] options parameter or using Element's
+[[preventChildrenCascade]] and [[preventSiblingCascade]] properties in element definitions. This means that
+you can have different policies declared for different fragments of the document is needed.
 
 Below are the different behaviors supported currently:
 
 ## `{  preventChildrenCascade: false,  preventSiblingCascade: true  } `
 
-This is the default behavior. Properties are propagated like in HTML/CSS, only from parent to children, never from sibling to next sibling. This configuration is declared:
+This is the default behavior. Properties are propagated like in HTML/CSS, only from parent to children, never
+from sibling to next sibling. This configuration is declared:
 
 ## `{ preventChildrenCascade: false,  preventSiblingCascade: false }`
 
-If both are false properties will be propagated both from parent to children and from sibling to next sibling. The base props for an element will be the mix between its parent's and its previous sibling's. The parent's has priority and of course element's own property declarations will override any of these.
+If both are false properties will be propagated both from parent to children and from sibling to next sibling.
+The base props for an element will be the mix between its parent's and its previous sibling's. The parent's
+has priority and of course element's own property declarations will override any of these.
 
 ## `{ preventChildrenCascade: true,  preventSiblingCascade: false }`
 
-Then base props for an element will be [[currentAttrs]], this is, the state of the attrs that previous siblings (and descendants) leave in the renderer instance. If the previous sibling declared a border or background, then the next sibling will have that border or background by default.
+Then base props for an element will be [[currentAttrs]], this is, the state of the attrs that previous
+siblings (and descendants) leave in the renderer instance. If the previous sibling declared a border or
+background, then the next sibling will have that border or background by default.
 
 ## `{ preventChildrenCascade: true,  preventSiblingCascade: true }`
-   * if both If [[preventChildrenCascade]] and [[[preventSiblingCascade]] are true, then there will be no property propagation at all. The base props for an element will always be [[defaultAttrs]] and this means elements will always need to declare **all** its properties explicitly.
+   * if both If [[preventChildrenCascade]] and [[[preventSiblingCascade]] are true, then there will be no
+     property propagation at all. The base props for an element will always be [[defaultAttrs]] and this means
+     elements will always need to declare **all** its properties explicitly.
 
  */
 interface RenderElementOptions {
   /**
-   * Default value is `false`. in which case, children inherits its parent properties, declared or not declared. If `true`, children won't inherits parent's properties. See [[RenderElementOptions]] description for details..
+   * Default value is `false`. in which case, children inherits its parent properties, declared or not
+   * declared. If `true`, children won't inherits parent's properties. See [[RenderElementOptions]]
+   * description for details..
    */
   preventChildrenCascade?: boolean
   /**
-   * Default value: `true` in which an element's properties are totally independent on the properties of its siblings. If `false`, properties defined by previous siblings or their descendants will be propagated to the element. See [[RenderElementOptions]] description for details.
+   * Default value: `true` in which an element's properties are totally independent on the properties of its
+   * siblings. If `false`, properties defined by previous siblings or their descendants will be propagated to
+   * the element. See [[RenderElementOptions]] description for details.
    *
    */
   preventSiblingCascade?: boolean
@@ -69,10 +82,12 @@ interface RenderElementOptions {
    */
   writeInsideOnly?: boolean
 
-  // /**
-  //  * if passed the write area will be applied only temporarily for the current frament being rendered. After the renderElement() call finished, it will be reseted. For a permanent write area use the setter [[writeArea]] or the method [[setElementWriteArea]]
-  //  */
-  // writeArea?: Rectangle
+  //  /**
+  //  * if passed the write area will be applied only temporarily for the current frament being rendered.
+  //    After the renderElement() call finished, it will be reseted. For a permanent write area use the setter
+  //    [[writeArea]] or the method [[setElementWriteArea]]
+  //    */
+  //  writeArea?: Rectangle
 }
 /**
  * TODO. should eb PAttrs for completness
@@ -95,7 +110,10 @@ interface BufferData {
  *  * maintains an internal buffer with each screen pixel character attribute so it's capable of reconstitute
  *    the screen at any moment ([[printElement]])
  *
- TODO: should we check if is neccesary to deactivate all modes bofore moving the cursor ? ms	Flag whose presence means that it is safe to move the cursor while the appearance modes are not in the normal state. If this flag is absent, programs should always reset the appearance modes to normal before moving the cursor.
+ * TODO: should we check if is neccesary to deactivate all modes bofore moving the cursor ? ms  Flag whose
+ * presence means that it is safe to move the cursor while the appearance modes are not in the normal state.
+ * If this flag is absent, programs should always reset the appearance modes to normal before moving the
+ * cursor.
  */
 export class ProgramDocumentRenderer {
   private useBuffer: boolean
@@ -217,7 +235,8 @@ export class ProgramDocumentRenderer {
    * IMPORTANT: all writings to program.output must be performed using this method, otherwise some features or
    * tests could fail.
    *
-   *  // TODO : test performance paint the rest of the line:  out += this.tput.cup(y, x); out += this.tput.el();  'parm_insert_line'
+   *  // TODO : test performance paint the rest of the line:  out += this.tput.cup(y, x); out +=
+   *  this.tput.el();  'parm_insert_line'
    */
   write(y: number, x: number, s: string) {
     const { xi, xl, yi, yl } = this._writeArea
@@ -252,7 +271,7 @@ export class ProgramDocumentRenderer {
         }
       }
     }
-  } 
+  }
 
   /**
    * Writes the escape characters so given attributes are applied (enabled or disabled). String properties are
@@ -323,8 +342,8 @@ export class ProgramDocumentRenderer {
   }
 
   /**
-   * Renders given element in the screen. Element's props character attributes will me
-   * merged with [[currentAttrs]] and that will be used to render the element's pixels.
+   * Renders given element in the screen. Element's props character attributes will me merged with
+   * [[currentAttrs]] and that will be used to render the element's pixels.
    */
   renderElement(el: ProgramElement
     , options: RenderElementOptions = this._defaultRenderOptions

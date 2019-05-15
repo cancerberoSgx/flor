@@ -1,10 +1,8 @@
-import { FlorDocument, Flor, Input, debug } from '../src'
+import { trimRightLines } from 'misc-utils-of-mine-generic'
+import { Flor, FlorDocument } from '../src'
+import { Text, text } from '../src/component/text'
 import { BorderStyle } from '../src/util/border'
-import { createElement } from '../src/util/util'
 import { defaultTestSetup } from './testUtil'
-import { Text } from '../src/component/text';
-import { trimRightLines } from 'misc-utils-of-mine-generic';
-import { writeFileSync } from 'fs';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
@@ -15,12 +13,11 @@ describe('text', () => {
 
   it('default behavior', async done => {
 
-   const el =  flor.create(<Text width={38} top={3} left={4}  height={16} 
-   padding={{top: 1, right: 2, left: 3, bottom: 1} }  border={{type: BorderStyle.double}}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum. 
+    const el =  flor.create(<Text width={38} top={3} left={4}  height={16}
+   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
+Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
-    flor.render(el)
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
 
 
@@ -44,42 +41,194 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
     done()
   })
 
-//   fit('column direction', async done => {
 
-//     const el =  flor.create(<Text width={38} top={3} left={4}  height={16} 
-//     padding={{top: 1, right: 2, left: 3, bottom: 1} }  border={{type: BorderStyle.double}}>
-//  Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum. 
-//      </Text>)
-//      flor.render()
-//      flor.render(el)
-//      expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
- 
- 
-//      ╔════════════════════════════════════╗
-//      ║                                    ║
-//      ║   Eiusmod nostrud deserunt ex      ║
-//      ║   qui in non magna velit nulla     ║
-//      ║   sint adipisicing sit veniam      ║
-//      ║   consectetur. Non minim sit       ║
-//      ║   cupidatat nulla nostrud cillum   ║
-//      ║   proident labore. Sint amet eu    ║
-//      ║   pariatur magna laboris           ║
-//      ║   occaecat in anim consectetur     ║
-//      ║   labore ipsum esse Lorem          ║
-//      ║   nostrud. Labore eu aliqua        ║
-//      ║   dolore tempor ea in sint culpa   ║
-//      ║   ipsum.                           ║
-//      ║                                    ║
-//      ╚════════════════════════════════════╝
-//  `))
-//      done()
-//    })
+  it('function text()', async done => {
+
+    const el =  text({ width: 38, top: 3 , left: 4 , height: 16
+   , padding: { top: 1, right: 2, left: 3, bottom: 1 } , border: { type: BorderStyle.double }, children: ['Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.']})
+
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+
+
+    ╔════════════════════════════════════╗
+    ║                                    ║
+    ║   Eiusmod nostrud deserunt ex      ║
+    ║   qui in non magna velit nulla     ║
+    ║   sint adipisicing sit veniam      ║
+    ║   consectetur. Non minim sit       ║
+    ║   cupidatat nulla nostrud cillum   ║
+    ║   proident labore. Sint amet eu    ║
+    ║   pariatur magna laboris           ║
+    ║   occaecat in anim consectetur     ║
+    ║   labore ipsum esse Lorem          ║
+    ║   nostrud. Labore eu aliqua        ║
+    ║   dolore tempor ea in sint culpa   ║
+    ║   ipsum.                           ║
+    ║                                    ║
+    ╚════════════════════════════════════╝
+`))
+    done()
+  })
+
+  it('column direction', async done => {
+    const el =  flor.create(<Text width={38} top={3} left={4}  height={22} direction="column"
+    padding={{top: 1, right: 2, left: 3, bottom: 1} }  border={{type: BorderStyle.double}}>
+ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+     </Text>)
+     flor.render()
+     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+
+
+    ╔════════════════════════════════════╗
+    ║                                    ║
+    ║   Eiusmod      cupidatat   esse    ║
+    ║   nostrud      nulla       Lorem   ║
+    ║   deserunt     nostrud     nostrud.║
+    ║   ex           cillum      Labore  ║
+    ║   qui          proident    eu      ║
+    ║   in           labore.     aliqua  ║
+    ║   non          Sint        dolore  ║
+    ║   magna        amet        tempor  ║
+    ║   velit        eu          ea      ║
+    ║   nulla        pariatur    in      ║
+    ║   sint         magna       sint    ║
+    ║   adipisicing  laboris     culpa   ║
+    ║   sit          occaecat    ipsum.  ║
+    ║   veniam       in                  ║
+    ║   consectetur. anim                ║
+    ║   Non          consectetur         ║
+    ║   minim        labore              ║
+    ║   sit          ipsum               ║
+    ║                                    ║
+    ╚════════════════════════════════════╝
+`))
+     done()
+   })
+
+  it('align justify', async done => {
+    const el =  flor.create(<Text width={38} top={3} left={4}  height={16} wordsAlign="justify"
+   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
+Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    </Text>)
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+
+
+    ╔════════════════════════════════════╗
+    ║                                    ║
+    ║   Eiusmod  nostrud  deserunt  ex   ║
+    ║   qui in  non magna  velit nulla   ║
+    ║   sint  adipisicing  sit  veniam   ║
+    ║   consectetur.  Non   minim  sit   ║
+    ║   cupidatat nulla nostrud cillum   ║
+    ║   proident labore.  Sint amet eu   ║
+    ║   pariatur     magna     laboris   ║
+    ║   occaecat  in anim  consectetur   ║
+    ║   labore   ipsum    esse   Lorem   ║
+    ║   nostrud.   Labore  eu   aliqua   ║
+    ║   dolore tempor ea in sint culpa   ║
+    ║   ipsum.                           ║
+    ║                                    ║
+    ╚════════════════════════════════════╝
+`))
+    done()
+  })
+
+
+  it('align center', async done => {
+    const el =  flor.create(<Text width={48} top={3} left={4}  height={16} wordsAlign="center"
+   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
+Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    </Text>)
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+
+
+    ╔══════════════════════════════════════════════╗
+    ║                                              ║
+    ║    Eiusmod nostrud deserunt ex qui in non    ║
+    ║    magna velit nulla sint adipisicing sit    ║
+    ║       veniam consectetur. Non minim sit      ║
+    ║    cupidatat nulla nostrud cillum proident   ║
+    ║      labore. Sint amet eu pariatur magna     ║
+    ║     laboris occaecat in anim consectetur     ║
+    ║    labore ipsum esse Lorem nostrud. Labore   ║
+    ║   eu aliqua dolore tempor ea in sint culpa   ║
+    ║                    ipsum.                    ║
+    ║                                              ║
+    ║                                              ║
+    ║                                              ║
+    ║                                              ║
+    ╚══════════════════════════════════════════════╝
+`))
+    done()
+  })
+
+  it('lines align bottom', async done => {
+    const el =  flor.create(<Text width={52} top={1} left={4}  height={18}  linesAlign="bottom"
+   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
+Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    </Text>)
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+    ╔══════════════════════════════════════════════════╗
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║   Eiusmod nostrud deserunt ex qui in non magna   ║
+    ║   velit nulla sint adipisicing sit veniam        ║
+    ║   consectetur. Non minim sit cupidatat nulla     ║
+    ║   nostrud cillum proident labore. Sint amet eu   ║
+    ║   pariatur magna laboris occaecat in anim        ║
+    ║   consectetur labore ipsum esse Lorem nostrud.   ║
+    ║   Labore eu aliqua dolore tempor ea in sint      ║
+    ║   culpa ipsum.                                   ║
+    ║                                                  ║
+    ╚══════════════════════════════════════════════════╝
+`))
+    done()
+  })
+
+  it('lines align center', async done => {
+    const el =  flor.create(<Text width={52} top={1} left={4}  height={18}  linesAlign="center" wordsAlign="justify"
+   padding={{ top: 1, right: 2, left: 3, bottom: 1 } } border={{ type: BorderStyle.double }}>
+Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    </Text>)
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+    ╔══════════════════════════════════════════════════╗
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║   Eiusmod nostrud deserunt ex qui in non magna   ║
+    ║   velit  nulla  sint  adipisicing  sit  veniam   ║
+    ║   consectetur. Non  minim sit  cupidatat nulla   ║
+    ║   nostrud cillum proident labore. Sint amet eu   ║
+    ║   pariatur  magna  laboris  occaecat  in  anim   ║
+    ║   consectetur labore ipsum esse Lorem nostrud.   ║
+    ║   Labore eu  aliqua dolore  tempor ea  in sint   ║
+    ║   culpa                                 ipsum.   ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ║                                                  ║
+    ╚══════════════════════════════════════════════════╝
+`))
+    done()
+  })
+
 })
 
 //   it('default behavior', async done => {
 
-//    const el =  flor.create(<Text width={28} top={2} left={4} fg="red" height={16  } 
-//    padding={{top: 1, right: 2, left: 3, bottom: 1} } bg="green" 
+//    const el =  flor.create(<Text width={28} top={2} left={4} fg="red" height={16  }
+//    padding={{top: 1, right: 2, left: 3, bottom: 1} } bg="green"
 //    newLineString="-0-0-" border={{type: BorderStyle.double}}>
 // {'-0-0-'}
 // Músicos
@@ -125,8 +274,6 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
 
 //          Paul Gershman (violino), Emanuel Green (violino), Louis Haber (violino)
 
-
-
 //          Julius Held (violino), Leo Kruczeck (violino),
 //          Harry Lookofsky (violino), Joseph Malignaggi (violino)
 //          Gene Orloff (violino), Raoul Poliakin (violino)
@@ -136,14 +283,13 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
 
 // })
 
-
 //   let flor: FlorDocument
 //   defaultTestSetup(f => flor = f || flor)
 
 //   it('should print lines identical to originals padding to the right with parents ch by default', async done => {
 
 //    const el =  flor.create(<Text width={0.7} top={2} left={4} fg="red" height={0.6} newLineString="$$$" border={{type: BorderStyle.round}}>
-// Eu duis laborum est irure in consectetur. Amet consequat amet cillum aute. Sint reprehenderit nostrud sint dolore pariatur dolor fugiat. 
+// Eu duis laborum est irure in consectetur. Amet consequat amet cillum aute. Sint reprehenderit nostrud sint dolore pariatur dolor fugiat.
 // {'$$$'}
 
 // Eu ea consectetur aliquip nostrud magna voluptate adipisicing velit nostrud excepteur culpa dolore nulla quis. Sint irure ex esse veniam fugiat nostrud ut id sint sit cupidatat.
@@ -178,4 +324,3 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
 // // `)
     // done()
   // })
-

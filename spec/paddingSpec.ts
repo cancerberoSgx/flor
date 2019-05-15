@@ -32,10 +32,9 @@ describe('padding', () => {
     done()
   })
 
-
   it('padding and text', async done => {
     const el = flor.create({
-      children: ['hello world'], padding: {top: 2, left: 3, right: 1, bottom: 2}, bg: 'red', border: {type: BorderStyle.round}, top: 2, left: 4, width: 19, height: 7
+      children: ['hello world'], padding: { top: 2, left: 3, right: 1, bottom: 2 }, bg: 'red', border: { type: BorderStyle.round }, top: 2, left: 4, width: 19, height: 7
     })
     flor.renderer.renderElement(el)
     expect(flor.renderer.printBuffer(true)).toContain(`
@@ -51,10 +50,9 @@ describe('padding', () => {
     done()
   })
 
-
   it('padding and wrapped text', async done => {
     const el = flor.create({
-      children: ['hello world l1a el li3 l4o lu p6a p7ye p8i po 0pu ya y08e yi j yo yau'], padding: {top: 2, left: 3, right: 1, bottom: 2}, bg: 'red', border: {type: BorderStyle.round}, top: 2, left: 4, width: 19, height: 12, textWrap: true
+      children: ['hello world l1a el li3 l4o lu p6a p7ye p8i po 0pu ya y08e yi j yo yau'], padding: { top: 2, left: 3, right: 1, bottom: 2 }, bg: 'red', border: { type: BorderStyle.round }, top: 2, left: 4, width: 19, height: 12, textWrap: true
     })
     flor.renderer.renderElement(el)
     expect(flor.renderer.printBuffer(true)).toContain(`
@@ -74,8 +72,5 @@ describe('padding', () => {
 `)
     done()
   })
-
-
-
 
 })

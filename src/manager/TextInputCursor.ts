@@ -142,8 +142,8 @@ export class SingleLineTextInputCursor {
   onKey(e: KeyEvent) {
     if (!this.enabled) {
       this.invalidAction({
-          key: e.name, reason: 'TextInputCursor disabled'
-        })
+        key: e.name, reason: 'TextInputCursor disabled'
+      })
     } else  if (this.keys.right(e)) {
       this.right()
     } else if (this.keys.controlRight(e)) {
@@ -371,8 +371,8 @@ export class TextInputCursorMulti extends SingleLineTextInputCursor {
   onKey(e: KeyEvent) {
     if (!this.enabled) {
       this.invalidAction({
-          key: e.name, reason: 'TextInputCursor disabled'
-        })
+        key: e.name, reason: 'TextInputCursor disabled'
+      })
     } else if (this.keys.up(e)) {
       if (this.pos.row === 0) {
         super.up()

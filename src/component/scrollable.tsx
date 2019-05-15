@@ -286,7 +286,9 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   /**
    * Overridden by animate implementation. Don't call.
    */
-  private _stopAnimation: () => void = () => { }
+  private _stopAnimation: () => void = () => { 
+    return 
+  }
 
   protected handleScrollEnd() {
     this.scrolling = false

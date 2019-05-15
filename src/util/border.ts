@@ -62,7 +62,7 @@ interface DrawElementBorderOptions {
   borderStyle: BorderStyle
 }
 
-function getBoxStyles(): BoxStyles  {
+function getBoxStyles(): BoxStyles {
   if (!boxStyles) {
     boxStyles = {
       light: {

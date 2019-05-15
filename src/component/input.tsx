@@ -125,9 +125,11 @@ export class Input extends Component<InputProps, {}> {
     this.input = this.textInputCursorManager!.value
   }
 
-  /** calling this method will passing an event will make the  textInputCursorManager to change its state (pos and value) */
+  /** 
+   * Calling this method  will make the  textInputCursorManager to change its state (pos and value) 
+   */
   private textInputCursorListener(e: KeyEvent<ProgramElement>) {
-
+    return
   }
 
   render() {

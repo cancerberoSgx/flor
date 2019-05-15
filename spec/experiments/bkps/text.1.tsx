@@ -35,11 +35,11 @@
 //  */
 //   wordWrapToWidth?: number,
 //   /**
-//    * If word-wrap is true, a fixed text at the beginning of each line: 
+//    * If word-wrap is true, a fixed text at the beginning of each line:
 //    */
 //   textPaddingLeft?: number
 //   /**
-//   * If word-wrap is true, a fixed text at the end of each line: 
+//   * If word-wrap is true, a fixed text at the end of each line:
 //   */
 //   textPaddingRight?: number
 //   /**
@@ -52,14 +52,13 @@
 //   'left' = 'left', 'right' = 'right', 'center' = 'center', 'none' = 'none'
 // }
 
-
 // /**
-//  * component specialized on rendering text. Render text character by character in a controlled rectangular grid and apply any transformation like wrap, etc here and not in renderer. 
-//  * 
+//  * component specialized on rendering text. Render text character by character in a controlled rectangular grid and apply any transformation like wrap, etc here and not in renderer.
+//  *
 //  * Uses https://github.com/jonschlinkert/word-wrap for word-wrap
 //  * * Mix with Imput to have a text area or multi line editor.
-//  * 
-//  * TODO: ChangingText extends Text using superstring or similarto support ranges, changes, diff and patches. 
+//  *
+//  * TODO: ChangingText extends Text using superstring or similarto support ranges, changes, diff and patches.
 //  */
 // export class Text extends Component<TextProps, {}> {
 //   protected _textDirty = true
@@ -116,8 +115,8 @@
 //     this.renderer!.renderElementBorder(this.element!)
 //   }
 //   protected processText(): any {
-//     // we need to calculate all the content in case align is not 'none' or 'left'. 
-//     // TODO: we recalculate everything - could be optimizae for 'none' or 'left'. 
+//     // we need to calculate all the content in case align is not 'none' or 'left'.
+//     // TODO: we recalculate everything - could be optimizae for 'none' or 'left'.
 
 //     if (!this._linesInitialized) {
 //       this.initLines()
@@ -137,7 +136,7 @@
 //         this.W = aux
 //       }
 //     }
-    
+
 //     const ch = this.element!.props.ch || this.renderer!.defaultAttrs.ch
 //     // const xi = this.element!.absoluteContentLeft+this.xOffset
 //     // this.renderer!.write(i, xi, l)
@@ -166,8 +165,6 @@
 //   }
 
 //   protected p: Required<ConcreteTextProps>
-
-
 
 //   render() {
 //     return <box  {...this.props} renderChildren={this.renderChildren}>{this.props.children}</box>
