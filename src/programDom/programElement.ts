@@ -53,7 +53,9 @@ export class ProgramElement extends Element {
    * @internal
    */
   protected layout() {
-    if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce) && (this._positionDirty||this._boundsDirty)) {
+    if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce)
+    && (this._positionDirty||this._boundsDirty)
+    ) {  
       layoutChildren({
         el: this, ...this.props.layout
       })
@@ -275,7 +277,13 @@ export class ProgramElement extends Element {
    */
   getInnerBounds(relative = false): Rectangle {
     if (!relative) {
-      return { yi: this.absoluteInnerTop, xi: this.absoluteInnerLeft, yl: this.absoluteInnerTop + this.innerHeight, xl: this._absoluteLeft + this.innerWidth }
+      return { 
+        yi: this.absoluteInnerTop, 
+        xi: this.absoluteInnerLeft,
+         yl: this.absoluteInnerTop + this.innerHeight, 
+         xl: this._absoluteLeft + this.innerWidth 
+        }
+
     } else {
       throw new Error('TODO')
     }

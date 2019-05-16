@@ -1,4 +1,4 @@
-import { array, serial } from 'misc-utils-of-mine-generic'
+import { array, serial, sleep } from 'misc-utils-of-mine-generic'
 import { createElement } from '../src'
 import { BorderStyle, Layout } from '../src/util'
 import { createProgramRendererDocumentAndElement } from '../src/manager/programUtil'
@@ -35,11 +35,12 @@ describe('layout', () => {
     renderer.eraseElement(el)
     el.empty()
     array(N).map(i => ({
-      top: int(0, 20), left: int(20), width: int(23, 40), height: int(12, 20), bg: 'white', fg: 'black', border: {}
+      top: int(3, 20), left: int(3, 40), width: int(23, 40), height: int(12, 20), bg: 'white', fg: 'black', border: {}
       , children: [`N${i}th`]
     })).forEach(el.create.bind(el))
     renderer.renderElement(el)
-    const output = renderer.printBuffer(true)
+    const output = renderer.printBuffer(true) 
+    // await sleep(4000)
     array(N).map(i => `N${i}th`).forEach(l => expect(output).toContain(l))
     renderer.destroy()
     done()
