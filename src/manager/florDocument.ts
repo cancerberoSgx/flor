@@ -60,7 +60,7 @@ export class FlorDocument {
     this.debug = this.debug.bind(this)
     this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this._cursor.enter()
-    // this.installLoggers()
+    this.installLoggers()
   }
 
   /**
@@ -217,3 +217,4 @@ export class FlorDocument {
   }
 
 }
+

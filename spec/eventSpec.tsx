@@ -8,12 +8,12 @@ describe('events', () => {
 
   it('click', async done => {
     let counter = 0
-    const p = <box width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClick={e => {
+    const p = <el width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClick={e => {
       e.currentTarget!.childNodes.item(0)!.textContent = 'clicked_' + counter++
       flor.renderer.renderElement(le)
     }}>
       text
-    </box>
+    </el>
     const le = flor.create(p)
     expect(flor.renderer.printBuffer(true).trim()).not.toContain('clicked_')
     flor.events.triggerMouseEvent({

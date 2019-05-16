@@ -9,11 +9,11 @@ import { color } from '../../data'
 function yogaFlorTest() {
   const flor = new FlorDocument()
   const { root, node1, node2 } = yogatest1(flor.program.rows, flor.program.cols)
-  const box1 = <box {...root.getComputedLayout()} bg={color()}>
-    <box {...node1.getComputedLayout()} bg={color()}>
-    </box><box {...node2.getComputedLayout()} bg={color()}>
-    </box>
-  </box>
+  const box1 = <el {...root.getComputedLayout()} bg={color()}>
+    <el {...node1.getComputedLayout()} bg={color()}>
+    </el><el {...node2.getComputedLayout()} bg={color()}>
+    </el>
+  </el>
   const el = flor.create(box1)
   flor.render(el)
   setTimeout(() => {
@@ -33,7 +33,7 @@ function yogaFlorTest() {
     node2.setHeight(100)
     root.insertChild(node1, 0)
     root.insertChild(node2, 1)
-    root.calculateLayout(500, 300, yoga.DIRECTION_LTR)
+    root.calculateLayout(w, h, yoga.DIRECTION_LTR)
     debug(root.getComputedLayout())
     debug(node1.getComputedLayout())
     debug(node2.getComputedLayout())

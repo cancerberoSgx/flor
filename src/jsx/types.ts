@@ -1,11 +1,13 @@
 import { ElementProps, ProgramDocument, ProgramElement } from '..'
 import { Component } from './component'
+import { YogaElementProps } from '../programDom/yogaElement';
 
 declare global {
 
   export namespace JSX {
     export interface IntrinsicElements {
-      box: OptionsProps<ElementProps>
+      el: OptionsProps<ElementProps>
+      box: OptionsProps<YogaElementProps>
     }
 
     /**

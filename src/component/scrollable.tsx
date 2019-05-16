@@ -441,7 +441,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
 
   render() {
     const layout = this.props.layout ? { ...this.props.layout, neverResizeContainer: true } : undefined
-    return <box focusable={true}
+    return <el focusable={true}
       {...{ ...this.props, onScroll: undefined, children: undefined }}
       layout={layout}
       onKeyPressed={this.onKeyPressed}
@@ -452,7 +452,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       preventChildrenCascade={true}
     >
       {...Array.isArray(this.props.children) ? this.props.children : asArray(this.props.children)}
-    </box>
+    </el>
   }
 }
 

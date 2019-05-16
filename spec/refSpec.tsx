@@ -8,7 +8,7 @@ describe('ref', () => {
 
   it('should reference elements', async done => {
     let r = Flor.createRef()
-    const b = flor.create(<box ref={r}>hello world</box>)
+    const b = flor.create(<el ref={r}>hello world</el>)
     flor.render()
     await toContain(flor.renderer, 'hello world')
     expect(r.current).toBe(b)
@@ -17,7 +17,7 @@ describe('ref', () => {
 
   it('should call callback', async done => {
     let b2: ProgramElement | undefined
-    const b = flor.create(<box ref={Flor.createRef(c => { b2 = c })}>hello world</box>)
+    const b = flor.create(<el ref={Flor.createRef(c => { b2 = c })}>hello world</el>)
     flor.render()
     await waitForPredicate(() => !!b2)
     expect(b2).toBe(b)
@@ -28,7 +28,7 @@ describe('ref', () => {
     let b2: C | undefined
     class C extends Component {
       render() {
-        return <box>hello</box>
+        return <el>hello</el>
       }
       __mark = 123
     }

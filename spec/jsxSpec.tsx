@@ -8,17 +8,17 @@ import { createProgramRendererDocument } from '../src/manager/programUtil'
 describe('jsx', () => {
 
   it('createElement', async done => {
-    const p = <box>hello</box>
-    expect(JSON.stringify(p)).toEqual(`{"type":"box","children":[{"type":"__text","props":{"textContent":"hello","children":[]},"children":[],"_type":"string"}],"props":{},"_type":"string"}`)
+    const p = <el>hello</el>
+    expect(JSON.stringify(p)).toEqual(`{"type":"el","children":[{"type":"__text","props":{"textContent":"hello","children":[]},"children":[],"_type":"string"}],"props":{},"_type":"string"}`)
     done()
   })
 
   it('render', async done => {
-    const p = <box width={10} height={7} bg="red" fg="black" top={4} left={12} ch="y">hello</box>
+    const p = <el width={10} height={7} bg="red" fg="black" top={4} left={12} ch="y">hello</el>
     const doc = new ProgramDocument()
     Flor.setDocument(doc)
     const e = Flor.render(p)
-    expect(e.outerHTML).toBe('<box width="10" height="7" bg="red" fg="black" top="4" left="12" ch="y">hello</box>')
+    expect(e.outerHTML).toBe('<el width="10" height="7" bg="red" fg="black" top="4" left="12" ch="y">hello</el>')
     const { renderer } = createProgramRendererDocument()
     renderer.renderElement(e)
     expect(renderer.printBuffer(true)).toContain(`
@@ -38,13 +38,13 @@ describe('jsx', () => {
   })
 
   it('children and text', async done => {
-    const p = <box width={60} height={37} bg="red" fg="black" top={4} left={12} ch="_">
+    const p = <el width={60} height={37} bg="red" fg="black" top={4} left={12} ch="_">
       hello world
-    <box top={7} left={4} width={3} height={7} ch="2" bg="blue">K</box>
+    <el top={7} left={4} width={3} height={7} ch="2" bg="blue">K</el>
       more text
-    <box top={8} left={16} width={17} height={4} ch="3" bg="green">INNER TEXT</box>
+    <el top={8} left={16} width={17} height={4} ch="3" bg="green">INNER TEXT</el>
       and even more
-    </box>
+    </el>
     const { renderer } = createProgramRendererDocument()
     renderer.renderElement(Flor.render(p))
     expect(renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -78,11 +78,11 @@ describe('jsx', () => {
   it('should render components', async done => {
     class C extends Component<{ name: string, colors: string[] }> {
       render() {
-        return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
-          <box top={1}>hello {this.props.name}</box>
+        return <el top={7} left={4} width={23} height={17} ch="_" bg="blue">
+          <el top={1}>hello {this.props.name}</el>
           Your colors:
-        {this.props.colors.map((c, i) => <box width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</box>)}
-        </box>
+        {this.props.colors.map((c, i) => <el width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</el>)}
+        </el>
       }
     }
     const app = <C name="seba" colors={['red', 'blue', 'green']} />
@@ -131,7 +131,7 @@ describe('jsx', () => {
         elementCreated = true
       }
       render() {
-        return <box><box>hello</box><box>my parent</box><box>will get me</box><box>an empty line</box></box>
+        return <el><el>hello</el><el>my parent</el><el>will get me</el><el>an empty line</el></el>
       }
     }
     const { renderer } = createProgramRendererDocument()

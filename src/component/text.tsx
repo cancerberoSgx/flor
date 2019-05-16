@@ -89,7 +89,7 @@ export class Text extends Component<TextProps, {}> {
   }
 
   render() {
-    return <box {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</box>
+    return <el {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</el>
   }
 
 }

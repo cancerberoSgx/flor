@@ -136,7 +136,7 @@ export class Input extends Component<InputProps, {}> {
   }
 
   render() {
-    return <box ref={Flor.createRef(c => this.boxEl = c!)} focusable={true} {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
+    return <el ref={Flor.createRef(c => this.boxEl = c!)} focusable={true} {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
       onFocus={e => {
         this.inputEnable()
         if (this.props.onFocus) {
@@ -168,7 +168,7 @@ export class Input extends Component<InputProps, {}> {
       }}
     >
       {this.props.value || this.input || ''}
-    </box>
+    </el>
   }
 
   /**
