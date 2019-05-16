@@ -6,10 +6,8 @@ import { int } from './data';
 import { FlorDocumentTesting } from './florTestHelper';
 
 describe('yogaElement', () => {
-  let flor: FlorDocument
-  defaultTestSetup(f => flor = f || flor)
 
-  it('by default overflow visible', async done => {
+  it('simple row, grow, no need for left, right, width, height in descendants', async done => {
    const flor = new FlorDocumentTesting({
      documentImplementation () {return new YogaDocument()}
    })
@@ -51,7 +49,6 @@ describe('yogaElement', () => {
  
   </box>)
   flor.render()
-  // debug('BUFFER: \n'+flor.printBuffer()) 
   await toContain(flor.renderer, '────────')
   flor.expect.toContain(`
 ╭──────────────────────────────╮
