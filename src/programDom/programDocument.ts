@@ -3,7 +3,7 @@ import { EventManager, ProgramDocumentRenderer } from '../manager'
 import { CursorManager } from '../manager/cursorManager'
 import { FocusManager } from '../manager/focusManager'
 import { Deferred } from '../util/misc'
-import { createElement } from '../util/util'
+import { createElement } from '../'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
 

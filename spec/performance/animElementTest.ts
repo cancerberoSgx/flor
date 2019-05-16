@@ -1,8 +1,9 @@
 import { writeFileSync } from 'fs'
 import { Program, ProgramDocument, ProgramDocumentRenderer } from '../../src'
 import { nextTick } from '../../src/util/misc'
-import { createElement, getPerformanceFileName } from '../../src/util/util'
+import { createElement  } from '../../src'
 import { int } from '../data'
+import { getPerformanceFileName } from '../testUtil';
 
 async function main() {
   let renderer: ProgramDocumentRenderer

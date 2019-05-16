@@ -5,9 +5,8 @@ import { EventListener } from '../dom/event'
 import { Component } from '../jsx'
 import { KeyEvent, KeyListener, MouseListener } from '../manager'
 import { layoutChildren } from '../util'
-import { createElement } from '../util/util'
 import { ElementPropsImpl } from './elementProps'
-import { isElement, Rectangle } from './elementUtil'
+import { isElement, Rectangle, createElement } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
 import { nextTick } from '../util/misc';
@@ -21,6 +20,13 @@ export class ProgramElement extends Element {
   _renderCounter: number = -1
 
   private _component?: Component
+  protected __boundsDirty: boolean
+  protected __positionDirty: boolean
+
+  /** 
+   * An unique id for this element instance that won't change. 
+   */
+  readonly internalId: number
 
   constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
     super(tagName, ownerDocument)
@@ -28,10 +34,9 @@ export class ProgramElement extends Element {
     this.internalId = ProgramElement.counter++
     this.props = new ElementPropsImpl({}, this)
     this.__positionDirty = true
+    this.__boundsDirty = true
   }
 
-  /** A unique id for this element instance that won't change. */
-  readonly internalId: number
 
   /**
    * Called by `Flor.render()` after all children `ProgramElement` are created and appended to this element.
@@ -96,7 +101,7 @@ export class ProgramElement extends Element {
    */
   _beforeRender(): any {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
-      if (this._positionDirty) {
+      if (this._positionDirty||this.__boundsDirty) {
         this.updateBounds()
       }
     }
@@ -175,18 +180,33 @@ export class ProgramElement extends Element {
   get innerWidth() {
     return this.props.width - (this.props.border ? 1 : 0)
   }
-
-  protected __positionDirty: boolean
+/** @internal */
   get _positionDirty() {
     return this.__positionDirty
   }
   /** @internal */
   set _positionDirty(d: boolean) {
-    if (d !== this.__positionDirty) {
+    // if (d !== this.__positionDirty) {
       this.__positionDirty = d
+      // if (d) {
+        // this.getChildrenElements().forEach(e => {
+        //   e._positionDirty = true
+        // })
+      // }
+    // }
+  }
+  /** @internal */
+  get _boundsDirty() {
+    return this.__boundsDirty
+  }
+  /** @internal */
+  set _boundsDirty(d: boolean) {
+    if (d !== this.__boundsDirty) {
+      this.__boundsDirty = d
       if (d) {
         this.getChildrenElements().forEach(e => {
-          e._positionDirty = true
+          e._positionDirty= true
+          e._boundsDirty= true
         })
       }
     }
@@ -237,11 +257,12 @@ export class ProgramElement extends Element {
    * updateBounds will be called for them individually
    */
   protected updateBounds(descendants?: boolean) {
-    if (this._positionDirty) {
+    if (this._positionDirty||this._boundsDirty) {
       let a = this.absoluteLeft - this.absoluteTop
       this.layout()
       a = this.absoluteLeft - this.absoluteTop
       this._positionDirty = false
+      this._boundsDirty = false
     }
     if (descendants) {
       this.getChildrenElements().forEach(e => {

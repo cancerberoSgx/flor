@@ -1,24 +1,5 @@
-import { execSync } from 'child_process'
 
 export const nextTick = global.setImmediate || process.nextTick.bind(process)
-
-export function nowHash() {
-  return Date.now().toString(36)
-}
-
-export function formatDate(d: Date) {
-  return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDay() + ':' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-}
-
-export function nowFormat() {
-  return Math.trunc(Date.now() / 1000 / 1000) + ''
-}
-
-export function getCurrentCommit() {
-  return execSync('git rev-parse --short HEAD')
-    .toString()
-    .trim()
-}
 
 export function nonEnumerableMember(o: any, name: string) {
   Object.defineProperty(o, name, {
@@ -35,35 +16,19 @@ export function enumerableMember(o: any, name: string) {
 }
 
 /**
- * Promise instance resolvable by an external actor. This is an anti pattern but is useful in some cases when
- * two different actors at different moments collaborate to provide a async notification where one knows when
- * to create the promise object and later another knows how to resolve. The only way of solving this is by
- * having a emitter and subscribing in the promise resolve. instead of having to create such an emitter, we
- * leave the promise as API and coordinate with other actor that will take care of resolving it (this last
- * actor, doesn't konw or is too late to provide an API for listeners). Usage:
-
-```ts
-apiProvider(){
-  this.somethingReady = new ResolvablePromise(resolve=>{
-    this.somethingReady.resolve = resolve
-  })
-}
-...
-resolverActor(){
-  this.somethingReady.resolve(something())
-}
+ * Promise like object that allows to resolve it promise from outside code. Example: 
+ * 
 ```
-*/
-export class ResolvablePromise<T> extends Promise<T> {
-  resolve: ((t: T) => void) = null as any
-  constructor(executor: (resolve: (value?: T | PromiseLike<T>) => void, reject?: (reason?: any) => void) => void) {
-    super(resolve => {
-      this.resolve = resolve
-      new Promise(executor.bind(this)).then(resolve)
+class Api {
+  fooReady = new Deferred<Data>()
+  private knower() {
+    inOtherMoment(data=>{
+      this.fooReady.resolve(data)
     })
   }
 }
-
+```
+ */
 export class Deferred<R, J= any> {
   resolve: (r: R) => void
   reject: (r: J) => void
@@ -87,3 +52,33 @@ export class Deferred<R, J= any> {
     return this.promise.catch(r)
   }
 }
+
+// /**
+//  * Promise instance resolvable by an external actor. This is an anti pattern but is useful in some cases when
+//  * two different actors at different moments collaborate to provide a async notification where one knows when
+//  * to create the promise object and later another knows how to resolve. The only way of solving this is by
+//  * having a emitter and subscribing in the promise resolve. instead of having to create such an emitter, we
+//  * leave the promise as API and coordinate with other actor that will take care of resolving it (this last
+//  * actor, doesn't konw or is too late to provide an API for listeners). Usage:
+
+// ```ts
+// apiProvider(){
+//   this.somethingReady = new ResolvablePromise(resolve=>{
+//     this.somethingReady.resolve = resolve
+//   })
+// }
+// ...
+// resolverActor(){
+//   this.somethingReady.resolve(something())
+// }
+// ```
+// */
+// export class ResolvablePromise<T> extends Promise<T> {
+//   resolve: ((t: T) => void) = null as any
+//   constructor(executor: (resolve: (value?: T | PromiseLike<T>) => void, reject?: (reason?: any) => void) => void) {
+//     super(resolve => {
+//       this.resolve = resolve
+//       new Promise(executor.bind(this)).then(resolve)
+//     })
+//   }
+// }

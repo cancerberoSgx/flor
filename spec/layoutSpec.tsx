@@ -1,7 +1,7 @@
 import { array, serial } from 'misc-utils-of-mine-generic'
 import { BorderStyle, Layout } from '../src/util'
 import { createProgramRendererDocumentAndElement } from '../src/util/programUtil'
-import { createElement } from '../src/util/util'
+import { createElement } from '../src'
 import { int } from './data'
 
 describe('layout', () => {

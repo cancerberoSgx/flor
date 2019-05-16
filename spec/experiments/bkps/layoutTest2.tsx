@@ -1,6 +1,6 @@
 // import { array } from 'misc-utils-of-mine-generic'
 // import { debug, Layout } from '../../../src'
-// import { createProgramRendererDocumentAndElement } from '../../../src/util/util'
+// import { createProgramRendererDocumentAndElement } from '../../../src'
 // import { color, int } from '../../data'
 
 // interface LG {

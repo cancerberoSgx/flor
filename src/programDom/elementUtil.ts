@@ -1,7 +1,7 @@
 import { Node } from '../dom'
 import { ProgramDocument } from './programDocument'
 import { ProgramElement } from './programElement'
-import { ElementProps } from './types'
+import { ElementProps, FullProps } from './types'
 
 export function isElement(n: any): n is ProgramElement {
   return n && n.nodeType === Node.ELEMENT_NODE && n.props
@@ -38,4 +38,34 @@ export function rectangleIntersects(a: R, b: R) {
 
 export function rectanglePlusOffsets(r: R,xOffset= 0, yOffset= 0) {
   return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
+}
+
+
+export function createElement(doc: ProgramDocument, tagName: string | Partial<FullProps>, parent?: ProgramElement, props: Partial<ElementProps> = {}, children?: Node[]) {
+  if (typeof tagName !== 'string') {
+    let opts = tagName
+    tagName = opts.tagName || 'box'
+    parent = opts.parent
+    props = { ...opts, parent: undefined, children: undefined, tagName: undefined } as any
+    children = (opts.children || []).map(c => {
+      if (typeof c === 'string') {
+        return doc.createTextNode(c)
+      } else if (isElement(c)) {
+        return c
+      } else {
+        return createElement(doc, c)
+      }
+    })
+  }
+  const el = doc.createElement(tagName)
+  Object.assign(el.props, props)
+  if (parent) {
+    parent.appendChild(el)
+  }
+  if (children) {
+    children.forEach(c => {
+      el.appendChild(c)
+    })
+  }
+  return el
 }

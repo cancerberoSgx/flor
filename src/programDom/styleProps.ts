@@ -16,6 +16,9 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     return this._data.border
   }
   public set border(value: Partial<BorderProps> | undefined) {
+    if(!!this._data.border!==!!value){
+      this.owner._boundsDirty = true
+    }
     this._data.border = value
   }
 
@@ -23,6 +26,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     return this._data.padding
   }
   public set padding(value: Padding | undefined) {
+    this.owner._boundsDirty = true
     this._data.padding = value
   }
 
@@ -33,13 +37,16 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
     if (!this._data.width) {
       return 0
     }
-    if (this._data.width > -1 && this._data.width < 1) {
+    else if (this._data.width > -1 && this._data.width < 1) {
       return isElement(this.owner.parentNode) && Math.round(this.owner.parentNode.contentWidth * this._data.width) || this._data.width
     }
-    return this._data.width || 0
+    else {
+      return this._data.width || 0
+    }
   }
   public set width(value: number) {
     if (this._data.width !== value) {
+      this.owner._boundsDirty = true      
       this._data.width = value
     }
   }
@@ -58,6 +65,7 @@ export class StylePropsImpl< T extends StyleProps = StyleProps> extends AttrsImp
   }
   public set height(value: number) {
     if (this._data.height !== value) {
+      this.owner._boundsDirty = true
       this._data.height = value
     }
   }

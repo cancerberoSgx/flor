@@ -42,18 +42,23 @@ export class Text extends Component<TextProps, {}> {
 
   protected yNode: yoga.YogaNode | undefined
   protected words: string[] | undefined
-  // protected words: {word: string}[] | undefined
+  protected calculateLayout: boolean;
 
   constructor(p: TextProps, s: {}) {
     super(p, s)
     this.renderChildren = this.renderChildren.bind(this)
+    this.beforeRender = this.beforeRender.bind(this)
+    this.calculateLayout =true
+  }
+
+  protected beforeRender(){
+    this.calculateLayout = !this.yNode || !this.words || this.element!._boundsDirty
+    return false
   }
 
   protected renderChildren(r: ProgramDocumentRenderer) {
     if (!this.yNode) {
       this.yNode = yoga.Node.create()
-      this.yNode.setWidth(this.element!.contentWidth)
-      this.yNode.setHeight(this.element!.contentHeight)
       this.yNode.setFlexWrap(yoga.WRAP_WRAP)
       this.yNode.setFlexDirection(this.props.direction === 'column' ? yoga.FLEX_DIRECTION_COLUMN : yoga.FLEX_DIRECTION_ROW)
       const justifyContent = this.props.wordsAlign==='right' ? yoga.JUSTIFY_FLEX_END : this.props.wordsAlign==='center' ? yoga.JUSTIFY_CENTER: this.props.wordsAlign==='justify' ? yoga.JUSTIFY_SPACE_BETWEEN : yoga.JUSTIFY_FLEX_START
@@ -62,27 +67,29 @@ export class Text extends Component<TextProps, {}> {
       this.yNode.setAlignContent(alignItems)
     }
     if (!this.words) {
-      this.words = Array.from(this.element!.childNodes).filter(isText).map(t => t.textContent).join(' ').split(' ')//.map(word=>({word}))
+      this.words = Array.from(this.element!.childNodes).filter(isText).map(t => t.textContent).join(' ').split(' ')
       this.words.forEach((l, i) => {
         const node = yoga.Node.create()
         node.setWidth(l.length + (this.props.extraWidth || 1))
         node.setHeight(1 + ((this.props.extraHeight || 0)))
         this.yNode!.insertChild(node, i)
       })
+    }
+    if(this.calculateLayout) {
+      this.yNode.setWidth(this.element!.contentWidth)
+      this.yNode.setHeight(this.element!.contentHeight)
       this.yNode.calculateLayout(this.element!.contentWidth, this.element!.contentHeight, yoga.DIRECTION_LTR)
     }
     //TODO: if text changed we should extract words again and recalculate
-    // this.yNode.calculateLayout(this.element!.contentWidth, this.element!.contentHeight, yoga.DIRECTION_LTR)
     array(this.yNode.getChildCount()).forEach(i => {
       const c = this.yNode!.getChild(i)
-      debugger
       const l = {top: c.getComputedTop(), left: c.getComputedLeft()}
       this.renderer!.write(this.element!.absoluteContentTop + l.top, this.element!.absoluteContentLeft + l.left, this.words![i])
     })
   }
 
   render() {
-    return <box {...this.props} renderChildren={this.renderChildren}>{this.props.children}</box>
+    return <box {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</box>
   }
 
 }

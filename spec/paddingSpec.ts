@@ -1,6 +1,6 @@
 import { FlorDocument } from '../src'
 import { BorderStyle } from '../src/util/border'
-import { createElement } from '../src/util/util'
+import { createElement } from '../src/'
 import { defaultTestSetup } from './testUtil'
 
 describe('padding', () => {
