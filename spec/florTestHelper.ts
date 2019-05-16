@@ -1,5 +1,6 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { FlorDocument } from '../src'
+import { FlorDocument, ProgramElement } from '../src'
+import { YogaElement } from '../src/programDom/yogaElement';
 
 class FlorTest {
   constructor(protected flor: FlorDocument) {
@@ -17,6 +18,6 @@ class FlorTest {
   }
 }
 
-export class FlorDocumentTesting extends FlorDocument {
+export class FlorDocumentTesting extends FlorDocument<YogaElement> {
   expect = new FlorTest(this)
 }

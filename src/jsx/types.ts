@@ -59,7 +59,7 @@ declare global {
  * Note: it could have another name than React, but if so tsconfig needs to be configured (JSXFactory) so for
  * simplicity we name the instance `React`
  */
-export interface FlorJsx {
+export interface FlorJsx<E extends ProgramElement = ProgramElement> {
   /**
    * JSX.Element to blessed node factory method. i.e. `<box>foo</box>` will be translated to
    * `React.createElement('box', {}, ['foo'])`.
@@ -70,17 +70,20 @@ export interface FlorJsx {
   createElement(tag: JSX.ElementType, attrs: BlessedJsxAttrs, ...children: any[]): JSX.FlorJsxNode
 
   /**
-   * Creates a blessed.element from given JSX expression. Will create blessed nodes recursively, bottom-up.
+   * Creates a blessed.element from given JSX expression. Will append it to given parent in options or in none to current document's body.
    */
-  render(e: JSX.Element, options?: RenderOptions): ProgramElement
+  render<E extends ProgramElement = ProgramElement>(e: JSX.Element, options?: RenderOptions): E
 
-  setDocument(doc: ProgramDocument): void
+  /**
+   * In order to create Elements, this JSX factory needs a Document instance (on which to call document.createElement). 
+   */
+  setDocument<E extends ProgramElement = ProgramElement>(doc: ProgramDocument<E>): void
 
   /**
    * Creates reference object that will be associated with a [[ProgramElement]] or with a [[Component]] instance at render-time.
    * Similar to https://reactjs.org/docs/refs-and-the-dom.html.
    */
-  createRef<T extends ProgramElement | Component = ProgramElement>(callback?: (current: T | undefined) => void): RefObject<T>
+  createRef<T extends E | Component = E>(callback?: (current: T | undefined) => void): RefObject<T>
 
 }
 

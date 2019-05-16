@@ -141,17 +141,17 @@ class FlorJsxImpl implements FlorJsx {
     }
   }
 
-  render(e: JSX.Element, options: RenderOptions = {}) {
+  render<E extends ProgramElement = ProgramElement>(e: JSX.Element, options: RenderOptions = {}): E {
     if (!this.doc && !options.document) {
       throw new Error('Need to provide a document with setDocument() before render')
     }
     const document = options.document || this.doc!
     const el =  this._render({ e, document })
     ;(options.parent || document.body).appendChild(el)
-    return el
+    return el as E
   }
 
-  setDocument(doc: ProgramDocument) {
+  setDocument<E extends ProgramElement = ProgramElement>(doc: ProgramDocument<E>) {
     this.doc = doc
   }
 

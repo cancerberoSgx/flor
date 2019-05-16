@@ -11,6 +11,10 @@ export class Element  extends Node  {
     this._ownerDocument = ownerDocument
   }
 
+  // get ownerDocument() {
+  //   return this._ownerDocument as Document
+  // }
+
   get textContent(): string | null {
     return this._textContent// !this.childNodes || this.childNodes.length === 0 ? '' : Array.from(this.childNodes || []).map(c => c.textContent).join('')
   }

@@ -9,8 +9,9 @@ import { FullProps } from './types'
 
 interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
 
-export class ProgramDocument extends Document {
-
+export class ProgramDocument<E extends ProgramElement = ProgramElement> extends Document<E> {
+  // destroy() {
+  // }
   body: ProgramElement
 
   protected managers: Managers | undefined
@@ -18,12 +19,13 @@ export class ProgramDocument extends Document {
 
   constructor() {
     super()
+    this.empty()
     this.body =  this.createElement('body')
     this.appendChild(this.body)
   }
 
   get program() {
-    return this.managers &&  this.managers.events.program
+    return this.managers &&  this.managers.renderer.program
   }
 
   get renderer() {
@@ -42,8 +44,8 @@ export class ProgramDocument extends Document {
     return this.managers &&  this.managers.events
   }
 
-  createElement(t: string) {
-    return new ProgramElement(t, this)
+  createElement(t: string) : E {
+    return new ProgramElement(t, this) as E
   }
 
   /**
@@ -52,7 +54,7 @@ export class ProgramDocument extends Document {
   create(props: Partial<FullProps>) {
     const el = createElement(this, props)
     this.body.appendChild(el)
-    return el
+    return el 
   }
 
   managersReady =  new Deferred<Managers>()
@@ -86,7 +88,7 @@ export class ProgramDocument extends Document {
     }
   }
 
-  private _emptyListenerQueue() {
+  private _emptyListenerQueue() { 
     if (this.managers) {
       this.registerListenerQueue.forEach(l => {
         if (l.type === 'event') {

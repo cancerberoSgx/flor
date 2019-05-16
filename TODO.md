@@ -4,7 +4,7 @@
  * setting border: {fg: 'red'} sets the text fg
 
 ## TODO
-
+ * Css cascading - currently is resolved by the renderer, but i need that information before render. lets another manager resolve that and store it somehow in the el (store it in another props, could be props._data_inherited) - the issue is in yoga, if I dont set the border / padding explicitly then is not considered and erased because is not in the prop, is drawn by the renderer.
  * renderer: erase text nodes outside parent viewport not possible unless the whole body is erased.
  * we are not using Node.attributes - we should make attributes===props
  * prevent children cascade per property - I dont want all my childs to have a border like me that i'm container

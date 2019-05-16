@@ -2,8 +2,12 @@ import * as yoga from 'yoga-layout'
 import { ElementPropsImpl, ProgramElement } from '.'
 import { ProgramDocument } from './programDocument'
 import { ElementProps } from './types'
-import { array } from 'misc-utils-of-mine-generic';
+import { array, tryTo } from 'misc-utils-of-mine-generic';
 import { isElement } from './elementUtil';
+import { equal, ok, notEqual } from 'assert';
+import { findAncestor } from '../dom';
+import { debug } from '../util';
+import { nextTick } from '../util/misc';
 
 export interface YogaElementProps extends ConcreteYogaElementProps, ElementProps {
 
@@ -200,21 +204,17 @@ class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements
 
 export class YogaElement extends ProgramElement {
 
+  // get ownerDocument(): YogaDocument {
+  //   return this._ownerDocument as YogaDocument
+  // }
+  // protected _ownerDocument: YogaDocument | null = null
   private _node: yoga.YogaNode = null as any
 
   props: YogaElementPropsImpl
-  // defaultHeight = () => 8
-  // defaultWidth = () => 7
 
-  constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
+  constructor(public readonly tagName: string, ownerDocument: YogaDocument) {
     super(tagName, ownerDocument)
     this.props = new YogaElementPropsImpl(undefined, this)
-    // if(typeof this.props.width==='undefined'){
-    //   this.props.width=this.defaultWidth()
-    // }
-    // if(typeof this.props.height==='undefined'){
-    //   this.props.height=this.defaultHeight()
-    // }
   }
 
   protected get node(): yoga.YogaNode {
@@ -222,116 +222,90 @@ export class YogaElement extends ProgramElement {
       this._node = yoga.Node.create()
       this.setPropsToNode();
       setYogaProps(this.node, this.props)
-      Array.from(this.childNodes).forEach((c, i) => {
-        if (c instanceof YogaElement) {
-          this.node.insertChild(c.node, i)
-        }
+      Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => {
+        this.node.insertChild(c.node, i)
       })
     }
     return this._node
   }
 
-  private setPropsToNode() {
+  protected setPropsToNode() {
     typeof this.getFlexWidth() !== 'undefined' && this.node.setWidth(this.getFlexWidth()!)
     typeof this.getFlexHeight() !== 'undefined' && this.node.setHeight(this.getFlexHeight()!)
     typeof this.getFlexLeft() !== 'undefined' && this.node.setPosition(yoga.EDGE_LEFT, this.getFlexLeft()!);
     typeof this.getFlexTop() !== 'undefined' && this.node.setPosition(yoga.EDGE_TOP, this.getFlexTop()!);
   }
-  setYogaProps() {
+
+  protected setYogaProps() {
     setYogaProps(this.node, this.props)
     this.setPropsToNode();
-    Array.from(this.childNodes).forEach((c, i) => {
-      if (c instanceof YogaElement) {
-        // setYogaProps(this.node, this.props)
+    Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => {
         c.setYogaProps()
-      }
     })
   }
-  calculateLayout() {
-    if (this.parentElement instanceof YogaElement) {
-      // const l = this.node.getComputedLayout()
+
+  protected calculateLayout() {
+    if (YogaElement.is(this.parentElement)) {
       this.left = this.node.getComputedLeft()
       this. top= this.node.getComputedTop()
      this. height=this.node.getComputedHeight()
       this.width= this.node.getComputedWidth() 
-      // this.props.assign({left: this.node.getComputedLeft(), top: this.node.getComputedTop(), width: this.node.getComputedWidth(), height: this.node.getComputedHeight()})
-      this.node.calculateLayout(isFinite(this.width) ? this.width : undefined,  isFinite(this.height) ? this.height : undefined, typeof this.props.direction!=='undefined'?this.props.direction : this.defaultDirection)
-      // this.node.calculateLayout()
+      this.node.calculateLayout(isFinite(this.width) ? this.width : undefined,  isFinite(this.height) ? this.height : undefined, this.props.direction)
     }
-    Array.from(this.childNodes).forEach((c, i) => { 
-      if (c instanceof YogaElement) {
-        // const l = c.node.getComputedLayout()
-        // c.props.assign({left: l.left, top: l.top, width: l.width, height: l.height})
-        // this.node.calculateLayout(this.props.width, this.props.height, yoga.DIRECTION_LTR)
+    Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => 
         c.calculateLayout()
-      }
-    })
-  }
-
-  protected get defaultDirection(): 0 | 1 | 2 | undefined {
-    return yoga.DIRECTION_INHERIT;
+    )
   }
 
   getFlexWidth(): number | undefined|string {
     return (this.width>0&&this.width<1)? Math.trunc(this.width*100)+'%': isFinite(this.width) ? this.width : undefined;
   }
+
   getFlexHeight(): number | undefined|string {
     return (this.height>0&&this.height<1)? Math.trunc(this.height*100)+'%': isFinite(this.height) ? this.height : undefined;
   }
+
   getFlexLeft(): string | number|undefined {
     return (this.left!==0 && this.left>-1 &&this.left<1) ? Math.trunc(this.left*100)+'%' :  isFinite(this.left) ? this.left : undefined;
    }
+
    getFlexTop(): string | number |undefined {
      return (this.top!==0 && this.top>-1 &&this.top<1 )? Math.trunc(this.top*100)+'%' : isFinite(this.top) ? this.top : undefined;
     }
     
-  // calcBounds() {
-  //   const l = this.node.getComputedLayout()
-  //   this.props.assign({left: l.left, top: l.top, width: l.width, height: l.height})
-  //   Array.from(this.childNodes).forEach((c, i) => {
-  //     if (c instanceof YogaElement) {
-  //       c.calcBounds()
-  //     }
-  //   })
-  // }
 
   static is(a: any): a is YogaElement {
     return a && a instanceof YogaElement
   }
 
   yogaDebug(): YogaLayoutInfo {
-    // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
     return {...this.node.getComputedLayout(), children: Array.from(this.childNodes).filter(YogaElement.is).map(e=>e.yogaDebug())} 
   }
 
-
   doLayout(forceUpdate= false) {
     // this.setYogaProps()
-    // this.node.calculateLayout(this.props.width, this.props.height, yoga.DIRECTION_LTR)
+    // this.node.calculateLayout(this.props.width, this.props.height, this.props.direction)
     // // this.calcBounds()
     // this.setYogaProps()
 
     this.setYogaProps()
     this.calculateLayout()
-
-    // if(forceUpdate ){
-    //   this._boundsDirty=true
-    // }
-    // if(this._boundsDirty) {
-//       Array.from(this.childNodes).forEach((c, i)=>{
-//         if(c instanceof YogaElement) {
-//           setYogaProps(this.node, this.props)
-//           // c.props.assign(c.node.getComputedLayout())
-//           // c.layout()
-//         }
-//       })
-// if(this.parentElement instanceof YogaElement) {
-//         this.props.assign(this.node.getComputedLayout())
-//         // debug(this.node.getComputedLayout())
-//       }
-    // }
   }
+
+  // destroy() {
+  //   // first free the children if not throws memory exception
+  //   Array.from(this.childNodes).filter(YogaElement.is).forEach(c=>c.destroy())
+  //     this._node && this._node.free()
+  //     this.ownerDocument._unregister(this)
+  // }
+  // /**
+  //  * @internal
+  //  */
+  // __getYogaNode(): yoga.YogaNode|undefined{
+  //   return this._node
+  // }
 }
+
 interface YogaLayoutInfo {
   readonly left: number;
   readonly right: number;
@@ -341,6 +315,7 @@ interface YogaLayoutInfo {
   readonly height: number;
   children: YogaLayoutInfo[]
 }
+
 function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   if (typeof props.flexWrap !== 'undefined') {
     node.setFlexWrap(props.flexWrap)
@@ -348,9 +323,6 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   if (typeof props.flexDirection !== 'undefined') {
     node.setFlexDirection(props.flexDirection)
   }
-  // if (typeof props.direction !== 'undefined') {
-  //   node.setFlexDirection(props.direction)
-  // }
   if (typeof props.flex !== 'undefined') {
     node.setFlex(props.flex)
   }
@@ -373,7 +345,6 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
     node.setAspectRatio(props.aspectRatio)
   }
   if (props.border) {
-    // node.setBorder(yoga.EDGE_ALL, 1)
     node.setBorder(yoga.EDGE_TOP, 0)// TODO: ??
     node.setBorder(yoga.EDGE_LEFT, 0)  // TODO: ??
     node.setBorder(yoga.EDGE_RIGHT, 2) // TODO: this is because of border+1 in contentWidth (ProgramEElement)
@@ -424,18 +395,81 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   // width: number                     <------ set with current prop - currently yoga percentage width is a string 30% instead of .3 like current one
   // bottom?: number | string                  // <---- use position to support it.
   // right?: number | string
-
 }
 
-export class YogaDocument extends ProgramDocument {
+export class YogaDocument extends ProgramDocument<YogaElement> {
+  body: YogaElement
+
+
+  constructor() {
+    super()
+    this.empty()
+    this.body =  this.createElement('body')
+    this.appendChild(this.body)
+  }
+  // private _allNodes : YogaElement[] = []
 
   // constructor() {
   //   super()
-  //   this.body =  this.createElement('body')
+  //   // if(this.body){
+  //     this.empty()
+  //   // }
+  //   this.body = new YogaElement('body', this)
   //   this.appendChild(this.body)
+  //   this._allNodes = this._allNodes ||[]
+  //     this._allNodes.push(this.body)
   // }
-
+  // // protected _body: YogaElement= null as any
+  // // get body() {
+  // //   if (!this._body) {
+  // //     this._body = this.createElement('body')
+  // //     this.appendChild(this._body)
+  // //   }
+  // //   return this._body
+  // // }
   createElement(tagName: string): YogaElement {
     return new YogaElement(tagName, this)
+
+    // const el= new YogaElement(tagName, this)
+    // // this._allNodes = this._allNodes|| [] // I need to do this - seems to be a bug in typescrpt or js classes - says this._allNodes.push is undefined no matter if i initialize it everywhere... is called from subclass constructor this.ndy = this.createElement... 
+    // // if(this._allNodes.find(n=>n!==el){
+    //   this._allNodes = this._allNodes ||[]
+    //   this._allNodes.push(el)
+    // // })
+    // return el 
   }
+
+//   destroy() {
+//     super.destroy()
+//     debug('before', this._allNodes.length, yoga.getInstanceCount())
+
+//     // this.body.destroy()
+
+//     this.body.__getYogaNode()!&&this.body.__getYogaNode()!.freeRecursive()
+
+//     // if(yoga.getInstanceCount()!==0){
+//       // this._allNodes
+//       // .filter(n=>!findAncestor(n, a=>a===this.body))
+//       // .forEach(e=>{      
+//       //   // e.destroy()
+//       //   e.__getYogaNode()&&e.__getYogaNode()!.free()
+//       // })
+//       debug('after', this._allNodes.length, yoga.getInstanceCount())
+
+//     // }
+//     // this._allNodes=[]
+// // nextTick(()=>    debug('after', this._allNodes.length, yoga.getInstanceCount()))
+// // setTimeout(() => {
+//   // debug('super after', this._allNodes.length, yoga.getInstanceCount())
+// // }, 600);
+//     // equal(yoga.getInstanceCount(), 0)
+//   }
+  
+  // _unregister(e: YogaElement) {
+  //   this._allNodes = this._allNodes.filter(n=>n!==e)
+  //   // const i = this._allNodes.findIndex(n=>n===e)
+  //   // notEqual(i, -1)
+  // //  this._allNodes.splice(i,1)
+  //  debug('_unregister' ,this._allNodes.length, yoga.getInstanceCount())
+  // }
 }

@@ -115,7 +115,7 @@ interface BufferData {
  * If this flag is absent, programs should always reset the appearance modes to normal before moving the
  * cursor.
  */
-export class ProgramDocumentRenderer {
+export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> {
   private useBuffer: boolean
   private _program: Program
   private buffer: BufferData[][] = []
@@ -225,7 +225,7 @@ export class ProgramDocumentRenderer {
   /**
    * Sets write writeArea to given element bounds.
    */
-  setElementWriteArea(el: ProgramElement) {
+  setElementWriteArea(el: E) {
     this._writeArea = el.getBounds()
   }
 
@@ -345,7 +345,7 @@ export class ProgramDocumentRenderer {
    * Renders given element in the screen. Element's props character attributes will me merged with
    * [[currentAttrs]] and that will be used to render the element's pixels.
    */
-  renderElement(el: ProgramElement
+  renderElement(el: E
     , options: RenderElementOptions = this._defaultRenderOptions
   ) {
     el._beforeRender()
@@ -376,7 +376,7 @@ export class ProgramDocumentRenderer {
     return el
   }
 
-  renderChildren(el: ProgramElement, options: RenderElementOptions) {
+  renderChildren(el: E, options: RenderElementOptions) {
     this.lastAbsLeft = el.absoluteContentLeft
     this.lastAbsTop = el.absoluteContentTop
     Array.from(el.childNodes).forEach((c, i, a) => {
@@ -386,7 +386,7 @@ export class ProgramDocumentRenderer {
         } else {
           this.renderText(c, a[i + 1])
         }
-      } else if (c instanceof ProgramElement) {
+      } else if (isElement<E>(c)) {
         if (el.props.renderChildElement) {
           el.props.renderChildElement(this, c, i, a)
         } else {
@@ -426,7 +426,7 @@ export class ProgramDocumentRenderer {
   /**
    * Renders just the content area of this element and its borders, without children elements or text.
    */
-  renderElementWithoutChildren(el: ProgramElement, options: RenderElementOptions = this._defaultRenderOptions) {
+  renderElementWithoutChildren(el: E, options: RenderElementOptions = this._defaultRenderOptions) {
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
@@ -460,7 +460,7 @@ export class ProgramDocumentRenderer {
   /**
    * Writes [[currentAttrs]] in all pixels of the area of given el.
    */
-  eraseElement(el: ProgramElement) {
+  eraseElement(el: E) {
     this.setAttrs(this._defaultAttrs)
     this.fillRectangle(el.absoluteTop, el.absoluteLeft, el.props.height, el.props.width)
   }
@@ -478,7 +478,7 @@ export class ProgramDocumentRenderer {
   /**
    * Draw given element's border.
    */
-  renderElementBorder(el: ProgramElement, elProps: Partial<ElementProps> = el.props.data) {
+  renderElementBorder(el: E, elProps: Partial<ElementProps> = el.props.data) {
     const border = elProps.border
     if (!border) {
       return

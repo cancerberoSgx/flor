@@ -3,8 +3,8 @@ import { ProgramDocument } from './programDocument'
 import { ProgramElement } from './programElement'
 import { ElementProps, FullProps } from './types'
 
-export function isElement(n: any): n is ProgramElement {
-  return n && n.nodeType === Node.ELEMENT_NODE && n.props
+export function isElement<E extends ProgramElement = ProgramElement>(n: any): n is E {
+  return n && n.nodeType === Node.ELEMENT_NODE && n.props && n._childrenReady
 }
 
 export function isDocument(n: any): n is ProgramDocument {
