@@ -4,7 +4,7 @@ import { Scrollable } from '../src/component/scrollable'
 import { Text } from '../src/component/text'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, words } from './data'
-import { defaultTestSetup, expectWillContain } from './testUtil'
+import { defaultTestSetup, waitToContain } from './testUtil'
 
 describe('scrollable', () => {
 
@@ -31,7 +31,7 @@ describe('scrollable', () => {
     </Scrollable>
     flor.create(el)
     flor.render()
-    await waitForPredicate(() => flor.renderer.printBuffer(true).includes('visible3'))
+    await waitToContain(flor.renderer, 'visible3')
     expect(flor.renderer.printBuffer(true)).toContain('visible4')
     done()
   })
@@ -51,25 +51,25 @@ describe('scrollable', () => {
     const el = flor.create(a)
     flor.render()
 
-    await expectWillContain(flor.renderer, 'firstChild123')
+    await waitToContain(flor.renderer, 'firstChild123')
     expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
     expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
 
     // wont scroll if not focused
     el.key('down', 8)
-    await expectWillContain(flor.renderer, 'firstChild123')
+    await waitToContain(flor.renderer, 'firstChild123')
     expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
     expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
 
     // focus with click
     el.click()
     el.key('down', 8)
-    await expectWillContain(flor.renderer, 'lastChild123')
+    await waitToContain(flor.renderer, 'lastChild123')
     expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
     expect(flor.renderer.printBuffer(true)).not.toContain('firstChild123')
 
     el.key('right', 20)
-    await expectWillContain(flor.renderer, 'Final words.')
+    await waitToContain(flor.renderer, 'Final words.')
     expect(flor.renderer.printBuffer(true)).not.toContain('firstChild123')
     expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
     done()
@@ -89,11 +89,11 @@ describe('scrollable', () => {
     const el = flor.create(a)
     el.getComponent<Scrollable>()!.scroll({ x: 0, y: 0 })
     flor.render()
-    await expectWillContain(flor.renderer, '════════')
+    await waitToContain(flor.renderer, '════════')
     expect(flor.renderer.printBuffer(true)).not.toContain('Eiusmod nostrud')
     el.getComponent<Scrollable>()!.scroll({ x: 18, y: 20 })
     flor.render()
-    await expectWillContain(flor.renderer, 'Eiusmod nostrud')
+    await waitToContain(flor.renderer, 'Eiusmod nostrud')
     done()
   })
 })

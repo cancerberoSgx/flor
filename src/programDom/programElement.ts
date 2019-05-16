@@ -53,7 +53,7 @@ export class ProgramElement extends Element {
    * @internal
    */
   protected layout() {
-    if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce) && this._positionDirty) {
+    if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce) && (this._positionDirty||this._boundsDirty)) {
       layoutChildren({
         el: this, ...this.props.layout
       })
@@ -65,6 +65,7 @@ export class ProgramElement extends Element {
   public update(force = false) {
     this._layoutOnce = false
     this._positionDirty = true
+    this._boundsDirty = true
     this.updateBounds(force)
   }
 
@@ -114,9 +115,9 @@ export class ProgramElement extends Element {
    */
   protected updateBounds(descendants?: boolean) {
     if (this._positionDirty || this._boundsDirty) {
-      let a = this.absoluteLeft - this.absoluteTop
+      let a = this.absoluteLeft - this.absoluteTop-  this.width - this.props.top - this.props.left
       this.layout()
-      a = this.absoluteLeft - this.absoluteTop
+      a = this.absoluteLeft - this.absoluteTop - this.width - this.props.top - this.props.left
       this._positionDirty = false
       this._boundsDirty = false
     }
@@ -183,9 +184,9 @@ export class ProgramElement extends Element {
     this.props.height = value
   }
   
-  onBoundsChange(arg0: () => void): any {
-    throw new Error('Method not implemented.')
-  }
+  // onBoundsChange(arg0: () => void): any {
+  //   throw new Error('Method not implemented.')
+  // }
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
   }
@@ -217,14 +218,14 @@ export class ProgramElement extends Element {
   }
   /** @internal */
   set _positionDirty(d: boolean) {
-    // if (d !== this.__positionDirty) {
+    if (d !== this.__positionDirty) {
     this.__positionDirty = d
-      // if (d) {
-        // this.getChildrenElements().forEach(e => {
-        //   e._positionDirty = true
-        // })
-      // }
-    // }
+      if (d) {
+        this.getChildrenElements().forEach(e => {
+          e._positionDirty = true
+        })
+      }
+    }
   }
   /** @internal */
   get _boundsDirty() {

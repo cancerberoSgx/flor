@@ -42,8 +42,8 @@ export function getCurrentCommit() {
     .trim()
 }
 
-export async function expectWillContain(renderer: ProgramDocumentRenderer, text: string) {
-  await waitForPredicate(() => renderer.printBuffer(true).includes(text), { interval: 100 })
+export async function waitToContain(renderer: ProgramDocumentRenderer, text: string) {
+  await waitForPredicate(() => renderer.printBuffer(true).includes(text), { interval: 100, timeoutError: 'expected to contain '+text })
   expect(renderer.printBuffer(true)).toContain(text)
 }
 export async function expectWontContain(renderer: ProgramDocumentRenderer, text: string) {
