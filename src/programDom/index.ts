@@ -1,5 +1,6 @@
 export * from './elementProps'
 export * from './elementUtil'
+export * from './attrProps'
 export * from './programDocument'
 export * from './programElement'
 export * from './styleProps'

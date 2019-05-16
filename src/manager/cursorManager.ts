@@ -1,6 +1,6 @@
 import { Color, colors } from '../declarations/colors'
 import { Program } from '../declarations/program'
-import { enterProgram, leaveProgram } from '../util/programUtil'
+import { enterProgram, leaveProgram } from './programUtil'
 
 type CursorShape = 'block' | 'underline' | 'line'
 
@@ -30,7 +30,7 @@ interface Options {
 /**
  * Manages the cursor. Adapted from blessed screen.
  */
-export class CursorManager implements CursorHandler {
+export class CursorManager {
 
   cursor: Cursor
   program: Program
@@ -51,8 +51,7 @@ export class CursorManager implements CursorHandler {
   cursorShape(shape?: CursorShape, blink?: boolean) {
     this.cursor.shape = shape || 'block'
     this.cursor.blink = blink || false
-    this.cursor._set = true
-
+    this.cursor._set = true    
     this.program.cursorShape(this.cursor.shape, this.cursor.blink)
   }
 
@@ -61,19 +60,20 @@ export class CursorManager implements CursorHandler {
       ? colors.convert(color)
       : undefined
     this.cursor._set = true
-
     return this.program.cursorColor((colors.ncolors as any)[this.cursor.color! as any])
   }
 
   /**
    * frees / unlock keyboard and mouse resources. Don't destroy de program or event listeners but the terminal is
-   * reset. To use it again, use [[enterProgram]]
+   * reset. To use it again, use [[enterProgram]].
    */
   leave() {
     leaveProgram(this.program)
   }
 
-  /** restore terminal control after [[leave]] was called */
+  /** 
+   * restore terminal control after [[leave]] was called 
+   */
   enter() {
     if (!this.cursor._set) {
       if (this.cursor.shape) {
@@ -110,18 +110,24 @@ export class CursorManager implements CursorHandler {
     this.setPosition({ row: options.top, col: options.left })
   }
 
+  /**
+   * Sets cursor position.
+   */
   setPosition(options: Pos) {
     this.program.cursorPos(options.row, options.col)
     this.program.showCursor()
   }
 
-  left(n: number) {
-    this.program.left(n)
-  }
+  // /**
+  //  * Moves cursor to the left n times.
+  //  */
+  // left(n: number) {
+  //   this.program.left(n)
+  // }
 
-  right(n: number) {
-    this.program.right(n)
-  }
+  // right(n: number) {
+  //   this.program.right(n)
+  // }
 }
 
 export interface Pos {
@@ -129,11 +135,11 @@ export interface Pos {
   col: number
 }
 
-/**
- * Can move the cursor
- */
-export interface CursorHandler {
-  setPosition(pos: Pos): void
-  left(n: number): void
-  right(n: number): void
-}
+// /**
+//  * Can move the cursor
+//  */
+// export interface CursorHandler {
+//   setPosition(pos: Pos): void
+//   // left(n: number): void
+//   // right(n: number): void
+// }

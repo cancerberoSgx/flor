@@ -71,7 +71,8 @@ export class EventManager {
   private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'>)[] = []
 
   /**
-   * Adds a key event listener [[l]]. if [[el]] is passed it will be notified only when given element emits key events, otherwise on any key event.
+   * Adds a key event listener [[l]]. if [[el]] is passed it will be notified only when given element emits
+   * key events, otherwise on any key event.
    */
   addKeyListener(l: KeyListener, el?: ProgramElement, name= 'keypress') {
     if (!this.keyListeners.find(k => k.listener === l && k.el === el && k.name === name)) {
@@ -84,7 +85,8 @@ export class EventManager {
   private beforeAllMouseListeners: RegisteredGlobalEventListener[] = []
 
   /**
-   * Adds a mouse event listener that is notified before "common" mouse event listeners added with . Unlike addMouseListener, the listener accepts
+   * Adds a mouse event listener that is notified before "common" mouse event listeners added with . Unlike
+   * addMouseListener, the listener accepts
    */
   addBeforeAllMouseListener(name: string, listener: (e: MouseEvent & StopPropagation) => boolean | void) {
     // if (!this.beforeAllMouseListeners.find(ll => l !== ll)) {
@@ -142,7 +144,8 @@ export class EventManager {
   }
 
   /**
-   * The main function that resolves names from element props like onClick to program event names like 'mouseup'.
+   * The main function that resolves names from element props like onClick to program event names like
+   * 'mouseup'.
    *
    * @internal
    * */
@@ -180,7 +183,7 @@ export class EventManager {
   }
 
   /**
-   * Triggers a click event on given element
+   * Triggers a click event on given element.
    */
   click(el: ProgramElement): any {
     this.triggerMouseEvent({

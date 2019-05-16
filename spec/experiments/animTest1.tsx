@@ -1,6 +1,6 @@
 import { Flor } from '../../src/jsx/createElement'
 import { animate, easing } from '../../src/util/anim'
-import { createProgramRendererDocument } from '../../src/util/programUtil'
+import { createProgramRendererDocument } from '../../src/manager/programUtil'
 
 const p = <box width={10} height={3} bg="red" fg="black" top={4} left={0} ch="_">
 </box>

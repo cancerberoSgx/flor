@@ -3,7 +3,7 @@ import { ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'
 import { isElement } from '../src/programDom/elementUtil'
-import { createProgramRendererDocument } from '../src/util/programUtil'
+import { createProgramRendererDocument } from '../src/manager/programUtil'
 
 describe('jsx', () => {
 

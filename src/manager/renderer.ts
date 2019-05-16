@@ -11,7 +11,7 @@ import { PAttrs } from '../programDom/styleProps'
 import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
-import { createProgram, destroyProgram } from '../util/programUtil'
+import { createProgram, destroyProgram } from './programUtil'
 
 export interface RendererCreateOptions {
   program?: Program
