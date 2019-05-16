@@ -6,7 +6,7 @@ import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps } from './types'
 
-export class ElementPropsImpl extends StylePropsImpl< ElementProps> implements Partial<ElementProps> {
+export class ElementPropsImpl< T extends ElementProps = ElementProps> extends StylePropsImpl< T> implements Partial<ElementProps> {
 
   public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow

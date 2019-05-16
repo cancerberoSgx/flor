@@ -31,7 +31,7 @@ export class ProgramElement extends Element {
     super(tagName, ownerDocument)
     this._ownerDocument = ownerDocument
     this.internalId = ProgramElement.counter++
-    this.props = new ElementPropsImpl({}, this)
+    this.props = new ElementPropsImpl(undefined, this)
     this.__positionDirty = true
     this.__boundsDirty = true
   }
@@ -105,6 +105,28 @@ export class ProgramElement extends Element {
     }
   }
 
+  /**
+   * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if
+   * `descendant` argument is passed also recursively for all descendants.
+   *
+   * on render() , descendants doesn't need to be calculated since they are rendered after the parent and
+   * updateBounds will be called for them individually
+   */
+  protected updateBounds(descendants?: boolean) {
+    if (this._positionDirty || this._boundsDirty) {
+      let a = this.absoluteLeft - this.absoluteTop
+      this.layout()
+      a = this.absoluteLeft - this.absoluteTop
+      this._positionDirty = false
+      this._boundsDirty = false
+    }
+    if (descendants) {
+      this.getChildrenElements().forEach(e => {
+        e.updateBounds(descendants)
+      })
+    }
+  }
+
   toString() {
     return 'ProgramElement ' + this.tagName
   }
@@ -148,11 +170,22 @@ export class ProgramElement extends Element {
   get absoluteBottom() {
     return this.absoluteTop + this.props.height
   }
-
+  get width() {
+    return this.props.width
+  }
+  set width(value: number) {
+    this.props.width = value
+  }
+  get height() {
+    return this.props.height
+  }
+  set height(value: number) {
+    this.props.height = value
+  }
+  
   onBoundsChange(arg0: () => void): any {
     throw new Error('Method not implemented.')
   }
-
   get absoluteContentTop() {
     return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
   }
@@ -247,27 +280,7 @@ export class ProgramElement extends Element {
     }
   }
 
-  /**
-   * Will calculate again position related properties such as [[absoluteTop]] and [[absoluteLeft]] and if
-   * `descendant` argument is passed also recursively for all descendants.
-   *
-   * on render() , descendants doesn't need to be calculated since they are rendered after the parent and
-   * updateBounds will be called for them individually
-   */
-  protected updateBounds(descendants?: boolean) {
-    if (this._positionDirty || this._boundsDirty) {
-      let a = this.absoluteLeft - this.absoluteTop
-      this.layout()
-      a = this.absoluteLeft - this.absoluteTop
-      this._positionDirty = false
-      this._boundsDirty = false
-    }
-    if (descendants) {
-      this.getChildrenElements().forEach(e => {
-        e.updateBounds(descendants)
-      })
-    }
-  }
+
 
   /**
    * Creates a new element and appends it to this element.
