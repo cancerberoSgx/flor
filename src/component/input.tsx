@@ -35,11 +35,13 @@ export interface ConcreteInputProps {
    */
   blurOnChange?: boolean
   /**
- * Keys that will enable the input again when the element is focused but the input is disabled. This only applies when [[blurOnChange]] is false. By default is ENTER.
+   * Keys that will enable the input again when the element is focused but the input is disabled. This only
+   * applies when [[blurOnChange]] is false. By default is ENTER.
  */
   enableInputKeys?: KeyPredicate
   /**
-   * Keys that will disable the input without making the element to loose focus and without changing the value. This only applies when [[blurOnChange]] is false. By default is ESC.
+   * Keys that will disable the input without making the element to loose focus and without changing the
+   * value. This only applies when [[blurOnChange]] is false. By default is ESC.
    */
   disableInputKeys?: KeyPredicate
 }
@@ -75,7 +77,7 @@ export class Input extends Component<InputProps, {}> {
     this.input = this.props.value || this.input || ''
   }
 
-  private handleChangeValue() {
+  protected handleChangeValue() {
     if (this.element) {
       this.element.props.value = this.element.props.input || ''
       this.props.onChange && this.props.onChange({ currentTarget: this.element, value: (this.element.props.input || '') })
@@ -86,6 +88,7 @@ export class Input extends Component<InputProps, {}> {
   get value() {
     return this.props.value || ''
   }
+
   /**
    * Setting this property will cause the element to loose focus
    */
@@ -101,7 +104,7 @@ export class Input extends Component<InputProps, {}> {
   }
 
   /**
-   * Setting this property will change the input text in the screen and call  `this.props.onInput` if any.
+   * Setting this property will change the input text in the screen and call  `this.props.onInput` if any.
    */
   set input(s: string) {
     if (this.element) {
@@ -125,8 +128,8 @@ export class Input extends Component<InputProps, {}> {
     this.input = this.textInputCursorManager!.value
   }
 
-  /** 
-   * Calling this method  will make the  textInputCursorManager to change its state (pos and value) 
+  /**
+   * Calling this method  will make the  textInputCursorManager to change its state (pos and value).
    */
   private textInputCursorListener(e: KeyEvent<ProgramElement>) {
     return
@@ -175,20 +178,27 @@ export class Input extends Component<InputProps, {}> {
     if (this.textInputCursorManager) {
       this.textInputCursorManager.enabled = true
     }
-    this.element && this.element.props.focused && this.cursor && this.cursor.show({
-      name: 'Input',
-      top: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row,
-      left: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col
-    })
+    if(this.element && this.element.props.focused && this.cursor){
+      this.cursor.show({
+        name: 'Input',
+        top: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row,
+        left: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col
+      })
+    }
     this.renderElement()
   }
 
   /**
-   * Will hide the cursor forbidding the user to keep writing input text. If this.props.blurOnChange (true by default) then it will also remove focus from the element.
+   * Will hide the cursor forbidding the user to keep writing input text. If this.props.blurOnChange (true by
+   * default) then it will also remove focus from the element.
    */
   disableInput() {
-    this.element && this.props.blurOnChange && this.element.props.focused && this.element.blur()
-    this.cursor && this.cursor.hide({ name: 'Input' })
+    if(this.element && this.props.blurOnChange && this.element.props.focused ){
+      this.element.blur()
+    }
+    if(this.cursor){
+      this.cursor.hide({ name: 'Input' })
+    }
     if (this.textInputCursorManager) {
       this.textInputCursorManager.enabled = false
     }

@@ -10,17 +10,17 @@ export function nodeTexts(n: Node): (string | null)[] {
   return mapChildren(n, c => c.textContent)
 }
 
-export function isElement(n: Node): n is Element {
+export function isDomElement(n: Node): n is Element {
   return n && n.nodeType === Node.ELEMENT_NODE
 }
 
-export function isText(n: Node): n is Element {
+export function isDomText(n: Node): n is Element {
   return n && n.nodeType === Node.TEXT_NODE
 }
 
 export function nodeAttributes(n: Node): (Attr[] | null)[] {
   return mapChildren(n, c => {
-    if (isElement(c)) {
+    if (isDomElement(c)) {
       const attrs: Attr[] = []
       Array.from(c.attributes).forEach(a => attrs.push({ name: a.name, value: a.value }))
       return attrs

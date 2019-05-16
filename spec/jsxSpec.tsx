@@ -79,13 +79,13 @@ describe('jsx', () => {
     class C extends Component<{ name: string, colors: string[] }> {
       render() {
         return <box top={7} left={4} width={23} height={17} ch="_" bg="blue">
-            <box top={1}>hello {this.props.name}</box>
-            Your colors:
+          <box top={1}>hello {this.props.name}</box>
+          Your colors:
         {this.props.colors.map((c, i) => <box width={c.length} ch="P" bg="yellow" height={4} left={1} top={i + 4}>{c}</box>)}
-          </box>
+        </box>
       }
     }
-    const app = <C name="seba" colors={['red', 'blue', 'green']}/>
+    const app = <C name="seba" colors={['red', 'blue', 'green']} />
     const { renderer, document } = createProgramRendererDocument()
     const e = Flor.render(app)
     renderer.renderElement(e)

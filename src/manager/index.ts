@@ -1,3 +1,5 @@
 export * from './eventManager'
 export * from './florDocument'
+export * from './cursorManager'
+export * from './textInputCursor'
 export * from './renderer'

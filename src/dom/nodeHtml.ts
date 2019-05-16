@@ -1,7 +1,7 @@
 import { Node } from '.'
-import { isElement } from './nodeUtil'
+import { isDomElement } from './nodeUtil'
 export function nodeHtml(node: Node, outer = true): string {
-  if (!isElement(node)) {
+  if (!isDomElement(node)) {
     return node.textContent + ''
   }
   const attrs = [...Array.from(node.attributes), ...Object.keys((node as any).props && (node as any).props.data || {})

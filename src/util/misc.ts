@@ -16,8 +16,8 @@ export function enumerableMember(o: any, name: string) {
 }
 
 /**
- * Promise like object that allows to resolve it promise from outside code. Example: 
- * 
+ * Promise like object that allows to resolve it promise from outside code. Example:
+ *
 ```
 class Api {
   fooReady = new Deferred<Data>()

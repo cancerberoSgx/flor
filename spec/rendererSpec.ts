@@ -1,5 +1,4 @@
-import { FlorDocument } from '../src'
-import { createElement } from '../src'
+import { createElement, FlorDocument } from '../src'
 import { defaultTestSetup } from './testUtil'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999

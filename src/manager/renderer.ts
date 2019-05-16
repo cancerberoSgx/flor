@@ -3,7 +3,7 @@ import { inspect } from 'util'
 import * as wrap from 'word-wrap'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Node } from '../dom'
-import { isText } from '../dom/nodeUtil'
+import { isDomText } from '../dom/nodeUtil'
 import { TextNode } from '../dom/text'
 import { isElement, Rectangle } from '../programDom'
 import { ProgramElement } from '../programDom/programElement'
@@ -416,7 +416,7 @@ export class ProgramDocumentRenderer {
         this.lastAbsLeft = parent.absoluteContentLeft
       })
     } else {
-      const nextChildIsText = isText(nextNode)
+      const nextChildIsText = isDomText(nextNode)
       this.write(this.lastAbsTop, this.lastAbsLeft, s)
       this.lastAbsLeft = this.lastAbsLeft + (nextChildIsText ? s.length : 0)
       this.lastAbsTop = this.lastAbsTop + (nextChildIsText ? 0 : 1)

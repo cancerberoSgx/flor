@@ -4,6 +4,7 @@ describe('input', () => {
   function test(f: (flor: FlorDocument) => ProgramElement) {
     let flor: FlorDocument = null as any
     let el: ProgramElement
+
     beforeAll(() => {
       flor = new FlorDocument()
       el = f(flor)
@@ -20,26 +21,26 @@ describe('input', () => {
       expect(flor.renderer.printBuffer()).not.toContain('value===')
       done()
     })
-    it('focus shound not change state', done => {
+    it('focus should not change state', done => {
       flor.events.click(el)
       expect(flor.renderer.program.cursorHidden).toBe(false)
       expect(!!el.props.input).toBe(false)
       expect(!!el.props.value).toBe(false)
       expect(flor.renderer.printBuffer()).not.toContain('value===')
-        ; done()
+      done()
     })
     it('input "a"', done => {
       flor.events.triggerKeyEvent('a')
       expect(el.props.input).toBe('a')
       expect(!!el.props.value).toBe(false)
       expect(flor.renderer.printBuffer()).not.toContain('value===')
-        ; done()
+      done()
     })
     it('input "b"', done => {
       flor.events.triggerKeyEvent('b')
       expect(el.props.input).toBe('ab')
       expect(!!el.props.value).toBe(false)
-        ; done()
+      done()
     })
 
     it('input "c"', done => {
@@ -48,22 +49,22 @@ describe('input', () => {
       expect(el.props.input).toBe('abc')
       expect(!!el.props.value).toBe(false)
       expect(flor.renderer.printBuffer()).not.toContain('value===')
-        ; done()
+      done()
     })
     it('"!enter"', done => {
       flor.events.triggerKeyEvent(undefined, { name: 'enter' })
       expect(el.props.input).toBe('abc')
       expect(el.props.value).toBe('abc')
       expect(flor.renderer.printBuffer()).toContain('*value===abc*')
-        ; done()
+      done()
     })
   }
 
   describe('component', () => {
-    test(flor =>    flor.create(<Input top={10} left={8} width={15} height={3} value={'initial'} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />)) })
+    test(flor => flor.create(<Input top={10} left={8} width={15} height={3} value={'initial'} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />))
+  })
 
   describe('plain function', () => {
-
     test(flor => flor.create(input({
       top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => {
         flor.debug('*value===' + e.value + '*')

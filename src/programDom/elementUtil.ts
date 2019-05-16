@@ -40,7 +40,6 @@ export function rectanglePlusOffsets(r: R,xOffset= 0, yOffset= 0) {
   return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
 }
 
-
 export function createElement(doc: ProgramDocument, tagName: string | Partial<FullProps>, parent?: ProgramElement, props: Partial<ElementProps> = {}, children?: Node[]) {
   if (typeof tagName !== 'string') {
     let opts = tagName

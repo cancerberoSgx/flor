@@ -1,11 +1,10 @@
-import { array, waitForPredicate, sleep } from 'misc-utils-of-mine-generic'
-import { BorderStyle, easing, FlorDocument, Input, Layout, ProgramDocumentRenderer } from '../src'
+import { waitForPredicate } from 'misc-utils-of-mine-generic'
+import { BorderStyle, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
+import { Text } from '../src/component/text'
 import { Flor } from '../src/jsx/createElement'
-import { char, color, int, words } from './data'
-import { defaultTestSetup, expectWillContain, expectWontContain } from './testUtil'
-import { Text } from '../src/component/text';
-import { nextTick } from '../src/util/misc';
+import { char, color, words } from './data'
+import { defaultTestSetup, expectWillContain } from './testUtil'
 
 describe('scrollable', () => {
 
@@ -44,10 +43,10 @@ describe('scrollable', () => {
       verticalAnimationDuration={1400} largeScrollAnimation={easing.easeOutBounce()}>
       <Text height={3} width={23}>firstChild123</Text>
       <Text height={17} width={58} border={{ type: BorderStyle.round }}
-          padding={{ top: 1, right: 2, left: 3, bottom: 1 }}>
-          Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum. Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Final words.</Text>
-          <Text height={3} width={23}>lastChild123</Text>
-    </Scrollable>    
+        padding={{ top: 1, right: 2, left: 3, bottom: 1 }}>
+        Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum. Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Final words.</Text>
+      <Text height={3} width={23}>lastChild123</Text>
+    </Scrollable>
 
     const el = flor.create(a)
     flor.render()
@@ -57,14 +56,14 @@ describe('scrollable', () => {
     expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
 
     // wont scroll if not focused
-    el.key('down', 8); 
-    await expectWillContain(flor.renderer, 'firstChild123') 
+    el.key('down', 8)
+    await expectWillContain(flor.renderer, 'firstChild123')
     expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
     expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
 
     // focus with click
-    el.click()     
-    el.key('down', 8); 
+    el.click()
+    el.key('down', 8)
     await expectWillContain(flor.renderer, 'lastChild123')
     expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
     expect(flor.renderer.printBuffer(true)).not.toContain('firstChild123')
@@ -82,7 +81,7 @@ describe('scrollable', () => {
       <Scrollable top={1} left={2} width={25} height={12} rightExtraOffset={3} bottomExtraOffset={3}
         border={{ type: BorderStyle.double }} bg="green">
         <Text bg="red" top={13} left={14} height={23} width={58}
-          linesAlign="center" wordsAlign="justify"  border={{ type: BorderStyle.round }}
+          linesAlign="center" wordsAlign="justify" border={{ type: BorderStyle.round }}
           padding={{ top: 1, right: 2, left: 3, bottom: 1 }}>
           Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.</Text>
       </Scrollable>

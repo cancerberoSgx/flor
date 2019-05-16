@@ -13,9 +13,9 @@ describe('text', () => {
 
   it('default behavior', async done => {
 
-    const el =  flor.create(<Text width={38} top={3} left={4}  height={16}
-   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={38} top={3} left={4} height={16}
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -41,11 +41,12 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
     done()
   })
 
-
   it('function text()', async done => {
 
-    const el =  text({ width: 38, top: 3 , left: 4 , height: 16
-   , padding: { top: 1, right: 2, left: 3, bottom: 1 } , border: { type: BorderStyle.double }, children: ['Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.']})
+    const el = text({
+      width: 38, top: 3, left: 4, height: 16
+      , padding: { top: 1, right: 2, left: 3, bottom: 1 }, border: { type: BorderStyle.double }, children: ['Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.']
+    })
 
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -72,12 +73,12 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
   })
 
   it('column direction', async done => {
-    const el =  flor.create(<Text width={38} top={3} left={4}  height={22} direction="column"
-    padding={{top: 1, right: 2, left: 3, bottom: 1} }  border={{type: BorderStyle.double}}>
- Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={38} top={3} left={4} height={22} direction="column"
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
      </Text>)
-     flor.render()
-     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
 
 
     ╔════════════════════════════════════╗
@@ -103,13 +104,13 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
     ║                                    ║
     ╚════════════════════════════════════╝
 `))
-     done()
-   })
+    done()
+  })
 
   it('align justify', async done => {
-    const el =  flor.create(<Text width={38} top={3} left={4}  height={16} wordsAlign="justify"
-   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={38} top={3} left={4} height={16} wordsAlign="justify"
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -135,11 +136,10 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
     done()
   })
 
-
   it('align center', async done => {
-    const el =  flor.create(<Text width={48} top={3} left={4}  height={16} wordsAlign="center"
-   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={48} top={3} left={4} height={16} wordsAlign="center"
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -166,9 +166,9 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
   })
 
   it('lines align bottom', async done => {
-    const el =  flor.create(<Text width={52} top={1} left={4}  height={18}  linesAlign="bottom"
-   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={52} top={1} left={4} height={18} linesAlign="bottom"
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -195,9 +195,9 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
   })
 
   it('lines align center', async done => {
-    const el =  flor.create(<Text width={52} top={1} left={4}  height={18}  linesAlign="center" wordsAlign="justify"
-   padding={{ top: 1, right: 2, left: 3, bottom: 1 } } border={{ type: BorderStyle.double }}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={52} top={1} left={4} height={18} linesAlign="center" wordsAlign="justify"
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -224,9 +224,9 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
   })
 
   it('Should update if bounds change', async done => {
-    const el =  flor.create(<Text width={38} top={3} left={4}  height={16} wordsAlign="justify"
-   padding={{ top: 1, right: 2, left: 3, bottom: 1 } }  border={{ type: BorderStyle.double }}>
-Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
+    const el = flor.create(<Text width={38} top={3} left={4} height={16} wordsAlign="justify"
+      padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
+      Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
     </Text>)
     flor.render()
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
@@ -250,9 +250,9 @@ Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit ve
     ╚════════════════════════════════════╝
 `))
 
-el.props.width = 54
-flor.render()
-expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+    el.props.width = 54
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
 
 
     ╔════════════════════════════════════════════════════╗
@@ -272,10 +272,10 @@ expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
     ║                                                    ║
     ╚════════════════════════════════════════════════════╝
 `))
-el.props.height = 14
-el.props.top = 1
-flor.render()
-expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+    el.props.height = 14
+    el.props.top = 1
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
     ╔════════════════════════════════════════════════════╗
     ║                                                    ║
     ║   Eiusmod nostrud  deserunt ex qui in  non magna   ║
@@ -292,9 +292,9 @@ expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
     ╚════════════════════════════════════════════════════╝
 `))
 
-el.props.padding = {top: 2, left: 6, right: 8, bottom: 1}
-flor.render()
-expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
+    el.props.padding = { top: 2, left: 6, right: 8, bottom: 1 }
+    flor.render()
+    expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
     ╔════════════════════════════════════════════════════╗
     ║                                                    ║
     ║                                                    ║
@@ -311,8 +311,7 @@ expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
     ╚════════════════════════════════════════════════════╝
 `))
 
-done()
+    done()
   })
-
 
 })

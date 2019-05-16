@@ -288,7 +288,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   /**
    * Overridden by animate implementation. Don't call.
    */
-  private _stopAnimation: () => void = () => { 
+  private _stopAnimation: () => void = () => {
   }
 
   protected handleScrollEnd() {
@@ -302,8 +302,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   // protected onKeyPressed = throttle(this._onKeyPressed, 80, {trailing: true})
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
     if (!this.element!.props.focused) {
-    } 
-    else if (this.scrolling) {
+    } else if (this.scrolling) {
       if (this.p.interruptAnimation) {
         this.handleScrollEnd()
         nextTick(() => this.onKeyPressed(e))
@@ -311,8 +310,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         this.renderer!.program.bell()
         this.handleScrollEnd()
       }
-    } 
-    else if (this.p.normalScrollUpKeys.find(p => p(e))) {
+    } else if (this.p.normalScrollUpKeys.find(p => p(e))) {
       this.handleNormalVerticalScroll(-1)
     } else if (this.p.normalScrollDownKeys.find(p => p(e))) {
       this.handleNormalVerticalScroll(1)
@@ -320,15 +318,13 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       this.handleNormalHorizontalScroll(1)
     } else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
       this.handleNormalHorizontalScroll(-1)
-    }
-    else if (this.p.largeScrollUpKeys.find(p => p(e))) {
+    } else if (this.p.largeScrollUpKeys.find(p => p(e))) {
       this.handleLargeVerticalScroll(-1)
     } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
       this.handleLargeVerticalScroll(1)
-    } 
+    }
     this.props.onKeyPressed && this.props.onKeyPressed(e)
   }
-
 
   protected handleNormalHorizontalScroll(direction: 1 | -1) {
     if (direction === 1) {
@@ -432,8 +428,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * animation will be used if any.
    */
   scroll(offset: { x?: number, y?: number }) {
-    this.xOffset = offset.x||this.xOffset
-    this.yOffset = offset.y||this.yOffset
+    this.xOffset = offset.x || this.xOffset
+    this.yOffset = offset.y || this.yOffset
   }
   /**
    * Similar to [[scroll]] but accepts offset ratios (percentages), that are numbers between 0 and 1. No

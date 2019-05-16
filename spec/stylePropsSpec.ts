@@ -7,10 +7,12 @@ describe('styleProps', () => {
   defaultTestSetup(f => flor = f || flor)
 
   it('top left can be negative', async done => {
-    const el = flor.document.create({top: 5, left: 12, width: 24, height: 6, ch: '0',
+    const el = flor.document.create({
+      top: 5, left: 12, width: 24, height: 6, ch: '0',
       children: [
-      { top: -2, left: -3, width: 22, height: 4, ch: '1' }
-      ]})
+        { top: -2, left: -3, width: 22, height: 4, ch: '1' }
+      ]
+    })
     flor.renderer.renderElement(el)
     expect(flor.renderer.printBuffer(true)).toContain(`
 
@@ -28,12 +30,14 @@ describe('styleProps', () => {
   })
 
   it('top left can be negative fractions', async done => {
-    const el = flor.document.create({top: 10, left: 14, width: 24, height: 15, ch: '0',
+    const el = flor.document.create({
+      top: 10, left: 14, width: 24, height: 15, ch: '0',
       children: [
-      { top: .7, left: .7, width: .4, height: .4, ch: '1' },
-      { top: -.2, left: -.2, width: .4, height: .4, ch: '2' },
-      { top: -.4, left: .9, width: .3, height: .3, ch: '3' }
-      ]})
+        { top: .7, left: .7, width: .4, height: .4, ch: '1' },
+        { top: -.2, left: -.2, width: .4, height: .4, ch: '2' },
+        { top: -.4, left: .9, width: .3, height: .3, ch: '3' }
+      ]
+    })
     flor.renderer.renderElement(el)
     expect(flor.renderer.printBuffer(true)).toContain(trimRightLines(`
 

@@ -1,7 +1,7 @@
 import { array, serial } from 'misc-utils-of-mine-generic'
+import { createElement } from '../src'
 import { BorderStyle, Layout } from '../src/util'
 import { createProgramRendererDocumentAndElement } from '../src/util/programUtil'
-import { createElement } from '../src'
 import { int } from './data'
 
 describe('layout', () => {
@@ -13,7 +13,7 @@ describe('layout', () => {
     const N = 10
     await serial([
       'top-down', 'left-right', 'diagonal', 'alt-diagonal', 'binary-tree', 'justified-layout'
-    ].map(l => async() => {
+    ].map(l => async () => {
       const el = createElement(document, 'Div', document.body, { bg: 'yellow', fg: 'black', layout: { layout: l as any }, border: { type: BorderStyle.double }, left: 20, top: 2, height: 26, width: 60, ch: ' ' },
         array(N).map(i => createElement(document, 'Div', undefined, { bg: 'white', fg: 'black', top: int(2, 12), left: int(2, 8), height: int(2, 4), width: int(6, 12), ch: '.', border: { type: BorderStyle.round } }, [
           document.createTextNode('N' + i + 'th')
