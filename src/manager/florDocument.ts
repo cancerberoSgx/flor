@@ -30,7 +30,7 @@ const mainBox = flor.create({bg: 'red', fg: 'black', left: 0, top: 0, width: .5,
 TODO: probably this should extend ProgramDocument and handle all registerListener call here directly.
 */
 
-export class FlorDocument<E extends ProgramElement=ProgramElement> {
+export class FlorDocument<E extends ProgramElement= ProgramElement> {
   private _renderer: ProgramDocumentRenderer
   private _program: Program = undefined as any
   private _document: ProgramDocument<E>
@@ -50,7 +50,7 @@ export class FlorDocument<E extends ProgramElement=ProgramElement> {
     }
     this.render = this.render.bind(this)
     this._events = new EventManager(this._program)
-    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument()   as any 
+    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument()   as any
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
@@ -89,7 +89,7 @@ export class FlorDocument<E extends ProgramElement=ProgramElement> {
   /**
    * Creates an Element from given Props or by rendering given JSXElement and appends it to [[body]].
    */
-  create<T extends ProgramElement=ProgramElement>(el: ProgramElement | Partial<FullProps> | JSX.Element) : T{
+  create<T extends ProgramElement= ProgramElement>(el: ProgramElement | Partial<FullProps> | JSX.Element): T {
     let r: ProgramElement | undefined
     if (isElement(el)) {
       r = el

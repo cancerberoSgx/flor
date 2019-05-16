@@ -1,10 +1,9 @@
-import { BorderStyle, Flor, debug, FlorDocument, ProgramDocumentRenderer, createElement, installExitKeys, ProgramDocument } from '../src';
-import * as yoga from '../src/programDom/yogaElement';
-import { YogaDocument } from '../src/programDom/yogaElement';
-import { FlorDocumentTesting } from './florTestHelper';
-import { toContain } from './testUtil';
-import { sleep } from 'misc-utils-of-mine-generic';
-import {getInstanceCount} from 'yoga-layout'
+import { getInstanceCount } from 'yoga-layout'
+import { BorderStyle, debug, Flor, installExitKeys, ProgramDocumentRenderer } from '../src'
+import * as yoga from '../src/programDom/yogaElement'
+import { YogaDocument } from '../src/programDom/yogaElement'
+import { FlorDocumentTesting } from './florTestHelper'
+import { toContain } from './testUtil'
 
 describe('yogaElement', () => {
   let flor: FlorDocumentTesting
@@ -17,19 +16,18 @@ describe('yogaElement', () => {
     flor.destroy()
   })
 
-
   it('using YogaDocument directly', async done => {
-    const renderer = new ProgramDocumentRenderer({programOptions: {buffer: true}})
+    const renderer = new ProgramDocumentRenderer({ programOptions: { buffer: true } })
     installExitKeys(renderer.program)
     const document = new YogaDocument()
     Flor.setDocument(document)
     // document.body.props.assign({ height: renderer.program.rows, width: renderer.program.cols, top: 0, left: 0, minHeight: renderer.program.rows, minWidth: renderer.program.cols ,   ...fo} //flexGrow: 1
     // )
-    document._setManagers({renderer, focus: null as any, events: null as any, cursor: null as any})
+    document._setManagers({ renderer, focus: null as any, events: null as any, cursor: null as any })
     // document.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     // renderer.renderElement( document.body)
     const el = Flor.render<yoga.YogaElement>(
-      <box width={50} height={20}  border={{ type: BorderStyle.round }} 
+      <box width={50} height={20}  border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_ROW}
       >
         <box  height={13} width={32} flex={1}>1</box>
@@ -37,7 +35,7 @@ describe('yogaElement', () => {
       </box>)
     renderer.renderElement(document.body)
     await toContain(renderer, '────────')
-    expect('\n'+renderer.printBuffer(true)+'\n').toContain(`
+    expect('\n' + renderer.printBuffer(true) + '\n').toContain(`
 ╭────────────────────────────────────────────────╮
 │1──────────────╮2──────────────────────────────╮│
 ││              ││                              ││
@@ -59,11 +57,10 @@ describe('yogaElement', () => {
 │                                                │
 ╰────────────────────────────────────────────────╯
 `)
-renderer.destroy()
+    renderer.destroy()
     // debug('expect: /n' +renderer.printBuffer(true)+'/n', JSON.stringify(el.yogaDebug(), null, 2)+'/n', JSON.stringify(el.debugAsJson(), null, 2)+'/n', el.debugAsXml())
     done()
   })
-
 
   it('FLEX_DIRECTION_ROW, row using flex width and height', async done => {
     const el = flor.create<yoga.YogaElement>(
@@ -91,53 +88,37 @@ renderer.destroy()
   │                              │
   ╰──────────────────────────────╯
 `)
-    // el.render()
-    debug('expect: /n' + flor.printBuffer()+'/n', JSON.stringify(el.yogaDebug(), null, 2)+'/n', JSON.stringify(el.debugAsJson(), null, 2)+'/n', el.debugAsXml())
+    debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     done()
   })
 
   it('depth, percent bounds', async done => {
     const el = flor.create<yoga.YogaElement>(
-      <box top={2} left={2} height={27} width={62} 
-      // preventChildrenCascade={true}
-      // border={{ type: BorderStyle.round }} 
-        flexDirection={yoga.FLEX_DIRECTION_ROW} 
-      >        
-        <box width={.4} height={.999} flexShrink={1}  
-        // preventChildrenCascade={true}
-          // border={undefined} 
+      <box top={2} left={2} height={27} width={62}
+        flexDirection={yoga.FLEX_DIRECTION_ROW}
+      >
+        <box width={.4} height={.999} flexShrink={1}
          flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
           <box width={.999} flexShrink={1} border={{ type: BorderStyle.round }} height={.3} fg="red"></box>
-          <box width={.999} height={.7} flexShrink={1} border={{ type: BorderStyle.roundTripleDash }}  
-          padding={{top: 1, bottom: 2, left: 2, right: 2}} ch="/" fg="yellow"
-          // flexDirection={yoga.FLEX_DIRECTION_ROW}
-          //  flexWrap={yoga.WRAP_WRAP} 
-          // justifyContent={yoga.JUSTIFY_CENTER} 
-          // alignContent={yoga.JUSTIFY_SPACE_EVENLY} preventChildrenCascade={true}
+          <box width={.999} height={.7} flexShrink={1} border={{ type: BorderStyle.roundTripleDash }}
+          padding={{ top: 1, bottom: 2, left: 2, right: 2 }} ch="/" fg="yellow"
           >
-          {/* <box height={1} width={2}>hi</box> */}
-          {/* {'Sint mollit velit et reprehenderit in reprehenderit fugiat eu.'.split(' ').map(w=><box 
-          // minWidth={w.length+1} maxWidth={w.length+1} minHeight={1}
-          flexShrink={1}  
-          width={w.length+1} height={1}
-          >{w}</box>)} */}
-          </box> 
+          </box>
         </box>
-        <box width={.6} flexShrink={1} height={.999} 
+        <box width={.6} flexShrink={1} height={.999}
       flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
         <box width={.999}  height={.3} flexShrink={1} ch="." border={{ type: BorderStyle.roundQuadrupleDash }} >
         </box>
-          <box width={.999} height={.3}  ch="-" 
+          <box width={.999} height={.3}  ch="-"
           flexShrink={1} flexGrow={1} border={{ type: BorderStyle.round }} >
-          </box> 
-          <box width={.999} flexShrink={1} border={{ type: BorderStyle.double }} ch="|"  height={.4}></box> 
+          </box>
+          <box width={.999} flexShrink={1} border={{ type: BorderStyle.double }} ch="|"  height={.4}></box>
         </box>
       </box>)
-      // el.doLayout()
-      flor.render()
-      debug('expect: /n' + flor.printBuffer()+'/n', JSON.stringify(el.yogaDebug(), null, 2)+'/n', JSON.stringify(el.debugAsJson(), null, 2)+'/n', el.debugAsXml())
-        await toContain(flor.renderer, '═════════════')
-        flor.expect.toContain(`
+    flor.render()
+    debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
+    await toContain(flor.renderer, '═════════════')
+    flor.expect.toContain(`
 
   ╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮╔═══════════════════════════════════╗
   ┆///////////////////////┆║|||||||||||||||||||||||||||||||||||║
@@ -166,32 +147,25 @@ renderer.destroy()
   │                       │┊...................................┊
   │                       │┊...................................┊
   ╰───────────────────────╯╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
-`) 
-        // el.render()
-        done()
+`)
+    done()
   })
 
-
-
- it('align center', async done => {
+  it('align center', async done => {
    debug('init', getInstanceCount())
-    const el = flor.create<yoga.YogaElement>(
-      <box height={18} width={30} 
-       direction={yoga.DIRECTION_LTR}  
-      // border={{ type: BorderStyle.round }}
-      //  preventChildrenCascade={true}
-      // padding={{top: 2, bottom: 2, left: 2, right: 2}} flexShrink={1}
-      justifyContent={yoga.JUSTIFY_CENTER} alignItems={yoga.ALIGN_CENTER} ch='·'
-      >        
-        <box width={5} height={4} 
-        // flexShrink={1} 
+   const el = flor.create<yoga.YogaElement>(
+      <box height={18} width={30}
+       direction={yoga.DIRECTION_LTR}
+      justifyContent={yoga.JUSTIFY_CENTER} alignItems={yoga.ALIGN_CENTER} ch="·"
+      >
+        <box width={5} height={4}
         ch="s"
         >Seba
         </box>
       </box>)
-    flor.render()
-        await toContain(flor.renderer, 'Seba')
-        flor.expect.toContain(`
+   flor.render()
+   await toContain(flor.renderer, 'Seba')
+   flor.expect.toContain(`
 ······························
 ······························
 ······························
@@ -210,13 +184,9 @@ renderer.destroy()
 ······························
 ······························
 ······························
-`, {trimAndRemoveEmptyLines: true}) 
-        // el.render()
-        // debug('expect: /n' + flor.printBuffer()+'/n', JSON.stringify(el.yogaDebug(), null, 2)+'/n', JSON.stringify(el.debugAsJson(), null, 2)+'/n', el.debugAsXml())
-        done()
-  })
-
-
+`, { trimAndRemoveEmptyLines: true })
+   done()
+ })
 
 //   xit('simple row, with columns, one grow', async done => {
 //     const flor = new FlorDocumentTesting({
@@ -248,7 +218,7 @@ renderer.destroy()
 //           top={Infinity} left={Infinity}
 //         >
 //           <box border={{ type: BorderStyle.round }} preventChildrenCascade={true}
-//             //  flexGrow={2} 
+//             //  flexGrow={2}
 //             // alignItems={yoga.ALIGN_AUTO}
 //             // alignContent={yoga.ALIGN_AUTO}
 //             // alignSelf={yoga.ALIGN_AUTO}

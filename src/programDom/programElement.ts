@@ -8,7 +8,7 @@ import { layoutChildren, LayoutOptions } from '../util'
 import { ElementPropsImpl } from './elementProps'
 import { createElement, isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
-import { FullProps, Padding, BorderProps, Edges } from './types'
+import { BorderProps, FullProps, Padding } from './types'
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -63,7 +63,7 @@ export class ProgramElement extends Element {
     }
   }
   private _layoutOnce = false
-  
+
   public forceUpdate(descendants = false) {
     this._layoutOnce = false
     this._positionDirty = true
@@ -143,7 +143,7 @@ export class ProgramElement extends Element {
   get parentElement(): ProgramElement | undefined {
     return isElement(this._parentNode) ? this._parentNode : undefined
   }
-  
+
   private _absoluteLeft = 0
   get absoluteLeft() {
     if (this._positionDirty) {
@@ -178,51 +178,51 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * Left coordinate, calculated in columns, relative to parent's content bounds. 
+   * Left coordinate, calculated in columns, relative to parent's content bounds.
    */
   get left() {
     return this.props.left
-  }    
+  }
   /**
    * Left coordinate, calculated in columns, relative to parent's content bounds.
    */
   set left(value: number) {
     this.props.left = value
-  } 
-  
+  }
+
   /**
-   * Top coordinate, calculated in rows, relative to parent's content bounds. 
+   * Top coordinate, calculated in rows, relative to parent's content bounds.
    */
   get top() {
     return this.props.top
-  }  
+  }
   /**
-   * Top coordinate, calculated in rows, relative to parent's content bounds. 
+   * Top coordinate, calculated in rows, relative to parent's content bounds.
    */
   set top(value: number) {
     this.props.top = value
-  } 
+  }
 
   public get padding(): Padding | undefined {
-    return this.props.padding;
+    return this.props.padding
   }
   public set padding(value: Padding | undefined) {
-    this.props.padding = value;
+    this.props.padding = value
   }
   public get border(): Partial<BorderProps> | undefined {
-    return this.props.border;
+    return this.props.border
   }
-  public set border(value: Partial<BorderProps>| undefined) {
-    this.props.border = value;
+  public set border(value: Partial<BorderProps> | undefined) {
+    this.props.border = value
   }
 
   public get layout(): LayoutOptions | undefined {
-    return this.props.layout;
+    return this.props.layout
   }
   public set layout(value: LayoutOptions | undefined) {
-    this.props.layout = value;
+    this.props.layout = value
   }
-  
+
   get width() {
     return this.props.width
   }
@@ -280,7 +280,7 @@ export class ProgramElement extends Element {
       }
     }
   }
-  
+
   /** @internal */
   get _boundsDirty() {
     return this.__boundsDirty
@@ -410,9 +410,9 @@ export class ProgramElement extends Element {
     return Array.from(this.childNodes).filter(isElement)
   }
 
-  debugAsJson():DebugJsonNode{
+  debugAsJson(): DebugJsonNode {
     // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
-    return {...this.props.data, children: Array.from(this.childNodes).map(e=>isElement(e) ? e.debugAsJson() : 'Text('+e.textContent+')')} 
+    return { ...this.props.data, children: Array.from(this.childNodes).map(e => isElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
   }
   /**
    * Returns a XML like string representation of this element instance.
@@ -464,7 +464,7 @@ export class ProgramElement extends Element {
   }
 }
 
-interface DebugJsonNode  {[s: string]: any, children: DebugJsonNode[]} 
+interface DebugJsonNode  {[s: string]: any, children: DebugJsonNode[]}
 
 interface DebugOptions {
   level: number

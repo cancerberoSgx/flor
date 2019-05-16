@@ -11,7 +11,7 @@ export interface Edges {
   right: number
   bottom: number
 }
-export interface Padding extends Edges { 
+export interface Padding extends Edges {
 }
 /**
  * This represents the native styles attrs that are set directly using tput (the axioms)

@@ -2,12 +2,6 @@ import * as yoga from 'yoga-layout'
 import { ElementPropsImpl, ProgramElement } from '.'
 import { ProgramDocument } from './programDocument'
 import { ElementProps } from './types'
-import { array, tryTo } from 'misc-utils-of-mine-generic';
-import { isElement } from './elementUtil';
-import { equal, ok, notEqual } from 'assert';
-import { findAncestor } from '../dom';
-import { debug } from '../util';
-import { nextTick } from '../util/misc';
 
 export interface YogaElementProps extends ConcreteYogaElementProps, ElementProps {
 
@@ -83,10 +77,10 @@ class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements
     this._data.direction = value
   }
   public get flex(): number | undefined {
-    return this._data.flex;
+    return this._data.flex
   }
   public set flex(value: number | undefined) {
-    this._data.flex = value;
+    this._data.flex = value
   }
   public get flexBasis(): number | undefined  {
     return this._data.flexBasis
@@ -220,7 +214,7 @@ export class YogaElement extends ProgramElement {
   protected get node(): yoga.YogaNode {
     if (!this._node) {
       this._node = yoga.Node.create()
-      this.setPropsToNode();
+      this.setPropsToNode()
       setYogaProps(this.node, this.props)
       Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => {
         this.node.insertChild(c.node, i)
@@ -232,54 +226,53 @@ export class YogaElement extends ProgramElement {
   protected setPropsToNode() {
     typeof this.getFlexWidth() !== 'undefined' && this.node.setWidth(this.getFlexWidth()!)
     typeof this.getFlexHeight() !== 'undefined' && this.node.setHeight(this.getFlexHeight()!)
-    typeof this.getFlexLeft() !== 'undefined' && this.node.setPosition(yoga.EDGE_LEFT, this.getFlexLeft()!);
-    typeof this.getFlexTop() !== 'undefined' && this.node.setPosition(yoga.EDGE_TOP, this.getFlexTop()!);
+    typeof this.getFlexLeft() !== 'undefined' && this.node.setPosition(yoga.EDGE_LEFT, this.getFlexLeft()!)
+    typeof this.getFlexTop() !== 'undefined' && this.node.setPosition(yoga.EDGE_TOP, this.getFlexTop()!)
   }
 
   protected setYogaProps() {
     setYogaProps(this.node, this.props)
-    this.setPropsToNode();
+    this.setPropsToNode()
     Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => {
-        c.setYogaProps()
+      c.setYogaProps()
     })
   }
 
   protected calculateLayout() {
     if (YogaElement.is(this.parentElement)) {
       this.left = this.node.getComputedLeft()
-      this. top= this.node.getComputedTop()
-     this. height=this.node.getComputedHeight()
-      this.width= this.node.getComputedWidth() 
+      this. top = this.node.getComputedTop()
+      this. height = this.node.getComputedHeight()
+      this.width = this.node.getComputedWidth()
       this.node.calculateLayout(isFinite(this.width) ? this.width : undefined,  isFinite(this.height) ? this.height : undefined, this.props.direction)
     }
-    Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => 
+    Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) =>
         c.calculateLayout()
     )
   }
 
-  getFlexWidth(): number | undefined|string {
-    return (this.width>0&&this.width<1)? Math.trunc(this.width*100)+'%': isFinite(this.width) ? this.width : undefined;
+  getFlexWidth(): number | undefined | string {
+    return (this.width > 0 && this.width < 1) ? Math.trunc(this.width * 100) + '%' : isFinite(this.width) ? this.width : undefined
   }
 
-  getFlexHeight(): number | undefined|string {
-    return (this.height>0&&this.height<1)? Math.trunc(this.height*100)+'%': isFinite(this.height) ? this.height : undefined;
+  getFlexHeight(): number | undefined | string {
+    return (this.height > 0 && this.height < 1) ? Math.trunc(this.height * 100) + '%' : isFinite(this.height) ? this.height : undefined
   }
 
-  getFlexLeft(): string | number|undefined {
-    return (this.left!==0 && this.left>-1 &&this.left<1) ? Math.trunc(this.left*100)+'%' :  isFinite(this.left) ? this.left : undefined;
+  getFlexLeft(): string | number | undefined {
+    return (this.left !== 0 && this.left > -1 && this.left < 1) ? Math.trunc(this.left * 100) + '%' :  isFinite(this.left) ? this.left : undefined
+  }
+
+  getFlexTop(): string | number | undefined {
+     return (this.top !== 0 && this.top > -1 && this.top < 1) ? Math.trunc(this.top * 100) + '%' : isFinite(this.top) ? this.top : undefined
    }
-
-   getFlexTop(): string | number |undefined {
-     return (this.top!==0 && this.top>-1 &&this.top<1 )? Math.trunc(this.top*100)+'%' : isFinite(this.top) ? this.top : undefined;
-    }
-    
 
   static is(a: any): a is YogaElement {
     return a && a instanceof YogaElement
   }
 
   yogaDebug(): YogaLayoutInfo {
-    return {...this.node.getComputedLayout(), children: Array.from(this.childNodes).filter(YogaElement.is).map(e=>e.yogaDebug())} 
+    return { ...this.node.getComputedLayout(), children: Array.from(this.childNodes).filter(YogaElement.is).map(e => e.yogaDebug()) }
   }
 
   doLayout(forceUpdate= false) {
@@ -307,12 +300,12 @@ export class YogaElement extends ProgramElement {
 }
 
 interface YogaLayoutInfo {
-  readonly left: number;
-  readonly right: number;
-  readonly top: number;
-  readonly bottom: number;
-  readonly width: number;
-  readonly height: number;
+  readonly left: number
+  readonly right: number
+  readonly top: number
+  readonly bottom: number
+  readonly width: number
+  readonly height: number
   children: YogaLayoutInfo[]
 }
 
@@ -366,8 +359,8 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
     node.setFlexShrink(props.flexShrink)
   }
   if (typeof props.justifyContent !== 'undefined') {
-     node.setJustifyContent(props.justifyContent)
-   }
+    node.setJustifyContent(props.justifyContent)
+  }
   if (typeof props.maxHeight !== 'undefined') {
     node.setMaxHeight(props.maxHeight)
   }
@@ -400,7 +393,6 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
 export class YogaDocument extends ProgramDocument<YogaElement> {
   body: YogaElement
 
-
   constructor() {
     super()
     this.empty()
@@ -431,12 +423,12 @@ export class YogaDocument extends ProgramDocument<YogaElement> {
     return new YogaElement(tagName, this)
 
     // const el= new YogaElement(tagName, this)
-    // // this._allNodes = this._allNodes|| [] // I need to do this - seems to be a bug in typescrpt or js classes - says this._allNodes.push is undefined no matter if i initialize it everywhere... is called from subclass constructor this.ndy = this.createElement... 
+    // // this._allNodes = this._allNodes|| [] // I need to do this - seems to be a bug in typescrpt or js classes - says this._allNodes.push is undefined no matter if i initialize it everywhere... is called from subclass constructor this.ndy = this.createElement...
     // // if(this._allNodes.find(n=>n!==el){
     //   this._allNodes = this._allNodes ||[]
     //   this._allNodes.push(el)
     // // })
-    // return el 
+    // return el
   }
 
 //   destroy() {
@@ -450,7 +442,7 @@ export class YogaDocument extends ProgramDocument<YogaElement> {
 //     // if(yoga.getInstanceCount()!==0){
 //       // this._allNodes
 //       // .filter(n=>!findAncestor(n, a=>a===this.body))
-//       // .forEach(e=>{      
+//       // .forEach(e=>{
 //       //   // e.destroy()
 //       //   e.__getYogaNode()&&e.__getYogaNode()!.free()
 //       // })
@@ -464,7 +456,7 @@ export class YogaDocument extends ProgramDocument<YogaElement> {
 // // }, 600);
 //     // equal(yoga.getInstanceCount(), 0)
 //   }
-  
+
   // _unregister(e: YogaElement) {
   //   this._allNodes = this._allNodes.filter(n=>n!==e)
   //   // const i = this._allNodes.findIndex(n=>n===e)

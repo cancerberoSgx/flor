@@ -1,6 +1,6 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { FlorDocument, ProgramElement } from '../src'
-import { YogaElement } from '../src/programDom/yogaElement';
+import { FlorDocument } from '../src'
+import { YogaElement } from '../src/programDom/yogaElement'
 
 class FlorTest {
   constructor(protected flor: FlorDocument) {

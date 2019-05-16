@@ -75,7 +75,7 @@ export interface FlorJsx<E extends ProgramElement = ProgramElement> {
   render<E extends ProgramElement = ProgramElement>(e: JSX.Element, options?: RenderOptions): E
 
   /**
-   * In order to create Elements, this JSX factory needs a Document instance (on which to call document.createElement). 
+   * In order to create Elements, this JSX factory needs a Document instance (on which to call document.createElement).
    */
   setDocument<E extends ProgramElement = ProgramElement>(doc: ProgramDocument<E>): void
 

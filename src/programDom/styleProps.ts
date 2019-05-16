@@ -1,7 +1,7 @@
 import { LayoutOptions } from '../util'
 import { AttrsImpl } from './attrProps'
 import { isElement } from './elementUtil'
-import { Attrs, BorderProps, Padding, StyleProps, Edges } from './types'
+import { Attrs, BorderProps, Padding, StyleProps } from './types'
 
 export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl<Partial<T>> implements Partial<StyleProps> {
 

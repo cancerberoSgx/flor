@@ -44,7 +44,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     return this.managers &&  this.managers.events
   }
 
-  createElement(t: string) : E {
+  createElement(t: string): E {
     return new ProgramElement(t, this) as E
   }
 
@@ -54,7 +54,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
   create(props: Partial<FullProps>) {
     const el = createElement(this, props)
     this.body.appendChild(el)
-    return el 
+    return el
   }
 
   managersReady =  new Deferred<Managers>()
@@ -88,7 +88,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     }
   }
 
-  private _emptyListenerQueue() { 
+  private _emptyListenerQueue() {
     if (this.managers) {
       this.registerListenerQueue.forEach(l => {
         if (l.type === 'event') {
