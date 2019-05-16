@@ -203,8 +203,8 @@ export class YogaElement extends ProgramElement {
   private _node: yoga.YogaNode = null as any
 
   props: YogaElementPropsImpl
-  defaultHeight = () => 8
-  defaultWidth = () => 7
+  // defaultHeight = () => 8
+  // defaultWidth = () => 7
 
   constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
     super(tagName, ownerDocument)
@@ -232,12 +232,11 @@ export class YogaElement extends ProgramElement {
   }
 
   private setPropsToNode() {
-    isFinite(this.width) && this.node.setWidth(this.width || this.defaultWidth());
-    isFinite(this.height) && this.node.setHeight(this.height || this.defaultHeight());
-    isFinite(this.left) && this.node.setPosition(yoga.EDGE_LEFT, this.left);
-    isFinite(this.top) && this.node.setPosition(yoga.EDGE_TOP, this.top);
+    typeof this.getFlexWidth() !== 'undefined' && this.node.setWidth(this.getFlexWidth()!)
+    typeof this.getFlexHeight() !== 'undefined' && this.node.setHeight(this.getFlexHeight()!)
+    typeof this.getFlexLeft() !== 'undefined' && this.node.setPosition(yoga.EDGE_LEFT, this.getFlexLeft()!);
+    typeof this.getFlexTop() !== 'undefined' && this.node.setPosition(yoga.EDGE_TOP, this.getFlexTop()!);
   }
-
   setYogaProps() {
     setYogaProps(this.node, this.props)
     this.setPropsToNode();
@@ -256,7 +255,7 @@ export class YogaElement extends ProgramElement {
      this. height=this.node.getComputedHeight()
       this.width= this.node.getComputedWidth() 
       // this.props.assign({left: this.node.getComputedLeft(), top: this.node.getComputedTop(), width: this.node.getComputedWidth(), height: this.node.getComputedHeight()})
-      this.node.calculateLayout(isFinite(this.width) ? this.width: undefined, isFinite(this.height) ? this.height: undefined, yoga.DIRECTION_INHERIT)
+      this.node.calculateLayout(isFinite(this.width) ? this.width : undefined,  isFinite(this.height) ? this.height : undefined, typeof this.props.direction!=='undefined'?this.props.direction : this.defaultDirection)
       // this.node.calculateLayout()
     }
     Array.from(this.childNodes).forEach((c, i) => { 
@@ -269,6 +268,23 @@ export class YogaElement extends ProgramElement {
     })
   }
 
+  protected get defaultDirection(): 0 | 1 | 2 | undefined {
+    return yoga.DIRECTION_INHERIT;
+  }
+
+  getFlexWidth(): number | undefined|string {
+    return (this.width>0&&this.width<1)? Math.trunc(this.width*100)+'%': isFinite(this.width) ? this.width : undefined;
+  }
+  getFlexHeight(): number | undefined|string {
+    return (this.height>0&&this.height<1)? Math.trunc(this.height*100)+'%': isFinite(this.height) ? this.height : undefined;
+  }
+  getFlexLeft(): string | number|undefined {
+    return (this.left!==0 && this.left>-1 &&this.left<1) ? Math.trunc(this.left*100)+'%' :  isFinite(this.left) ? this.left : undefined;
+   }
+   getFlexTop(): string | number |undefined {
+     return (this.top!==0 && this.top>-1 &&this.top<1 )? Math.trunc(this.top*100)+'%' : isFinite(this.top) ? this.top : undefined;
+    }
+    
   // calcBounds() {
   //   const l = this.node.getComputedLayout()
   //   this.props.assign({left: l.left, top: l.top, width: l.width, height: l.height})

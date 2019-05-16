@@ -13,34 +13,31 @@ describe('yogaElement', () => {
     })
     const el = flor.create<yoga.YogaElement>(
       <box top={2} left={2} height={13} width={32} border={{ type: BorderStyle.round }}
-        display={yoga.DISPLAY_FLEX}
         flexDirection={yoga.FLEX_DIRECTION_ROW}
       >
-        <box flex={1}></box>
-        <box flex={0}></box>
+        <box width={6} height={8} flex={1}></box>
+        <box  width={6} height={8} flex={0}></box>
       </box>)
-    flor.render()
+    flor.render() 
     await toContain(flor.renderer, '────────')
     flor.expect.toContain(`
 
   ╭──────────────────────────────╮
-  │╭─────────────────────╮╭─────╮│
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  │╰─────────────────────╯╰─────╯│
+  │╭──────────────────────╮╭────╮│
+  ││                      ││    ││
+  ││                      ││    ││
+  ││                      ││    ││
+  ││                      ││    ││
+  ││                      ││    ││
+  ││                      ││    ││
+  │╰──────────────────────╯╰────╯│
   │                              │
   │                              │
   │                              │
   ╰──────────────────────────────╯
-`)  // TODO: why do I have to do this ? no left, no top... ISSUE
-    // el.erase()
+`) 
     el.render()
     // debug('expect: \n' + flor.printBuffer()+'\n', JSON.stringify(el.yogaDebug(), null, 2)+'\n', JSON.stringify(el.debugAsJson(), null, 2)+'\n', el.debugAsXml())
-
     flor.destroy()
     done()
   })
@@ -56,7 +53,7 @@ describe('yogaElement', () => {
         // dire
         // flex={0}
         flexShrink={1}
-
+      direction={yoga.DIRECTION_LTR}
         justifyContent={yoga.JUSTIFY_FLEX_START}
         alignItems={yoga.ALIGN_STRETCH}
         alignContent={yoga.ALIGN_STRETCH}
