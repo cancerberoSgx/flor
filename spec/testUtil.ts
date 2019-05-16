@@ -27,3 +27,7 @@ export async function expectWillContain(renderer: ProgramDocumentRenderer, text:
   await waitForPredicate(() => renderer.printBuffer(true).includes(text))
   expect(renderer.printBuffer(true)).toContain(text)
 }
+export async function expectWontContain(renderer: ProgramDocumentRenderer, text: string) {
+  await waitForPredicate(() => !renderer.printBuffer(true).includes(text))
+  expect(renderer.printBuffer(true)).not.toContain(text)
+}

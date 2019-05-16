@@ -203,6 +203,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this._renderChildren = this._renderChildren.bind(this)
     this.xOffset = 0 - this.p.leftExtraOffset
     this.handleScrollEnd = this.handleScrollEnd.bind(this)
+    // this.onKeyPressed = this.onKeyPressed.bind(this)
   }
 
   /**
@@ -288,20 +289,21 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * Overridden by animate implementation. Don't call.
    */
   private _stopAnimation: () => void = () => { 
-    return 
   }
 
   protected handleScrollEnd() {
     this.scrolling = false
     this._stopAnimation()
     if (this.props.onScroll) {
-      this.p.onScroll({ currentTarget: this.element!, xOffset: this.xOffset, yOffset: this.yOffset })
+      this.props.onScroll({ currentTarget: this.element!, xOffset: this.xOffset, yOffset: this.yOffset })
     }
   }
 
+  // protected onKeyPressed = throttle(this._onKeyPressed, 80, {trailing: true})
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
     if (!this.element!.props.focused) {
-    } else if (this.scrolling) {
+    } 
+    else if (this.scrolling) {
       if (this.p.interruptAnimation) {
         this.handleScrollEnd()
         nextTick(() => this.onKeyPressed(e))
@@ -309,11 +311,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
         this.renderer!.program.bell()
         this.handleScrollEnd()
       }
-    } else if (this.p.largeScrollUpKeys.find(p => p(e))) {
-      this.handleLargeVerticalScroll(-1)
-    } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
-      this.handleLargeVerticalScroll(1)
-    } else if (this.p.normalScrollUpKeys.find(p => p(e))) {
+    } 
+    else if (this.p.normalScrollUpKeys.find(p => p(e))) {
       this.handleNormalVerticalScroll(-1)
     } else if (this.p.normalScrollDownKeys.find(p => p(e))) {
       this.handleNormalVerticalScroll(1)
@@ -322,8 +321,14 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     } else if (this.p.normalScrollLeftKeys.find(p => p(e))) {
       this.handleNormalHorizontalScroll(-1)
     }
+    else if (this.p.largeScrollUpKeys.find(p => p(e))) {
+      this.handleLargeVerticalScroll(-1)
+    } else if (this.p.largeScrollDownKeys.find(p => p(e))) {
+      this.handleLargeVerticalScroll(1)
+    } 
     this.props.onKeyPressed && this.props.onKeyPressed(e)
   }
+
 
   protected handleNormalHorizontalScroll(direction: 1 | -1) {
     if (direction === 1) {

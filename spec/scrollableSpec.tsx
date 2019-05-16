@@ -3,8 +3,9 @@ import { BorderStyle, easing, FlorDocument, Input, Layout, ProgramDocumentRender
 import { Scrollable } from '../src/component/scrollable'
 import { Flor } from '../src/jsx/createElement'
 import { char, color, int, words } from './data'
-import { defaultTestSetup, expectWillContain } from './testUtil'
+import { defaultTestSetup, expectWillContain, expectWontContain } from './testUtil'
 import { Text } from '../src/component/text';
+import { nextTick } from '../src/util/misc';
 
 describe('scrollable', () => {
 
@@ -36,25 +37,42 @@ describe('scrollable', () => {
     done()
   })
 
-  it('should hide overflow and scroll vertical with up and down arrows by default', async done => {
-    const a = <Scrollable top={10} left={20} width={55} height={23}
+  it('should hide overflow and scroll vertical/horizontal with down and right arrows', async done => {
+    const a = <Scrollable top={10} left={20} width={35} height={13}
       border={{ type: BorderStyle.double }} preventChildrenCascade={true}
       layout={{ layout: Layout.topDown }} normalVerticalStep={2} overflow="hidden" largeVerticalScrollStep={40}
       verticalAnimationDuration={1400} largeScrollAnimation={easing.easeOutBounce()}>
-      <box height={2} width={23}>firstChild123</box>
-      {array(int(4, 11)).map(i => <box ch=" " layout={{ layout: Layout.leftRight }}
-        bg={color()} height={int(7, 11)} width={int(40, 85)}>
-        {i} - - {words(4).join(', ')} {array(10).map(j =>
-          <box ch=" " bg={color()} height={int(3, 7)} width={int(14, 20)}>
-            {i}, {j}
-          </box>)}
-      </box>)}
-    </Scrollable>
-    flor.create(<box>Hello</box>)
+      <Text height={3} width={23}>firstChild123</Text>
+      <Text height={17} width={58} border={{ type: BorderStyle.round }}
+          padding={{ top: 1, right: 2, left: 3, bottom: 1 }}>
+          Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum. Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Final words.</Text>
+          <Text height={3} width={23}>lastChild123</Text>
+    </Scrollable>    
+
     const el = flor.create(a)
     flor.render()
-    await waitForPredicate(() => flor.renderer.printBuffer(true).includes('firstChild123'))
-    expect(flor.renderer.printBuffer(true)).toContain('0, 0')
+
+    await expectWillContain(flor.renderer, 'firstChild123')
+    expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
+    expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
+
+    // wont scroll if not focused
+    el.key('down', 8); 
+    await expectWillContain(flor.renderer, 'firstChild123') 
+    expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
+    expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
+
+    // focus with click
+    el.click()     
+    el.key('down', 8); 
+    await expectWillContain(flor.renderer, 'lastChild123')
+    expect(flor.renderer.printBuffer(true)).not.toContain('Final words.')
+    expect(flor.renderer.printBuffer(true)).not.toContain('firstChild123')
+
+    el.key('right', 20)
+    await expectWillContain(flor.renderer, 'Final words.')
+    expect(flor.renderer.printBuffer(true)).not.toContain('firstChild123')
+    expect(flor.renderer.printBuffer(true)).not.toContain('lastChild123')
     done()
   })
 

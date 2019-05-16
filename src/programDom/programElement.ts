@@ -1,4 +1,4 @@
-import { indent } from 'misc-utils-of-mine-generic'
+import { indent, array } from 'misc-utils-of-mine-generic'
 import { mouseActionNames } from '../declarations/program'
 import { Element } from '../dom'
 import { EventListener } from '../dom/event'
@@ -10,6 +10,7 @@ import { ElementPropsImpl } from './elementProps'
 import { isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { FullProps } from './types'
+import { nextTick } from '../util/misc';
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -250,7 +251,7 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * creates a new element and appends it to this element.
+   * Creates a new element and appends it to this element.
    */
   create(props: Partial<FullProps>) {
     if (!this.ownerDocument) {
@@ -329,6 +330,7 @@ export class ProgramElement extends Element {
   addMouseListener(l: MouseListener, name= 'click') {
     this.ownerDocument.managersReady.then(({ events }) => events.addMouseListener(l, this, name))
   }
+
   /**
    * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus.
    */
@@ -344,8 +346,10 @@ export class ProgramElement extends Element {
   /**
    * Triggers a key event on this element.
    */
-  key(e: string | Partial<KeyEvent>) {
-    this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e === 'string' ? e : undefined, typeof e === 'string' ? { name: e } : e)
+  key(e: string | Partial<KeyEvent>, count=1) {
+    array(count).forEach(()=>{
+      this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e === 'string' ? e : undefined, typeof e === 'string' ? { name: e } : e)
+    })
   }
   /**
    * Focus this element.
