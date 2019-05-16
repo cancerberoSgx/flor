@@ -1,9 +1,9 @@
-import { waitForPredicate } from 'misc-utils-of-mine-generic'
+import { waitForPredicate, array } from 'misc-utils-of-mine-generic'
 import { BorderStyle, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Text } from '../src/component/text'
 import { Flor } from '../src/jsx/createElement'
-import { char, color, words } from './data'
+import { char, color, words, int } from './data'
 import { defaultTestSetup, waitToContain } from './testUtil'
 
 describe('scrollable', () => {
@@ -94,6 +94,29 @@ describe('scrollable', () => {
     el.getComponent<Scrollable>()!.scroll({ x: 18, y: 20 })
     flor.render()
     await waitToContain(flor.renderer, 'Eiusmod nostrud')
+    done()
+  })
+
+  it('should scroll many children rows with', async done => {
+    const a = <Scrollable top={10} left={20} width={55} height={23}
+      border={{ type: BorderStyle.double }} preventChildrenCascade={true}
+      layout={{ layout: Layout.topDown }} normalVerticalStep={2} overflow="hidden" largeVerticalScrollStep={40}
+      verticalAnimationDuration={1400} largeScrollAnimation={easing.easeOutBounce()}>
+      <box height={2} width={23}>firstChild123</box>
+      {array(int(20)).map(i => <box ch=" " layout={{ layout: Layout.leftRight }}
+        bg={color()} height={int(7, 11)} width={int(40, 85)}>
+        {i} - - {words(4).join(', ')} 
+        {array(10).map(j =>
+          <box ch=" " bg={color()} height={int(3, 7)} width={int(14, 20)}>
+            {i}, {j}
+          </box>)}
+      </box>)}
+    </Scrollable>
+    flor.create(<box>Hello</box>)
+    const el = flor.create(a)
+    flor.render()
+    await waitForPredicate(() => flor.renderer.printBuffer(true).includes('firstChild123'))
+    expect(flor.renderer.printBuffer(true)).toContain('0, 0')
     done()
   })
 })

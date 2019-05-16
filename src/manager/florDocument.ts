@@ -192,11 +192,11 @@ export class FlorDocument {
     .forEach(c => {
       this._debugEl!.appendChild(this.create({  children: [c] }))
     })
-    this._debugEl.update(true)
+    this._debugEl.forceUpdate(true)
     this.render(this._debugEl)
     if (props.hideTimeout) {
       setTimeout(() => {
-        this._debugEl!.update(true)
+        this._debugEl!.forceUpdate(true)
         this.render(this._debugEl)
       }, props.hideTimeout)
     }

@@ -250,7 +250,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       let r
       if (isElement(c)) {
         if (!this._calcScrollAreaRun) {
-          c.update(true)
+          c.forceUpdate()
           const cyi = c.absoluteTop - this.element!.absoluteTop - this.p.topExtraOffset
           if (this.yi > cyi) {
             this.yi = cyi
@@ -299,7 +299,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     }
   }
 
-  // protected onKeyPressed = throttle(this._onKeyPressed, 80, {trailing: true})
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {
     if (!this.element!.props.focused) {
     } else if (this.scrolling) {

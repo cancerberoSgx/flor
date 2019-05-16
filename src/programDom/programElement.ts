@@ -64,11 +64,11 @@ export class ProgramElement extends Element {
   }
   private _layoutOnce = false
 
-  public update(force = false) {
+  public forceUpdate(descendants = false) {
     this._layoutOnce = false
     this._positionDirty = true
     this._boundsDirty = true
-    this.updateBounds(force)
+    this.updateBounds(descendants)
   }
 
   /**
@@ -117,9 +117,9 @@ export class ProgramElement extends Element {
    */
   protected updateBounds(descendants?: boolean) {
     if (this._positionDirty || this._boundsDirty) {
-      let a = this.absoluteLeft - this.absoluteTop-  this.width - this.props.top - this.props.left
+      // let a = this.absoluteLeft - this.absoluteBottom + this.absoluteRight
       this.layout()
-      a = this.absoluteLeft - this.absoluteTop - this.width - this.props.top - this.props.left
+      this._useExpression(this.absoluteBottom + this.absoluteRight)
       this._positionDirty = false
       this._boundsDirty = false
     }
@@ -128,6 +128,9 @@ export class ProgramElement extends Element {
         e.updateBounds(descendants)
       })
     }
+  }
+  private _useExpression(a: any){
+
   }
 
   toString() {
