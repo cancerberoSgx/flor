@@ -10,9 +10,10 @@ import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 
-interface FlorDocumentOptions extends ProgramOptions, RendererCreateOptions {
+interface FlorDocumentOptions <T extends ProgramDocument=ProgramDocument>  extends ProgramOptions, RendererCreateOptions {
   program?: Program
   useAnsiDiff?: boolean
+  documentImplementation?:()=>T
 }
 /**
  * Main entry point for the library. When calling `new FlorDocument()`, a new [[Program]] instance is created along with a new [[ProgramDocumentRenderer]], [[ProgramDocument]], [[EventManager]] and [[FocusManager]].
@@ -39,7 +40,8 @@ export class FlorDocument {
 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
-      this._program = new Program(o)
+      const programDefaultOptions = { buffer: true }
+      this._program = new Program({...programDefaultOptions, ...o})
       this._program.setMouse({
         allMotion: true
       }, true)
@@ -48,7 +50,7 @@ export class FlorDocument {
     }
     this.render = this.render.bind(this)
     this._events = new EventManager(this._program)
-    this._document = new ProgramDocument()
+    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument()
     Flor.setDocument(this._document)
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
