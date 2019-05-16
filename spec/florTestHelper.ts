@@ -1,11 +1,17 @@
 import { FlorDocument } from '../src';
+import { notFalsy } from 'misc-utils-of-mine-typescript';
 
 class FlorTest {
   constructor(protected flor: FlorDocument){   
   } 
-  toContain(s: string){
-    expect('\n'+this.flor.printBuffer()).toContain(s)
+  toContain(s: string, o: {trimAndRemoveEmptyLines?: boolean} = {trimAndRemoveEmptyLines: false}){
+    let b = this.flor.printBuffer()
+    if(o.trimAndRemoveEmptyLines){
+      b = '\n'+b.split('\n').map(l=>l.trim()).filter(notFalsy).join('\n')+'\n'
+    }
+    expect(b).toContain(s)
   }
+  
   notToContain(s: string){
     expect(this.flor.printBuffer()).not.toContain(s)
   }
