@@ -23,6 +23,7 @@ export interface ConcreteYogaElementProps {
   aspectRatio: number
   // border: {} number                <-------set with current
   display: Display
+  flex: number
   flexGrow: number
   flexShrink: number
   // height: number                       <-------set with current currently yoga percentage width is a string 30% instead of .3 like
@@ -76,6 +77,12 @@ class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements
   }
   public set direction(value: Direction | undefined) {
     this._data.direction = value
+  }
+  public get flex(): number | undefined {
+    return this._data.flex;
+  }
+  public set flex(value: number | undefined) {
+    this._data.flex = value;
   }
   public get flexBasis(): number | undefined  {
     return this._data.flexBasis
@@ -202,15 +209,18 @@ export class YogaElement extends ProgramElement {
   constructor(public readonly tagName: string, ownerDocument: ProgramDocument) {
     super(tagName, ownerDocument)
     this.props = new YogaElementPropsImpl(undefined, this)
+    // if(typeof this.props.width==='undefined'){
+    //   this.props.width=this.defaultWidth()
+    // }
+    // if(typeof this.props.height==='undefined'){
+    //   this.props.height=this.defaultHeight()
+    // }
   }
 
   protected get node(): yoga.YogaNode {
     if (!this._node) {
       this._node = yoga.Node.create()
-      this.node.setWidth(this.width || this.defaultWidth())
-      this.node.setHeight(this.height || this.defaultHeight())
-      this.node.setPosition(yoga.EDGE_LEFT, this.left)
-      this.node.setPosition(yoga.EDGE_TOP, this.top)
+      this.setPropsToNode();
       setYogaProps(this.node, this.props)
       Array.from(this.childNodes).forEach((c, i) => {
         if (c instanceof YogaElement) {
@@ -221,8 +231,16 @@ export class YogaElement extends ProgramElement {
     return this._node
   }
 
+  private setPropsToNode() {
+    isFinite(this.width) && this.node.setWidth(this.width || this.defaultWidth());
+    isFinite(this.height) && this.node.setHeight(this.height || this.defaultHeight());
+    isFinite(this.left) && this.node.setPosition(yoga.EDGE_LEFT, this.left);
+    isFinite(this.top) && this.node.setPosition(yoga.EDGE_TOP, this.top);
+  }
+
   setYogaProps() {
     setYogaProps(this.node, this.props)
+    this.setPropsToNode();
     Array.from(this.childNodes).forEach((c, i) => {
       if (c instanceof YogaElement) {
         // setYogaProps(this.node, this.props)
@@ -232,26 +250,34 @@ export class YogaElement extends ProgramElement {
   }
   calculateLayout() {
     if (this.parentElement instanceof YogaElement) {
-      this.props.assign(this.node.getComputedLayout())
+      // const l = this.node.getComputedLayout()
+      this.left = this.node.getComputedLeft()
+      this. top= this.node.getComputedTop()
+     this. height=this.node.getComputedHeight()
+      this.width= this.node.getComputedWidth() 
+      // this.props.assign({left: this.node.getComputedLeft(), top: this.node.getComputedTop(), width: this.node.getComputedWidth(), height: this.node.getComputedHeight()})
+      this.node.calculateLayout(isFinite(this.width) ? this.width: undefined, isFinite(this.height) ? this.height: undefined, yoga.DIRECTION_INHERIT)
+      // this.node.calculateLayout()
     }
     Array.from(this.childNodes).forEach((c, i) => { 
       if (c instanceof YogaElement) {
-        const l = c.node.getComputedLayout()
-        c.props.assign(l)
-        this.node.calculateLayout( )
+        // const l = c.node.getComputedLayout()
+        // c.props.assign({left: l.left, top: l.top, width: l.width, height: l.height})
+        // this.node.calculateLayout(this.props.width, this.props.height, yoga.DIRECTION_LTR)
         c.calculateLayout()
       }
     })
   }
 
-  calcBounds() {
-    this.props.assign(this.node.getComputedLayout())
-    Array.from(this.childNodes).forEach((c, i) => {
-      if (c instanceof YogaElement) {
-        c.calcBounds()
-      }
-    })
-  }
+  // calcBounds() {
+  //   const l = this.node.getComputedLayout()
+  //   this.props.assign({left: l.left, top: l.top, width: l.width, height: l.height})
+  //   Array.from(this.childNodes).forEach((c, i) => {
+  //     if (c instanceof YogaElement) {
+  //       c.calcBounds()
+  //     }
+  //   })
+  // }
 
   static is(a: any): a is YogaElement {
     return a && a instanceof YogaElement
@@ -261,13 +287,16 @@ export class YogaElement extends ProgramElement {
     // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
     return {...this.node.getComputedLayout(), children: Array.from(this.childNodes).filter(YogaElement.is).map(e=>e.yogaDebug())} 
   }
-  layout(forceUpdate= false) {
+
+
+  doLayout(forceUpdate= false) {
+    // this.setYogaProps()
+    // this.node.calculateLayout(this.props.width, this.props.height, yoga.DIRECTION_LTR)
+    // // this.calcBounds()
+    // this.setYogaProps()
+
     this.setYogaProps()
-    // this.node.calculateLayout()
-    // this.calcBounds()
-    
     this.calculateLayout()
-    
 
     // if(forceUpdate ){
     //   this._boundsDirty=true
@@ -303,8 +332,11 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   if (typeof props.flexDirection !== 'undefined') {
     node.setFlexDirection(props.flexDirection)
   }
-  if (typeof props.direction !== 'undefined') {
-    node.setFlexDirection(props.direction)
+  // if (typeof props.direction !== 'undefined') {
+  //   node.setFlexDirection(props.direction)
+  // }
+  if (typeof props.flex !== 'undefined') {
+    node.setFlex(props.flex)
   }
   if (typeof props.flexBasis !== 'undefined') {
     node.setFlexBasis(props.flexBasis)

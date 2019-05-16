@@ -5,11 +5,13 @@ import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
 
-export interface Padding {
+export interface Edges {
   top: number
   left: number
   right: number
   bottom: number
+}
+export interface Padding extends Edges { 
 }
 /**
  * This represents the native styles attrs that are set directly using tput (the axioms)

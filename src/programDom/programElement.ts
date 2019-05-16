@@ -4,11 +4,11 @@ import { Element } from '../dom'
 import { EventListener } from '../dom/event'
 import { Component } from '../jsx'
 import { KeyEvent, KeyListener, MouseListener } from '../manager'
-import { layoutChildren } from '../util'
+import { layoutChildren, LayoutOptions } from '../util'
 import { ElementPropsImpl } from './elementProps'
 import { createElement, isElement, Rectangle } from './elementUtil'
 import { ProgramDocument } from './programDocument'
-import { FullProps } from './types'
+import { FullProps, Padding, BorderProps, Edges } from './types'
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -43,7 +43,7 @@ export class ProgramElement extends Element {
    */
   _childrenReady() {
     if (!this.props.childrenReady || !this.props.childrenReady()) {
-      this.layout()
+      this.doLayout()
     }
   }
 
@@ -52,18 +52,18 @@ export class ProgramElement extends Element {
    *
    * @internal
    */
-  protected layout() {
-    if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce)
+  protected doLayout() {
+    if (this.layout && (!this.layout.manualLayout || !this._layoutOnce)
     && (this._positionDirty || this._boundsDirty)
     ) {
       layoutChildren({
-        el: this, ...this.props.layout
+        el: this, ...this.layout
       })
       this._layoutOnce = true
     }
   }
   private _layoutOnce = false
-
+  
   public forceUpdate(descendants = false) {
     this._layoutOnce = false
     this._positionDirty = true
@@ -118,7 +118,7 @@ export class ProgramElement extends Element {
   protected updateBounds(descendants?: boolean) {
     if (this._positionDirty || this._boundsDirty) {
       // let a = this.absoluteLeft - this.absoluteBottom + this.absoluteRight
-      this.layout()
+      this.doLayout()
       this._useExpression(this.absoluteBottom + this.absoluteRight)
       this._positionDirty = false
       this._boundsDirty = false
@@ -143,6 +143,39 @@ export class ProgramElement extends Element {
   get parentElement(): ProgramElement | undefined {
     return isElement(this._parentNode) ? this._parentNode : undefined
   }
+  
+  private _absoluteLeft = 0
+  get absoluteLeft() {
+    if (this._positionDirty) {
+      let x = this.left
+      let n: ProgramElement | ProgramDocument = this
+      while (n.parentNode !== n.ownerDocument) {
+        x = x + (n.parentNode as ProgramElement).left + ((n.parentNode as ProgramElement).padding && (n.parentNode as ProgramElement).padding!.left || 0) + ((n.parentNode as ProgramElement).border ? 1 : 0)
+        n = n.parentNode
+      }
+      this._absoluteLeft = x
+    }
+    return this._absoluteLeft
+  }
+  get absoluteRight() {
+    return this.absoluteLeft + this.width
+  }
+  private _absoluteTop = 0
+  get absoluteTop() {
+    if (this._positionDirty) {
+      let y = this.top
+      let n: ProgramElement | ProgramDocument = this
+      while (n.parentNode && n.parentNode !== n.ownerDocument) {
+        y = y + (n.parentNode as ProgramElement).top + ((n.parentNode as ProgramElement).padding && (n.parentNode as ProgramElement).padding!.top || 0) + ((n.parentNode as ProgramElement).border ? 1 : 0)
+        n = n.parentNode
+      }
+      this._absoluteTop = y
+    }
+    return this._absoluteTop
+  }
+  get absoluteBottom() {
+    return this.absoluteTop + this.height
+  }
 
   /**
    * Left coordinate, calculated in columns, relative to parent's content bounds. 
@@ -156,11 +189,12 @@ export class ProgramElement extends Element {
   set left(value: number) {
     this.props.left = value
   } 
+  
   /**
    * Top coordinate, calculated in rows, relative to parent's content bounds. 
    */
   get top() {
-    return this.props.left
+    return this.props.top
   }  
   /**
    * Top coordinate, calculated in rows, relative to parent's content bounds. 
@@ -169,38 +203,26 @@ export class ProgramElement extends Element {
     this.props.top = value
   } 
 
-  private _absoluteLeft = 0
-  get absoluteLeft() {
-    if (this._positionDirty) {
-      let x = this.props.left
-      let n: ProgramElement | ProgramDocument = this
-      while (n.parentNode !== n.ownerDocument) {
-        x = x + (n.parentNode as ProgramElement).props.left + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.left || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
-        n = n.parentNode
-      }
-      this._absoluteLeft = x
-    }
-    return this._absoluteLeft
+  public get padding(): Padding | undefined {
+    return this.props.padding;
   }
-  get absoluteRight() {
-    return this.absoluteLeft + this.props.width
+  public set padding(value: Padding | undefined) {
+    this.props.padding = value;
   }
-  private _absoluteTop = 0
-  get absoluteTop() {
-    if (this._positionDirty) {
-      let y = this.props.top
-      let n: ProgramElement | ProgramDocument = this
-      while (n.parentNode && n.parentNode !== n.ownerDocument) {
-        y = y + (n.parentNode as ProgramElement).props.top + ((n.parentNode as ProgramElement).props.padding && (n.parentNode as ProgramElement).props.padding!.top || 0) + ((n.parentNode as ProgramElement).props.border ? 1 : 0)
-        n = n.parentNode
-      }
-      this._absoluteTop = y
-    }
-    return this._absoluteTop
+  public get border(): Partial<BorderProps> | undefined {
+    return this.props.border;
   }
-  get absoluteBottom() {
-    return this.absoluteTop + this.props.height
+  public set border(value: Partial<BorderProps>| undefined) {
+    this.props.border = value;
   }
+
+  public get layout(): LayoutOptions | undefined {
+    return this.props.layout;
+  }
+  public set layout(value: LayoutOptions | undefined) {
+    this.props.layout = value;
+  }
+  
   get width() {
     return this.props.width
   }
@@ -218,30 +240,31 @@ export class ProgramElement extends Element {
   //   throw new Error('Method not implemented.')
   // }
   get absoluteContentTop() {
-    return this.absoluteTop + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.top : 0)
+    return this.absoluteTop + (this.border ? 1 : 0) + (this.padding ? this.padding.top : 0)
   }
   get absoluteContentLeft() {
-    return this.absoluteLeft + (this.props.border ? 1 : 0) + (this.props.padding ? this.props.padding.left : 0)
+    return this.absoluteLeft + (this.border ? 1 : 0) + (this.padding ? this.padding.left : 0)
   }
   get contentHeight() {
-    return this.props.height - (this.props.border ? 2 : 0) - (this.props.padding ? (this.props.padding.top + this.props.padding.bottom) : 0)
+    return this.height - (this.border ? 2 : 0) - (this.padding ? (this.padding.top + this.padding.bottom) : 0)
   }
   get contentWidth() {
-    return this.props.width - (this.props.border ? 2 : 0) - (this.props.padding ? (this.props.padding.left + this.props.padding.right) : 0)
+    return this.width - (this.border ? 2 : 0) - (this.padding ? (this.padding.left + this.padding.right) : 0)
   }
 
   get absoluteInnerTop() {
-    return this.absoluteTop + (this.props.border ? 1 : 0)
+    return this.absoluteTop + (this.border ? 1 : 0)
   }
   get absoluteInnerLeft() {
-    return this.absoluteLeft + (this.props.border ? 1 : 0)
+    return this.absoluteLeft + (this.border ? 1 : 0)
   }
   get innerHeight() {
-    return this.props.height - (this.props.border ? 1 : 0)
+    return this.height - (this.border ? 1 : 0)
   }
   get innerWidth() {
-    return this.props.width - (this.props.border ? 1 : 0)
+    return this.width - (this.border ? 1 : 0)
   }
+
 /** @internal */
   get _positionDirty() {
     return this.__positionDirty
@@ -257,6 +280,7 @@ export class ProgramElement extends Element {
       }
     }
   }
+  
   /** @internal */
   get _boundsDirty() {
     return this.__boundsDirty
@@ -279,8 +303,8 @@ export class ProgramElement extends Element {
       return {
         yi: this.absoluteTop,
         xi: this.absoluteLeft,
-        yl: this.absoluteTop + this.props.height,
-        xl: this.absoluteLeft + this.props.width
+        yl: this.absoluteTop + this.height,
+        xl: this.absoluteLeft + this.width
       }
     } else {
       throw new Error('TODO')
@@ -373,22 +397,34 @@ export class ProgramElement extends Element {
     this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this)
   }
   /**
+   * If the owner document has a renderer available it request to erase this element from the screen.
+   */
+  erase() {
+    this.ownerDocument.renderer && this.ownerDocument.renderer.eraseElement(this)
+  }
+
+  /**
    * Gets only childNodes that are elements.
    */
   getChildrenElements() {
     return Array.from(this.childNodes).filter(isElement)
   }
 
+  debugAsJson():DebugJsonNode{
+    // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
+    return {...this.props.data, children: Array.from(this.childNodes).map(e=>isElement(e) ? e.debugAsJson() : 'Text('+e.textContent+')')} 
+  }
   /**
    * Returns a XML like string representation of this element instance.
    */
-  debug(o: DebugOptions = { level: 0 }): string {
+  debugAsXml(o: DebugOptions = { level: 0 }): string {
     return `${indent(o.level)}<${this.tagName} ${
-      Object.keys({ ...this.props, ...this.props.data })
-        .filter(f => f !== '_data').map(p => `${p}=${
-          JSON.stringify(({ ...this.props, owner: undefined } as any)[p] || (this.props.data as any)[p] || '')}`).join(' ')} textContent="${this.textContent}">\n${indent(o.level + 1)}${
+      Object.keys({  ...this.props.data })
+        // .filter(f => f !== '_data')
+        .map(p => `${p}=${
+          JSON.stringify(this.props.data[p])}`).join(' ')} ${this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${
       Array.from(this.childNodes)
-        .map(e => isElement(e) ? e.debug({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join('')}\n${indent(o.level)}<${this.tagName}>\n`
+        .map(e => isElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`
   }
 
   addKeyListener(l: KeyListener, name= 'keypress') {
@@ -427,6 +463,8 @@ export class ProgramElement extends Element {
     }
   }
 }
+
+interface DebugJsonNode  {[s: string]: any, children: DebugJsonNode[]} 
 
 interface DebugOptions {
   level: number

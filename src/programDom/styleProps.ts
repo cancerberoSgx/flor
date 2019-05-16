@@ -1,7 +1,7 @@
 import { LayoutOptions } from '../util'
 import { AttrsImpl } from './attrProps'
 import { isElement } from './elementUtil'
-import { Attrs, BorderProps, Padding, StyleProps } from './types'
+import { Attrs, BorderProps, Padding, StyleProps, Edges } from './types'
 
 export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl<Partial<T>> implements Partial<StyleProps> {
 
@@ -47,7 +47,7 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   public get border() {
     return this._data.border
   }
-  public set border(value: Partial<BorderProps> | undefined) {
+  public set border(value: Partial<BorderProps>  | undefined) {
     if (!!this._data.border !== !!value) {
       this.owner._boundsDirty = true
       this.owner._positionDirty = true

@@ -177,14 +177,14 @@ export class FlorDocument {
   debug(el: any, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
     if (!this._debugEl) {
       this._debugEl = this.create({   top: .7, left: .01, width: 200, height: .3, ...props, children: ['LOG']
-      , layout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
+      , doLayout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
       })
     }
     this._debugEl.empty()
     if (typeof el === 'string') {
       this._debugEl.appendChild(this.create({  children: [el] }))
     } else if (isElement(el)) {
-      (el.debug() || '').split('\n').forEach((l, i) => {
+      (el.debugAsXml() || '').split('\n').forEach((l, i) => {
         this._debugEl!.appendChild(this.create({   children: [l] }))
       })
     } else {
