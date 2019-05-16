@@ -1,9 +1,9 @@
-import { waitForPredicate, array } from 'misc-utils-of-mine-generic'
+import { array, waitForPredicate } from 'misc-utils-of-mine-generic'
 import { BorderStyle, easing, FlorDocument, Layout } from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Text } from '../src/component/text'
 import { Flor } from '../src/jsx/createElement'
-import { char, color, words, int } from './data'
+import { char, color, int, words } from './data'
 import { defaultTestSetup, toContain } from './testUtil'
 
 describe('scrollable', () => {
@@ -105,7 +105,7 @@ describe('scrollable', () => {
       <el height={2} width={23}>firstChild123</el>
       {array(int(20)).map(i => <el ch=" " layout={{ layout: Layout.leftRight }}
         bg={color()} height={int(7, 11)} width={int(40, 85)}>
-        {i} - - {words(4).join(', ')} 
+        {i} - - {words(4).join(', ')}
         {array(10).map(j =>
           <el ch=" " bg={color()} height={int(3, 7)} width={int(14, 20)}>
             {i}, {j}

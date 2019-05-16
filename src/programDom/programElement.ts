@@ -54,8 +54,8 @@ export class ProgramElement extends Element {
    */
   protected layout() {
     if (this.props.layout && (!this.props.layout.manualLayout || !this._layoutOnce)
-    && (this._positionDirty||this._boundsDirty)
-    ) {  
+    && (this._positionDirty || this._boundsDirty)
+    ) {
       layoutChildren({
         el: this, ...this.props.layout
       })
@@ -129,7 +129,7 @@ export class ProgramElement extends Element {
       })
     }
   }
-  private _useExpression(a: any){
+  private _useExpression(a: any) {
 
   }
 
@@ -143,6 +143,31 @@ export class ProgramElement extends Element {
   get parentElement(): ProgramElement | undefined {
     return isElement(this._parentNode) ? this._parentNode : undefined
   }
+
+  /**
+   * Left coordinate, calculated in columns, relative to parent's content bounds. 
+   */
+  get left() {
+    return this.props.left
+  }    
+  /**
+   * Left coordinate, calculated in columns, relative to parent's content bounds.
+   */
+  set left(value: number) {
+    this.props.left = value
+  } 
+  /**
+   * Top coordinate, calculated in rows, relative to parent's content bounds. 
+   */
+  get top() {
+    return this.props.left
+  }  
+  /**
+   * Top coordinate, calculated in rows, relative to parent's content bounds. 
+   */
+  set top(value: number) {
+    this.props.top = value
+  } 
 
   private _absoluteLeft = 0
   get absoluteLeft() {
@@ -188,7 +213,7 @@ export class ProgramElement extends Element {
   set height(value: number) {
     this.props.height = value
   }
-  
+
   // onBoundsChange(arg0: () => void): any {
   //   throw new Error('Method not implemented.')
   // }
@@ -224,7 +249,7 @@ export class ProgramElement extends Element {
   /** @internal */
   set _positionDirty(d: boolean) {
     if (d !== this.__positionDirty) {
-    this.__positionDirty = d
+      this.__positionDirty = d
       if (d) {
         this.getChildrenElements().forEach(e => {
           e._positionDirty = true
@@ -280,19 +305,17 @@ export class ProgramElement extends Element {
    */
   getInnerBounds(relative = false): Rectangle {
     if (!relative) {
-      return { 
-        yi: this.absoluteInnerTop, 
+      return {
+        yi: this.absoluteInnerTop,
         xi: this.absoluteInnerLeft,
-         yl: this.absoluteInnerTop + this.innerHeight, 
-         xl: this._absoluteLeft + this.innerWidth 
-        }
+        yl: this.absoluteInnerTop + this.innerHeight,
+        xl: this._absoluteLeft + this.innerWidth
+      }
 
     } else {
       throw new Error('TODO')
     }
   }
-
-
 
   /**
    * Creates a new element and appends it to this element.

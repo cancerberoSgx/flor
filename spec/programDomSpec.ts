@@ -24,7 +24,7 @@ describe('programDom', () => {
 
   it('js api', async done => {
     const program = new Program()
-    program.key(['q', 'escape', 'C-c'], function () {
+    program.key(['q', 'escape', 'C-c'], function() {
       program.showCursor()
       program.disableMouse()
       program.normalBuffer()

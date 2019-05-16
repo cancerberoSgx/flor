@@ -43,7 +43,7 @@ export function getCurrentCommit() {
 }
 
 export async function toContain(renderer: ProgramDocumentRenderer, text: string) {
-  await waitForPredicate(() => renderer.printBuffer(true).includes(text), { interval: 100, timeoutError: 'expected to contain '+text })
+  await waitForPredicate(() => renderer.printBuffer(true).includes(text), { interval: 100, timeoutError: 'expected to contain ' + text })
   expect(renderer.printBuffer(true)).toContain(text)
 }
 export async function notToContain(renderer: ProgramDocumentRenderer, text: string) {

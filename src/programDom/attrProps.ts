@@ -2,7 +2,7 @@ import { ProgramElement } from './programElement'
 import { ColorString, PAttrs } from './styleProps'
 
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
-  constructor(p: PAttrs|undefined, owner: ProgramElement) {
+  constructor(p: PAttrs | undefined, owner: ProgramElement) {
     this._data = p as any || {}
     this.owner = owner
   }

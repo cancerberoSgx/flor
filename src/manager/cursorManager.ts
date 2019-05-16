@@ -51,7 +51,7 @@ export class CursorManager {
   cursorShape(shape?: CursorShape, blink?: boolean) {
     this.cursor.shape = shape || 'block'
     this.cursor.blink = blink || false
-    this.cursor._set = true    
+    this.cursor._set = true
     this.program.cursorShape(this.cursor.shape, this.cursor.blink)
   }
 
@@ -71,8 +71,8 @@ export class CursorManager {
     leaveProgram(this.program)
   }
 
-  /** 
-   * restore terminal control after [[leave]] was called 
+  /**
+   * restore terminal control after [[leave]] was called
    */
   enter() {
     if (!this.cursor._set) {

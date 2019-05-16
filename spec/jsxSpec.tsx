@@ -2,8 +2,8 @@ import { trimRightLines } from 'misc-utils-of-mine-generic'
 import { ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'
-import { isElement } from '../src/programDom/elementUtil'
 import { createProgramRendererDocument } from '../src/manager/programUtil'
+import { isElement } from '../src/programDom/elementUtil'
 
 describe('jsx', () => {
 

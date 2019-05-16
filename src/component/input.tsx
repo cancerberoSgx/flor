@@ -178,7 +178,7 @@ export class Input extends Component<InputProps, {}> {
     if (this.textInputCursorManager) {
       this.textInputCursorManager.enabled = true
     }
-    if(this.element && this.element.props.focused && this.cursor){
+    if (this.element && this.element.props.focused && this.cursor) {
       this.cursor.show({
         name: 'Input',
         top: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row,
@@ -193,10 +193,10 @@ export class Input extends Component<InputProps, {}> {
    * default) then it will also remove focus from the element.
    */
   disableInput() {
-    if(this.element && this.props.blurOnChange && this.element.props.focused ){
+    if (this.element && this.props.blurOnChange && this.element.props.focused) {
       this.element.blur()
     }
-    if(this.cursor){
+    if (this.cursor) {
       this.cursor.hide({ name: 'Input' })
     }
     if (this.textInputCursorManager) {

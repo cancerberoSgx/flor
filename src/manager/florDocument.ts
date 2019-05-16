@@ -4,16 +4,16 @@ import { Program, ProgramOptions } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
 import { ElementProps, FullProps, isElement, ProgramDocument, ProgramElement } from '../programDom'
 import { addLogger, Layout } from '../util'
-import { installExitKeys } from './programUtil'
 import { CursorManager } from './cursorManager'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
+import { installExitKeys } from './programUtil'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 
-interface FlorDocumentOptions <T extends ProgramDocument=ProgramDocument>  extends ProgramOptions, RendererCreateOptions {
+interface FlorDocumentOptions <T extends ProgramDocument= ProgramDocument>  extends ProgramOptions, RendererCreateOptions {
   program?: Program
   useAnsiDiff?: boolean
-  documentImplementation?:()=>T
+  documentImplementation?: () => T
 }
 /**
  * Main entry point for the library. When calling `new FlorDocument()`, a new [[Program]] instance is created along with a new [[ProgramDocumentRenderer]], [[ProgramDocument]], [[EventManager]] and [[FocusManager]].
@@ -41,7 +41,7 @@ export class FlorDocument {
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
       const programDefaultOptions = { buffer: true }
-      this._program = new Program({...programDefaultOptions, ...o})
+      this._program = new Program({ ...programDefaultOptions, ...o })
       this._program.setMouse({
         allMotion: true
       }, true)
@@ -88,7 +88,7 @@ export class FlorDocument {
   /**
    * Creates an Element from given Props or by rendering given JSXElement and appends it to [[body]].
    */
-  create(el: ProgramElement | Partial<FullProps> | JSX.Element) {
+  create<T extends ProgramElement=ProgramElement>(el: ProgramElement | Partial<FullProps> | JSX.Element) : T{
     let r: ProgramElement | undefined
     if (isElement(el)) {
       r = el
@@ -102,7 +102,7 @@ export class FlorDocument {
     } else {
       throw new Error('Could not create element for input ' + el)
     }
-    return r
+    return r as T
   }
 
   /**
@@ -217,4 +217,3 @@ export class FlorDocument {
   }
 
 }
-

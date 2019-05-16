@@ -1,6 +1,6 @@
 import { ElementProps, ProgramDocument, ProgramElement } from '..'
+import { YogaElementProps } from '../programDom/yogaElement'
 import { Component } from './component'
-import { YogaElementProps } from '../programDom/yogaElement';
 
 declare global {
 

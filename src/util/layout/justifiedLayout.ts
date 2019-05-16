@@ -45,7 +45,7 @@ export function handleJustifiedLayout(o: LayoutOptions & {
         // c.props.assign({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) })
       }
     })
-  } 
+  }
 }
 /**
  * Accepts an array of boxes (with a lot of optional configuration options) and returns geometry for a nice justified layout as seen all over [Flickr](https://www.flickr.com/explore)

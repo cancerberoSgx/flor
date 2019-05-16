@@ -53,7 +53,7 @@ export function destroyProgram(program: Program) {
  * destroyed and the process exits)
  */
 export function installExitKeys(program: Program, exitKeys = ['q', 'escape', 'C-c']) {
-  program.key(exitKeys, function () {
+  program.key(exitKeys, function() {
     destroyProgramAndExit(program)
   })
 }
@@ -123,8 +123,8 @@ export function createProgramRendererDocument(programOptions: ProgramOptions = d
   return { renderer, document, program }
 }
 
-/** 
- * Creates a new program. 
+/**
+ * Creates a new program.
  */
 export function createProgram(programOptions: ProgramOptions & {
   installDefaultExitKeys?: boolean;

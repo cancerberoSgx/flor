@@ -1,71 +1,90 @@
-import { FlorDocument, Flor, BorderStyle, debug } from '../src'
-import { defaultTestSetup, toContain } from './testUtil'
-import { YogaDocument , JUSTIFY_FLEX_START} from '../src/programDom/yogaElement';
-import * as yoga from  '../src/programDom/yogaElement'
-import { int } from './data';
+import { BorderStyle, Flor, debug } from '../src';
+import * as yoga from '../src/programDom/yogaElement';
+import { YogaDocument } from '../src/programDom/yogaElement';
 import { FlorDocumentTesting } from './florTestHelper';
+import { toContain } from './testUtil';
 
 describe('yogaElement', () => {
 
-  it('simple row, grow, no need for left, right, width, height in descendants', async done => {
-   const flor = new FlorDocumentTesting({
-     documentImplementation () {return new YogaDocument()}
-   })
-  const el = flor.create( 
-    <box top={2} left={2} height={13} width={32} border={{type: BorderStyle.round}} preventChildrenCascade={false}
-    flexDirection={yoga.FLEX_DIRECTION_ROW} 
-    // alignContent={yoga.ALIGN_CENTER}
-    // alignItems={yoga.ALIGN_CENTER}
-    flexWrap={yoga.WRAP_NO_WRAP}
-    // justifyContent={yoga.ALIGN_STRETCH}
-    // direction={yoga.DIRECTION_LTR}
-    // flexShrink={1}
-     >
-      <box  
-      // top={2} left={3} 
-      // height={23} width={32} 
-       border={{type: BorderStyle.doubleLight}} preventChildrenCascade={false}
-      // flexDirection={yoga.FLEX_DIRECTION_COLUMN} 
-      flexGrow={1}
-      // flexShrink={1}
-     >
-        {/* <box  
-        height={7} width={12}
-         border={{type: BorderStyle.double}}>box 11</box>
-      <box  height={9} width={15} border={{type: BorderStyle.double}}  >box 12</box> */}
-      </box>  
+  it('FLEX_DIRECTION_ROW, flexGrow, descendants bounds not needed', async done => {
+    const flor = new FlorDocumentTesting({
+      documentImplementation() { return new YogaDocument() }
+    })
+    const el = flor.create(
+      <box top={2} left={2} height={13} width={32} border={{ type: BorderStyle.round }}
+        flexDirection={yoga.FLEX_DIRECTION_ROW}
+      >
+        <box flexGrow={1}></box>
+        <box></box>
+      </box>)
+    flor.render()
+    await toContain(flor.renderer, '────────')
+    flor.expect.toContain(`
 
-       <box 
-      //  top={2} left={3} 
-      //  height={20} width={22}  
-       border={{type: BorderStyle.doubleLight}} preventChildrenCascade={false}
-        // flexDirection={yoga.FLEX_DIRECTION_COLUMN} 
-      // flexGrow={1}
-      // flexShrink={1}
-       >
-        {/* <box  height={8} width={14} border={{type: BorderStyle.double}}  >box 21</box>
-      <box  height={6} width={13} border={{type: BorderStyle.double}}  >box 22</box> */}
-      </box>
- 
-  </box>)
-  flor.render()
-  await toContain(flor.renderer, '────────')
-  flor.expect.toContain(`
-╭──────────────────────────────╮
-│╒═════════════════════╕╒═════╕│
-││                     ││     ││
-││                     ││     ││
-││                     ││     ││
-││                     ││     ││
-││                     ││     ││
-││                     ││     ││
-│╘═════════════════════╛╘═════╛│
-│                              │
-│                              │
-│                              │
-╰──────────────────────────────╯
-`, {trimAndRemoveEmptyLines: true})  // TODO: why do I have to do this ? no left, no top... ISSUE
-  flor.destroy()
-  done()
+  ╭──────────────────────────────╮
+  │╭─────────────────────╮╭─────╮│
+  ││                     ││     ││
+  ││                     ││     ││
+  ││                     ││     ││
+  ││                     ││     ││
+  ││                     ││     ││
+  ││                     ││     ││
+  │╰─────────────────────╯╰─────╯│
+  │                              │
+  │                              │
+  │                              │
+  ╰──────────────────────────────╯
+`)  // TODO: why do I have to do this ? no left, no top... ISSUE
+    flor.destroy()
+    done()
+  })
+
+
+  xit('simple row, with columns, one grow', async done => {
+    const flor = new FlorDocumentTesting({
+      documentImplementation() { return new YogaDocument() }
+    })
+    const el = flor.create<yoga.YogaElement>(
+      <box top={2} left={2} height={23} width={62} border={{ type: BorderStyle.round }}
+        flexDirection={yoga.FLEX_DIRECTION_ROW}
+      >
+        <box
+          // flexDirection={yoga.FLEX_DIRECTION_COLUMN}
+          flexGrow={2}
+        >
+          <box></box>
+          <box></box>
+        </box>
+
+        <box
+          // flexDirection={yoga.FLEX_DIRECTION_COLUMN}
+          flexGrow={1}
+        >
+          <box></box>
+          <box></box>
+
+        </box>
+
+      </box>)
+    flor.render()
+    debug('expect: \n' + flor.printBuffer()+'\n', el.yogaDebug())
+    //     await toContain(flor.renderer, '────────')
+    //     flor.expect.toContain(`
+    //  ╭──────────────────────────────╮
+    //  │╒═════════════════════╕╒═════╕│
+    //  ││                     ││     ││
+    //  ││                     ││     ││
+    //  ││                     ││     ││
+    //  ││                     ││     ││
+    //  ││                     ││     ││
+    //  ││                     ││     ││
+    //  │╘═════════════════════╛╘═════╛│
+    //  │                              │
+    //  │                              │
+    //  │                              │
+    //  ╰──────────────────────────────╯
+    //  ` )  // TODO: why do I have to do this ? no left, no top... ISSUE
+    //     flor.destroy()
+    //     done()
   })
 })
