@@ -3,13 +3,14 @@ import { defaultTestSetup, toContain } from './testUtil'
 import { YogaDocument , JUSTIFY_FLEX_START} from '../src/programDom/yogaElement';
 import * as yoga from  '../src/programDom/yogaElement'
 import { int } from './data';
+import { FlorDocumentTesting } from './florTestHelper';
 
 describe('yogaElement', () => {
   let flor: FlorDocument
   defaultTestSetup(f => flor = f || flor)
 
   fit('by default overflow visible', async done => {
-   const flor = new FlorDocument({
+   const flor = new FlorDocumentTesting({
      documentImplementation () {return new YogaDocument()}
    })
   const el = flor.create( 
@@ -50,24 +51,38 @@ describe('yogaElement', () => {
  
   </box>)
   flor.render()
-  debug(flor.printBuffer()) 
+  // debug('BUFFER: \n'+flor.printBuffer()) 
   await toContain(flor.renderer, '────────')
-  await toContain(flor.renderer, `
-
-  ╭──────────────────────────────╮
-  │╒═════════════════════╕╒═════╕│
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  ││                     ││     ││
-  │╘═════════════════════╛╘═════╛│
-  │                              │
-  │                              │
-  │                              │
-  ╰──────────────────────────────╯
+  expect('\n'+flor.printBuffer()).toContain(`
+╭──────────────────────────────╮
+│╒═════════════════════╕╒═════╕│
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+│╘═════════════════════╛╘═════╛│
+│                              │
+│                              │
+│                              │
+╰──────────────────────────────╯
 `)
+  flor.expect.toContain(`
+╭──────────────────────────────╮
+│╒═════════════════════╕╒═════╕│
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+││                     ││     ││
+│╘═════════════════════╛╘═════╛│
+│                              │
+│                              │
+│                              │
+╰──────────────────────────────╯
+`) 
   flor.destroy()
   done()
   })

@@ -4,10 +4,10 @@ class FlorTest {
   constructor(protected flor: FlorDocument){   
   } 
   toContain(s: string){
-    expect(this.flor.printBuffer(true)).toContain(s)
+    expect('\n'+this.flor.printBuffer()).toContain(s)
   }
   notToContain(s: string){
-    expect(this.flor.printBuffer(true)).not.toContain(s)
+    expect(this.flor.printBuffer()).not.toContain(s)
   }
 }
 
