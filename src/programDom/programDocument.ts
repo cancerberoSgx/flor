@@ -101,9 +101,9 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     }
   }
 
-  static is(d: any): d is ProgramDocument {
-    return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create)
-  }
+  // static is(d: any): d is ProgramDocument {
+  //   return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create) && d instanceof ProgramDocument
+  // }
 }
 
-type Resolve<T> =  (value?: T) => PromiseLike<T>
+// type Resolve<T> =  (value?: T) => PromiseLike<T>

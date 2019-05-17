@@ -10,7 +10,7 @@ import { FocusManager } from './focusManager'
 import { installExitKeys } from './programUtil'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 
-interface FlorDocumentOptions <E extends ProgramElement = ProgramElement, T extends ProgramDocument<E>= ProgramDocument<E>>  extends ProgramOptions, RendererCreateOptions {
+export interface FlorDocumentOptions <E extends ProgramElement = ProgramElement, T extends ProgramDocument<E>= ProgramDocument<E>>  extends ProgramOptions, RendererCreateOptions {
   program?: Program
   useAnsiDiff?: boolean
   documentImplementation?: () => T

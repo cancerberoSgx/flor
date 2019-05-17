@@ -78,7 +78,7 @@ describe('yogaElement', () => {
       </box>)
     flor.render()
     await toContain(flor.renderer, '────────')
-    flor.expect.toContain(`
+    flor.test.toContain(`
 
   ╭──────────────────────────────╮
   │┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓┏╍╍╍╍┓│
@@ -124,7 +124,7 @@ describe('yogaElement', () => {
     flor.render()
     // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     await toContain(flor.renderer, '═════════════')
-    flor.expect.toContain(`
+    flor.test.toContain(`
 
   ╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮╔═══════════════════════════════════╗
   ┆///////////////////////┆║|||||||||||||||||||||||||||||||||||║
@@ -169,7 +169,7 @@ describe('yogaElement', () => {
       </box>)
     flor.render()
     await toContain(flor.renderer, 'Seba')
-    flor.expect.toContain(`
+    flor.test.toContain(`
   ······························
   ······························
   ······························
@@ -208,8 +208,8 @@ describe('yogaElement', () => {
         <box  {...o} width={.1} height={11}>8</box>
       </box>)
     flor.render()
-    await flor.expect.willContain('1')
-    flor.expect.toContain(`
+    await flor.test.willContain('1')
+    flor.test.toContain(`
 
 
     ╭──────────────────────────────────────────────────╮
@@ -247,14 +247,14 @@ describe('yogaElement', () => {
     ╰──────────────────────────────────────────────────╯
 `)
 
-    await flor.expect.wontContain('seba')
+    await flor.test.wontContain('seba')
     el.props.flexDirection = yoga.FLEX_DIRECTION_ROW
     el.findDescendant(n => isDomText(n) && !!n.textContent && n.textContent.includes('1'))!.textContent = 'seba'
     flor.render()
-    await flor.expect.willContain('seba')
-    await flor.expect.wontContain('1')
+    await flor.test.willContain('seba')
+    await flor.test.wontContain('1')
 
-    flor.expect.toContain(`
+    flor.test.toContain(`
 
 
     ╭──────────────────────────────────────────────────╮

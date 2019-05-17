@@ -17,7 +17,7 @@ export class YogaDocument extends ProgramDocument<YogaElement> {
     this.appendChild(this.body)
     this._allNodes.push(this.body)
   }
-  private _allNodes: (undefined|YogaElement)[]
+  private _allNodes: (undefined | YogaElement)[]
   // constructor() {
   //   super()
   //   // if(this.body){
@@ -68,10 +68,15 @@ export class YogaDocument extends ProgramDocument<YogaElement> {
     // equal(yoga.getInstanceCount(), 0)
   }
   _unregister(e: YogaElement) {
-    this._allNodes[e.internalId]=undefined// = this._allNodes.filter(n => n !== e)
+    this._allNodes[e.internalId] = undefined// = this._allNodes.filter(n => n !== e)
     // const i = this._allNodes.findIndex(n=>n===e)
     // notEqual(i, -1)
     //  this._allNodes.splice(i,1)
     debug('_unregister', this._allNodes.filter(notUndefined).length, yoga.getInstanceCount())
   }
+
+  
+  // static is(d: any): d is YogaDocument {
+  //   return !!(d && d.body && (d as YogaDocument).createElement && (d as YogaDocument).create && (d as YogaDocument)._unregister && d instanceof YogaDocument)
+  // }
 }

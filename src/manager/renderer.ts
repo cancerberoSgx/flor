@@ -1,6 +1,6 @@
 import { array, repeat, trimRightLines } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
-import * as wrap from 'word-wrap'
+import wrap from 'word-wrap'
 import { isElement, Rectangle } from '..'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Node } from '../dom'

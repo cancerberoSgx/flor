@@ -14,7 +14,7 @@ export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   /**
    * Gets all props as plain object.
    */
-  get data(): any {
+  get data(): any { // TODO: sould eb AttrsProps - workqaround for types issue.
     return this._data
   }
   /**

@@ -47,15 +47,13 @@ export abstract class Node extends EventTarget {
   get innerHTML() {
     return nodeHtml(this, false)
   }
-  // set innerHTML(id: string | null) {
-  //   throw new Error('not implemented')
+  // set innerHTML(id: string | null) {throw new Error('not implemented')
   // }
 
   get outerHTML() {
     return nodeHtml(this, true)
   }
-  // set outerHTML(id: string | null) {
-  //   throw new Error('not implemented')
+  // set outerHTML(id: string | null) {throw new Error('not implemented')
   // }
 
   getAttribute(a: string) {
@@ -82,10 +80,8 @@ export abstract class Node extends EventTarget {
     this.parentNode && this.parentNode.removeChild(this)
   }
   removeChild(n: Node): Node | undefined {
-    // const c2 = this._children.filter(c=>c!==n)
-    // const removed = c2.length<this._children.length
-    // this._children = c2
-    // return removed ? n : undefined
+    // const c2 = this._children.filter(c=>c!==n) const removed = c2.length<this._children.length
+    // this._children = c2 return removed ? n : undefined
     const i = this._children.findIndex(c => c === n)
     if (i !== -1) {
       return this._children.splice(i, 1)[0] || undefined
@@ -103,51 +99,59 @@ export abstract class Node extends EventTarget {
     }
   }
   /**
-   * Replaces node with nodes, while replacing strings in nodes with equivalent Text nodes. Throws a "HierarchyRequestError" DOMException if the constraints of the node tree are violated.
+   * Replaces node with nodes, while replacing strings in nodes with equivalent Text nodes. Throws a
+   * "HierarchyRequestError" DOMException if the constraints of the node tree are violated.
    */
   replaceWith(...nodes: (Node | string)[]): void {
     const children = (this._parentNode as any)._children as Node[]
     children.splice(children.indexOf(this), 1,
-        ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
+      ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
   }
 
   /** miscellaneous data */
-  _data: {[s: string]: any } = {}
+  _data: { [s: string]: any } = {}
 
   visitChildren(v: (c: Node) => void) {
     visitChildren(this, v)
   }
   mapChildren<T>(v: (c: Node) => T): T[] {
-    return  mapChildren(this, v)
+    return mapChildren(this, v)
   }
-  findChildren<T extends Node = Node>(p: ElementPredicate) {
-    return  findChildren(this, p)
+  findChildren(p: ElementPredicate) {
+    return findChildren(this, p)
   }
-  filterChildren<T extends Node = Node>(p: ElementPredicate) {
-    return   filterChildren(this, p)
+  filterChildren(p: ElementPredicate) {
+    return filterChildren(this, p)
   }
   visitDescendants(v: Visitor, o: VisitorOptions = {}): boolean {
-    return  visitDescendants(this, v, o)
+    return visitDescendants(this, v, o)
   }
   filterDescendants<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
-    return   filterDescendants(this, p, o)
+    return filterDescendants(this, p, o)
   }
-  mapDescendants<T extends Node = Node, V = any>(p: (p: T) => V, o: VisitorOptions = {}): V[]  {
-    return    mapDescendants(this, p, o)
+  mapDescendants<T extends Node = Node, V = any>(p: (p: T) => V, o: VisitorOptions = {}): V[] {
+    return mapDescendants(this, p, o)
   }
-  findDescendant<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}) {
-    return    findDescendant(this, p, o)
+  findDescendant(p: ElementPredicate, o: VisitorOptions = {}) {
+    return findDescendant(this, p, o)
   }
   visitAncestors(v: Visitor, o = {}): boolean {
-    return     visitAncestors(this, v, o)
+    return visitAncestors(this, v, o)
   }
-  findAncestor<T extends Node = Node>(p: ElementPredicate, o = {}) {
-    return      findAncestor(this, p, o)
+  findAncestor(p: ElementPredicate, o = {}) {
+    return findAncestor(this, p, o)
   }
-
   filterAncestors<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
     return filterAncestors(this, p, o)
   }
+
+  // /**
+  //  * returns the first descendant node that contains given text. Warning, if you use the type parameter to
+  //  * cast the result, be aware that this method doesn't perform any verification on the returned type. 
+  //  */
+  // findDescendantContaining<T extends Node = Node>(text: string, o: VisitorOptions = {}): T|undefined {
+  //   return findDescendantContaining(this, text, o)
+  // }
 }
 
 export type NodeType = 10 | 3 | 1

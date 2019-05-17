@@ -23,12 +23,13 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
     this._data.focused = value
     // TODO: here we could notify focusManager
   }
-  public get focus(): Partial<StyleProps> | undefined {
-    
+
+
+  public get focus(): Partial<StyleProps>&{readonly data: any} | undefined {    
     return this._dataFocus
   }  
-  private _dataFocus: StylePropsImpl<StyleProps> | undefined
-  public set focus(value: Partial<StyleProps> | undefined) {
+  private _dataFocus: StylePropsImpl | undefined
+  public set focus(value: Partial<StyleProps>&{readonly data: any}  | undefined) {
     if(!this._dataFocus){
       this._dataFocus = new StylePropsImpl(undefined, this.owner)
     }

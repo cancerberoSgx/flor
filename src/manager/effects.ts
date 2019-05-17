@@ -2,6 +2,7 @@ import { ProgramElement, ProgramDocument } from '../programDom';
 import { YogaElement } from '../yogaDom';
 import { FocusManager, FocusEvent, BlurEvent } from './focusManager';
 import { CommonElementImpl } from '../jsx';
+// import {di} from 'misc-utils-of-mine-generic'
 
 interface State {
   dirty: boolean
@@ -21,13 +22,13 @@ export class StyleEffectsManager {
     this.previous = focused
   }
   get(e?: YogaElement): State | undefined {
-    if (!e) {
+    if (!e||!e.props.focus) {
       return
     }
     let s = this._state[e.internalId]
     if (!s) {
       s = {
-        dirty: true
+        dirty: !!e.props.focus
       }
       this._state[e.internalId] = s
     }
@@ -35,12 +36,13 @@ export class StyleEffectsManager {
   }
   setFocusedStyle(focused?: YogaElement) {
     const s = this.get(focused)
-    if (!s || !s.dirty) {
+    if (!focused || !s || !s.dirty) {
       return
     }
-    // focused.props.focus
-
-
+    const focusStyle = focused.props.focus!.data
+    // const currentStyle = Object.keys(focused.props.data)
+    const focusedKeys =  Object.keys(focusStyle.data)
+    const diff = Object.keys(focused.props.data).filter
   }
   setNotFocusedStyle(previous: YogaElement | undefined) {
     if (!previous) {

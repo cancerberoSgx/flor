@@ -1,9 +1,13 @@
 import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { FlorDocument } from '../src'
+import { FlorDocument, borderStyles, colors } from '../src'
 import { YogaElement } from '../src/yogaDom/yogaElement'
-interface Options {trimAndRemoveEmptyLines?: boolean}
-const defaultOptions =  { trimAndRemoveEmptyLines: false }
+import { int, item, color } from './data';
+
+interface Options { trimAndRemoveEmptyLines?: boolean }
+
+const defaultOptions = { trimAndRemoveEmptyLines: false }
+
 class FlorTest {
   constructor(protected flor: FlorDocument) {
   }
@@ -18,7 +22,7 @@ class FlorTest {
     }
     return b
   }
-  notToContain(s: string,  o: Options = defaultOptions) {
+  notToContain(s: string, o: Options = defaultOptions) {
     const b = this._textExtractor(o)
     expect(b).not.toContain(s)
   }
@@ -28,8 +32,15 @@ class FlorTest {
   async wontContain(s: string, o: Options = defaultOptions) {
     await waitForPredicate(() => !this._textExtractor(o).includes(s))
   }
+
+  randomBounds() {
+    return {
+      top: int(5, this.flor.program.rows/4), left: int(5, this.flor.program.cols/4), width: int(5, this.flor.program.cols/4),  height: int(5, this.flor.program.rows/4), border: {border: item(borderStyles)}, bg: color(), fg: color()
+    }
+  }
+
 }
 
 export class FlorDocumentTesting extends FlorDocument<YogaElement> {
-  expect = new FlorTest(this)
+  test = new FlorTest(this)
 }

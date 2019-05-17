@@ -170,6 +170,22 @@ export function filterAncestors<T extends Node = Node>(n: Node, p: ElementPredic
       a.push(c as T)
     }
     return false
-  })
+  })  
   return a
 }
+
+//   /**
+//    * returns the first descendant node that contains given text. Warning, if you use the type parameter to
+//    * cast the result, be aware that this method doesn't perform any verification on the returned type. 
+//    */
+// export function  findDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T |undefined {
+//     return findDescendant(n, n => (n.textContent || '').includes(text), o) as T | undefined
+//   }
+
+//     /**
+//    * returns the first descendant node that contains given text. Warning, if you use the type parameter to
+//    * cast the result, be aware that this method doesn't perform any verification on the returned type. 
+//    */
+// export function  filterDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T []{
+//   return filterDescendants(n, n => (n.textContent || '').includes(text), o) as T[]
+// }

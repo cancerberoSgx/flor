@@ -1,4 +1,4 @@
-import { array, indent } from 'misc-utils-of-mine-generic'
+import { array, indent, RemoveProperties } from 'misc-utils-of-mine-generic'
 import { mouseActionNames } from '../declarations/program'
 import { Element } from '../dom'
 import { EventListener } from '../dom/event'
@@ -6,7 +6,7 @@ import { Component } from '../jsx'
 import { KeyEvent, KeyListener, MouseListener } from '../manager'
 import { layoutChildren, LayoutOptions } from '../util'
 import { ElementPropsImpl } from './elementProps'
-import { createElement, isElement, Rectangle } from './elementUtil'
+import { createElement, isElement, Rectangle, isDocument } from './elementUtil'
 import { ProgramDocument } from './programDocument'
 import { BorderProps, FullProps, Padding } from './types'
 
@@ -335,7 +335,6 @@ export class ProgramElement extends Element {
         yl: this.absoluteInnerTop + this.innerHeight,
         xl: this._absoluteLeft + this.innerWidth
       }
-
     } else {
       throw new Error('TODO')
     }
@@ -353,7 +352,7 @@ export class ProgramElement extends Element {
 
   /** @internal */
   _addEventListener(name: string, listener: EventListener): void {
-    if (ProgramDocument.is(this.ownerDocument)) {
+    if (isDocument(this.ownerDocument)) {
       if (name === 'onFocus') {
         this.ownerDocument._registerListener({ type: 'focus', listener: { els: [this], listener } })
       } else if (name === 'onBlur') {
