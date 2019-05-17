@@ -1,9 +1,8 @@
 import { asArray, throttle } from 'misc-utils-of-mine-generic'
-import { animate, easing } from '..'
+import { animate, easing, ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { KeyEvent, KeyPredicate, MouseEvent, ProgramDocumentRenderer } from '../manager'
-import { ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '..'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
 

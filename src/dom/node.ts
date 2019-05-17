@@ -115,23 +115,23 @@ export abstract class Node extends EventTarget {
   _data: {[s: string]: any } = {}
 
   visitChildren(v: (c: Node) => void) {
-  visitChildren(this, v)
-}
+    visitChildren(this, v)
+  }
   mapChildren<T>(v: (c: Node) => T): T[] {
-  return  mapChildren(this, v)
-}
+    return  mapChildren(this, v)
+  }
   findChildren<T extends Node = Node>(p: ElementPredicate) {
-  return  findChildren(this, p)
-}
+    return  findChildren(this, p)
+  }
   filterChildren<T extends Node = Node>(p: ElementPredicate) {
-   return   filterChildren(this, p)
- }
+    return   filterChildren(this, p)
+  }
   visitDescendants(v: Visitor, o: VisitorOptions = {}): boolean {
-  return  visitDescendants(this, v, o)
-}
+    return  visitDescendants(this, v, o)
+  }
   filterDescendants<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
-   return   filterDescendants(this, p, o)
- }
+    return   filterDescendants(this, p, o)
+  }
   mapDescendants<T extends Node = Node, V = any>(p: (p: T) => V, o: VisitorOptions = {}): V[]  {
     return    mapDescendants(this, p, o)
   }
@@ -139,15 +139,15 @@ export abstract class Node extends EventTarget {
     return    findDescendant(this, p, o)
   }
   visitAncestors(v: Visitor, o = {}): boolean {
-     return     visitAncestors(this, v, o)
-   }
+    return     visitAncestors(this, v, o)
+  }
   findAncestor<T extends Node = Node>(p: ElementPredicate, o = {}) {
-      return      findAncestor(this, p, o)
-    }
+    return      findAncestor(this, p, o)
+  }
 
   filterAncestors<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
-   return filterAncestors(this, p, o)
- }
+    return filterAncestors(this, p, o)
+  }
 }
 
 export type NodeType = 10 | 3 | 1

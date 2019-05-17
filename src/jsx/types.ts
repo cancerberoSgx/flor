@@ -1,8 +1,8 @@
 import { ElementProps, ProgramDocument, ProgramElement } from '..'
-import { YogaElementProps } from "../yogaDom/types";
+import { ElementPropsImpl } from '../programDom'
+import { YogaDocument, YogaElement, YogaElementPropsImpl } from '../yogaDom'
+import { YogaElementProps } from '../yogaDom/types'
 import { Component } from './component'
-import { YogaElement, YogaDocument, YogaElementPropsImpl } from '../yogaDom';
-import { ElementPropsImpl } from '../programDom';
 
 declare global {
 
@@ -104,17 +104,15 @@ export interface RefObject<T = any> {
   current: T | undefined
 }
 
-
 export interface CommonElementImpl extends YogaElement, ProgramElement {
-props: CommonElementProps
-ownerDocument: CommonDocumentImpl
+  props: CommonElementProps
+  ownerDocument: CommonDocumentImpl
 }
 export interface CommonDocumentImpl extends YogaDocument, ProgramDocument, YogaDocument {
-createElement(s:string): CommonElementImpl
-body:CommonElementImpl
+  createElement(s: string): CommonElementImpl
+  body: CommonElementImpl
 }
 
-
-export interface CommonElementProps extends YogaElementPropsImpl, ElementPropsImpl{
+export interface CommonElementProps extends YogaElementPropsImpl, ElementPropsImpl {
 
 }

@@ -1,10 +1,6 @@
-import { array } from 'misc-utils-of-mine-generic'
-import * as yoga from 'yoga-layout'
 import { Component, Flor } from '../jsx'
-import { ProgramDocumentRenderer, MouseEvent } from '../manager'
-import { ElementProps } from '..'
-import { YogaElementProps, YogaElement } from '../yogaDom';
-import { ProgramElement } from '../programDom';
+import { MouseEvent } from '../manager'
+import { YogaElementProps } from '../yogaDom'
 
 interface ButtonProps extends Partial<YogaElementProps> {
   children?: string[]
@@ -14,12 +10,12 @@ interface ButtonProps extends Partial<YogaElementProps> {
  * Component specialized on rendering Button.
  */
 export class Button extends Component<ButtonProps, {}> {
-  protected defaultProps: ButtonProps ={
+  protected defaultProps: ButtonProps = {
 
   }
 
-  onClick(r: MouseEvent) : boolean | void| undefined{
-    if(this.props.onClick){
+  onClick(r: MouseEvent): boolean | void | undefined {
+    if (this.props.onClick) {
       this.onClick(r)
     }
   }

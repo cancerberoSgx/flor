@@ -1,8 +1,8 @@
 import * as yoga from 'yoga-layout'
 import { ProgramElement } from '..'
-import { YogaElementPropsImpl } from './yogaProps';
-import { YogaDocument } from './yogaDocument';
-import { YogaElementProps } from './types';
+import { YogaElementProps } from './types'
+import { YogaDocument } from './yogaDocument'
+import { YogaElementPropsImpl } from './yogaProps'
 
 export class YogaElement extends ProgramElement {
 
@@ -150,7 +150,6 @@ interface YogaLayoutInfo {
   children: YogaLayoutInfo[]
 }
 
-
 function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   if (typeof props.flexWrap !== 'undefined') {
     node.setFlexWrap(props.flexWrap)
@@ -255,6 +254,3 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   // bottom?: number | string                  // <---- use position to support it.
   // right?: number | string
 }
-
-
-

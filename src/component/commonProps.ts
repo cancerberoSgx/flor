@@ -1,16 +1,14 @@
-import { isElementProps, ElementProps } from '../programDom';
-import { ProgramDocumentRenderer } from '../manager';
-import { YogaElementProps } from '../yogaDom';
-import { BorderStyle } from '../util';
+import { BorderStyle } from '../util'
+import { YogaElementProps } from '../yogaDom'
 
 export const baseProps: Partial<YogaElementProps> = {
   bg: '#1e1e1e',
-  fg: 'lightgray',
+  fg: 'lightgray'
 }
 
 export const focusableProps: Partial<YogaElementProps> = {
   bg: 'lightgray',
   fg: 'yellow',
-  border: {type: BorderStyle.round},
+  border: { type: BorderStyle.round },
   bold: true
 }

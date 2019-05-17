@@ -1,14 +1,14 @@
-import { ProgramMouseEvent } from '../declarations/program'
-import { Event } from '../dom/event'
-import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
+import { ProgramMouseEvent } from '../declarations/program'
+import { Event, EventTarget } from '../dom/event'
+import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { EventManager, notifyListener } from './eventManager'
 
 /**
  *
  * TODO: focusNext and focusPrev element order policy customization
  */
-export class FocusManager {
+export class FocusManager<T extends ProgramElement = ProgramElement> {
 
   constructor(private events: EventManager, protected document: ProgramDocument) {
     this.onMouseUp = this.onMouseUp.bind(this)
@@ -25,8 +25,8 @@ export class FocusManager {
     this.dispatchFocusChanged(target)
   }
 
-  protected focusListeners: { els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void }[] = []
-  protected blurListeners: { els?: ProgramElement[], listener: (e: BlurEvent) => boolean | void }[] = []
+  protected focusListeners: { els?: T[], listener: (e: FocusEvent<T>) => boolean | void }[] = []
+  protected blurListeners: { els?: T[], listener: (e: BlurEvent<T>) => boolean | void }[] = []
 
   private dispatchFocusChanged(target: ProgramElement | undefined) {
     const previous = this.focused
@@ -39,12 +39,12 @@ export class FocusManager {
     let stopFocus = false
     let stopBlur = false
     if (target) {
-      target.props.focused = true
       stopFocus = !!target.props.onFocus && notifyListener(target.props.onFocus, focusEvent)
+      target.props.focused = true
     }
     if (previous) {
-      previous.props.focused = false
       stopBlur = !!previous.props.onBlur && notifyListener(previous.props.onBlur, blurEvent)
+      previous.props.focused = false
     }
     !stopFocus && this.focusListeners.some(l => {
       if (!l.els || l.els.find(e => e === focusEvent.currentTarget)) {
@@ -89,16 +89,16 @@ export class FocusManager {
   }
 
   /**
-   * Add a listener t be notified when a new element gain focus.
+   * Add a listener t be notified when a new element gain focus. If targets is not given, it will notify all focus events that happen on all elements. 
    */
-  addFocusListener(l: { els?: ProgramElement[], listener: (e: FocusEvent) => boolean | void }) {
+  addFocusListener (l: { targets?: T[], listener: (e: FocusEvent<T>) => boolean | void }) {
     this.focusListeners.push(l)
   }
 
   /**
-   * Add a listener t be notified when the current focused element looses focus.
+   * Add a listener t be notified when the current focused element looses focus.. If targets is not given, it will notify all blur events that happen on all elements. 
    */
-  addBlurListener(l: { els?: ProgramElement[], listener: (e: BlurEvent) => boolean | void }) {
+  addBlurListener(l: { els?: T[], listener: (e: BlurEvent<T>) => boolean | void }) {
     if (!this.focusListeners.find(ll => l !== ll)) {
       this.focusListeners.push(l)
     }
@@ -142,10 +142,10 @@ export class FocusManager {
   }
 }
 
-export interface FocusEvent extends Event<ProgramElement> {
-  previous?: ProgramElement
+export interface FocusEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
+  previous?: T
 }
 
-export interface BlurEvent extends Event<ProgramElement> {
-  focused?: ProgramElement
+export interface BlurEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
+  focused?: T
 }

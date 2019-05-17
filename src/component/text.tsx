@@ -1,9 +1,9 @@
 import { array } from 'misc-utils-of-mine-generic'
 import * as yoga from 'yoga-layout'
+import { ElementProps } from '..'
 import { isDomText } from '../dom/nodeUtil'
 import { Component, Flor } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
-import { ElementProps } from '..'
 
 interface TextProps extends Partial<ElementProps> {
   children?: string[]

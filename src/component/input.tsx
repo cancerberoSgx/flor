@@ -1,7 +1,7 @@
+import { ElementProps, ProgramDocument, ProgramElement } from '..'
 import { Component, Flor } from '../jsx'
 import { KeyEvent, KeyPredicate } from '../manager'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
-import { ElementProps, ProgramDocument, ProgramElement } from '..'
 
 interface InputProps extends Partial<ElementProps>, ConcreteInputProps {
 

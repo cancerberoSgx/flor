@@ -1,6 +1,5 @@
-import { ProgramElement } from './programElement'
+import { CommonElementImpl, CommonElementProps } from '../jsx'
 import { ColorString, PAttrs } from './styleProps'
-import { CommonElementProps, CommonElementImpl } from '../jsx';
 
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs | undefined, owner: Partial<CommonElementImpl>) {

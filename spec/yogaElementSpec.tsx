@@ -1,5 +1,5 @@
-import {isDomText} from '../src/dom/nodeUtil'
-import { BorderStyle, Flor, installExitKeys, ProgramDocumentRenderer, YogaDocument, YogaElement  } from '../src'
+import { BorderStyle, Flor, installExitKeys, ProgramDocumentRenderer, YogaDocument, YogaElement } from '../src'
+import { isDomText } from '../src/dom/nodeUtil'
 import * as yoga from '../src/yogaDom/types'
 import { FlorDocumentTesting } from './florTestHelper'
 import { toContain } from './testUtil'

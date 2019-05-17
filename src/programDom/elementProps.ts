@@ -4,9 +4,10 @@ import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
 import { BlurEvent, FocusEvent } from '../manager/focusManager'
 import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
-import { ElementProps } from './types'
+import { ElementProps, StyleProps } from './types'
 
 export class ElementPropsImpl< T extends ElementProps = ElementProps> extends StylePropsImpl< T> implements Partial<ElementProps> {
+
 
   public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow
@@ -21,6 +22,17 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
   public set focused(value: boolean | undefined) {
     this._data.focused = value
     // TODO: here we could notify focusManager
+  }
+  public get focus(): Partial<StyleProps> | undefined {
+    
+    return this._dataFocus
+  }  
+  private _dataFocus: StylePropsImpl<StyleProps> | undefined
+  public set focus(value: Partial<StyleProps> | undefined) {
+    if(!this._dataFocus){
+      this._dataFocus = new StylePropsImpl(undefined, this.owner)
+    }
+    this._dataFocus.assign({...value||{}})
   }
 
   public get focusable(): boolean | undefined {
