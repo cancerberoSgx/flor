@@ -1,7 +1,7 @@
 import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { FlorDocument } from '../src'
-import { YogaElement } from '../src/programDom/yogaElement'
+import { YogaElement } from '../src/yogaDom/yogaElement'
 interface Options {trimAndRemoveEmptyLines?: boolean}
 const defaultOptions =  { trimAndRemoveEmptyLines: false }
 class FlorTest {

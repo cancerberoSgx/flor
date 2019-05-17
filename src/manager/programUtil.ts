@@ -2,7 +2,7 @@ import { tryTo } from 'misc-utils-of-mine-generic'
 import { ProgramDocument, ProgramDocumentRenderer } from '..'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Flor } from '../jsx/createElement'
-import { FullProps } from '../programDom'
+import { FullProps } from '..'
 
 /**
  * Destroy given program and exits the process with given status.

@@ -1,7 +1,7 @@
 import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
 import { BlurEvent, FocusEvent } from '../manager/focusManager'
-import { BorderProps, ColorString, Padding, ProgramDocument, ProgramElement } from '../programDom'
-import { YogaElement } from '../programDom/yogaElement'
+import { BorderProps, ColorString, Padding, ProgramDocument, ProgramElement } from '..'
+import { YogaElement } from '../yogaDom/yogaElement'
 import { LayoutOptions } from './layout'
 
 class ChainBase<E extends ProgramElement = ProgramElement> {

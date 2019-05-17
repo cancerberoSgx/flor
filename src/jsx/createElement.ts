@@ -1,6 +1,6 @@
 import { ProgramDocument } from '..'
 import { Node } from '../dom'
-import { ProgramElement } from '../programDom'
+import { ProgramElement } from '..'
 import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
 

@@ -1,7 +1,7 @@
 import { ProgramMouseEvent } from '../declarations/program'
 import { Event } from '../dom/event'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
-import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '../programDom'
+import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
 import { EventManager, notifyListener } from './eventManager'
 
 /**

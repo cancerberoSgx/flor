@@ -1,6 +1,6 @@
-import { BorderStyle, Flor, installExitKeys, isDomText, ProgramDocumentRenderer } from '../src'
-import * as yoga from '../src/programDom/yogaElement'
-import { YogaDocument } from '../src/programDom/yogaElement'
+import {isDomText} from '../src/dom/nodeUtil'
+import { BorderStyle, Flor, installExitKeys, ProgramDocumentRenderer, YogaDocument, YogaElement  } from '../src'
+import * as yoga from '../src/yogaDom/types'
 import { FlorDocumentTesting } from './florTestHelper'
 import { toContain } from './testUtil'
 
@@ -21,7 +21,7 @@ describe('yogaElement', () => {
     const document = new YogaDocument()
     Flor.setDocument(document)
     document._setManagers({ renderer, focus: null as any, events: null as any, cursor: null as any })
-    const el = Flor.render<yoga.YogaElement>(
+    const el = Flor.render<YogaElement>(
       <box top={2} left={2} width={50} height={20} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_ROW} flexShrink={1}
       >
@@ -59,7 +59,7 @@ describe('yogaElement', () => {
   })
 
   it('FLEX_DIRECTION_ROW, row using heightAuto and widthAuto', async done => {
-    const el = flor.create<yoga.YogaElement>(
+    const el = flor.create<YogaElement>(
       <box top={2} left={2} height={13} width={32} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_ROW} preventChildrenCascade={true}
         display={yoga.DISPLAY_FLEX}
@@ -99,7 +99,7 @@ describe('yogaElement', () => {
   })
 
   it('depth, percent bounds', async done => {
-    const el = flor.create<yoga.YogaElement>(
+    const el = flor.create<YogaElement>(
       <box top={2} left={2} height={27} width={62}
         flexDirection={yoga.FLEX_DIRECTION_ROW}
       >
@@ -158,7 +158,7 @@ describe('yogaElement', () => {
   })
 
   it('align center', async done => {
-    const el = flor.create<yoga.YogaElement>(
+    const el = flor.create<YogaElement>(
       <box height={18} width={30} top={1} left={2}
         direction={yoga.DIRECTION_LTR}
         justifyContent={yoga.JUSTIFY_CENTER} alignItems={yoga.ALIGN_CENTER} ch="·"
@@ -194,7 +194,7 @@ describe('yogaElement', () => {
 
   it('Should update when props or text change (makes bounds dirty)', async done => {
     const o = { flexShrink: 1 }
-    const el = flor.create<yoga.YogaElement>(
+    const el = flor.create<YogaElement>(
       <box top={3} left={4} height={33} width={52} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_COLUMN} flexWrap={yoga.WRAP_WRAP} direction={yoga.DIRECTION_LTR}
       >

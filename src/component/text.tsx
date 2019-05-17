@@ -3,7 +3,7 @@ import * as yoga from 'yoga-layout'
 import { isDomText } from '../dom/nodeUtil'
 import { Component, Flor } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
-import { ElementProps } from '../programDom'
+import { ElementProps } from '..'
 
 interface TextProps extends Partial<ElementProps> {
   children?: string[]
