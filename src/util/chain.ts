@@ -1,46 +1,46 @@
-import { ProgramDocument, ProgramElement, ColorString, Padding, BorderProps } from '../programDom';
-import { LayoutOptions } from './layout';
-import { ProgramDocumentRenderer, MouseEvent, KeyEvent } from '../manager';
-import { BlurEvent, FocusEvent } from '../manager/focusManager';
-import { YogaElement } from '../programDom/yogaElement';
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
+import { BlurEvent, FocusEvent } from '../manager/focusManager'
+import { BorderProps, ColorString, Padding, ProgramDocument, ProgramElement } from '../programDom'
+import { YogaElement } from '../programDom/yogaElement'
+import { LayoutOptions } from './layout'
 
 class ChainBase<E extends ProgramElement = ProgramElement> {
   protected el: E
-  constructor(protected doc: ProgramDocument<E>){
+  constructor(protected doc: ProgramDocument<E>) {
     this.el = doc.createElement('box')
   }
 }
 
 class AttrsChain<E extends ProgramElement = ProgramElement> extends ChainBase<E> {
-  bg(value: ColorString){
+  bg(value: ColorString) {
     this.el.props.bg = value
     return this
   }
-  fg(value: ColorString){
+  fg(value: ColorString) {
     this.el.props.fg = value
     return this
   }
-  ch(value: string){
+  ch(value: string) {
     this.el.props.ch = value
     return this
   }
-  bold(value: boolean){
+  bold(value: boolean) {
     this.el.props.bold = value
     return this
   }
-  underline(value: boolean){
+  underline(value: boolean) {
     this.el.props.underline = value
     return this
   }
-  standout(value: boolean){
+  standout(value: boolean) {
     this.el.props.standout = value
     return this
   }
-  blink(value: boolean){
+  blink(value: boolean) {
     this.el.props.blink = value
     return this
   }
-  invisible(value: boolean){
+  invisible(value: boolean) {
     this.el.props.invisible = value
     return this
   }
@@ -49,50 +49,49 @@ class AttrsChain<E extends ProgramElement = ProgramElement> extends ChainBase<E>
 class StyleChain <E extends ProgramElement = ProgramElement> extends AttrsChain<E> {
 
   width(value: number): this {
-    this.el.props.width =value
+    this.el.props.width = value
     return this
   }
- 
+
   height(value: number): this {
-    this.el.props.height =value
+    this.el.props.height = value
     return this
   }
-  
+
   top(value: number): this {
-    this.el.props.top =value
+    this.el.props.top = value
     return this
   }
-  
+
   left(value: number): this {
-    this.el.props.left =value
+    this.el.props.left = value
     return this
   }
 
   textWrap(value: boolean): this {
-    this.el.props.textWrap =value
+    this.el.props.textWrap = value
     return this
   }
- 
+
   padding(value: Padding): this {
-    this.el.props.padding =value
+    this.el.props.padding = value
     return this
   }
   layout(value: LayoutOptions): this {
-    this.el.props.layout =value
+    this.el.props.layout = value
     return this
   }
-  
+
   border(value: Partial<BorderProps>): this {
-    this.el.props.border =value
+    this.el.props.border = value
     return this
   }
-  
+
   noFill(value: boolean): this {
-    this.el.props.noFill =value
+    this.el.props.noFill = value
     return this
   }
 }
-
 
 class ElementChain  <E extends ProgramElement = ProgramElement>  extends StyleChain<E> {
 
@@ -127,71 +126,70 @@ class ElementChain  <E extends ProgramElement = ProgramElement>  extends StyleCh
     return this
   }
 
-  afterRenderWithoutChildren(value: ()=>( boolean)):this{
-    this.el.props.afterRenderWithoutChildren= value
+  afterRenderWithoutChildren(value: () => (boolean)): this {
+    this.el.props.afterRenderWithoutChildren = value
     return this
   }
- 
-  afterRender(value: ()=>( boolean)):this{
+
+  afterRender(value: () => (boolean)): this {
     this.el.props.afterRender = value
     return this
   }
 
-  beforeRender(value: ()=>( boolean)):this{
+  beforeRender(value: () => (boolean)): this {
     this.el.props.beforeRender  = value
     return this
   }
 
-  childrenReady(value: ()=>( boolean)):this{
+  childrenReady(value: () => (boolean)): this {
     this.el.props.childrenReady  = value
     return this
   }
 
-  onClick<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onClick<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onClick  = value
     return this
   }
 
-  onKeyPressed<T extends ProgramElement= ProgramElement>(value: (e: KeyEvent<T>)=>( void | boolean)):this{
-    this.el.props.onKeyPressed  = value as any 
+  onKeyPressed<T extends ProgramElement= ProgramElement>(value: (e: KeyEvent<T>) => (void | boolean)): this {
+    this.el.props.onKeyPressed  = value as any
     return this
   }
 
-  onMouse<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onMouse<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onMouse  = value
     return this
   }
-  onMouseOut<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onMouseOut<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onMouseOut  = value
     return this
   }
-  onMouseOver<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onMouseOver<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onMouseOver  = value
     return this
   }
-  onMouseDown<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onMouseDown<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onMouseDown  = value
     return this
   }
-  onWheelDown<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onWheelDown<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onWheelDown  = value
     return this
   }
-  onWheelUp<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onWheelUp<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onWheelUp  = value
     return this
   }
-  onMouseMove<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>)=>( void | boolean)):this{
+  onMouseMove<T extends ProgramElement= ProgramElement>(value: (r: MouseEvent<T>) => (void | boolean)): this {
     this.el.props.onMouseMove  = value
     return this
   }
 
-
-  onBlur(value: (e: BlurEvent)=>( void | boolean)):this{
+  onBlur(value: (e: BlurEvent) => (void | boolean)): this {
     this.el.props.onBlur  = value
     return this
   }
-  onFocus(value: (e: FocusEvent)=>( void | boolean)):this{
+  onFocus(value: (e: FocusEvent) => (void | boolean)): this {
     this.el.props.onFocus  = value
     return this
   }
@@ -200,7 +198,7 @@ class ElementChain  <E extends ProgramElement = ProgramElement>  extends StyleCh
    * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared,
    * the content and border won't be rendered, and implementation is responsible of them.
    */
-  render(value: (renderer: ProgramDocumentRenderer)=> void): this{
+  render(value: (renderer: ProgramDocumentRenderer) => void): this {
     this.el.props.render  = value
     return this
   }
@@ -210,7 +208,7 @@ class ElementChain  <E extends ProgramElement = ProgramElement>  extends StyleCh
    * method. If declared, the content   won't be rendered but the border will. The implementation is
    * responsible of drawing the content.
    */
-  renderContent(value: (renderer: ProgramDocumentRenderer)=> void): this{
+  renderContent(value: (renderer: ProgramDocumentRenderer) => void): this {
     this.el.props.renderContent  = value
     return this
   }
@@ -220,7 +218,7 @@ class ElementChain  <E extends ProgramElement = ProgramElement>  extends StyleCh
    * method. If declared, the content   won't be rendered but the border will. The implementation is
    * responsible of drawing the content.
    */
-  renderBorder(value: (renderer: ProgramDocumentRenderer)=>void): this{
+  renderBorder(value: (renderer: ProgramDocumentRenderer) => void): this {
     this.el.props.renderBorder  = value
     return this
   }
@@ -230,7 +228,7 @@ class ElementChain  <E extends ProgramElement = ProgramElement>  extends StyleCh
    * that need custom children drawing method. If declared, children   won't be rendered but the content and
    * border will. The implementation is responsible of drawing the children.
    */
-  renderChildren(value: (renderer: ProgramDocumentRenderer)=>void): this{
+  renderChildren(value: (renderer: ProgramDocumentRenderer) => void): this {
     this.el.props.renderChildren  = value
     return this
   }

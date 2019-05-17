@@ -1,14 +1,14 @@
+import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { FlorDocument } from '../src'
 import { YogaElement } from '../src/programDom/yogaElement'
-import { waitForPredicate } from 'misc-utils-of-mine-generic';
 interface Options {trimAndRemoveEmptyLines?: boolean}
 const defaultOptions =  { trimAndRemoveEmptyLines: false }
 class FlorTest {
   constructor(protected flor: FlorDocument) {
   }
-  toContain(s: string, o: Options =defaultOptions) {
-   const b = this._textExtractor(o)
+  toContain(s: string, o: Options = defaultOptions) {
+    const b = this._textExtractor(o)
     expect(b).toContain(s)
   }
   private _textExtractor(o: Options) {
@@ -18,15 +18,15 @@ class FlorTest {
     }
     return b
   }
-  notToContain(s: string,  o: Options =defaultOptions) {
+  notToContain(s: string,  o: Options = defaultOptions) {
     const b = this._textExtractor(o)
     expect(b).not.toContain(s)
   }
-  async willContain(s: string, o: Options =defaultOptions) {
-    await waitForPredicate(()=>this._textExtractor(o).includes(s))
+  async willContain(s: string, o: Options = defaultOptions) {
+    await waitForPredicate(() => this._textExtractor(o).includes(s))
   }
-  async wontContain(s: string, o: Options =defaultOptions) {
-    await waitForPredicate(()=>!this._textExtractor(o).includes(s))
+  async wontContain(s: string, o: Options = defaultOptions) {
+    await waitForPredicate(() => !this._textExtractor(o).includes(s))
   }
 }
 

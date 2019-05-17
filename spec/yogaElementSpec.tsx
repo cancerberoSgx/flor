@@ -1,5 +1,4 @@
-import { getInstanceCount } from 'yoga-layout'
-import { BorderStyle, debug, Flor, installExitKeys, ProgramDocumentRenderer, isDomText } from '../src'
+import { BorderStyle, Flor, installExitKeys, isDomText, ProgramDocumentRenderer } from '../src'
 import * as yoga from '../src/programDom/yogaElement'
 import { YogaDocument } from '../src/programDom/yogaElement'
 import { FlorDocumentTesting } from './florTestHelper'
@@ -29,7 +28,7 @@ describe('yogaElement', () => {
         <box height={13} width={32} flex={1}>1</box>
         <box height={13} width={32} flex={0}>2</box>
       </box>)
-    renderer.renderElement(document.body)    
+    renderer.renderElement(document.body)
     await toContain(renderer, '────────')
     expect(renderer.printBuffer(true)).toContain(`
 
@@ -65,13 +64,13 @@ describe('yogaElement', () => {
         flexDirection={yoga.FLEX_DIRECTION_ROW} preventChildrenCascade={true}
         display={yoga.DISPLAY_FLEX}
       >
-        <box 
+        <box
         heightAuto
-        widthAuto 
+        widthAuto
         border={{ type: BorderStyle.heavyDoubleDash }}
-        flexGrow={1} 
+        flexGrow={1}
         >1</box>
-        <box  
+        <box
         widthAuto
         border={{ type: BorderStyle.heavyDoubleDash }}
         heightAuto
@@ -193,7 +192,6 @@ describe('yogaElement', () => {
     done()
   })
 
-
   it('Should update when props or text change (makes bounds dirty)', async done => {
     const o = { flexShrink: 1 }
     const el = flor.create<yoga.YogaElement>(
@@ -251,7 +249,7 @@ describe('yogaElement', () => {
 
     await flor.expect.wontContain('seba')
     el.props.flexDirection = yoga.FLEX_DIRECTION_ROW
-    el.findDescendant(n => isDomText(n) && !!n.textContent && n.textContent!.includes('1'))!.textContent = 'seba'
+    el.findDescendant(n => isDomText(n) && !!n.textContent && n.textContent.includes('1'))!.textContent = 'seba'
     flor.render()
     await flor.expect.willContain('seba')
     await flor.expect.wontContain('1')
@@ -298,9 +296,3 @@ describe('yogaElement', () => {
   })
 
 })
-
-
-
-
-
-
