@@ -10,8 +10,6 @@ import { FullProps } from './types'
 interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
 
 export class ProgramDocument<E extends ProgramElement = ProgramElement> extends Document<E> {
-  // destroy() {
-  // }
   body: ProgramElement
 
   protected managers: Managers | undefined

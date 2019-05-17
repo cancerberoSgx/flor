@@ -2,6 +2,7 @@ import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document } from './document'
 import { EventTarget } from './event'
 import { nodeHtml } from './nodeHtml'
+import { filterAncestors, findAncestor, visitAncestors, Visitor, ElementPredicate, VisitorOptions, findDescendant, mapDescendants, filterDescendants, visitDescendants, filterChildren, findChildren, mapChildren, visitChildren } from './nodeUtil';
 
 export abstract class Node extends EventTarget {
 
@@ -112,6 +113,43 @@ export abstract class Node extends EventTarget {
 
   /** miscellaneous data */
   _data: {[s: string]: any } = {}
+
+
+
+visitChildren(v: (c: Node) => void){
+  visitChildren(this, v)
+}
+mapChildren<T>(v: (c: Node) => T): T[] {
+ return  mapChildren(this, v)
+}
+findChildren<T extends Node = Node>(p: ElementPredicate){
+ return  findChildren(this, p)
+}
+ filterChildren<T extends Node = Node>(p: ElementPredicate){
+ return   filterChildren(this, p)
+ }
+visitDescendants(v: Visitor, o: VisitorOptions = {}): boolean {
+ return  visitDescendants(this, v, o)
+}
+ filterDescendants<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
+ return   filterDescendants(this, p, o)
+ }
+  mapDescendants<T extends Node = Node, V = any>(p: (p: T) => V, o: VisitorOptions = {}): V[]  {
+ return    mapDescendants(this, p, o)
+  }
+  findDescendant<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}) {
+ return    findDescendant(this, p, o)
+  }
+   visitAncestors(v: Visitor, o = {}): boolean {
+ return     visitAncestors(this, v, o)
+   }
+    findAncestor<T extends Node = Node>( p: ElementPredicate, o = {}){
+ return      findAncestor(this, p, o)
+    }
+
+ filterAncestors<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
+   return filterAncestors(this, p, o)
+ }
 }
 
 export type NodeType = 10 | 3 | 1

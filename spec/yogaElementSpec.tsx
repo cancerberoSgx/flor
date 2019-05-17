@@ -1,5 +1,5 @@
 import { getInstanceCount } from 'yoga-layout'
-import { BorderStyle, debug, Flor, installExitKeys, ProgramDocumentRenderer } from '../src'
+import { BorderStyle, debug, Flor, installExitKeys, ProgramDocumentRenderer, isDomText } from '../src'
 import * as yoga from '../src/programDom/yogaElement'
 import { YogaDocument } from '../src/programDom/yogaElement'
 import { FlorDocumentTesting } from './florTestHelper'
@@ -21,74 +21,81 @@ describe('yogaElement', () => {
     installExitKeys(renderer.program)
     const document = new YogaDocument()
     Flor.setDocument(document)
-    // document.body.props.assign({ height: renderer.program.rows, width: renderer.program.cols, top: 0, left: 0, minHeight: renderer.program.rows, minWidth: renderer.program.cols ,   ...fo} //flexGrow: 1
-    // )
     document._setManagers({ renderer, focus: null as any, events: null as any, cursor: null as any })
-    // document.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
-    // renderer.renderElement( document.body)
     const el = Flor.render<yoga.YogaElement>(
-      <box width={50} height={20}  border={{ type: BorderStyle.round }}
-        flexDirection={yoga.FLEX_DIRECTION_ROW}
+      <box top={2} left={2} width={50} height={20} border={{ type: BorderStyle.round }}
+        flexDirection={yoga.FLEX_DIRECTION_ROW} flexShrink={1}
       >
-        <box  height={13} width={32} flex={1}>1</box>
-        <box  height={13} width={32} flex={0}>2</box>
+        <box height={13} width={32} flex={1}>1</box>
+        <box height={13} width={32} flex={0}>2</box>
       </box>)
-    renderer.renderElement(document.body)
+    renderer.renderElement(document.body)    
     await toContain(renderer, '────────')
-    expect('\n' + renderer.printBuffer(true) + '\n').toContain(`
-╭────────────────────────────────────────────────╮
-│1──────────────╮2──────────────────────────────╮│
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-││              ││                              ││
-│╰──────────────╯╰──────────────────────────────╯│
-│                                                │
-│                                                │
-│                                                │
-│                                                │
-│                                                │
-╰────────────────────────────────────────────────╯
+    expect(renderer.printBuffer(true)).toContain(`
+
+  ╭────────────────────────────────────────────────╮
+  │1───────────────2──────────────────────────────╮│
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  ││               │                              ││
+  │╰───────────────╰──────────────────────────────╯│
+  │                                                │
+  │                                                │
+  │                                                │
+  │                                                │
+  │                                                │
+  ╰────────────────────────────────────────────────╯
 `)
+// debug('expect: /n' +renderer.printBuffer(true) + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     renderer.destroy()
-    // debug('expect: /n' +renderer.printBuffer(true)+'/n', JSON.stringify(el.yogaDebug(), null, 2)+'/n', JSON.stringify(el.debugAsJson(), null, 2)+'/n', el.debugAsXml())
     done()
   })
 
-  it('FLEX_DIRECTION_ROW, row using flex width and height', async done => {
+  it('FLEX_DIRECTION_ROW, row using heightAuto and widthAuto', async done => {
     const el = flor.create<yoga.YogaElement>(
       <box top={2} left={2} height={13} width={32} border={{ type: BorderStyle.round }}
-        flexDirection={yoga.FLEX_DIRECTION_ROW}
+        flexDirection={yoga.FLEX_DIRECTION_ROW} preventChildrenCascade={true}
+        display={yoga.DISPLAY_FLEX}
       >
-        <box width={6} height={8} flex={1}></box>
-        <box width={6} height={8} flex={0}></box>
+        <box 
+        heightAuto
+        widthAuto 
+        border={{ type: BorderStyle.heavyDoubleDash }}
+        flexGrow={1} 
+        >1</box>
+        <box  
+        widthAuto
+        border={{ type: BorderStyle.heavyDoubleDash }}
+        heightAuto
+        ><box height={4} width={4}>4x4</box></box>
       </box>)
     flor.render()
     await toContain(flor.renderer, '────────')
     flor.expect.toContain(`
 
   ╭──────────────────────────────╮
-  │╭──────────────────────╮╭────╮│
-  ││                      ││    ││
-  ││                      ││    ││
-  ││                      ││    ││
-  ││                      ││    ││
-  ││                      ││    ││
-  ││                      ││    ││
-  │╰──────────────────────╯╰────╯│
-  │                              │
-  │                              │
-  │                              │
+  │┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓┏╍╍╍╍┓│
+  │╏1                     ╏╏4x4 ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │╏                      ╏╏    ╏│
+  │┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛┗╍╍╍╍┛│
   ╰──────────────────────────────╯
 `)
-    debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
+    // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     done()
   })
 
@@ -98,25 +105,25 @@ describe('yogaElement', () => {
         flexDirection={yoga.FLEX_DIRECTION_ROW}
       >
         <box width={.4} height={.999} flexShrink={1}
-         flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
+          flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
           <box width={.999} flexShrink={1} border={{ type: BorderStyle.round }} height={.3} fg="red"></box>
           <box width={.999} height={.7} flexShrink={1} border={{ type: BorderStyle.roundTripleDash }}
-          padding={{ top: 1, bottom: 2, left: 2, right: 2 }} ch="/" fg="yellow"
+            padding={{ top: 1, bottom: 2, left: 2, right: 2 }} ch="/" fg="yellow"
           >
           </box>
         </box>
         <box width={.6} flexShrink={1} height={.999}
-      flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
-        <box width={.999}  height={.3} flexShrink={1} ch="." border={{ type: BorderStyle.roundQuadrupleDash }} >
-        </box>
-          <box width={.999} height={.3}  ch="-"
-          flexShrink={1} flexGrow={1} border={{ type: BorderStyle.round }} >
+          flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
+          <box width={.999} height={.3} flexShrink={1} ch="." border={{ type: BorderStyle.roundQuadrupleDash }} >
           </box>
-          <box width={.999} flexShrink={1} border={{ type: BorderStyle.double }} ch="|"  height={.4}></box>
+          <box width={.999} height={.3} ch="-"
+            flexShrink={1} flexGrow={1} border={{ type: BorderStyle.round }} >
+          </box>
+          <box width={.999} flexShrink={1} border={{ type: BorderStyle.double }} ch="|" height={.4}></box>
         </box>
       </box>)
     flor.render()
-    debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
+    // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     await toContain(flor.renderer, '═════════════')
     flor.expect.toContain(`
 
@@ -152,164 +159,148 @@ describe('yogaElement', () => {
   })
 
   it('align center', async done => {
-   debug('init', getInstanceCount())
-   const el = flor.create<yoga.YogaElement>(
-      <box height={18} width={30}
-       direction={yoga.DIRECTION_LTR}
-      justifyContent={yoga.JUSTIFY_CENTER} alignItems={yoga.ALIGN_CENTER} ch="·"
+    const el = flor.create<yoga.YogaElement>(
+      <box height={18} width={30} top={1} left={2}
+        direction={yoga.DIRECTION_LTR}
+        justifyContent={yoga.JUSTIFY_CENTER} alignItems={yoga.ALIGN_CENTER} ch="·"
       >
-        <box width={5} height={4}
-        ch="s"
+        <box width={5} height={4} ch="s"
         >Seba
         </box>
       </box>)
-   flor.render()
-   await toContain(flor.renderer, 'Seba')
-   flor.expect.toContain(`
-······························
-······························
-······························
-······························
-······························
-···········Sebas··············
-···········sssss··············
-···········sssss··············
-···········sssss··············
-······························
-······························
-······························
-······························
-······························
-······························
-······························
-······························
-······························
-`, { trimAndRemoveEmptyLines: true })
-   done()
- })
+    flor.render()
+    await toContain(flor.renderer, 'Seba')
+    flor.expect.toContain(`
+  ······························
+  ······························
+  ······························
+  ······························
+  ······························
+  ······························
+  ······························
+  ·············Sebas············
+  ·············sssss············
+  ·············sssss············
+  ·············sssss············
+  ······························
+  ······························
+  ······························
+  ······························
+  ······························
+  ······························
+  ······························
+`)
+    done()
+  })
 
-//   xit('simple row, with columns, one grow', async done => {
-//     const flor = new FlorDocumentTesting({
-//       documentImplementation() { return new YogaDocument() }
-//     })
-//     const el = flor.create<yoga.YogaElement>(
-//       <box top={2} left={2} height={23} width={62} border={{ type: BorderStyle.round }} preventChildrenCascade={true}
-//         display={yoga.DISPLAY_FLEX}
-//         // dire
-//         // flex={0}
-//         flexShrink={1}
-//         direction={yoga.DIRECTION_LTR}
-//         justifyContent={yoga.JUSTIFY_FLEX_START}
-//         alignItems={yoga.ALIGN_STRETCH}
-//         alignContent={yoga.ALIGN_STRETCH}
-//         // justifyContent={yoga.JUSTIFY_SPACE_EVENLY}
 
-//         flexDirection={yoga.FLEX_DIRECTION_ROW}
-//       >
-//         <box border={{ type: BorderStyle.round }} preventChildrenCascade={true}
-//           flexDirection={yoga.FLEX_DIRECTION_COLUMN}
-//           // flex={0}
-//           alignItems={yoga.ALIGN_STRETCH}
-//           alignContent={yoga.ALIGN_AUTO}
-//           alignSelf={yoga.ALIGN_AUTO}
-//           justifyContent={yoga.JUSTIFY_FLEX_START}
-//           flexGrow={1} flexShrink={1}
-//           width={Infinity} height={Infinity}
-//           top={Infinity} left={Infinity}
-//         >
-//           <box border={{ type: BorderStyle.round }} preventChildrenCascade={true}
-//             //  flexGrow={2}
-//             // alignItems={yoga.ALIGN_AUTO}
-//             // alignContent={yoga.ALIGN_AUTO}
-//             // alignSelf={yoga.ALIGN_AUTO}
-//             // justifyContent={yoga.JUSTIFY_FLEX_START}
-//             flexGrow={1} flexShrink={1}
-//             flexDirection={yoga.FLEX_DIRECTION_ROW}
-//             width={Infinity} height={Infinity}
-//             top={Infinity} left={Infinity}
-//           // flex={1}
-//           >11</box>
-//           <box border={{ type: BorderStyle.round }}
-//             width={Infinity} height={Infinity} flexDirection={yoga.FLEX_DIRECTION_ROW}
-//             //  flexGrow={1}
-//             // alignItems={yoga.ALIGN_AUTO}
-//             // alignContent={yoga.ALIGN_AUTO}
-//             // alignSelf={yoga.ALIGN_AUTO}
-//             // justifyContent={yoga.JUSTIFY_FLEX_START}
-//             flexGrow={1} flexShrink={1}
-//             top={Infinity} left={Infinity}
-//           // flex={2}
-//           >12</box>
-//         </box>
+  it('Should update when props or text change (makes bounds dirty)', async done => {
+    const o = { flexShrink: 1 }
+    const el = flor.create<yoga.YogaElement>(
+      <box top={3} left={4} height={33} width={52} border={{ type: BorderStyle.round }}
+        flexDirection={yoga.FLEX_DIRECTION_COLUMN} flexWrap={yoga.WRAP_WRAP} direction={yoga.DIRECTION_LTR}
+      >
+        <box {...o} width={.5} height={3}>1</box>
+        <box  {...o} width={.4} height={8}>2</box>
+        <box  {...o} width={.3} height={5}>3</box>
+        <box  {...o} width={.1} height={9}>4</box>
+        <box {...o} width={.5} height={4}>5</box>
+        <box  {...o} width={.4} height={11}>6</box>
+        <box  {...o} width={.3} height={7}>7</box>
+        <box  {...o} width={.1} height={11}>8</box>
+      </box>)
+    flor.render()
+    await flor.expect.willContain('1')
+    flor.expect.toContain(`
 
-//         <box border={{ type: BorderStyle.round }} preventChildrenCascade={true}
-//           flexDirection={yoga.FLEX_DIRECTION_COLUMN}
-//           alignContent={yoga.ALIGN_STRETCH}
-//           alignItems={yoga.ALIGN_STRETCH}
-//           // alignContent={yoga.ALIGN_AUTO}
-//           // alignSelf={yoga.ALIGN_AUTO}
-//           justifyContent={yoga.JUSTIFY_FLEX_START}
-//           // flex={0}
-//           width={Infinity} height={Infinity}
-//           top={Infinity} left={Infinity}
-//           flexGrow={1} flexShrink={1}
-//         >
-//           <box border={{ type: BorderStyle.round }}
-//             alignSelf={yoga.ALIGN_STRETCH}
-//             width={Infinity} height={Infinity}
-//             flexGrow={1} flexShrink={1}
-//             top={Infinity} left={Infinity}
-//           // alignItems={yoga.ALIGN_AUTO}
-//           // alignContent={yoga.ALIGN_AUTO}
-//           // alignSelf={yoga.ALIGN_AUTO}
-//           // justifyContent={yoga.JUSTIFY_FLEX_START}
-//           // flexDirection={yoga.FLEX_DIRECTION_ROW}
-//           // width={Infinity} height={Infinity}
 
-//           // flex={1}
-//           >21</box>
-//           <box border={{ type: BorderStyle.round }}
-//             //  flexGrow={2}
-//             // width={Infinity} height={Infinity} flexDirection={yoga.FLEX_DIRECTION_ROW}
-//             // flexGrow={2}  flexShrink={0}
-//             // alignItems={yoga.ALIGN_AUTO}
-//             // alignContent={yoga.ALIGN_AUTO}
-//             alignSelf={yoga.ALIGN_STRETCH}
-//             // justifyContent={yoga.JUSTIFY_FLEX_START}
-//             width={Infinity} height={Infinity}
-//             flexGrow={1} flexShrink={1}
-//             top={Infinity} left={Infinity}
+    ╭──────────────────────────────────────────────────╮
+    │1───────────────────────╮6──────────────────╮     │
+    ││                       ││                  │     │
+    │╰───────────────────────╯│                  │     │
+    │2──────────────────╮     │                  │     │
+    ││                  │     │                  │     │
+    ││                  │     │                  │     │
+    ││                  │     │                  │     │
+    ││                  │     │                  │     │
+    ││                  │     │                  │     │
+    ││                  │     │                  │     │
+    │╰──────────────────╯     ╰──────────────────╯     │
+    │3─────────────╮          7─────────────╮          │
+    ││             │          │             │          │
+    ││             │          │             │          │
+    ││             │          │             │          │
+    │╰─────────────╯          │             │          │
+    │4───╮                    │             │          │
+    ││   │                    ╰─────────────╯          │
+    ││   │                    8───╮                    │
+    ││   │                    │   │                    │
+    ││   │                    │   │                    │
+    ││   │                    │   │                    │
+    ││   │                    │   │                    │
+    ││   │                    │   │                    │
+    │╰───╯                    │   │                    │
+    │5───────────────────────╮│   │                    │
+    ││                       ││   │                    │
+    ││                       ││   │                    │
+    │╰───────────────────────╯╰───╯                    │
+    │                                                  │
+    │                                                  │
+    ╰──────────────────────────────────────────────────╯
+`)
 
-//           // flex={2}
-//           >22</box>
+    await flor.expect.wontContain('seba')
+    el.props.flexDirection = yoga.FLEX_DIRECTION_ROW
+    el.findDescendant(n => isDomText(n) && !!n.textContent && n.textContent!.includes('1'))!.textContent = 'seba'
+    flor.render()
+    await flor.expect.willContain('seba')
+    await flor.expect.wontContain('1')
 
-//         </box>
+    flor.expect.toContain(`
 
-//       </box>)
-//     flor.render()
 
-//     // flor.render(el)
-//     // await sleep(2000)
-//     // debug('expect: /n' + flor.printBuffer()+'/n', JSON.stringify(el.yogaDebug(), null, 2)+'/n', JSON.stringify(el.debugAsJson(), null, 2)+'/n', el.debugAsXml())
+    ╭──────────────────────────────────────────────────╮
+    │seba────────────────────╮2──────────────────╮     │
+    ││                       ││                  │     │
+    │╰───────────────────────╯│                  │     │
+    │                         │                  │     │
+    │                         │                  │     │
+    │                         │                  │     │
+    │                         │                  │     │
+    │                         ╰──────────────────╯     │
+    │3─────────────╮4───╮5───────────────────────╮     │
+    ││             ││   ││                       │     │
+    ││             ││   ││                       │     │
+    ││             ││   │╰───────────────────────╯     │
+    │╰─────────────╯│   │                              │
+    │               │   │                              │
+    │               │   │                              │
+    │               │   │                              │
+    │               ╰───╯                              │
+    │6──────────────────╮7─────────────╮8───╮          │
+    ││                  ││             ││   │          │
+    ││                  ││             ││   │          │
+    ││                  ││             ││   │          │
+    ││                  ││             ││   │          │
+    ││                  ││             ││   │          │
+    ││                  │╰─────────────╯│   │          │
+    ││                  │               │   │          │
+    ││                  │               │   │          │
+    ││                  │               │   │          │
+    │╰──────────────────╯               ╰───╯          │
+    │                                                  │
+    │                                                  │
+    │                                                  │
+    ╰──────────────────────────────────────────────────╯
+`)
+    // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
+    done()
+  })
 
-//     // debug('expect: /n' + flor.printBuffer()+'/n', JSON.stringify(el.yogaDebug(), null, 2))
-//     //     await toContain(flor.renderer, '────────')
-//     //     flor.expect.toContain(`
-//     //  ╭──────────────────────────────╮
-//     //  │╒═════════════════════╕╒═════╕│
-//     //  ││                     ││     ││
-//     //  ││                     ││     ││
-//     //  ││                     ││     ││
-//     //  ││                     ││     ││
-//     //  ││                     ││     ││
-//     //  ││                     ││     ││
-//     //  │╘═════════════════════╛╘═════╛│
-//     //  │                              │
-//     //  │                              │
-//     //  │                              │
-//     //  ╰──────────────────────────────╯
-//     //  ` )  // TODO: why do I have to do this ? no left, no top... ISSUE
-//     // flor.destroy()
-//     // done()
-//   })
 })
+
+
+
+
+
+

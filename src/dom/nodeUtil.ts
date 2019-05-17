@@ -147,7 +147,7 @@ export function visitAncestors(n: Node, v: Visitor, o = {}): boolean {
   return !n || v(n) || !n.parentNode || n.parentNode === n.ownerDocument || visitAncestors(n.parentNode, v, o)
 }
 
-export function findAncestor<T extends Node = Node>(n: Element, p: ElementPredicate, o = {}) {
+export function findAncestor<T extends Node = Node>(n: Node, p: ElementPredicate, o = {}) {
   let a: T | undefined
   visitAncestors(
     n,

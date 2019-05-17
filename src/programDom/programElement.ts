@@ -426,14 +426,12 @@ export class ProgramElement extends Element {
       Array.from(this.childNodes)
         .map(e => isElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`
   }
-
   addKeyListener(l: KeyListener, name= 'keypress') {
     this.ownerDocument.managersReady.then(({ events }) => events.addKeyListener(l, this, name))
   }
   addMouseListener(l: MouseListener, name= 'click') {
     this.ownerDocument.managersReady.then(({ events }) => events.addMouseListener(l, this, name))
   }
-
   /**
    * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus.
    */
