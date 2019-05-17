@@ -3,11 +3,11 @@ import { Node } from './node'
 
 export class Element  extends Node  {
 
-  children: ElementList
+  // children: ElementList
 
   constructor(public readonly tagName: string, ownerDocument: Document) {
     super(Node.ELEMENT_NODE)
-    this.children = new ElementList(this._children)
+    // this.children = new ElementList(this._children)
     this._ownerDocument = ownerDocument
   }
 
@@ -31,14 +31,14 @@ export class Element  extends Node  {
   }
 }
 
-class ElementList<T extends Node = Node> {
-  constructor(protected list: T[]) {
+// class ElementList<T extends Node = Node> {
+//   constructor(protected list: T[]) {
 
-  }
-  item(i: number): T | undefined {
-    return this.list[i] || undefined
-  }
-  get length() {
-    return this.list.length
-  }
-}
+//   }
+//   item(i: number): T | undefined {
+//     return this.list[i] || undefined
+//   }
+//   get length() {
+//     return this.list.length
+//   }
+// }

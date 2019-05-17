@@ -1,8 +1,8 @@
+import { notUndefined } from 'misc-utils-of-mine-typescript'
 import * as yoga from 'yoga-layout'
 import { ProgramDocument } from '../programDom/programDocument'
 import { debug } from '../util'
 import { YogaElement } from './yogaElement'
-import { notUndefined } from 'misc-utils-of-mine-typescript';
 
 export class YogaDocument extends ProgramDocument<YogaElement> {
   body: YogaElement
@@ -75,7 +75,6 @@ export class YogaDocument extends ProgramDocument<YogaElement> {
     debug('_unregister', this._allNodes.filter(notUndefined).length, yoga.getInstanceCount())
   }
 
-  
   // static is(d: any): d is YogaDocument {
   //   return !!(d && d.body && (d as YogaDocument).createElement && (d as YogaDocument).create && (d as YogaDocument)._unregister && d instanceof YogaDocument)
   // }

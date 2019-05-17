@@ -1,6 +1,6 @@
 import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
 import { ProgramMouseEvent } from '../declarations/program'
-import { Event, EventTarget } from '../dom/event'
+import { Event } from '../dom/event'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { EventManager, notifyListener } from './eventManager'
 
@@ -89,14 +89,14 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
   }
 
   /**
-   * Add a listener t be notified when a new element gain focus. If targets is not given, it will notify all focus events that happen on all elements. 
+   * Add a listener t be notified when a new element gain focus. If targets is not given, it will notify all focus events that happen on all elements.
    */
-  addFocusListener (l: { targets?: T[], listener: (e: FocusEvent<T>) => boolean | void }) {
+  addFocusListener(l: { targets?: T[], listener: (e: FocusEvent<T>) => boolean | void }) {
     this.focusListeners.push(l)
   }
 
   /**
-   * Add a listener t be notified when the current focused element looses focus.. If targets is not given, it will notify all blur events that happen on all elements. 
+   * Add a listener t be notified when the current focused element looses focus.. If targets is not given, it will notify all blur events that happen on all elements.
    */
   addBlurListener(l: { els?: T[], listener: (e: BlurEvent<T>) => boolean | void }) {
     if (!this.focusListeners.find(ll => l !== ll)) {

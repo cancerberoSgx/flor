@@ -1,4 +1,4 @@
-import { array, serial } from 'misc-utils-of-mine-generic'
+import { array, serial, sleep } from 'misc-utils-of-mine-generic'
 import { createElement } from '../src'
 import { createProgramRendererDocumentAndElement } from '../src/manager/programUtil'
 import { BorderStyle, Layout } from '../src/util'
@@ -20,6 +20,7 @@ describe('layout', () => {
         ]))
       )
       renderer.renderElement(el)
+      await sleep(10)
       const output = renderer.printBuffer(true)
       array(N).map(i => 'N' + i + 'th').forEach(l => expect(output).toContain(l))
     }

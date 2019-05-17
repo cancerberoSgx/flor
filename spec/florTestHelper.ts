@@ -1,8 +1,8 @@
 import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { FlorDocument, borderStyles, colors } from '../src'
+import { borderStyles, FlorDocument } from '../src'
 import { YogaElement } from '../src/yogaDom/yogaElement'
-import { int, item, color } from './data';
+import { color, int, item } from './data'
 
 interface Options { trimAndRemoveEmptyLines?: boolean }
 
@@ -35,7 +35,7 @@ class FlorTest {
 
   randomBounds() {
     return {
-      top: int(5, this.flor.program.rows/4), left: int(5, this.flor.program.cols/4), width: int(5, this.flor.program.cols/4),  height: int(5, this.flor.program.rows/4), border: {border: item(borderStyles)}, bg: color(), fg: color()
+      top: int(5, this.flor.program.rows / 4), left: int(5, this.flor.program.cols / 4), width: int(5, this.flor.program.cols / 4),  height: int(5, this.flor.program.rows / 4), border: { border: item(borderStyles) }, bg: color(), fg: color()
     }
   }
 

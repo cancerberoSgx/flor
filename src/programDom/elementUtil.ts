@@ -2,8 +2,6 @@ import { Node } from '../dom'
 import { ProgramDocument } from './programDocument'
 import { ProgramElement } from './programElement'
 import { ElementProps, FullProps } from './types'
-import { isJSXElementImpl, Flor } from '../jsx';
-import { isObject } from 'util';
 
 /**
  * important! right now it must match both ProgramElement and YogaElement
@@ -13,9 +11,9 @@ export function isElement<E extends ProgramElement = ProgramElement>(n: any): n 
 }
 
 // export function isDocument(n: any): n is ProgramDocument {
-//   return n && n.nodeType === Node.DOCUMENT_TYPE_NODE && isElement(n.body)&& 
-//   (n as ProgramDocument).createElement && (n as ProgramDocument).create 
-//   // && 
+//   return n && n.nodeType === Node.DOCUMENT_TYPE_NODE && isElement(n.body)&&
+//   (n as ProgramDocument).createElement && (n as ProgramDocument).create
+//   // &&
 //   // n instanceof ProgramDocument
 // }
 

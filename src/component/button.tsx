@@ -14,19 +14,18 @@ export class Button extends Component<ButtonProps, {}> {
 
   }
 
-  onClick(r: MouseEvent): boolean | void | undefined {
-    if (this.props.onClick) {
-      this.onClick(r)
-    }
-  }
-
   constructor(p: ButtonProps, s: {}) {
     super(p, s)
     this.onClick = this.onClick.bind(this)
   }
+  onClick(r: MouseEvent): boolean | void | undefined {
+    if (this.props.onClick) {
+      this.props.onClick(r)
+    }
+  }
 
   render() {
-    return <box {...this.defaultProps}{...this.props} onClick={this.onClick}> </box>
+    return <box {...this.defaultProps}{...this.props} onClick={this.onClick}>{this.props.children}</box>
   }
 
 }

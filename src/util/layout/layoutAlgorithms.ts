@@ -15,11 +15,12 @@ export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
   }
 
   let layer: any = layout(o.layout, { sort: !!o.sort })
-  for (let c of o.el.childNodes) {
-    if (isElement(c)) {
-      layer.addItem({ 'height': c.props.height, 'width': c.props.width, 'meta': c })
-    }
+  o.el.children.forEach(c => {
+  if (isElement(c)) {
+    layer.addItem({ 'height': c.props.height, 'width': c.props.width, 'meta': c })
   }
+})
+
   let info: Info = layer['export']()
   info.items.forEach(i => {
     i.meta.props.left = i.x

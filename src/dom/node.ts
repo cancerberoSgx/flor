@@ -2,7 +2,8 @@ import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document } from './document'
 import { EventTarget } from './event'
 import { nodeHtml } from './nodeHtml'
-import { ElementPredicate, filterAncestors, filterChildren, filterDescendants, findAncestor, findChildren, findDescendant, mapChildren, mapDescendants, visitAncestors, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
+import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
+import { TextNode } from './text'
 
 export abstract class Node extends EventTarget {
 
@@ -18,12 +19,21 @@ export abstract class Node extends EventTarget {
 
   protected _children: Node[] = []
   readonly childNodes: NodeList<Node>
+  protected _boundsDirty: boolean
+
+  /**
+   * Same as [[childNodes]] but returns them in an array
+   */
+  get children(): Node[] {
+    return Array.from(this.childNodes)
+  }
 
   constructor(readonly nodeType: NodeType) {
     super()
     this._children = []
     this.childNodes = new NodeList(this._children)
     this.attributes = new NamedNodeMap(this._attributes)
+    this._boundsDirty = true
   }
 
   protected _ownerDocument: Document | null = null
@@ -37,6 +47,13 @@ export abstract class Node extends EventTarget {
   }
   set textContent(c: string | null) {
     this._textContent = c
+    if(!this._boundsDirty){
+      this._boundsDirty=true
+      if(isDomText(this)&&this._parentNode){
+        // since text have not independent rendering we need to mark our parent
+        this._parentNode._boundsDirty=true
+      }
+    }
   }
 
   protected _parentNode: Node | null = null
@@ -135,23 +152,39 @@ export abstract class Node extends EventTarget {
   findDescendant(p: ElementPredicate, o: VisitorOptions = {}) {
     return findDescendant(this, p, o)
   }
-  visitAncestors(v: Visitor, o = {}): boolean {
-    return visitAncestors(this, v, o)
+  visitAscendants(v: Visitor, o = {}): boolean {
+    return visitAscendants(this, v, o)
   }
-  findAncestor(p: ElementPredicate, o = {}) {
-    return findAncestor(this, p, o)
+  findAscendant(p: ElementPredicate, o = {}) {
+    return findAscendant(this, p, o)
   }
-  filterAncestors<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
-    return filterAncestors(this, p, o)
+  filterAscendants<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
+    return filterAscendants(this, p, o)
+  }
+
+  findDescendantTextNodeContaining(name: string, o: VisitorOptions = {}): TextNode | undefined {
+    return findDescendantContaining(this, name, o)
+    // return isDomText(this) ? undefined :  findDescendantTextNodeContaining(this, name, o)
+  }
+
+  filterDescendantTextNodesContaining(name: string, o: VisitorOptions = {}): TextNode[] {
+    return isDomText(this) ? [] : filterDescendantTextNodesContaining(this, name, o)
   }
 
   // /**
   //  * returns the first descendant node that contains given text. Warning, if you use the type parameter to
-  //  * cast the result, be aware that this method doesn't perform any verification on the returned type. 
+  //  * cast the result, be aware that this method doesn't perform any verification on the returned type.
   //  */
   // findDescendantContaining<T extends Node = Node>(text: string, o: VisitorOptions = {}): T|undefined {
   //   return findDescendantContaining(this, text, o)
   // }
+
+  previousSibling(): Node | undefined {
+    const i = this.parentNode && this.parentNode._children.indexOf(this) || 0
+    if (i > 0) {
+      return this.parentNode!._children[i - 1]
+    }
+  }
 }
 
 export type NodeType = 10 | 3 | 1

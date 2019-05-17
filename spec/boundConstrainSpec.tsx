@@ -18,7 +18,7 @@
 
 //     const el = flor.create(
 //     <box width={.9} height={.9} top={.1} left={.1}>test123
-      
+
 //     </box>
 //     )
 
@@ -41,10 +41,10 @@
 //       }
 //     }
 
-//     const b2 = el.findDescendantContaining<ProgramElement>('view2')!;    
+//     const b2 = el.findDescendantContaining<ProgramElement>('view2')!;
 //     const b1 = el.findDescendantContaining<ProgramElement>('view1')!;
 //     debug(!!b1, !!b2, b1 &&   b1.parentNode!!, b2 && !!b2.parentNode!!);
-//     b2 && isElement(b2.parentNode) && b2.parentNode.props.assign(extractBounds(view.subViews.view2));    
+//     b2 && isElement(b2.parentNode) && b2.parentNode.props.assign(extractBounds(view.subViews.view2));
 //     b1 && isElement(b1.parentNode)&& b1.parentNode&& b1.parentNode!.props.assign(extractBounds(view.subViews.view1));
 //     await sleep(122)
 //     flor.render()
@@ -58,7 +58,6 @@
 //     // debug(view.subViews.view2); // {left: 205, top: 0, width: 195, height: 500}
 
 //     await sleep(50000)
-
 
 //     // el.findDescendantContaining<ProgramElement>('view2')!.props.assign(view.subViews.view2)
 //     // flor.destroy()

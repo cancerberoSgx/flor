@@ -1,7 +1,6 @@
-import { ProgramElement, ProgramDocument } from '../programDom';
-import { YogaElement } from '../yogaDom';
-import { FocusManager, FocusEvent, BlurEvent } from './focusManager';
-import { CommonElementImpl } from '../jsx';
+import { ProgramDocument } from '../programDom'
+import { YogaElement } from '../yogaDom'
+import { FocusEvent, FocusManager } from './focusManager'
 // import {di} from 'misc-utils-of-mine-generic'
 
 interface State {
@@ -10,7 +9,7 @@ interface State {
 export class StyleEffectsManager {
 
   private _state: State[] = []
-  previous: YogaElement | undefined;
+  previous: YogaElement | undefined
   onFocus(e: FocusEvent<YogaElement>) {
     const previous = e.previous || this.previous
     const focused = e.currentTarget
@@ -22,7 +21,7 @@ export class StyleEffectsManager {
     this.previous = focused
   }
   get(e?: YogaElement): State | undefined {
-    if (!e||!e.props.focus) {
+    if (!e || !e.props.focus) {
       return
     }
     let s = this._state[e.internalId]

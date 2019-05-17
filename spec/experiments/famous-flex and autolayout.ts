@@ -1,4 +1,3 @@
-import { objectMapValues } from 'misc-utils-of-mine-generic';
 
 // import * as kiwi from 'kiwi.js';
 // import { equal } from 'assert';
@@ -24,15 +23,15 @@ import { objectMapValues } from 'misc-utils-of-mine-generic';
 
 // console.log(right);
 
-var AutoLayout = require('autolayout');
-var constraints = AutoLayout.VisualFormat.parse([
+let AutoLayout = require('autolayout')
+let constraints = AutoLayout.VisualFormat.parse([
   'H:|[view1(==view2)]-10-[view2]|',
   'V:|[view1,view2]|'
-], {extended: true});
-var view = new AutoLayout.View({constraints: constraints});
-view.setSize(400, 500);
+], { extended: true })
+let view = new AutoLayout.View({ constraints: constraints })
+view.setSize(400, 500)
 
 // console.log(objectMapValues(view.subViews.view1, (v: any)=>v.value)); // {left: 0, top: 0, width: 195, height: 500}
-console.log();
+console.log()
 
-console.log(view.subViews.view2._attr); // {left: 205, top: 0, width: 195, height: 500}
+console.log(view.subViews.view2._attr) // {left: 205, top: 0, width: 195, height: 500}

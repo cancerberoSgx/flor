@@ -8,7 +8,6 @@ import { ElementProps, StyleProps } from './types'
 
 export class ElementPropsImpl< T extends ElementProps = ElementProps> extends StylePropsImpl< T> implements Partial<ElementProps> {
 
-
   public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow
   }
@@ -24,16 +23,15 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
     // TODO: here we could notify focusManager
   }
 
-
-  public get focus(): Partial<StyleProps>&{readonly data: any} | undefined {    
+  public get focus(): Partial<StyleProps> & {readonly data: any} | undefined {
     return this._dataFocus
-  }  
+  }
   private _dataFocus: StylePropsImpl | undefined
-  public set focus(value: Partial<StyleProps>&{readonly data: any}  | undefined) {
-    if(!this._dataFocus){
+  public set focus(value: Partial<StyleProps> & {readonly data: any}  | undefined) {
+    if (!this._dataFocus) {
       this._dataFocus = new StylePropsImpl(undefined, this.owner)
     }
-    this._dataFocus.assign({...value||{}})
+    this._dataFocus.assign({ ...value || {} })
   }
 
   public get focusable(): boolean | undefined {
