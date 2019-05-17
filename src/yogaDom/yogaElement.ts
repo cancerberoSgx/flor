@@ -83,7 +83,7 @@ export class YogaElement extends ProgramElement {
     )
   }
 
-  doLayout(forceUpdate= false) {
+  doLayout() {
     // this.setYogaProps()
 // this.node.calculateLayout(this.props.width, this.props.height, this.props.direction)
 // // this.calcBounds()

@@ -31,6 +31,7 @@
     "justified-layout": "^2.1.2",
     "layout": "^2.2.0",
     "yoga-layout": "^1.9.3",
+    "word-wrap": "^1.2.3",
     "misc-utils-of-mine-generic": "^0.2.1"
   },
   "devDependencies": {
@@ -39,16 +40,13 @@
     "@types/node": "^12.0.0",
     "@types/shelljs": "^0.8.5",
     "@types/word-wrap": "^1.2.0",
-    "word-wrap": "^1.2.3",
     "@types/yoga-layout": "^1.9.1",
     "ansi-diff-stream": "^1.2.1",
     "browserify": "^16.2.3",
     "cli-driver": "^0.2.1",
     "clipboardy": "^2.0.0",
     "diff": "^4.0.1",
-    "diff-match-patch": "^1.0.4",
     "jasmine": "^3.4.0",
-    "jasmine-diff": "^0.1.3",
     "jasmine-spec-reporter": "^4.2.1",
     "markdown-toc": "^1.2.0",
     "shelljs": "^0.8.3",
@@ -68,5 +66,5 @@
     "CLI",
     "interactive"
   ],
-  "repository": "https://github.com/cancerberoSgx/accursed"
+  "repository": "https://github.com/cancerberoSgx/flor"
 }

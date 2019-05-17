@@ -31,7 +31,7 @@ export class ProgramElement extends Element {
     super(tagName, ownerDocument)
     this._ownerDocument = ownerDocument
     this.internalId = ProgramElement.counter++
-    this.props = new ElementPropsImpl(undefined, this)
+    this.props = new ElementPropsImpl(undefined, this as any)
     this.__positionDirty = true
     this.__boundsDirty = true
   }
@@ -52,7 +52,7 @@ export class ProgramElement extends Element {
    *
    * @internal
    */
-  protected doLayout() {
+  doLayout() {
     if (this.layout && (!this.layout.manualLayout || !this._layoutOnce)
     && (this._positionDirty || this._boundsDirty)
     ) {

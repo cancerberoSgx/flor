@@ -1,16 +1,17 @@
 import { ProgramElement } from './programElement'
 import { ColorString, PAttrs } from './styleProps'
+import { CommonElementProps, CommonElementImpl } from '../jsx';
 
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
-  constructor(p: PAttrs | undefined, owner: ProgramElement) {
+  constructor(p: PAttrs | undefined, owner: Partial<CommonElementImpl>) {
     this._data = p as any || {}
-    this.owner = owner
+    this.owner = owner as  CommonElementImpl
   }
-  assign(o: T) {
+  assign(o: Partial<CommonElementProps>) {
     Object.assign(this._data, o || {})
   }
-  protected _data: T
-  protected owner: ProgramElement
+  protected _data: CommonElementProps
+  protected owner: CommonElementImpl
   /**
    * Gets all props as plain object.
    */

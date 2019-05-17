@@ -8,3 +8,4 @@ log*.txt
 /docs
 test_output.txt
 /package/*
+apps

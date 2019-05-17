@@ -1,0 +1,10 @@
+{
+  "spec_dir": "./dist/spec",
+  "spec_files": [
+    "*Spec.js"
+  ],
+  "helpers": [
+    "support/helpers/test.js"
+  ],
+  "random": false
+}
