@@ -1,4 +1,4 @@
-import { trimRightLines } from 'misc-utils-of-mine-generic'
+import { trimRightLines, removeWhites } from 'misc-utils-of-mine-generic'
 import { ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'
@@ -18,7 +18,7 @@ describe('jsx', () => {
     const doc = new ProgramDocument()
     Flor.setDocument(doc)
     const e = Flor.render(p)
-    expect(e.outerHTML).toBe('<el width="10" height="7" bg="red" fg="black" top="4" left="12" ch="y">hello</el>')
+    expect(removeWhites(e.outerHTML)).toBe('<el width="10" height="7" bg="red" fg="black" top="4" left="12" ch="y"> hello </el>')
     const { renderer } = createProgramRendererDocument()
     renderer.renderElement(e)
     expect(renderer.printBuffer(true)).toContain(`

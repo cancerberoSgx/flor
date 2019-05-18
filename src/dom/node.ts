@@ -1,11 +1,9 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document } from './document'
 import { EventTarget } from './event'
-import { nodeHtml } from './nodeHtml'
-import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
-import { TextNode } from './text'
+import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions , nodeHtml} from './nodeUtil'
 
-export abstract class Node extends EventTarget {
+export class Node extends EventTarget {
 
   static DOCUMENT_TYPE_NODE: NodeType = 10
   static TEXT_NODE: NodeType = 3
@@ -47,12 +45,12 @@ export abstract class Node extends EventTarget {
   }
   set textContent(c: string | null) {
     this._textContent = c
-    if(!this._boundsDirty){
-      this._boundsDirty=true
-      if(isDomText(this)&&this._parentNode){
-        // since text have not independent rendering we need to mark our parent
-        this._parentNode._boundsDirty=true
-      }
+    if (!this._boundsDirty) {
+      this._boundsDirty = true
+    }
+    if (isDomText(this) && this._parentNode) {
+      // since text have not independent rendering we need to mark our parent
+      this._parentNode._boundsDirty = true
     }
   }
 
@@ -81,45 +79,67 @@ export abstract class Node extends EventTarget {
   }
 
   appendChild(c: Node) {
-    c.remove()
+    if (c.parentNode) {
+      c.parentNode.removeChild(c)
+      c.remove()
+    }
     this._children.push(c)
     c._parentNode = this
-  }
-
-  /**
-   * Returns whether node and otherNode have the same properties.
-   */
-  isEqualNode(otherNode: Node | null): boolean {
-    return false // TODO
-  }
-
-  remove() {
-    this.parentNode && this.parentNode.removeChild(this)
-  }
-  removeChild(n: Node): Node | undefined {
-    // const c2 = this._children.filter(c=>c!==n) const removed = c2.length<this._children.length
-    // this._children = c2 return removed ? n : undefined
-    const i = this._children.findIndex(c => c === n)
-    if (i !== -1) {
-      return this._children.splice(i, 1)[0] || undefined
+    if (!this._boundsDirty) {
+      this._boundsDirty
     }
   }
+
+  // /**
+  //  * Returns whether node and otherNode have the same properties.
+  //  */
+  // isEqualNode(otherNode: Node | null): boolean {
+  //   return false // TODO
+  // }
+
+  remove() {
+    // boundsDirty in self and parentNode is take care by removeChild()
+    if (this.parentNode) {
+      this.parentNode.removeChild(this)
+    }
+  }
+
+  removeChild(n: Node): Node | undefined {
+    const i = this._children.findIndex(c => c === n)
+    if (i !== -1) {
+      const c = this._children.splice(i, 1)[0] || undefined
+      c._parentNode = null
+      if (!n._boundsDirty) {
+        c._boundsDirty = true
+      }
+      if (!this._boundsDirty) {
+        this._boundsDirty = true
+      }
+      return c
+    }
+  }
+
   get firstChild(): Node | undefined {
     return this._children.length ? this._children[0] : undefined
   }
+
   /**
    * Removes all children from this node
    */
   empty() {
+    // boundsDirty in self and parentNode is take care by removeChild()
     while (this.firstChild) {
+      // performance - we could delete all and after mark dirty only once.
       this.removeChild(this.firstChild)
     }
   }
+
   /**
    * Replaces node with nodes, while replacing strings in nodes with equivalent Text nodes. Throws a
    * "HierarchyRequestError" DOMException if the constraints of the node tree are violated.
    */
   replaceWith(...nodes: (Node | string)[]): void {
+    // TODO: mark boundsDirty
     const children = (this._parentNode as any)._children as Node[]
     children.splice(children.indexOf(this), 1,
       ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
@@ -162,12 +182,12 @@ export abstract class Node extends EventTarget {
     return filterAscendants(this, p, o)
   }
 
-  findDescendantTextNodeContaining(name: string, o: VisitorOptions = {}): TextNode | undefined {
+  findDescendantTextNodeContaining(name: string, o: VisitorOptions = {}): Node | undefined {
     return findDescendantContaining(this, name, o)
-    // return isDomText(this) ? undefined :  findDescendantTextNodeContaining(this, name, o)
+    // return isDomText(this) ? undefined :  findDescendantNodeContaining(this, name, o)
   }
 
-  filterDescendantTextNodesContaining(name: string, o: VisitorOptions = {}): TextNode[] {
+  filterDescendantTextNodesContaining(name: string, o: VisitorOptions = {}): Node[] {
     return isDomText(this) ? [] : filterDescendantTextNodesContaining(this, name, o)
   }
 
@@ -225,5 +245,14 @@ export class NamedNodeMap<T extends Attr> {
   }
   item(i: number): T | null {
     return Object.values(this.map)[i] || null
+  }
+}
+
+
+export class TextNode extends Node {
+  constructor(_textContent: string | null, ownerDocument: Document) {
+    super(Node.TEXT_NODE)
+    this._textContent = _textContent
+    this._ownerDocument = ownerDocument
   }
 }

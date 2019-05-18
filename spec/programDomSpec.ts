@@ -1,4 +1,4 @@
-import { trimRightLines } from 'misc-utils-of-mine-generic'
+import { trimRightLines, removeWhites } from 'misc-utils-of-mine-generic'
 import { BorderStyle, Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
@@ -17,7 +17,7 @@ describe('programDom', () => {
     expect(d2.absoluteLeft).toBe(15)
     expect(d2.props.left).toBe(5)
 
-    expect(div1.outerHTML).toBe('<Div left="10"><Div left="5"></Div>hello world</Div>')
+    expect(removeWhites(div1.outerHTML)).toBe('<Div left="10"> <Div left="5"> </Div> hello world </Div>')
 
     done()
   })

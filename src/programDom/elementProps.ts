@@ -1,8 +1,6 @@
 import { Node } from '../dom'
-import { TextNode } from '../dom/text'
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer, TextNode , ProgramElement} from '..'
 import { BlurEvent, FocusEvent } from '../manager/focusManager'
-import { ProgramElement } from './programElement'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps, StyleProps } from './types'
 

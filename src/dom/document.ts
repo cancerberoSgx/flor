@@ -1,17 +1,18 @@
 import { Element } from './element'
-import { Node } from './node'
-import { TextNode } from './text'
+import { Node, TextNode } from './node'
+// import { TextNode } from './text'
 
 export class Document<E extends Element = Element> extends Node {
   // body: Es = null as any
   constructor() {
     super(Node.DOCUMENT_TYPE_NODE)
     // this.initBody();
-    this.head = new HeadElement('head', this)
+    // this.head = new HeadElement('head', this)
     this.body = new BodyElement('body', this)
+    this.appendChild(this.body)
   }
 
-  head: HeadElement
+  // head: HeadElement
   body: BodyElement
   // protected initBody() {
   //   this.body = this.createElement('body');
@@ -35,8 +36,8 @@ export class Document<E extends Element = Element> extends Node {
   }
 }
 
-class HeadElement extends Element {
-}
+// class HeadElement extends Element {
+// }
 
 class BodyElement extends Element {
 }

@@ -20,7 +20,7 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
   protected onMouseUp(e: ProgramMouseEvent) {
     const target = findDescendant<ProgramElement>(this.document.body, n => {
       return isElement(n) && !!n.props.focusable && this.events._isMouseEventTarget(e, n)
-    }, { childrenFirst: true })
+    }, { childrenFirst: true, andSelf: true })
 
     this.dispatchFocusChanged(target)
   }

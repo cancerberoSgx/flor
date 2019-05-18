@@ -1,10 +1,6 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { Element, Node } from '.'
-import { Document } from './document'
-import { TextNode } from './text'
-// import { isDocument } from '../programDom';
-// import { Document } from './document';
-// import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { Element, Node, Document,TextNode  } from '.'
+import { repeat } from 'misc-utils-of-mine-generic';
 
 export function nodeTypes(n: Node): number[] {
   const o: number[] = []
@@ -272,6 +268,7 @@ export interface VisitorOptions {
    * no matter if visitor returns true for a node, it will still visit its descendants and then break the chain
    */
   visitDescendantsOnSelfSignalAnyway?: boolean
+  andSelf?: boolean
 }
 
 /**
@@ -280,28 +277,31 @@ export interface VisitorOptions {
  * options. By default, first the parent is evaluated which is configurable configurable with
  * [[[VisitorOptions.childrenFirst]]
  * */
-export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}): boolean {
+export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion=false): boolean {
   let r = false
   if (o.childrenFirst) {
-    r = n.children.some(c => visitDescendants(c, v, o))
+    r = n.children.some(c => visitDescendants(c, v, o, true))
     if (r) {
-      if (!o.breakOnDescendantSignal) {
+      if (!o.breakOnDescendantSignal&&(o.andSelf||inRecursion)) {
         v(n)
       }
       return true
-    } else {
-      return v(n)
-    }
+    } else if(o.andSelf||inRecursion){
+        r = v(n)
+      }
+      return false
   } else {
-    r = v(n)
+    if(o.andSelf||inRecursion){
+      r = v(n)
+    }
     if (r) {
       if (!o.visitDescendantsOnSelfSignalAnyway) {
         return true
       } else {
-        return n.children.some(c => visitDescendants(c, v, o)) || true // true because self was signaled
+        return n.children.some(c => visitDescendants(c, v, o ,true)) || true // true because self was signaled
       }
     } else {
-      return n.children.some(c => visitDescendants(c, v, o))
+      return n.children.some(c => visitDescendants(c, v, o, true))
     }
   }
 }
@@ -361,3 +361,26 @@ export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredica
 // }
 
 // //TODO: ancestors, direct children and siblings. nice to have getFirstDescendantOfType, etc
+
+
+export function nodeHtml(node: Node, outer = true, _level=0): string {
+  if (isDomDocument(node)) {
+    return `<document>${elementHtml(node.body, outer, _level)+'\n'+repeat(_level, '  ')}</document>`
+  } else if (isDomElement(node)) {
+    return elementHtml(node, outer, _level)
+  } else {
+    return '\n'+repeat(_level, '  ')+ node.textContent || ''
+  }
+}
+
+function elementHtml(node: Element, outer: boolean, _level=0) {
+  const attrs = [...Array.from(node.attributes), ...Object.keys((node as any).props && (node as any).props.data || {})
+    .map(k => ({ name: k, value: (node as any).props[k] }))]
+  return `${'\n'+repeat(_level, '  ')}${outer ? `<${node.tagName}${attrs.length ? ' ' : ''}${attrs.map(a => a.value && `${a.name}="${a.value.toString ? a.value.toString() : a.value}"`)
+    .filter(a => a)
+    .join(' ')}>` : ``}${Array.from(node.childNodes).map(c => nodeHtml(c, true, _level+1)).join('\n'+repeat(_level, '  '))+'\n'+repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`.split('\n')
+    .map(l=>l.trim() ? l : '')
+    // .filter((l, i, a)=> l || i===0 || a[i-1])
+    .join('\n')
+    .replace(/\n+/gm, '\n') // removes consecutive end of lines
+}

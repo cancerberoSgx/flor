@@ -1,14 +1,5 @@
 import { array, indent } from 'misc-utils-of-mine-generic'
-import { mouseActionNames } from '../declarations/program'
-import { Element } from '../dom'
-import { EventListener } from '../dom/event'
-import { Component } from '../jsx'
-import { KeyEvent, KeyListener, MouseListener } from '../manager'
-import { layoutChildren, LayoutOptions } from '../util'
-import { ElementPropsImpl } from './elementProps'
-import { createElement, isDocument, isElement, Rectangle } from './elementUtil'
-import { ProgramDocument } from './programDocument'
-import { BorderProps, FullProps, Padding } from './types'
+import { mouseActionNames, Element , layoutChildren, LayoutOptions,KeyEvent, KeyListener, MouseListener, BorderProps, FullProps, Padding, Component,ProgramDocument,ElementPropsImpl, createElement, isDocument, isElement, Rectangle , EventListener } from '..'
 
 export class ProgramElement extends Element {
   private static counter = 1
