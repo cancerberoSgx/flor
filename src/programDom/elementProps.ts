@@ -21,6 +21,26 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
     // TODO: here we could notify focusManager
   }
 
+  public get id(): string {
+    return this._data.id;
+  }
+  public set id(value: string) {
+    this._data.id = value;
+  }
+  public get name(): string {
+    return this._data.name;
+  }
+  public set name(value: string) {
+    this._data.name = value;
+  }
+  public get classes(): string[] {
+    return this._data.classes;
+  }
+  public set classes(value: string[]) {
+    this._data.classes = value;
+  }
+
+
   public get focus(): Partial<StyleProps> & {readonly data: any} | undefined {
     return this._dataFocus
   }

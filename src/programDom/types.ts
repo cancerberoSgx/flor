@@ -169,6 +169,10 @@ export interface ElementProps extends StyleProps, ComponentProps {
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
 
+  id: string
+  name: string
+  classes: string[]
+
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
