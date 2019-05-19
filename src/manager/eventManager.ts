@@ -3,7 +3,7 @@ import { Event, KeyListener, MouseEvent, MouseListener, ProgramElement, Register
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
 import { Node } from '../dom'
 
-type E<T=ProgramElement> = T extends ProgramElement ? T : never
+type E<T= ProgramElement> = T extends ProgramElement ? T : never
 
 /**
  * Manager class responsible of registering and dispatching keyboard and mouse events.
@@ -53,11 +53,9 @@ export class EventManager {
   /**
    * Removes a previously added key listener with [[addKeyListener]].
    */
-  removeKeyListener<T extends ProgramElement = ProgramElement> (listener: KeyListener<T>, el: T, name: string){
-    this.keyListeners= this.keyListeners.filter(l=>!(l.el===el && l.listener===listener && (l.name === name||l.name === this.toProgramEventName(name).name)))
+  removeKeyListener<T extends ProgramElement = ProgramElement>(listener: KeyListener<T>, el: T, name: string) {
+    this.keyListeners = this.keyListeners.filter(l => !(l.el === el && l.listener === listener && (l.name === name || l.name === this.toProgramEventName(name).name)))
   }
-
-
 
   private mouseListeners: RegisteredEventListener[] = []
 
@@ -74,7 +72,7 @@ export class EventManager {
   }
 
   /**
-   * Register a mouse event listener for a particular mouse event type in a particular element instance [[el]]. 
+   * Register a mouse event listener for a particular mouse event type in a particular element instance [[el]].
    */
   addMouseListener<T extends ProgramElement = ProgramElement>(listener: (e: MouseEvent) => void, el: T, name: string) {
     if (!el) {
@@ -87,8 +85,8 @@ export class EventManager {
   /**
    * Removes a previously added MouseListener with [[addMouseListener]].
    */
-  removeMouseListener<T extends ProgramElement = ProgramElement> (listener: MouseListener<T>, el: T, name: string){
-    this.mouseListeners= this.mouseListeners.filter(l=>!(l.el===el && l.listener===listener && (l.name === name||l.name === this.toProgramEventName(name).name)))
+  removeMouseListener<T extends ProgramElement = ProgramElement>(listener: MouseListener<T>, el: T, name: string) {
+    this.mouseListeners = this.mouseListeners.filter(l => !(l.el === el && l.listener === listener && (l.name === name || l.name === this.toProgramEventName(name).name)))
   }
 
   private _ignoreMouse = false
@@ -126,15 +124,15 @@ export class EventManager {
       e.y >= el.absoluteTop && e.y < el.absoluteTop + el.props.height
   }
 
-   _registerEventListener<T extends ProgramElement = ProgramElement>(o: RegisteredEventListener<T>): any {
-    const { name,type } = this.toProgramEventName(o.name)
-    if (type === 'key') {
+  _registerEventListener<T extends ProgramElement = ProgramElement>(o: RegisteredEventListener<T>): any {
+     const { name,type } = this.toProgramEventName(o.name)
+     if (type === 'key') {
       // TODO: support on('key a')
       this.keyListeners.push({ ...o, name })
     } else        {
       this.mouseListeners.push({ ...o, name })
     }
-  }
+   }
 
   /**
    * Resolves names from element props like onClick to program event names like 'mouseup'.
@@ -176,7 +174,7 @@ export class EventManager {
 }
 
 /**
- * calls given event listener with given event object, supporting stopPropagation() event method. Returns true if handler calls event.stopPropagation() orhterwise false. 
+ * calls given event listener with given event object, supporting stopPropagation() event method. Returns true if handler calls event.stopPropagation() orhterwise false.
  * @internal
  */
 export function notifyListener<T extends Node= Node, E extends Event<T> = Event<T>>(l: KeyListener | MouseListener, ev: RemoveProperties<E, 'stopPropagation'>) {
@@ -184,4 +182,3 @@ export function notifyListener<T extends Node= Node, E extends Event<T> = Event<
   (l as any)({ ...ev, stopPropagation() {stop = true} } as any)
   return stop
 }
-

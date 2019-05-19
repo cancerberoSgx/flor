@@ -117,7 +117,7 @@ export interface StopPropagation {
 export interface RegisteredEventListener<T extends ProgramElement = ProgramElement> {
   el: T
   name: string
-  listener: MouseListener| KeyListener
+  listener: MouseListener | KeyListener
 }
 
 export type RegisteredGlobalEventListener<T extends ProgramElement = ProgramElement> = PropertyOptional<RegisteredEventListener<T>, 'el'>
@@ -152,7 +152,6 @@ export interface MouseEvent<T extends ProgramElement = ProgramElement> extends A
   bug: Buffer
 }
 
-
 export interface FocusEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
   previous?: T
 }
@@ -160,9 +159,6 @@ export interface FocusEvent<T extends ProgramElement = ProgramElement>  extends 
 export interface BlurEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
   focused?: T
 }
-
-
-
 
 export interface ElementProps extends StyleProps, ComponentProps {
 

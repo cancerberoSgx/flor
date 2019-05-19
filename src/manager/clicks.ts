@@ -1,4 +1,4 @@
-import { ProgramElement, MouseEvent } from '../programDom';
+import { MouseEvent, ProgramElement } from '../programDom'
 
 export interface ClicksEvent<T extends ProgramElement = ProgramElement> extends MouseEvent<T> {
   count: number
@@ -39,7 +39,7 @@ interface Options<T extends ProgramElement = ProgramElement> {
  * Adds click listener that also reports the amount of clicks in event.count property of event with which the
  * handler function is called.
  */
-export function clicks<T extends ProgramElement = ProgramElement> (options: Options<T>) {
+export function clicks<T extends ProgramElement = ProgramElement>(options: Options<T>) {
   let t0 = Date.now()
   let count = 0
   const interval = options.interval || 250

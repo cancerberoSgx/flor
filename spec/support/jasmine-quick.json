@@ -3,5 +3,5 @@
   "spec_files": [
     "*Spec.ts*"
   ],
-  "random": false
+  "random": true
 }

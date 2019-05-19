@@ -3,5 +3,5 @@
   "spec_files": [
     "*Spec.js"
   ],
-  "random": false
+  "random": true
 }

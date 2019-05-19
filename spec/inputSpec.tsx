@@ -5,12 +5,12 @@ describe('input', () => {
     let flor: FlorDocument = null as any
     let el: ProgramElement
 
-    beforeAll(() => {
+    beforeEach(() => {
       flor = new FlorDocument()
       el = f(flor)
       flor.render()
     })
-    afterAll(() => {
+    afterEach(() => {
       flor.destroy()
     })
 
@@ -30,6 +30,7 @@ describe('input', () => {
       done()
     })
     it('input "a"', done => {
+      flor.events.click(el)
       flor.events.triggerKeyEvent('a')
       expect(el.props.input).toBe('a')
       expect(!!el.props.value).toBe(false)
@@ -37,6 +38,8 @@ describe('input', () => {
       done()
     })
     it('input "b"', done => {
+      flor.events.click(el)
+      flor.events.triggerKeyEvent('a')
       flor.events.triggerKeyEvent('b')
       expect(el.props.input).toBe('ab')
       expect(!!el.props.value).toBe(false)
@@ -45,6 +48,9 @@ describe('input', () => {
 
     it('input "c"', done => {
       expect(flor.renderer.printBuffer()).not.toContain('value===')
+      flor.events.click(el)
+      flor.events.triggerKeyEvent('a')
+      flor.events.triggerKeyEvent('b')
       flor.events.triggerKeyEvent('c')
       expect(el.props.input).toBe('abc')
       expect(!!el.props.value).toBe(false)
@@ -52,6 +58,11 @@ describe('input', () => {
       done()
     })
     it('"!enter"', done => {
+      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      flor.events.click(el)
+      flor.events.triggerKeyEvent('a')
+      flor.events.triggerKeyEvent('b')
+      flor.events.triggerKeyEvent('c')
       flor.events.triggerKeyEvent(undefined, { name: 'enter' })
       expect(el.props.input).toBe('abc')
       expect(el.props.value).toBe('abc')

@@ -1,7 +1,6 @@
-import { MouseEvent } from '..'
 import { Component, Flor } from '../jsx'
-import { ElementProps, ProgramElement } from '../programDom'
-import { ClicksListener, clicks, ClicksEvent } from '../manager/clicks';
+import { clicks, ClicksListener } from '../manager/clicks'
+import { ElementProps } from '../programDom'
 
 interface ButtonProps extends  Partial<ElementProps> {
   children?: string[]
@@ -18,8 +17,8 @@ export class Button extends Component<ButtonProps, {}> {
 
   constructor(p: ButtonProps, s: {}) {
     super(p, s)
-    if(this.props.onClicks){
-      this.elementReady.then(target=>clicks({target, handler: this.props.onClicks!}))
+    if (this.props.onClicks) {
+      this.elementReady.then(target => clicks({ target, handler: this.props.onClicks! }))
     }
   }
 

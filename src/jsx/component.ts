@@ -1,6 +1,6 @@
 import { ProgramElement } from '../programDom/programElement'
+import { Deferred } from '../util/misc'
 import { ComponentProps } from './types'
-import { Deferred } from '../util/misc';
 
 /**
  * Simple abstract Component class (like React.Component) but without life cycle methods.

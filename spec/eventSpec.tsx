@@ -1,7 +1,7 @@
+import { sleep } from 'misc-utils-of-mine-generic'
 import { FlorDocument, MouseAction, MouseEvent } from '../src'
 import { Flor } from '../src/jsx/createElement'
 import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
-import { sleep } from 'misc-utils-of-mine-generic';
 
 describe('events', () => {
   let flor: FlorDocument
@@ -54,7 +54,6 @@ describe('events', () => {
     done()
   })
 
-  
   it('addMouseListener and removeMouseListener', async done => {
     let counter = 0
     const p = <el width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_">

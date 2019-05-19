@@ -1,4 +1,4 @@
-import { ProgramDocument, FocusEvent } from '../programDom'
+import { FocusEvent, ProgramDocument } from '../programDom'
 import { YogaElement } from '../yogaDom'
 import { FocusManager } from './focusManager'
 
