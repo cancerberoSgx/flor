@@ -15,7 +15,7 @@ describe('AutoLayout', () => {
     flor.destroy()
   })
 
-  it('auto layout api', async done => {
+  fit('auto layout api', async done => {
 
    
     const el = flor.create(

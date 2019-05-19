@@ -48,51 +48,57 @@ export class AutoLayout<E extends ProgramElement = ProgramElement> {
   apply(options: { fitContainerBounds?: boolean } = {}) {
     // this.parentConstraints[0].constant = this.parent.contentWidth
     // this.parentConstraints[1].constant = this.parent.contentHeight
-    this.prepareChildren();
+    // this.prepareChildren();
     // debug(this.parent.contentWidth, this.parent.contentHeight)
     this.view.setSize(this.parent.contentWidth, this.parent.contentHeight);
-    this.prepareChildren(true);
+    this.getBounds().forEach(b=>{
+      b.el.width = b.bounds.width
+      b.el.height = b.bounds.height
+      b.el.top = b.bounds.top
+      b.el.left = b.bounds.left
+    })
+    // this.prepareChildren(true);
       if (options.fitContainerBounds) {
         this.parent.contentWidth = Math.round(this.view.fittingWidth)
         this.parent.contentHeight = Math.round(this.view.fittingHeight)
       }
   }
 
-
-
-  private prepareChildren(modify=false) {
-    this.parent.childNodes.filter(isElement).forEach((c, i) => {
-      if (c.props.name) {
-        const v = this.view.subViews[c.props.name];
-        if (!v) {
-          console.log('Warning, no constraint found for child named ' + c.props.name);
-          return;
-        }
-        // debug(this.view.subViews.child1)
-        if(modify){
-          c.width = Math.round(v.width);
-        c.height = Math.round(v.height);
-        c.top = Math.round(v.top);
-        c.left = Math.round(v.left);
-        // debug(v.left, v.top, v.width, v.height)
-        }
-        // else {
-        //   if (c.width) {
-        //     v.intrinsicWidth = c.width;
-        //   }
-        //   if (c.height) {
-        //     v.intrinsicHeight = c.height;
-        //   }
-        // }
-      }
-      else {
-        debug('Warning, child without name will be ignored in the layout.');
-      }
-    });
-  }
-  getBounds( ): {left: number, top: number, width: number, height: number, el: E}[] {
-    this.prepareChildren();
-    // debug(this.parent.contentWidth, this.parent.contentHeight)
+  // private prepareChildren(modify=false) {
+  //   this.parent.childNodes.filter(isElement).forEach((c, i) => {
+  //     if (c.props.name) {
+  //       const v = this.view.subViews[c.props.name];
+  //       if (!v) {
+  //         console.log('Warning, no constraint found for child named ' + c.props.name);
+  //         return;
+  //       }
+  //       // debug(this.view.subViews.child1)
+  //       if(modify){
+  //         c.width = Math.round(v.width);
+  //       c.height = Math.round(v.height);
+  //       c.top = Math.round(v.top);
+  //       c.left = Math.round(v.left);
+  //       // debug(v.left, v.top, v.width, v.height)
+  //       }
+  //       // else {
+  //       //   if (c.width) {
+  //       //     v.intrinsicWidth = c.width;
+  //       //   }
+  //       //   if (c.height) {
+  //       //     v.intrinsicHeight = c.height;
+  //       //   }
+  //       // }
+  //     }
+  //     else {
+  //       debug('Warning, child without name will be ignored in the layout.');
+  //     }
+  //   });
+  // }
+  /**
+   * same as 
+   */
+  getBounds( ): {bounds: {left: number, top: number, width: number, height: number}, el: E}[] {
+    // this.prepareChildren();
     this.view.setSize(this.parent.contentWidth, this.parent.contentHeight);
     return this.parent.childNodes.filter(isElement).map((c, i) => {
       if (c.props.name) {
@@ -101,29 +107,14 @@ export class AutoLayout<E extends ProgramElement = ProgramElement> {
           console.log('Warning, no constraint found for child named ' + c.props.name);
           return;
         }
-        // debug(this.view.subViews.child1)
-        // if(modify){
           return {
             el: c as E, 
-            width: Math.round(v.width), 
+           bounds: { width: Math.round(v.width), 
             height: Math.round(v.height),
             top: Math.round(v.top),
             left: Math.round(v.left)
           }
-        //   c.width = Math.round(v.width);
-        // c.height = Math.round(v.height);
-        // c.top = Math.round(v.top);
-        // c.left = Math.round(v.left);
-        // debug(v.left, v.top, v.width, v.height)
-        // }
-        // else {
-        //   if (c.width) {
-        //     v.intrinsicWidth = c.width;
-        //   }
-        //   if (c.height) {
-        //     v.intrinsicHeight = c.height;
-        //   }
-        // }
+          }
       }
       else {
         debug('Warning, child without name will be ignored in the layout.');
