@@ -1,7 +1,5 @@
-import { FocusEvent, ProgramDocument, ElementProps, StyleProps, ProgramElement } from '../programDom'
-import { YogaElement } from '../yogaDom'
+import { FocusEvent, ProgramDocument, ProgramElement, StyleProps } from '../programDom'
 import { FocusManager } from './focusManager'
-import { debug } from '../util';
 
 interface State {
   // notFocusedUndefinedStyle?:string[]
@@ -15,7 +13,6 @@ interface Options<T extends ProgramElement = ProgramElement> {
   // getFocusedExtraStyle?(el: T): Partial<T>
 }
 
-
 export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
 
   private _state: State[] = []
@@ -26,7 +23,6 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     this.onFocus = this.onFocus.bind(this)
     this.options.focusManager.addFocusListener({ listener: this.onFocus })
   }
-
 
   onFocus(e: FocusEvent<T>) {
     const previous = e.previous || this.previous
@@ -55,21 +51,21 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
 
   protected setFocusedStyle(focused?: T) {
     const s = this.get(focused)
-    if (!focused || !s || !s.dirty || !focused.props.focus|| !focused.props.focus.data) {
+    if (!focused || !s || !s.dirty || !focused.props.focus || !focused.props.focus.data) {
       return
     }
     const focusStyle = focused.props.focus.data
-    //TODO: if default style changes after this moment, we will loose the changes. Perhaps we need to remove the if()
-    if(!s.notFocusedStyle){
+    // TODO: if default style changes after this moment, we will loose the changes. Perhaps we need to remove the if()
+    if (!s.notFocusedStyle) {
       const focusedKeys =  Object.keys(focusStyle)
-      s.notFocusedStyle = {}  
+      s.notFocusedStyle = {}
       //  s.notFocusedUndefinedStyle = []
-      focusedKeys.forEach(k=>{
+      focusedKeys.forEach(k => {
         // if(typeof focused.props.data[k]==='undefined'){
         //   (s.notFocusedUndefinedStyle as any).push(k)
         // }
         // else {
-          (s.notFocusedStyle as any)[k]  = focused.props.data[k]
+        (s.notFocusedStyle as any)[k]  = focused.props.data[k]
         // }
       })
     }
@@ -79,11 +75,11 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
 
   protected setNotFocusedStyle(previous: T | undefined) {
     const s = this.get(previous)
-    if (!previous||!s||!s.dirty||!s.notFocusedStyle) {
+    if (!previous || !s || !s.dirty || !s.notFocusedStyle) {
       return
     }
     // debug('setNotFocusedStyle', s)
-    previous.props.assign(s.notFocusedStyle);
+    previous.props.assign(s.notFocusedStyle)
     // (s.notFocusedUndefinedStyle||[]).forEach(s=>{
     //   (previous.props as any)[s] = undefined
     // })
@@ -94,5 +90,5 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
   // onBlur(e: BlurEvent) {
   //   throw new Error('Method not implemented.');
   // }
-  
+
 }

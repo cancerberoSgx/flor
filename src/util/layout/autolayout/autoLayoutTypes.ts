@@ -10,7 +10,7 @@ export interface ViewOptions {
    */
   constraints: Constraint[]
   /**
-   * Spacing for the view 
+   * Spacing for the view
    */
   spacing?: number | number[]
   /**
@@ -37,7 +37,7 @@ export interface View<Names extends string = string> {
    */
   readonly height: number
   /**
-   * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.  
+   * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.
    * When the width has been explicitly set using setSize, the fittingWidth will always be the same as the
    * explicitly set width. To calculate the size based on the content, use:
    *
@@ -46,7 +46,7 @@ export interface View<Names extends string = string> {
   });
    * view.subViews.view1.intrinsicWidth = 100; view.subViews.view2.intrinsicWidth = 100;
    * console.log('fittingWidth: ' + view.fittingWidth); // 260
-  ``` 
+  ```
 */
   fittingWidth: number
   /**
@@ -54,12 +54,12 @@ export interface View<Names extends string = string> {
    * .[[fittingWidth]].
    */
   fittingHeight: number
-  /** 
-   * Dictionary of SubView objects that have been created when adding constraints. 
+  /**
+   * Dictionary of SubView objects that have been created when adding constraints.
    */
   subViews: { [name in Names]: SubView }
   /**
-   * Sets the width and height of the view. 
+   * Sets the width and height of the view.
    */
   setSize(width: number, height: number): View
   /**
@@ -204,7 +204,7 @@ export interface SubView {
   width: number,
   height: number
   name: string
-  /** 
+  /**
    * Intrinsic width of the sub-view. Use this property to explicitly set the width of the sub-view, e.g.:
    *
 ```

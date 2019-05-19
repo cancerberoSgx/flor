@@ -1,7 +1,6 @@
 import { ElementProps, KeyEvent, KeyPredicate, ProgramDocument, ProgramElement } from '..'
 import { Component, Flor } from '../jsx'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
-import { debug } from '../util';
 
 interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, ConcreteInputProps {
 
@@ -122,7 +121,7 @@ export class Input extends Component<InputProps, {}> {
   }
 
   protected onKeyPressed(e: KeyEvent) {
-    if (!this.element){// || !this.element.props.focused) {
+    if (!this.element) {// || !this.element.props.focused) {
       return
     }
     if (this.p.changeKeys(e)) {
@@ -130,14 +129,14 @@ export class Input extends Component<InputProps, {}> {
     }
     // call text input cursor listener and then get the resulting state (pos and value) and update our state.
     this.textInputCursorListener && this.textInputCursorListener(e)
-    
+
     this.input = this.textInputCursorManager!.value
 
     this.renderElement()
 
-    this.cursor!.setPosition({ 
-      row: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row, 
-      col: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col 
+    this.cursor!.setPosition({
+      row: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row,
+      col: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col
     })
   }
 

@@ -39,7 +39,7 @@ describe('input', () => {
       expect(flor.renderer.printBuffer()).not.toContain('value===')
       done()
     })
-    
+
     it('input "b"', done => {
       flor.events.click(el)
       flor.events.triggerKeyEvent('a')

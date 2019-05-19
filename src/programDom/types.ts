@@ -168,9 +168,16 @@ export interface ElementProps extends StyleProps, ComponentProps {
   overflow: 'visible' | 'hidden'
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
-  
+
+  /**
+   * Custom Styles for when the element is focused. Note: in order for the element to restore the normal
+   * property value, it must also be declared as a normal property. Example: `<box focus={{bg: 'blue'}}/>`,
+   * because `bg` is only declared as a focus property when the element looses focus the 'blue' background
+   * will remain applied. This can ba avoided declaring also a normal state background color: `<box bg="black"
+   * focus={{bg: 'blue'}}/>`.
+   */
   focus: Partial<StyleProps>
-  
+
   id: string
   name: string
   classes: string[]
@@ -214,8 +221,8 @@ export interface ElementProps extends StyleProps, ComponentProps {
   onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
-   * Listener for when the element is clicked several times in a short amount of time, like double click.
-   * The element must have the mouse enabled (`Program.enableMouse()`).
+   * Listener for when the element is clicked several times in a short amount of time, like double click. The
+   * element must have the mouse enabled (`Program.enableMouse()`).
    */
   onClicks?<T extends ProgramElement= ProgramElement>(r: ClicksEvent<T>): void | boolean
 

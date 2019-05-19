@@ -128,10 +128,10 @@ export class EventManager {
     const { name,type } = this.toProgramEventName(o.name)
     if (type === 'key') {
       // TODO: support on('key a')
-       this.keyListeners.push({ ...o, name })
-     } else        {
-       this.mouseListeners.push({ ...o, name })
-     }
+      this.keyListeners.push({ ...o, name })
+    } else        {
+      this.mouseListeners.push({ ...o, name })
+    }
   }
 
   /**

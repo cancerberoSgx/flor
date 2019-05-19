@@ -237,7 +237,7 @@ export class ProgramElement extends Element {
   get absoluteContentLeft() {
     return this.absoluteLeft + (this.border ? 1 : 0) + (this.padding ? this.padding.left : 0)
   }
-  
+
   get contentHeight() {
     return this.height - (this.border ? 2 : 0) - (this.padding ? (this.padding.top + this.padding.bottom) : 0)
   }
@@ -355,8 +355,8 @@ export class ProgramElement extends Element {
    */
   _addEventListener(name: string, listener: EventListener): void {
     if (name === 'onFocus') {
-        this.ownerDocument._registerListener({ type: 'focus', listener: { els: [this], listener } })
-      } else if (name === 'onBlur') {
+      this.ownerDocument._registerListener({ type: 'focus', listener: { els: [this], listener } })
+    } else if (name === 'onBlur') {
         this.ownerDocument._registerListener({ type: 'blur', listener: { els: [this], listener } })
       } else if (name === 'onClicks') {
         this.ownerDocument._registerListener({ type: 'clicks', listener: { el: this, listener } })

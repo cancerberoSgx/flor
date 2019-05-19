@@ -1,9 +1,9 @@
-import { sleep } from 'misc-utils-of-mine-generic';
-import { BorderStyle, Flor } from '../src';
-import { AutoLayout } from '../src/util/layout/autolayout/autoLayout';
-import { color } from './data';
-import { FlorDocumentTesting } from './florTestHelper';
-import { expectToContain, willContain } from './testUtil';
+import { sleep } from 'misc-utils-of-mine-generic'
+import { BorderStyle, Flor } from '../src'
+import { AutoLayout } from '../src/util/layout/autolayout/autoLayout'
+import { color } from './data'
+import { FlorDocumentTesting } from './florTestHelper'
+import { expectToContain, willContain } from './testUtil'
 
 describe('AutoLayout', () => {
   let flor: FlorDocumentTesting
@@ -70,9 +70,9 @@ describe('AutoLayout', () => {
   ╰──────────────────────────────────────────╯
 `)
 
-el.width = 22
-el.height = 8
-l.apply({ fitContainerBounds: true })
+    el.width = 22
+    el.height = 8
+    l.apply({ fitContainerBounds: true })
     flor.render()
     await sleep(100)
 

@@ -1,6 +1,6 @@
 import { Flor, FlorDocument, Layout } from '../src'
-import { defaultTestSetup, willContain, expectToContain } from './testUtil'
-import { StyleEffectsManager } from '../src/manager/effects';
+import { StyleEffectsManager } from '../src/manager/effects'
+import { defaultTestSetup, expectToContain, willContain } from './testUtil'
 
 describe('effects', () => {
   let flor: FlorDocument

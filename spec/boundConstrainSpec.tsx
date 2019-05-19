@@ -1,10 +1,9 @@
-import { Flor, FlorDocument, YogaDocument, ProgramElement, debug, isElement, BorderStyle } from '../src';
-import { defaultTestSetup, willContain, expectToContain } from './testUtil';
-import { int, color } from './data';
-import { FlorDocumentTesting } from './florTestHelper';
-import { sleep, array } from 'misc-utils-of-mine-generic';
-import { TODO } from 'misc-utils-of-mine-typescript';
-var AutoLayout = require('autolayout') as AutoLayout
+import { sleep } from 'misc-utils-of-mine-generic'
+import { BorderStyle, debug, Flor, isElement, ProgramElement } from '../src'
+import { color } from './data'
+import { FlorDocumentTesting } from './florTestHelper'
+import { expectToContain, willContain } from './testUtil'
+let AutoLayout = require('autolayout') as AutoLayout
 
 interface AutoLayout {
   VisualFormat: VisualFormat
@@ -16,7 +15,7 @@ interface ViewOptions {
    */
   constraints: Constraint[]
   /**
-   * Spacing for the view 
+   * Spacing for the view
    */
   spacing?: number | number[]
   /**
@@ -42,7 +41,7 @@ interface View<Names extends string = string> {
    */
   readonly height: number
   /**
-   * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.  
+   * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.
    * When the width has been explicitly set using setSize, the fittingWidth will always be the same as the
    * explicitly set width. To calculate the size based on the content, use:
    *
@@ -51,7 +50,7 @@ interface View<Names extends string = string> {
   });
    * view.subViews.view1.intrinsicWidth = 100; view.subViews.view2.intrinsicWidth = 100;
    * console.log('fittingWidth: ' + view.fittingWidth); // 260
-  ``` 
+  ```
 */
   fittingWidth: number
   /**
@@ -59,12 +58,12 @@ interface View<Names extends string = string> {
    * .[[fittingWidth]].
    */
   fittingHeight: number
-  /** 
-   * Dictionary of SubView objects that have been created when adding constraints. 
+  /**
+   * Dictionary of SubView objects that have been created when adding constraints.
    */
   subViews: { [name in Names]: SubView }
   /**
-   * Sets the width and height of the view. 
+   * Sets the width and height of the view.
    */
   setSize(width: number, height: number): View
   /**
@@ -205,7 +204,7 @@ interface SubView {
   width: number,
   height: number
   name: string
-  /** 
+  /**
    * Intrinsic width of the sub-view. Use this property to explicitly set the width of the sub-view, e.g.:
    *
 ```
@@ -229,14 +228,14 @@ interface SubView {
 // }
 
 function createAutoLayout(el: ProgramElement, visualConstraints: string[], options?: ParseOptions) {
-  var constraints = AutoLayout.VisualFormat.parse(visualConstraints, options);
-  var view = new AutoLayout.View({ constraints: constraints });
-  view.setSize(el.contentWidth, el.contentHeight);
+  let constraints = AutoLayout.VisualFormat.parse(visualConstraints, options)
+  let view = new AutoLayout.View({ constraints: constraints })
+  view.setSize(el.contentWidth, el.contentHeight)
   el.childNodes.filter(isElement).forEach((c, i) => {
     if (c.props.name) {
       const v = view.subViews[c.props.name]
       if (!v) {
-        debug('Warning, no constraint found for child named ' + c.props.name);
+        debug('Warning, no constraint found for child named ' + c.props.name)
         return
       }
       if (c.width) {
@@ -247,29 +246,29 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
       }
       // v.left = c.left v.top = c.top
     } else {
-      debug('Warning, child without name will be ignored in the layout.');
+      debug('Warning, child without name will be ignored in the layout.')
     }
   })
-  view.setSize(el.contentWidth, el.contentHeight);
+  view.setSize(el.contentWidth, el.contentHeight)
   return {
-    getBounds( ) {
-      view.setSize(el.contentWidth, el.contentHeight);
+    getBounds() {
+      view.setSize(el.contentWidth, el.contentHeight)
       return el.childNodes.filter(isElement).map((c, i) => {
         if (c.props.name) {
           const v = view.subViews[c.props.name]
           if (!v) {
-            console.log('Warning, no constraint found for child named ' + c.props.name);
+            console.log('Warning, no constraint found for child named ' + c.props.name)
             return
           }
           return extractBounds(v)
-        }else {
-          debug('Warning, child without name will be ignored in the layout.');
+        } else {
+          debug('Warning, child without name will be ignored in the layout.')
         }
       })
     },
     apply(options: {fitContainerBounds?: boolean} = {}) {
-      view.setSize(el.contentWidth, el.contentHeight);
-      if(options.fitContainerBounds){
+      view.setSize(el.contentWidth, el.contentHeight)
+      if (options.fitContainerBounds) {
         el.contentWidth = Math.round(view.fittingWidth)
         el.contentHeight = Math.round(view.fittingHeight)
       }
@@ -277,7 +276,7 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
         if (c.props.name) {
           const v = view.subViews[c.props.name]
           if (!v) {
-            console.log('Warning, no constraint found for child named ' + c.props.name);
+            console.log('Warning, no constraint found for child named ' + c.props.name)
             return
           }
           c.width = Math.round(v.width)
@@ -293,14 +292,13 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
 function extractBounds(view: SubView) {
   return {
     left: view.left, top: view.top,
-    // right: view.right, bottom: view.bottom, 
+    // right: view.right, bottom: view.bottom,
     width: view.width, height: view.height
   }
 }
 // function extractBounds(sv: SubView){return   {top: sv.getValue('top'), left: sv.getValue('left'), width:
 // sv.getValue('width'), height: sv.getValue('height')}
 // }
-
 
 describe('auto layout - boundConstrain', () => {
   let flor: FlorDocumentTesting
@@ -312,13 +310,13 @@ describe('auto layout - boundConstrain', () => {
   })
 
   it('auto layout api', async done => {
-    var constraints = AutoLayout.VisualFormat.parse([
+    let constraints = AutoLayout.VisualFormat.parse([
       'H:|[view1(==view2/1.5)]-10-[view2(==20)]-10-[view3(==view1*2)]|',
       'C:view1.top(10).height(>=10)',
       'V:|[view1(==20)]-10-[view2(==20)]-10-[view3(==20)]|'
-    ], { extended: true, spacing: 1 });
-    var view = new AutoLayout.View<'view1' | 'view2' | 'view3'>({ constraints: constraints });
-    view.setSize(100, 50);
+    ], { extended: true, spacing: 1 })
+    let view = new AutoLayout.View<'view1' | 'view2' | 'view3'>({ constraints: constraints })
+    view.setSize(100, 50)
 
     const bounds = Object.keys(view.subViews).map(k => extractBounds((view.subViews as any)[k]))
     expect(bounds).toEqual([{ left: 0, top: 0, width: 20, height: 20 },
@@ -329,8 +327,8 @@ describe('auto layout - boundConstrain', () => {
 
   it('createAutoLayout', async done => {
     const el = flor.create(
-      <box width={44} height={15} top={2} left={2} 
-      border={{type: BorderStyle.round}}
+      <box width={44} height={15} top={2} left={2}
+      border={{ type: BorderStyle.round }}
       >test123
     <box name="child1" ch="1" top={2} left={10} width={10} height={4} bg={color()}></box>
         <box name="child2" ch="2" top={4} left={20} width={10} height={4} bg={color()}></box>
@@ -359,7 +357,7 @@ describe('auto layout - boundConstrain', () => {
 
     const autoLayout = createAutoLayout(el, [
 
-      // dont go out of parent's 
+      // dont go out of parent's
       'C:child1.top(>=0).left(>=0).bottom(<=15).right(<=44)',
       'C:child2.top(>=0).left(>=0).bottom(<=15).right(<=44)',
       'C:child3.top(>=0).left(>=0).bottom(<=15).right(<=44)',
@@ -367,10 +365,10 @@ describe('auto layout - boundConstrain', () => {
       'H:|-[child1(==child2.height*1.5)]-5-[child2(>=child1*2)]-5-[child3(==child1*1.3)]-|',
       'C:child1.top(<=8).height(>=5).height(<=10).left(==5)',
       'C:child2.top(<=child1.top*0.5).height(==child3.height*2).left(>=child1.left+20)',
-      'C:child3.height(==child2.height*1.6).width(==child1.width*2.5).bottom(<=child2.top).right(<=child1.left)',
+      'C:child3.height(==child2.height*1.6).width(==child1.width*2.5).bottom(<=child2.top).right(<=child1.left)'
     ], { extended: true, spacing: 1 })
 
-    autoLayout.apply({fitContainerBounds: true})
+    autoLayout.apply({ fitContainerBounds: true })
     flor.render()
     await sleep(100)
     expectToContain(flor, `
@@ -391,13 +389,12 @@ describe('auto layout - boundConstrain', () => {
   ╰──────────────────────────────────────────╯
 `)
 
-    debug(autoLayout.getBounds());
-    
+    debug(autoLayout.getBounds())
+
     done()
   })
 
   it('1', async done => {
-
 
     //     const el = flor.create(<box width={.9} height={.9} top={.1} left={.1}>test123
     //     {array(10).map(i=><box top={i*2} left={i*10} width={10} height={4} bg={color()}></box>)} </box>
@@ -425,8 +422,6 @@ describe('auto layout - boundConstrain', () => {
     //     flor.render()
 
     // expect(YogaDocument.is(flor.document)).toBe(false) await sleep(1000)
-
-
 
     // function extractBounds(view: SubView) {return {left: view.left, top: view.top, // right: view.right,
     //   bottom: view.bottom, width: view.width, height: view.height
