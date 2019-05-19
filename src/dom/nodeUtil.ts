@@ -101,7 +101,7 @@ export function filterDescendantTextNodesContaining(
 }
 
 export function asElements(el: Element | Document): Element[] {
-  return (isDomElement(el) ? [el] : [el.body]).filter(isDomElement) // ? Array.from(body.childNodes).filter(isElement) : [el]
+  return (isDomElement(el) ? [el] : [el.body]).filter(isDomElement)  
 }
 
 /**
@@ -121,6 +121,7 @@ export function  filterDescendantContaining<T extends Node = Node>(n: Node, text
 }
 
 export type Visitor<T extends Node = Node> = (n: T) => boolean
+
 /**
  * settings for visitDescendants regarding visiting order and visit interruption modes.
  */
@@ -229,152 +230,12 @@ export function nodeHtml(node: Node, outer = true, _level= 0): string {
 }
 
 function elementHtml(node: Element, outer: boolean, _level= 0) {
-  const attrs = [...Array.from(node.attributes), ...Object.keys((node as any).props && (node as any).props.data || {})
+  const attrs = [  ...Object.keys((node as any).props && (node as any).props.data || {})
     .map(k => ({ name: k, value: (node as any).props[k] }))]
   return `${'\n' + repeat(_level, '  ')}${outer ? `<${node.tagName}${attrs.length ? ' ' : ''}${attrs.map(a => a.value && `${a.name}="${a.value.toString ? a.value.toString() : a.value}"`)
     .filter(a => a)
     .join(' ')}>` : ``}${Array.from(node.childNodes).map(c => nodeHtml(c, true, _level + 1)).join('\n' + repeat(_level, '  ')) + '\n' + repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`.split('\n')
     .map(l => l.trim() ? l : '')
     .join('\n')
-    .replace(/\n+/gm, '\n') // removes consecutive end of lines
+    .replace(/\n+/gm, '\n') // removes consecutive empty
 }
-
-
-
-
-
-
-// export function findChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-//   return n.children.find<T>(c => p(c))
-// }
-
-// export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-//   return n.children.filter(c => p(c))
-// }
-
-// //TODO: ancestors, direct children and siblings. nice to have getFirstDescendantOfType, etc
-
-
-// export type Visitor<T extends Node = Node> = (n: T) => boolean
-// /**
-//  * settings for visitDescendants regarding visiting order and visit interruption modes.
-//  */
-// export interface VisitorOptions {
-//   childrenFirst?: boolean
-//   /**
-//    * if a descendant visitor returned true, we stop visiting and signal up
-//    */
-//   breakOnDescendantSignal?: boolean
-//   /**
-//    * no matter if visitor returns true for a node, it will still visit its descendants and then break the chain
-//    */
-//   visitDescendantsOnSelfSignalAnyway?: boolean
-// }
-
-// /**
-//  * Visit node's descendants until the visitor function return true or there are no more. In the first
-//  * different modes on which visiting the rest of descendants or ancestors are configurable through the
-//  * options. By default, first the parent is evaluated which is configurable configurable with
-//  * [[[VisitorOptions.childrenFirst]]
-//  * */
-// export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}): boolean {
-//   let r = false
-//   if (o.childrenFirst) {
-//     r = Array.from(n.childNodes).some(c => visitDescendants(c, v, o))
-//     if (r) {
-//       if (!o.breakOnDescendantSignal) {
-//         v(n)
-//       }
-//       return true
-//     } else {
-//       return v(n)
-//     }
-//   } else {
-//     r = v(n)
-//     if (r) {
-//       if (!o.visitDescendantsOnSelfSignalAnyway) {
-//         return true
-//       } else {
-//         return Array.from(n.childNodes).some(c => visitDescendants(c, v, o)) || true // true because self was signaled
-//       }
-//     } else {
-//       return Array.from(n.childNodes).some(c => visitDescendants(c, v, o))
-//     }
-//   }
-// }
-
-// export type ElementPredicate<T extends Node = Node> = (n: T) => boolean
-
-// export function filterDescendants<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
-//   const a: T[] = []
-//   visitDescendants(
-//     n,
-//     c => {
-//       if (p(c)) {
-//         a.push(c as T)
-//       }
-//       return false
-//     },
-//     o
-//   )
-//   return a
-// }
-
-// export function mapDescendants<T extends Node = Node, V = any>(n: Node, p: (p: T) => V, o: VisitorOptions = {}): V[] {
-//   const a: V[] = []
-//   visitDescendants(
-//     n,
-//     c => {
-//       a.push(p(c as any))
-//       return false
-//     },
-//     o
-//   )
-//   return a
-// }
-
-// export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}) {
-//   let a: T | undefined
-//   visitDescendants(
-//     n,
-//     c => {
-//       if (p(c)) {
-//         a = c as T
-//         return true
-//       }
-//       return false
-//     },
-//     o
-//   )
-//   return a
-// }
-// export function visitAncestors(n: Node, v: Visitor, o = {}): boolean {
-//   return !n || v(n) || !n.parentNode || n.parentNode === n.ownerDocument || visitAncestors(n.parentNode, v, o)
-// }
-
-// export function findAncestor<T extends Node = Node>(n: Node, p: ElementPredicate, o = {}) {
-//   let a: T | undefined
-//   visitAncestors(
-//     n,
-//     c => {
-//       if (p(c)) {
-//         a = c as T
-//         return true
-//       }
-//       return false
-//     },
-//     o
-//   )
-//   return a
-// }
-
-// export function filterAncestors<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
-//   const a: T[] = []
-//   visitAncestors(n, c => {
-//     if (p(c)) {
-//       a.push(c as T)
-//     }
-//     return false
-//   })
-//   return a
-// }
