@@ -27,7 +27,6 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
   }
   children: any[] = []
   props: P
-  // _type: 'string' | 'function' | 'class' | undefined
 }
 
 /**
@@ -67,9 +66,6 @@ class FlorJsxImpl implements FlorJsx {
             } else {
               r = this._render({ e: c, document, parentNode: el })
             }
-            // if(r.parentNode){
-            //   debug('already has ', (r as any).tagName, r.nodeTypeName)
-            // }
           } else {
             throw new Error('Unrecognized child type ' + c)
           }
@@ -149,7 +145,6 @@ class FlorJsxImpl implements FlorJsx {
     }
     const document = options.document || this.doc!
     const el =  this._render({ e, document , parentNode: options.parent || document.body})
-    // ;(options.parent || document.body).appendChild(el)
     return el as E
   }
 
@@ -163,19 +158,14 @@ class FlorJsxImpl implements FlorJsx {
     if (isComponentConstructor(tag)) {
       component = new tag({ ...attrs, children }, {})
       el = component.render();
-      // (el as any)._type = 'class'
       if (isJSXElementImpl(el)) {
         el._component = component
       }
     } else if (typeof tag === 'function') {
       el = tag({ ...attrs, children });
-      // (el as any)._type = 'function'
     } else if (typeof tag === 'string') {
       el = new JSXElementImpl(tag, attrs);
-      // (el as any)._type = 'string'
-      // if (typeof tag === 'string') {
         this.installAttributesAndChildren(el! as any,         children)
-      // }
     }
     return el!
   }
@@ -192,7 +182,7 @@ class FlorJsxImpl implements FlorJsx {
 export const Flor: FlorJsx = new FlorJsxImpl()
 
 export function isJSXElementImpl(e: any): e is JSXElementImpl {
-  return e && e.props && e.children// &&  ['string', 'function', 'class' , undefined].includes(e._type)
+  return e && e.props && e.children
 }
 
 export function isJsxNode(el: any): el is JSX.FlorJsxNode {

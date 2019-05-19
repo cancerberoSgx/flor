@@ -3,23 +3,26 @@ import { YogaElementProps } from '../yogaDom'
 
 export const baseProps: () => Partial<YogaElementProps> = () => ({
   bg: '#1e1e1e',
-  fg: 'lightgray'
+  fg: 'lightgray',
+  width: .4,
+  height: 3, 
+  bold: false
 })
 
 export const containerProps: () => Partial<YogaElementProps> = () => ({
   ...baseProps(),
   bg: 'gray',
-  border: { ...baseProps(), type: BorderStyle.round },
+  // border: { ...baseProps(), type: BorderStyle.round },
 })
 
 export const focusableProps: () => Partial<YogaElementProps> = () => ({
   ...baseProps(),
-  border: { ...baseProps(), type: BorderStyle.round },
+  border: { ...baseProps(), type: BorderStyle.round , fg: 'blue'},
   focusable: true,
   focus: {
-    border: {type: BorderStyle.heavier, fg: 'red', bold: true},
+    border: {fg: 'red'},
     bold: true,
-    fg: 'black',
-    bg: 'lightgray'
+    fg: 'white',
+    bg: 'gray'
   }
 })

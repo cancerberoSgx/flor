@@ -9,6 +9,7 @@ describe('input', () => {
       flor = new FlorDocument()
       el = f(flor)
       flor.render()
+      m=''
     })
     afterEach(() => {
       flor.destroy()
@@ -18,7 +19,7 @@ describe('input', () => {
       expect(!!el.props.input).toBe(false)
       expect(!!el.props.value).toBe(false)
       expect(flor.renderer.program.cursorHidden).toBe(true)
-      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      expect(m).not.toContain('value===')
       done()
     })
 
@@ -27,7 +28,7 @@ describe('input', () => {
       expect(flor.renderer.program.cursorHidden).toBe(false)
       expect(!!el.props.input).toBe(false)
       expect(!!el.props.value).toBe(false)
-      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      expect(m).not.toContain('value===')
       done()
     })
 
@@ -36,7 +37,7 @@ describe('input', () => {
       flor.events.triggerKeyEvent('a')
       expect(el.props.input).toBe('a')
       expect(!!el.props.value).toBe(false)
-      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      expect(m).not.toContain('value===')
       done()
     })
 
@@ -50,18 +51,18 @@ describe('input', () => {
     })
 
     it('input "c"', done => {
-      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      expect(m).not.toContain('value===')
       flor.events.click(el)
       flor.events.triggerKeyEvent('a')
       flor.events.triggerKeyEvent('b')
       flor.events.triggerKeyEvent('c')
       expect(el.props.input).toBe('abc')
       expect(!!el.props.value).toBe(false)
-      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      expect(m).not.toContain('value===')
       done()
     })
     it('"!enter"', done => {
-      expect(flor.renderer.printBuffer()).not.toContain('value===')
+      expect(m).not.toContain('value===')
       flor.events.click(el)
       flor.events.triggerKeyEvent('a')
       flor.events.triggerKeyEvent('b')
@@ -69,19 +70,22 @@ describe('input', () => {
       flor.events.triggerKeyEvent(undefined, { name: 'enter' })
       expect(el.props.input).toBe('abc')
       expect(el.props.value).toBe('abc')
-      expect(flor.renderer.printBuffer()).toContain('*value===abc*')
+      expect(m).toContain('*value===abc*')
       done()
     })
   }
-
+  let m = ''
+  function msg(s: string) {
+    m = 'msg:' + s
+  }
   describe('component', () => {
-    test(flor => flor.create(<Input top={10} left={8} width={15} height={3} value={'initial'} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug('*value===' + e.value + '*')} />))
+    test(flor => flor.create(<Input top={10} left={8} width={15} height={3}  border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => msg('*value===' + e.value + '*')} />))
   })
 
   describe('plain function', () => {
     test(flor => flor.create(input({
       top: 10, left: 8, height: 3, width: 15, border: { type: BorderStyle.heavy }, bg: 'blue', onChange: e => {
-        flor.debug('*value===' + e.value + '*')
+        msg('*value===' + e.value + '*')
       }, document: flor.document
     })))
   })

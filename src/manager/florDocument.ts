@@ -94,7 +94,7 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
   /**
    * Creates an Element from given Props or by rendering given JSXElement and appends it to [[body]].
    */
-  create<T extends ProgramElement= ProgramElement>(el: ProgramElement | Partial<FullProps> | JSX.Element): T {
+  create(el: ProgramElement | Partial<FullProps> | JSX.Element): E {
     let r: ProgramElement | undefined
     if (isElement(el)) {
       r = el
@@ -108,7 +108,7 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
     } else {
       throw new Error('Could not create element for input ' + el)
     }
-    return r as T
+    return r as E
   }
 
   /**
@@ -179,39 +179,61 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
     this.renderer.renderElement(el)
   }
 
-  private _debugEl: ProgramElement | undefined
+  // private _debugEl: ProgramElement | undefined
 
   /**
    * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
-  debug(el: any, props: Partial<ElementProps> & {hideTimeout?: number} = {}, ...args: any[]) {
-    if (!this._debugEl) {
-      this._debugEl = this.create({   top: .7, left: .01, width: 200, height: .3, ...props, children: ['LOG']
-      , doLayout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
+  debug( ...args: any[]) {
+    // if (!this._debugEl) {
+    //   this._debugEl = this.create({   top: .7, left: .01, width: 200, height: .3, ...props, children: ['LOG']
+    //   , doLayout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
+    //   })
+    // }
+    // this._debugEl.empty()
+    // if (typeof el === 'string') {
+    //   // this._debugEl.appendChild(this.create({  children: [el] }))
+    //   args.splice(0, 0, el)
+    // } else if (isElement(el)) {
+    //   // (el.debugAsXml() || '').split('\n').forEach((l, i) => {
+    //     // this._debugEl!.appendChild(this.create({   children: [l] }))
+    //   // })
+    //   args.splice(0, 0, el.debugAsXml)
+    // } else {
+    //   args.push(el)
+    // }
+    setTimeout(()=>{
+      // this.cursor.hide({name: 'flordebug'})
+
+      this.program.saveCursor('flordebug')
+      args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 44, breakLength: 120 }))
+      .forEach((c, i) => {
+        // this._debugEl!.appendChild(this.create({  children: [c] }))
+        this.renderer.write(i, 0, c)     
       })
-    }
-    this._debugEl.empty()
-    if (typeof el === 'string') {
-      this._debugEl.appendChild(this.create({  children: [el] }))
-    } else if (isElement(el)) {
-      (el.debugAsXml() || '').split('\n').forEach((l, i) => {
-        this._debugEl!.appendChild(this.create({   children: [l] }))
-      })
-    } else {
-      args.push(el)
-    }
-    args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 44, breakLength: 120 }))
-    .forEach(c => {
-      this._debugEl!.appendChild(this.create({  children: [c] }))
-    })
-    this._debugEl.forceUpdate(true)
-    this.render(this._debugEl)
-    if (props.hideTimeout) {
+      this.program.restoreCursor('flordebug')
+
+
       setTimeout(() => {
-        this._debugEl!.forceUpdate(true)
-        this.render(this._debugEl)
-      }, props.hideTimeout)
-    }
+        // t.remove()
+        this.program.saveCursor('flordebug')
+        this.render()
+        this.program.restoreCursor('flordebug')
+      }, 3000);
+    }, 1000)
+    // .join('\n')
+
+    // const t = this.create(text({value: s, width: 20, height: 20, top: 20, left: 20}))
+    // this.render(t)
+
+    // this._debugEl.forceUpdate(true)
+    // this.render(this._debugEl)
+    // if (props.hideTimeout) {
+      // setTimeout(() => {
+        // this._debugEl!.forceUpdate(true)
+        // this.render(this._debugEl)
+      // }, props.hideTimeout)
+    // }
   }
 
   private installLoggers() {

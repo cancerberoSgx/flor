@@ -60,7 +60,7 @@ export class ProgramElement extends Element {
     this._layoutOnce = false
     this._positionDirty = true
     this._boundsDirty = true
-    this.updateBounds(descendants)
+    this.updateBounds(descendants, descendants)
   }
 
   /**
@@ -94,7 +94,7 @@ export class ProgramElement extends Element {
    */
   _beforeRender(): any {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
-      if (this._positionDirty || this.__boundsDirty) {
+      if (this._positionDirty || this._boundsDirty) {
         this.updateBounds()
       }
     }
@@ -107,7 +107,13 @@ export class ProgramElement extends Element {
    * on render() , descendants doesn't need to be calculated since they are rendered after the parent and
    * updateBounds will be called for them individually
    */
-  protected updateBounds(descendants?: boolean) {
+  protected updateBounds(descendants?: boolean, force?: boolean) {
+    if(force){
+
+      this._layoutOnce = false
+      this._positionDirty = true
+      this._boundsDirty = true
+    }
     if (this._positionDirty || this._boundsDirty) {
       // let a = this.absoluteLeft - this.absoluteBottom + this.absoluteRight
       this.doLayout()
@@ -115,23 +121,21 @@ export class ProgramElement extends Element {
       this._positionDirty = false
       this._boundsDirty = false
     }
-    if (descendants) {
+    if (descendants||force) {
       this.getChildrenElements().forEach(e => {
-        e.updateBounds(descendants)
+        e.updateBounds(descendants, force)
       })
     }
   }
+
   private _useExpression(a: any) {
 
-  }
-
-  toString() {
-    return 'ProgramElement ' + this.tagName
   }
 
   get parentNode(): ProgramElement | ProgramDocument {
     return this._parentNode as any
   }
+
   get parentElement(): ProgramElement | undefined {
     return isElement(this._parentNode) ? this._parentNode : undefined
   }
@@ -149,9 +153,11 @@ export class ProgramElement extends Element {
     }
     return this._absoluteLeft
   }
+
   get absoluteRight() {
     return this.absoluteLeft + this.width
   }
+
   private _absoluteTop = 0
   get absoluteTop() {
     if (this._positionDirty) {
@@ -165,6 +171,7 @@ export class ProgramElement extends Element {
     }
     return this._absoluteTop
   }
+
   get absoluteBottom() {
     return this.absoluteTop + this.height
   }
@@ -201,6 +208,7 @@ export class ProgramElement extends Element {
   public set padding(value: Padding | undefined) {
     this.props.padding = value
   }
+  
   public get border(): Partial<BorderProps> | undefined {
     return this.props.border
   }
@@ -221,6 +229,7 @@ export class ProgramElement extends Element {
   set width(value: number) {
     this.props.width = value
   }
+  
   get height() {
     return this.props.height
   }
@@ -228,12 +237,10 @@ export class ProgramElement extends Element {
     this.props.height = value
   }
 
-  // onBoundsChange(arg0: () => void): any {
-  //   throw new Error('Method not implemented.')
-  // }
   get absoluteContentTop() {
     return this.absoluteTop + (this.border ? 1 : 0) + (this.padding ? this.padding.top : 0)
   }
+
   get absoluteContentLeft() {
     return this.absoluteLeft + (this.border ? 1 : 0) + (this.padding ? this.padding.left : 0)
   }
@@ -255,12 +262,15 @@ export class ProgramElement extends Element {
   get absoluteInnerTop() {
     return this.absoluteTop + (this.border ? 1 : 0)
   }
+
   get absoluteInnerLeft() {
     return this.absoluteLeft + (this.border ? 1 : 0)
   }
+
   get innerHeight() {
     return this.height - (this.border ? 1 : 0)
   }
+
   get innerWidth() {
     return this.width - (this.border ? 1 : 0)
   }

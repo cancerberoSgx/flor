@@ -5,7 +5,6 @@ import { asArray } from 'misc-utils-of-mine-generic';
 import { isArray } from 'util';
 
 interface BoxProps extends Partial<YogaElementProps> {
-  // children: JSX.BlessedJsxChild[]
 }
 
 /**
@@ -13,10 +12,10 @@ interface BoxProps extends Partial<YogaElementProps> {
  */
 export class Box extends Component<BoxProps, {}> {
   render() {
-    return <box {...this.props}>{...this.props.children as any}</box>
+    return <box {...containerProps()} {...{ ...this.props, children: undefined }}>{this.props.children}</box>
   }
 }
 
-// export function box(props: BoxProps) {
-//   return Flor.render(<Box {...{ ...props, children: undefined as any }}>{...props.children ? asArray(props.children) : []}</Box>)
-// }
+export function box(props: BoxProps) {
+  return Flor.render(<Box {...props}>{props.children}</Box>)
+}

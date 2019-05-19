@@ -4,6 +4,7 @@ import { YogaElementProps } from './types'
 import { YogaDocument } from './yogaDocument'
 import { YogaElementPropsImpl } from './yogaProps'
 import { debug } from '../util';
+import { isElement } from '../programDom';
 
 export class YogaElement extends ProgramElement {
 
@@ -28,11 +29,17 @@ export class YogaElement extends ProgramElement {
     return this._node
   }
 
-  protected setPropsToNode() {
+  protected setPropsToNode(descendants?: boolean) {
     typeof this.getFlexWidth() !== 'undefined' && this.node.setWidth(this.getFlexWidth()!)
     typeof this.getFlexHeight() !== 'undefined' && this.node.setHeight(this.getFlexHeight()!)
     typeof this.getFlexLeft() !== 'undefined' && this.node.setPosition(yoga.EDGE_LEFT, this.getFlexLeft()!)
     typeof this.getFlexTop() !== 'undefined' && this.node.setPosition(yoga.EDGE_TOP, this.getFlexTop()!)
+    // if(descendants){
+    //   this.getChildrenElements().forEach(c=>c.setPropsToNode(descendants))
+    // }
+  }
+  getChildrenElements() {
+    return this.childNodes.filter(YogaElement.is)  
   }
 
   protected setYogaProps() {
@@ -51,15 +58,18 @@ export class YogaElement extends ProgramElement {
       this.node.calculateLayout(isFinite(this.width) ? this.width : undefined, isFinite(this.height) ? this.height : undefined, this.props.direction)
     }
     else {
-      debugger
+      // debugger
       debug('calculateLayout node ignored parent:',this.parentNode && this.parentNode.nodeTypeName, 'self: ', this.innerHTML)
     }
-    (this.childNodes).filter(YogaElement.is).forEach((c, i) =>
+    this.childNodes.filter(YogaElement.is).forEach((c, i) =>
       c.calculateLayout()
     )
   }
 
   doLayout() {
+    // if(this.__boundsDirty){
+    //   this.setPropsToNode()
+    // }
     this.setYogaProps()
     this.calculateLayout()
   }

@@ -6,8 +6,10 @@ describe('focus', () => {
   defaultTestSetup(f => flor = f || flor)
 
   it('should visit focusable elements', async done => {
+    let m = ''
     function msg(s: string) {
-      flor.debug('msg:' + s)
+      // flor.debug('msg:' + s)
+      m = 'msg:' + s
     }
     const a = <el {...{ height: .9, width: .9, top: 0, left: 0, layout: { neverResizeContainer: true, layout: Layout['leftRight'] } }}>
       <el {...{ height: .9, width: .4, layout: { layout: Layout.topDown } }}>
@@ -29,20 +31,20 @@ describe('focus', () => {
         flor.focus.focusPrevious()
       }
     })
-    expect(flor.renderer.printBuffer(true)).not.toContain('msg:')
+    expect(m).not.toContain('msg:')
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
-    expect(flor.renderer.printBuffer(true)).toContain('msg:button 1 focused')
+    expect(m).toContain('msg:button 1 focused')
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
-    expect(flor.renderer.printBuffer(true)).toContain('msg:button 2 focused')
+    expect(m).toContain('msg:button 2 focused')
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
-    expect(flor.renderer.printBuffer(true)).toContain('msg:button 3 focused')
+    expect(m).toContain('msg:button 3 focused')
     flor.events.triggerKeyEvent(undefined, { name: 'tab', ctrl: true })
-    expect(flor.renderer.printBuffer(true)).toContain('msg:button 2 focused')
+    expect(m).toContain('msg:button 2 focused')
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
     flor.events.triggerKeyEvent(undefined, { name: 'tab' })
-    expect(flor.renderer.printBuffer(true)).toContain('msg:button 1 focused')
+    expect(m).toContain('msg:button 1 focused')
     flor.events.triggerKeyEvent(undefined, { name: 'tab', ctrl: true })
-    expect(flor.renderer.printBuffer(true)).toContain('msg:button 3 focused')
+    expect(m).toContain('msg:button 3 focused')
     done()
   })
 })
