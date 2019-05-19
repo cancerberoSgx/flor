@@ -109,7 +109,7 @@ export class Input extends Component<InputProps, {}> {
   set input(s: string) {
     if (this.element) {
       this.element.props.input = s
-      this.element.childNodes.item(0)!.textContent = this.element.props.input || ''
+      this.element.childNodes[0]!.textContent = this.element.props.input || ''
       this.props.onInput && this.props.onInput({ currentTarget: this.element, input: (this.element.props.input || '') })
       this.renderElement()
     }

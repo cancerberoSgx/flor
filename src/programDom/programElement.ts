@@ -397,12 +397,12 @@ export class ProgramElement extends Element {
    * Gets only childNodes that are elements.
    */
   getChildrenElements() {
-    return Array.from(this.childNodes).filter(isElement)
+    return (this.childNodes).filter(isElement)
   }
 
   debugAsJson(): DebugJsonNode {
     // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
-    return { ...this.props.data, children: Array.from(this.childNodes).map(e => isElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
+    return { ...this.props.data, children: (this.childNodes).map(e => isElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
   }
   /**
    * Returns a XML like string representation of this element instance.
@@ -413,7 +413,7 @@ export class ProgramElement extends Element {
         // .filter(f => f !== '_data')
         .map(p => `${p}=${
           JSON.stringify(this.props.data[p])}`).join(' ')} ${this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${
-      Array.from(this.childNodes)
+      (this.childNodes)
         .map(e => isElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`
   }
   addKeyListener(l: KeyListener, name= 'keypress') {

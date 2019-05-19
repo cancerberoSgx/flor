@@ -8,22 +8,25 @@ export class Node implements EventTarget {
   static DOCUMENT_TYPE_NODE: NodeType = 10
   static TEXT_NODE: NodeType = 3
   static ELEMENT_NODE: NodeType = 1
-  static _WATERMARK = 'jsx-alone-dom-dom'
 
-  protected _children: Node[] = []
-  readonly childNodes: NodeList<Node>
-  protected _boundsDirty: boolean
-
-  /**
-   * Same as [[childNodes]] but returns them in an array
-   */
-  get children(): Node[] {
-    return Array.from(this.childNodes)
+  // protected _children: Node[] = []
+  protected _childNodes: Node[]
+  get childNodes(): Node[] {
+    return this._childNodes
   }
 
+  protected _boundsDirty: boolean
+
+  // /**
+  //  * Same as [[childNodes]] but returns them in an array
+  //  */
+  // get children(): Node[] {
+  //   return (this.childNodes)
+  // }
+
   constructor(readonly nodeType: NodeType) {
-    this._children = []
-    this.childNodes = new NodeList(this._children)
+    this._childNodes = []
+    // this.childNodes = new NodeList(this._children)
     this._boundsDirty = true
   }
 
@@ -67,7 +70,7 @@ export class Node implements EventTarget {
       c.parentNode.removeChild(c)
       c.remove()
     }
-    this._children.push(c)
+    this._childNodes.push(c)
     c._parentNode = this
     if (!this._boundsDirty) {
       this._boundsDirty
@@ -82,9 +85,9 @@ export class Node implements EventTarget {
   }
 
   removeChild(n: Node): Node | undefined {
-    const i = this._children.findIndex(c => c === n)
+    const i = this._childNodes.findIndex(c => c === n)
     if (i !== -1) {
-      const c = this._children.splice(i, 1)[0] || undefined
+      const c = this._childNodes.splice(i, 1)[0] || undefined
       c._parentNode = null
       if (!n._boundsDirty) {
         c._boundsDirty = true
@@ -97,7 +100,7 @@ export class Node implements EventTarget {
   }
 
   get firstChild(): Node | undefined {
-    return this._children.length ? this._children[0] : undefined
+    return this._childNodes.length ? this._childNodes[0] : undefined
   }
 
   /**
@@ -117,7 +120,7 @@ export class Node implements EventTarget {
    */
   replaceWith(...nodes: (Node | string)[]): void {
     // TODO: mark boundsDirty
-    const children = (this._parentNode as any)._children as Node[]
+    const children = (this._parentNode as any)._childNodes as Node[]
     children.splice(children.indexOf(this), 1,
       ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
   }
@@ -175,9 +178,9 @@ export class Node implements EventTarget {
   }
 
   previousSibling(): Node | undefined {
-    const i = this.parentNode && this.parentNode._children.indexOf(this) || 0
+    const i = this.parentNode && this.parentNode._childNodes.indexOf(this) || 0
     if (i > 0) {
-      return this.parentNode!._children[i - 1]
+      return this.parentNode!._childNodes[i - 1]
     }
   }
 
@@ -185,24 +188,24 @@ export class Node implements EventTarget {
 
 export type NodeType = 10 | 3 | 1
 
-export class NodeList<T> {
-  [index: number]: T;
+// export class NodeList<T> {
+//   [index: number]: T;
 
-  constructor(protected list: T[]) {
-  }
+//   constructor(protected list: T[]) {
+//   }
 
-  [Symbol.iterator]() {
-    return this.list[Symbol.iterator]()
-  }
+//   [Symbol.iterator]() {
+//     return this.list[Symbol.iterator]()
+//   }
   
-  get length() {
-    return this.list.length
-  }
+//   get length() {
+//     return this.list.length
+//   }
   
-  item(i: number): T | null {
-    return this.list[i] || null
-  }
-}
+//   item(i: number): T | null {
+//     return this.list[i] || null
+//   }
+// }
 
 export class TextNode extends Node {
   constructor(_textContent: string | null, ownerDocument: Document) {

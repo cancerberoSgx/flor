@@ -158,7 +158,7 @@
 //    * will extract text from children and remove them so we handle only as a porperty
 //    */
 //   protected initLines() {
-//     let childText = Array.from(this.element!.childNodes).map(c=>c.textContent+'')
+//     let childText = (this.element!.childNodes).map(c=>c.textContent+'')
 //     // .map(c => this.p.trimChildrenText ? (c.textContent+'').trim() : c.textContent)//.filter(s=>s&& isString(s))
 //     this.lines = childText.join(this.p.childrenTextSeparator).split(this.p.newLineString) // TDO: performance
 //     this._linesInitialized = true

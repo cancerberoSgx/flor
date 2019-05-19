@@ -123,7 +123,7 @@ describe('jsx', () => {
     class C extends Component<{ name: string, colors: string[] }> {
       _elementReady() {
         elementReady = true
-        Array.from(this.element!.childNodes).filter(isElement).forEach((c, i) => {
+        this.element!.childNodes.filter(isElement).forEach((c, i) => {
           c.props.top = i + 1
         })
       }

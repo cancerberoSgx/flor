@@ -19,7 +19,7 @@ describe('dom', () => {
   it('document should have at the body as its children', async done => {
     const d = new Document()
     expect(d.childNodes.length).toBe(1)
-    expect(d.childNodes.item(0)).toBe(d.body)
+    expect(d.childNodes[0]).toBe(d.body)
     expect(removeWhites(d.outerHTML, '')).toContain('<document><body></body></document>')
     expect(d.filterDescendants(notFalsy).length).toBe(1)
     expect(d.findDescendant(notFalsy)).toBe(d.body)

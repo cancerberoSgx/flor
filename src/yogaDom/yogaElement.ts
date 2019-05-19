@@ -20,7 +20,7 @@ export class YogaElement extends ProgramElement {
       this._node = yoga.Node.create()
       this.setPropsToNode()
       setYogaProps(this.node, this.props)
-      Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => {
+      this.childNodes.filter(YogaElement.is).forEach((c, i) => {
         this.node.insertChild(c.node, i)
       })
     }
@@ -64,8 +64,7 @@ export class YogaElement extends ProgramElement {
 
   protected setYogaProps() {
     setYogaProps(this.node, this.props)
-    // this.setPropsToNode()
-    Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) => {
+    this.childNodes.filter(YogaElement.is).forEach((c, i) => {
       c.setYogaProps()
     })
   }
@@ -78,7 +77,7 @@ export class YogaElement extends ProgramElement {
       this.width = this.node.getComputedWidth()
       this.node.calculateLayout(isFinite(this.width) ? this.width : undefined,  isFinite(this.height) ? this.height : undefined, this.props.direction)
     }
-    Array.from(this.childNodes).filter(YogaElement.is).forEach((c, i) =>
+    (this.childNodes).filter(YogaElement.is).forEach((c, i) =>
         c.calculateLayout()
     )
   }
@@ -118,7 +117,7 @@ export class YogaElement extends ProgramElement {
   }
 
   yogaDebug(): YogaLayoutInfo {
-    return { ...this.node.getComputedLayout(), children: Array.from(this.childNodes).filter(YogaElement.is).map(e => e.yogaDebug()) }
+    return { ...this.node.getComputedLayout(), children: (this.childNodes).filter(YogaElement.is).map(e => e.yogaDebug()) }
   }
 
   get ownerDocument(): YogaDocument {
@@ -127,7 +126,7 @@ export class YogaElement extends ProgramElement {
 
   destroy() {
     // first free the children if not throws memory exception
-    Array.from(this.childNodes).filter(YogaElement.is).forEach(c => c.destroy())
+    (this.childNodes).filter(YogaElement.is).forEach(c => c.destroy())
     this._node && this._node.free()
     this.ownerDocument._unregister(this)
   }

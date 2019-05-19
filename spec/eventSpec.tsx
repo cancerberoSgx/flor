@@ -9,7 +9,7 @@ describe('events', () => {
   it('click', async done => {
     let counter = 0
     const p = <el width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClick={e => {
-      e.currentTarget!.childNodes.item(0)!.textContent = 'clicked_' + counter++
+      e.currentTarget!.childNodes[0]!.textContent = 'clicked_' + counter++
       flor.renderer.renderElement(le)
     }}>
       text

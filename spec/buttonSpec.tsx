@@ -78,7 +78,7 @@ describe('button', () => {
 
         // {/* <Rando          }
         // {/* <Button onClick={e => {
-        //   e.currentTarget!.childNodes.item(0)!.textContent = 'clicked_' + counter++
+        //   e.currentTarget!.childNodes[0]!.textContent = 'clicked_' + counter++
         //   flor.renderer.renderElement(le)
         // }}>CLICK ME2</Button>
         // <el width={10} height={2}>text2</el> */}

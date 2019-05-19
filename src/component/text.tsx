@@ -67,7 +67,7 @@ export class Text extends Component<TextProps, {}> {
       this.yNode.setAlignContent(alignItems)
     }
     if (!this.words) {
-      this.words = Array.from(this.element!.childNodes).filter(isDomText).map(t => t.textContent).join(' ').split(' ')
+      this.words = (this.element!.childNodes).filter(isDomText).map(t => t.textContent).join(' ').split(' ')
       this.words.forEach((l, i) => {
         const node = yoga.Node.create()
         node.setWidth(l.length + (this.props.extraWidth || 1))

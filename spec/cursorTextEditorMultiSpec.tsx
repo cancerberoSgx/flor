@@ -33,13 +33,13 @@
 //       })
 //     }} onKeyPressed={e => {
 //       editor.onKey(e)
-//       el.childNodes.item(0)!.textContent = editor.value
+//       el.childNodes[0]!.textContent = editor.value
 //       el.render()
 //       flor.program.cursorPos(el.absoluteContentTop + editor.pos.row, el.absoluteContentLeft + editor.pos.col)
 //     }}>{text}</box>
 //     const el = flor.create(a)
 //     flor.render()
-//     editor.value = el.childNodes.item(0)!.textContent || ''
+//     editor.value = el.childNodes[0]!.textContent || ''
 //     flor.cursor.show({
 //       name: 'cursorTextEditorTest2', top: el.absoluteContentTop + editor.pos.row, left: el.absoluteContentLeft + editor.pos.col
 //     })

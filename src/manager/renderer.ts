@@ -376,7 +376,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   renderChildren(el: E, options: RenderElementOptions) {
     this.lastAbsLeft = el.absoluteContentLeft
     this.lastAbsTop = el.absoluteContentTop
-    Array.from(el.childNodes).forEach((c, i, a) => {
+    el.childNodes.forEach((c, i, a) => {
       if (c instanceof TextNode) {
         if (el.props.renderChildText) {
           el.props.renderChildText(this, c, i)

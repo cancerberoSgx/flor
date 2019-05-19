@@ -15,7 +15,7 @@ export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
   }
 
   let layer: any = layout(o.layout, { sort: !!o.sort })
-  o.el.children.forEach(c => {
+  o.el.childNodes.forEach(c => {
     if (isElement(c)) {
       layer.addItem({ 'height': c.props.height, 'width': c.props.width, 'meta': c })
     }

@@ -111,7 +111,7 @@ describe('cursorTextEditor', () => {
       const initialValue = 'hello world'
       el = flor.create(<el top={10} left={8} width={33} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e => {
         keyListener(e)
-        el.childNodes.item(0)!.textContent = editor.value
+        el.childNodes[0]!.textContent = editor.value
         el.render()
         flor.program.cursorPos(11 + editor.pos.row, 9 + editor.pos.col)
       }}

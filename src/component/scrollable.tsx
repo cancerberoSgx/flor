@@ -242,7 +242,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     let first: ProgramElement | undefined
     let last: ProgramElement | undefined
     const viewportArea = this.getViewportArea()
-    this.vChildren = Array.from(this.element!.childNodes).filter((c, i, a) => {
+    this.vChildren = (this.element!.childNodes).filter((c, i, a) => {
       if (last && this._calcScrollAreaRun) {
         return false
       }

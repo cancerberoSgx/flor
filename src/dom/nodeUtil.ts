@@ -28,7 +28,7 @@ export function isDomDocument(n: any): n is Document {
 
 export function visitChildren(n: Node, v: (c: Node) => void) {
   v(n)
-  Array.from(n.childNodes as any).forEach(c => visitChildren(c as any, v))
+  n.childNodes.forEach(c => visitChildren(c as any, v))
 }
 
 export function mapChildren<T>(n: Node, v: (c: Node) => T): T[] {
@@ -38,11 +38,11 @@ export function mapChildren<T>(n: Node, v: (c: Node) => T): T[] {
 }
 
 export function findChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-  return Array.from(n.childNodes).find<T>(c => p(c))
+  return (n.childNodes).find<T>(c => p(c))
 }
 
 export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-  return Array.from(n.childNodes).filter(c => p(c))
+  return (n.childNodes).filter(c => p(c))
 }
 
 export function visitAscendants(n: Node, v: Visitor, o = {}): boolean {
@@ -147,7 +147,7 @@ export interface VisitorOptions {
 export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion= false): boolean {
   let r = false
   if (o.childrenFirst) {
-    r = n.children.some(c => visitDescendants(c, v, o, true))
+    r = n.childNodes.some(c => visitDescendants(c, v, o, true))
     if (r) {
       if (!o.breakOnDescendantSignal && (o.andSelf || inRecursion)) {
         v(n)
@@ -165,10 +165,10 @@ export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, in
       if (!o.visitDescendantsOnSelfSignalAnyway) {
         return true
       } else {
-        return n.children.some(c => visitDescendants(c, v, o ,true)) || true // true because self was signaled
+        return n.childNodes.some(c => visitDescendants(c, v, o ,true)) || true // true because self was signaled
       }
     } else {
-      return n.children.some(c => visitDescendants(c, v, o, true))
+      return n.childNodes.some(c => visitDescendants(c, v, o, true))
     }
   }
 }
@@ -234,7 +234,7 @@ function elementHtml(node: Element, outer: boolean, _level= 0) {
     .map(k => ({ name: k, value: (node as any).props[k] }))]
   return `${'\n' + repeat(_level, '  ')}${outer ? `<${node.tagName}${attrs.length ? ' ' : ''}${attrs.map(a => a.value && `${a.name}="${a.value.toString ? a.value.toString() : a.value}"`)
     .filter(a => a)
-    .join(' ')}>` : ``}${Array.from(node.childNodes).map(c => nodeHtml(c, true, _level + 1)).join('\n' + repeat(_level, '  ')) + '\n' + repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`.split('\n')
+    .join(' ')}>` : ``}${(node.childNodes).map(c => nodeHtml(c, true, _level + 1)).join('\n' + repeat(_level, '  ')) + '\n' + repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`.split('\n')
     .map(l => l.trim() ? l : '')
     .join('\n')
     .replace(/\n+/gm, '\n') // removes consecutive empty

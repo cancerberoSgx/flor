@@ -6,7 +6,7 @@ const justifiedLayout = require('justified-layout')
 export function handleJustifiedLayout(o: LayoutOptions & {
   el: ProgramElement;
 }) {
-  const children = Array.from(o.el.childNodes).filter(isElement)
+  const children = (o.el.childNodes).filter(isElement)
   const data = children.map(c => ({
     top: c.props.top,
     left: c.props.left,
