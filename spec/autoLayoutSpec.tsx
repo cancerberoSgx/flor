@@ -70,7 +70,22 @@ describe('AutoLayout', () => {
   ╰──────────────────────────────────────────╯
 `)
 
+el.width = 22
+el.height = 8
+l.apply({ fitContainerBounds: true })
+    flor.render()
+    await sleep(100)
 
+    expectToContain(flor, `
+  ╭────────────────────╮
+  │child1╮child2──────╮│
+  ││     ││           ││
+  ││     ││           ││
+  ││     ││           ││
+  ││     ││           ││
+  │╰─────╯╰───────────╯│
+  ╰────────────────────╯
+`)
     done()
   })
 })
