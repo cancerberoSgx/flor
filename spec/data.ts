@@ -10,6 +10,7 @@ export const string = (length: number = int(10, 20)) =>
     .reduce((a, b) => a.concat(b))
 
 export const char = () => String.fromCharCode(int('a'.charCodeAt(0), 'a'.charCodeAt(0) + 25))
+
 export const words = (
   wordCount = int(10, 20),
   wordLength = int(5, 10),
@@ -18,6 +19,7 @@ export const words = (
 ) => arr(wordCount, wordCountB).map(i => string(int(wordLength, wordLengthB)))
 
 export const int = (a = 10, b = a) => Math.floor(Math.random() * b) + (a === b ? 0 : a)
+
 export const float = (a = 10, b = a) => Math.random() * b + (a === b ? 0 : a)
 
 export function color() {

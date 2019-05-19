@@ -125,14 +125,14 @@ export class EventManager {
   }
 
   _registerEventListener<T extends ProgramElement = ProgramElement>(o: RegisteredEventListener<T>): any {
-     const { name,type } = this.toProgramEventName(o.name)
-     if (type === 'key') {
+    const { name,type } = this.toProgramEventName(o.name)
+    if (type === 'key') {
       // TODO: support on('key a')
-      this.keyListeners.push({ ...o, name })
-    } else        {
-      this.mouseListeners.push({ ...o, name })
-    }
-   }
+       this.keyListeners.push({ ...o, name })
+     } else        {
+       this.mouseListeners.push({ ...o, name })
+     }
+  }
 
   /**
    * Resolves names from element props like onClick to program event names like 'mouseup'.

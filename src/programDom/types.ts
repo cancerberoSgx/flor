@@ -2,11 +2,11 @@ import { PropertyOptional } from 'misc-utils-of-mine-generic'
 import { MouseAction, ProgramKeyEvent, ProgramMouseEvent } from '../declarations'
 import { ComponentProps } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
+import { ClicksEvent } from '../manager/clicks'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
-import { ClicksEvent } from '../manager/clicks';
 
 export interface Edges {
   top: number
@@ -208,7 +208,7 @@ export interface ElementProps extends StyleProps, ComponentProps {
   onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
-   * Listener for when the element is clicked several times in a short amount of time, like double click. 
+   * Listener for when the element is clicked several times in a short amount of time, like double click.
    * The element must have the mouse enabled (`Program.enableMouse()`).
    */
   onClicks?<T extends ProgramElement= ProgramElement>(r: ClicksEvent<T>): void | boolean

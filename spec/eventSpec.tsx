@@ -2,7 +2,6 @@ import { sleep } from 'misc-utils-of-mine-generic'
 import { FlorDocument, MouseAction, MouseEvent } from '../src'
 import { Flor } from '../src/jsx/createElement'
 import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
-import { ClicksEvent } from '../src/manager/clicks';
 
 describe('events', () => {
   let flor: FlorDocument
@@ -91,14 +90,12 @@ describe('events', () => {
     done()
   })
 
-
   it('onClicks should listen for double clicks', async done => {
     let counter = 0
-    const p = <el width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClicks={e=>{
-      if(e.count===2){
+    const p = <el width={13} height={3} bg="red" fg="black" top={4} left={0} ch="_" onClicks={e => {
+      if (e.count === 2) {
         e.currentTarget!.childNodes[0].textContent = 'double_clicked_' + counter++
-      }
-      else {
+      } else {
         e.currentTarget!.childNodes[0].textContent = 'not_multiple'
       }
       flor.renderer.renderElement(le)
@@ -107,23 +104,22 @@ describe('events', () => {
     </el>
     const le = flor.create(p)
     flor.render()
-    
+
     await willContain(flor, 'text')
     expectNotToContain(flor, 'clicked_')
-    
-    le.click()    
+
+    le.click()
     await willContain(flor, 'not_multiple')
     expectNotToContain(flor, 'text')
-    
+
     le.click()
     await sleep(1)
-    le.click()    
+    le.click()
     await willContain(flor, 'clicked_0')
     expectNotToContain(flor, 'text')
     expectNotToContain(flor, 'not_multiple')
 
     done()
   })
-
 
 })

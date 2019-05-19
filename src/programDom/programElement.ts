@@ -1,6 +1,6 @@
 import { array, indent } from 'misc-utils-of-mine-generic'
-import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isDocument, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
-import { clicks, ClicksListener } from '../manager/clicks';
+import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
+import { clicks, ClicksListener } from '../manager/clicks'
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -342,20 +342,17 @@ export class ProgramElement extends Element {
     return createElement(this.ownerDocument, { ...props, parent: this })
   }
 
-  /** 
-   * @internal 
+  /**
+   * @internal
    */
   _addEventListener(name: string, listener: EventListener): void {
-      if (name === 'onFocus') {
+    if (name === 'onFocus') {
         this.ownerDocument._registerListener({ type: 'focus', listener: { els: [this], listener } })
-      } 
-      else if (name === 'onBlur') {
+      } else if (name === 'onBlur') {
         this.ownerDocument._registerListener({ type: 'blur', listener: { els: [this], listener } })
-      } 
-      else if (name === 'onClicks') {
+      } else if (name === 'onClicks') {
         this.ownerDocument._registerListener({ type: 'clicks', listener: { el: this, listener } })
-      } 
-      else {
+      } else {
         this.ownerDocument._registerListener({ type: 'event', listener: { el: this, name: _getEventName(name), listener } })
       }
     function _getEventName(name: string): string {
@@ -434,19 +431,18 @@ export class ProgramElement extends Element {
     this.ownerDocument.managersReady.then(({ events }) => events.removeKeyListener(l, this, name))
   }
 
-  addMouseListener(l: MouseListener|ClicksListener, name = 'click') {
-    if(name==='clicks'){
+  addMouseListener(l: MouseListener | ClicksListener, name = 'click') {
+    if (name === 'clicks') {
       clicks({ target: this, handler: l })
-    }
-    else {
+    } else {
       this.ownerDocument.managersReady.then(({ events }) => events.addMouseListener(l as MouseListener, this, name))
     }
   }
 
-  removeMouseListener(l: MouseListener|ClicksListener, name: string) {
-    if(name==='clicks'){
+  removeMouseListener(l: MouseListener | ClicksListener, name: string) {
+    if (name === 'clicks') {
       clicks({ target: this, handler: l, remove: true })
-    }else {
+    } else {
       this.ownerDocument.managersReady.then(({ events }) => events.removeMouseListener(l as MouseListener, this, name))
     }
   }

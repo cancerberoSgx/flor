@@ -1,13 +1,13 @@
 import { BorderStyle } from '../util'
 import { YogaElementProps } from '../yogaDom'
 
-export const baseProps: ()=>Partial<YogaElementProps> = ()=> ({
+export const baseProps: () => Partial<YogaElementProps> = () => ({
   bg: '#1e1e1e',
   fg: 'lightgray'
 })
 
-export const focusableProps: ()=>Partial<YogaElementProps> = ()=>({
-  ...baseProps(), 
+export const focusableProps: () => Partial<YogaElementProps> = () => ({
+  ...baseProps(),
   bg: 'lightgray',
   fg: 'yellow',
   border: { type: BorderStyle.round },

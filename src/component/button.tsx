@@ -1,6 +1,6 @@
 import { Component, Flor } from '../jsx'
 import { ElementProps } from '../programDom'
-import { focusableProps } from './commonProps';
+import { focusableProps } from './commonProps'
 
 interface ButtonProps extends Partial<ElementProps> {
   children?: string[]
