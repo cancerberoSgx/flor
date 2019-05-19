@@ -1,17 +1,12 @@
 import { ProgramElement } from '../programDom/programElement'
-import { RefObject } from './types'
-
-export interface ExtraProps {
-  children?: JSX.FlorJsxNode
-  ref?: RefObject
-}
+import { RefObject, ComponentProps } from './types'
 
 /**
  * Simple abstract Component class (like React.Component) but without life cycle methods.
  *
  * Has a dummy state property that subclasses could implement some behavior for, right now it does nothing.
  */
-export abstract class Component<UP = {}, S = {}, P = UP & ExtraProps> {
+export abstract class Component<P extends ComponentProps =ComponentProps , S={}> {
 
   constructor(protected props: P, protected state: S) {
 

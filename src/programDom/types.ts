@@ -6,6 +6,7 @@ import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
 import { ProgramKeyEvent, MouseAction, ProgramMouseEvent } from '../declarations';
 import { PropertyOptional } from 'misc-utils-of-mine-generic';
+import { ComponentProps } from '../jsx';
 
 export interface Edges {
   top: number
@@ -153,7 +154,7 @@ export interface MouseEvent<T extends ProgramElement = ProgramElement> extends A
 
 
 
-export interface ElementProps extends StyleProps {
+export interface ElementProps extends StyleProps, ComponentProps {
 
   focusable: boolean
   focused: boolean

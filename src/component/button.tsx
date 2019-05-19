@@ -2,7 +2,7 @@ import { Component, Flor } from '../jsx'
 import { MouseEvent } from '..'
 import { ElementProps } from '../programDom';
 
-interface ButtonProps extends JSX.PropsWithRef<Partial<ElementProps>> {
+interface ButtonProps extends  Partial<ElementProps> {
   children?: string[]
 }
 

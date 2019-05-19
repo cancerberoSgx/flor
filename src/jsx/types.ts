@@ -105,6 +105,11 @@ export interface RefObject<T = any> {
   current: T | undefined
 }
 
+export interface ComponentProps {
+  children?: JSX.FlorJsxNode
+  ref?: RefObject
+}
+
 export interface CommonElementImpl extends YogaElement, ProgramElement {
   props: CommonElementProps
   ownerDocument: CommonDocumentImpl
