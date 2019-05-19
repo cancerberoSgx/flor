@@ -169,7 +169,6 @@ export interface ElementProps extends StyleProps, ComponentProps {
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
 
-
   /**
    * Custom Styles for when the element is focused. Note: in order for the element to restore the normal
    * property value, it must also be declared as a normal property. Example: `<box focus={{bg: 'blue'}}/>`,
@@ -180,23 +179,23 @@ export interface ElementProps extends StyleProps, ComponentProps {
   focus: Partial<StyleProps>
 
   /**
-   * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user. 
+   * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
    */
   id: string
   /**
-   * Similar to [[id]] but doesn't have to be unique. Not used internally, meant for the user. 
+   * Similar to [[id]] but doesn't have to be unique. Not used internally, meant for the user.
    */
   name: string
   /**
-   * Similar to Dom Element class names. Not used internally, meant for the user. 
+   * Similar to Dom Element class names. Not used internally, meant for the user.
    */
   classes: string[]
   /**
-   * Similar to [[name]] but numeric type. Not used internally, meant for the user. 
+   * Similar to [[name]] but numeric type. Not used internally, meant for the user.
    */
   number: number
   /**
-   * Custom elements or components can use this property to identify the their type with a name. 
+   * Custom elements or components can use this property to identify the their type with a name.
    */
   elementType: string
 

@@ -72,7 +72,7 @@ export interface FlorJsx<E extends ProgramElement = ProgramElement> {
   createElement(tag: JSX.ElementType, attrs: BlessedJsxAttrs, ...children: any[]): JSX.FlorJsxNode
 
   /**
-   * Creates a blessed.element from given JSX expression. Will append it to given parent in options or in none to current document's body.
+   * Creates a blessed.element from given JSX expression. Will append it to given parent in options or if none to current document's body.
    */
   render<E extends ProgramElement = ProgramElement>(e: JSX.Element, options?: RenderOptions): E
 
@@ -89,9 +89,15 @@ export interface FlorJsx<E extends ProgramElement = ProgramElement> {
 
 }
 
-interface RenderOptions {
-  document: ProgramDocument
+
+export interface RenderOptions {
+  document?: ProgramDocument
+  /**
+   * parent element to attach the rendered elements. if not provided document.body
+   */
+  parent?: ProgramElement
 }
+
 
 /** @internal */
 export type BlessedJsxAttrs = { [a: string]: any } | undefined

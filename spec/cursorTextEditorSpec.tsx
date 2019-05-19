@@ -1,7 +1,6 @@
 import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement } from '../src'
 import { SingleLineTextInputCursor } from '../src/manager/textInputCursor'
 import { defaultTestSetup } from './testUtil'
-import { sleep } from 'misc-utils-of-mine-generic';
 
 describe('cursorTextEditor', () => {
 
@@ -10,7 +9,7 @@ describe('cursorTextEditor', () => {
     let editor: SingleLineTextInputCursor
     let el: ProgramElement
     let flor: FlorDocument
-    
+
     defaultTestSetup(f => {
       flor = f || flor;
       ({ el, editor } = build())

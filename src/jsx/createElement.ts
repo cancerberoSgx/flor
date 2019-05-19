@@ -1,15 +1,7 @@
 import { ProgramDocument, ProgramElement } from '..'
 import { Node } from '../dom'
 import { Component } from './component'
-import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
-
-interface RenderOptions {
-  document?: ProgramDocument
-  /**
-   * parent element to attach the rendered elements. if not provided document.body
-   */
-  parent?: ProgramElement
-}
+import { BlessedJsxAttrs, FlorJsx, RefObject, RenderOptions } from './types'
 
 interface ComponentConstructor<P = {}, S = {}> {
   new (p: P, s: S): Component
@@ -36,12 +28,12 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
 class FlorJsxImpl implements FlorJsx {
   protected doc: ProgramDocument | undefined
 
-  private _render({ e, document, parentNode }: {e: JSX.Element<{}>, document: ProgramDocument, parentNode: Node}) {
+  private _render({ e, document, parent }: {e: JSX.Element<{}>}&Required<RenderOptions>) {
     if (typeof e.type !== 'string') {
       throw new Error('unexpected undefined type ' + e)
     }
     const el = document.createElement(e.type)
-    parentNode.appendChild(el)
+    parent.appendChild(el)
     if (isJSXElementImpl(e) && e._component) {
       e._component.element = el;
       (el as any)._component = e._component
@@ -63,7 +55,7 @@ class FlorJsxImpl implements FlorJsx {
               r = document.createTextNode((c.props as any).textContent + '')
               el.appendChild(r)
             } else {
-              r = this._render({ e: c, document, parentNode: el })
+              r = this._render({ e: c, document, parent: el })
             }
           } else {
             throw new Error('Unrecognized child type ' + c)
@@ -143,7 +135,7 @@ class FlorJsxImpl implements FlorJsx {
       throw new Error('Need to provide a document with setDocument() before render')
     }
     const document = options.document || this.doc!
-    const el =  this._render({ e, document , parentNode: options.parent || document.body })
+    const el =  this._render({ e, document , parent: options.parent || document.body })
     return el as E
   }
 

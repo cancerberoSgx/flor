@@ -1,6 +1,7 @@
 import { array, indent } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
 import { clicks, ClicksListener } from '../manager/clicks'
+import { nextTick } from '../util/misc';
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -484,6 +485,13 @@ export class ProgramElement extends Element {
     array(count).forEach(() => {
       this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e === 'string' ? e : undefined, typeof e === 'string' ? { name: e } : e)
     })
+  }
+  enterText(s: string){
+    return new Promise(resolve=>{
+      s.split('').forEach(i=>nextTick(()=>this.key(i)))
+      setTimeout(resolve, 100)
+    })
+    
   }
 
   /**

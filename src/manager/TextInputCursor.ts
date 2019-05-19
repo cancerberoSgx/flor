@@ -80,7 +80,7 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
   down: e => noModifiers(e, 'down'),
   backspace: e => noModifiers(e, 'backspace'),
   delete: e => noModifiers(e, 'delete'),
-  enter: e => noModifiers(e, 'enter'),
+  enter: e => e.name==='enter'||e.name==='return',
   controlLeft: e => e.name === 'left' && e.ctrl && !e.shift && !e.meta,
   controlRight: e => e.name === 'right' && e.ctrl && !e.shift && !e.meta,
   controlUp: e => e.name === 'up' && e.ctrl && !e.shift && !e.meta,

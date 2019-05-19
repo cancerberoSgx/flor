@@ -2,6 +2,8 @@ import { Node } from '../dom'
 import { ProgramDocument } from './programDocument'
 import { ProgramElement } from './programElement'
 import { ElementProps, FullProps } from './types'
+import { Component } from '../jsx';
+import { RemoveProperties } from 'misc-utils-of-mine-generic';
 
 /**
  * important! right now it must match both ProgramElement and YogaElement
@@ -74,3 +76,5 @@ export function createElement(doc: ProgramDocument, tagName: string | Partial<Fu
   }
   return el
 }
+
+export type ElementOfComponent<C extends Component, E extends ProgramElement = ProgramElement> = {getComponent():C }&E&RemoveProperties<E, 'getComponent'>

@@ -1,6 +1,5 @@
 import * as yoga from 'yoga-layout'
 import { ProgramElement } from '..'
-import { debug } from '../util'
 import { YogaElementProps } from './types'
 import { YogaDocument } from './yogaDocument'
 import { YogaElementPropsImpl } from './yogaProps'

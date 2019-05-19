@@ -9,42 +9,41 @@ export class Node implements EventTarget {
   static TEXT_NODE: NodeType = 3
   static ELEMENT_NODE: NodeType = 1
 
-  // protected _children: Node[] = []
+  protected _textContent: string | undefined = undefined
+  protected _parentNode: Node | undefined = undefined
   protected _childNodes: Node[]
+  protected _ownerDocument: Document | undefined = undefined
+
+  // public get top(): number {
+  //   return this.props.top;
+  // }
+  // public set top(value: number) {
+  //   this.props.top = value;
+  // }
+
   get childNodes(): Node[] {
     return this._childNodes
   }
 
   protected _boundsDirty: boolean
 
-  // /**
-  //  * Same as [[childNodes]] but returns them in an array
-  //  */
-  // get children(): Node[] {
-  //   return (this.childNodes)
-  // }
-
   constructor(readonly nodeType: NodeType) {
     this._childNodes = []
-    // this.childNodes = new NodeList(this._children)
     this._boundsDirty = true
   }
 
   get nodeTypeName() {
     return this.nodeType === Node.DOCUMENT_TYPE_NODE ? 'document' : this.nodeType === Node.ELEMENT_NODE ? 'element' : 'text'
   }
-  protected _ownerDocument: Document | null = null
 
   get ownerDocument() {
     return this._ownerDocument
   }
 
-  protected _textContent: string | null = null
-
   get textContent() {
     return this._textContent
   }
-  set textContent(c: string | null) {
+  set textContent(c: string | undefined) {
     this._textContent = c
     if (!this._boundsDirty) {
       this._boundsDirty = true
@@ -55,9 +54,15 @@ export class Node implements EventTarget {
     }
   }
 
-  protected _parentNode: Node | null = null
   get parentNode() {
     return this._parentNode
+  }
+  set parentNode(n: Node|undefined) {
+    if(!n){
+      this.remove()
+    }else {
+      n.appendChild(this)
+    }
   }
 
   get innerHTML() {
@@ -69,14 +74,17 @@ export class Node implements EventTarget {
   }
 
   appendChild(c: Node) {
+    this.insertChild(this.childNodes.length, c)
+  }
+
+  insertChild(index: number, c: Node){
     if (c.parentNode) {
       c.parentNode.removeChild(c)
-      c.remove()
     }
-    this._childNodes.push(c)
+    this._childNodes.splice(index, 0, c)
     c._parentNode = this
     if (!this._boundsDirty) {
-      this._boundsDirty
+      this._boundsDirty = true
     }
   }
 
@@ -91,7 +99,7 @@ export class Node implements EventTarget {
     const i = this._childNodes.findIndex(c => c === n)
     if (i !== -1) {
       const c = this._childNodes.splice(i, 1)[0] || undefined
-      c._parentNode = null
+      c._parentNode = undefined
       if (!n._boundsDirty) {
         c._boundsDirty = true
       }
@@ -136,8 +144,8 @@ export class Node implements EventTarget {
     return mapChildren(this, v)
   }
 
-  findChildren(p: ElementPredicate) {
-    return findChildren(this, p)
+  findChildren<T extends Node = Node>(p: ElementPredicate): T|undefined {
+    return findChildren(this, p) as T|undefined
   }
 
   filterChildren(p: ElementPredicate) {
@@ -181,21 +189,31 @@ export class Node implements EventTarget {
   }
 
   previousSibling<T extends Node = Node>(): T | undefined {
-    if(this.parentNode){
+    if (this.parentNode) {
       const i =  this.parentNode._childNodes.indexOf(this)
-      if (i!==-1 && i > 0) {
+      if (i !== -1 && i > 0) {
         return this.parentNode._childNodes[i - 1] as T
       }
     }
   }
+
   nextSibling<T extends Node = Node>(): T | undefined {
-    if(this.parentNode){
+    if (this.parentNode) {
       const i =  this.parentNode._childNodes.indexOf(this)
-      if (i !==-1 && i<this.parentNode._childNodes.length-1) {
+      if (i !== -1 && i < this.parentNode._childNodes.length - 1) {
         return this.parentNode._childNodes[i + 1] as T
       }
     }
   }
+
+  findSibling(p: ElementPredicate, o: VisitorOptions = {}): Node|undefined {
+    return this._parentNode ? this._parentNode.childNodes.find(c=>c!==this && p(c)) : undefined
+  }
+
+  filterSibling(p: ElementPredicate, o: VisitorOptions = {}): Node[]{
+    return this._parentNode ? this._parentNode.childNodes.filter(c=>c!==this && p(c)) : []
+  }
+  
 }
 
 export type NodeType = 10 | 3 | 1
@@ -214,13 +232,13 @@ export type NodeType = 10 | 3 | 1
 //     return this.list.length
 //   }
 
-//   item(i: number): T | null {
-//     return this.list[i] || null
+//   item(i: number): T | undefined {
+//     return this.list[i] || undefined
 //   }
 // }
 
 export class TextNode extends Node {
-  constructor(_textContent: string | null, ownerDocument: Document) {
+  constructor(_textContent: string | undefined, ownerDocument: Document) {
     super(Node.TEXT_NODE)
     this._textContent = _textContent
     this._ownerDocument = ownerDocument

@@ -86,8 +86,11 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   }
   public set width(value: number) {
     if (this._data.width !== value) {
-      this.owner._boundsDirty = true
       this._data.width = value
+      this.owner._boundsDirty = true
+      if(this.owner.parentElement){ 
+        this.owner.parentElement._boundsDirty=true
+      }
       this.calculatedWidth()
     }
   }
@@ -117,8 +120,11 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   }
   public set height(value: number) {
     if (this._data.height !== value) {
-      this.owner._boundsDirty = true
       this._data.height = value
+      this.owner._boundsDirty = true
+      if(this.owner.parentElement){ 
+        this.owner.parentElement._boundsDirty=true
+      }
       this.calculatedHeight()
     }
   }
@@ -151,8 +157,11 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   }
   set left(value: number) {
     if (this._data.left !== value) {
-      this.owner._positionDirty = true
       this._data.left = value
+      this.owner._positionDirty = true
+      if(this.owner.parentElement){ 
+        this.owner.parentElement._boundsDirty=true
+      }
       this.calculatedLeft()
     }
   }
@@ -186,8 +195,11 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   }
   set top(value: number) {
     if (this._data.top !== value) {
-      this.owner._positionDirty = true
       this._data.top = value
+      this.owner._positionDirty = true
+      if(this.owner.parentElement){ 
+        this.owner.parentElement._boundsDirty=true
+      }
       this.calculatedTop()
     }
   }

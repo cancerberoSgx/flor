@@ -10,7 +10,7 @@ export function nodeTypes(n: Node): number[] {
   return o
 }
 
-export function nodeTexts(n: Node): (string | null)[] {
+export function nodeTexts(n: Node): (string | undefined)[] {
   return mapChildren(n, c => c.textContent)
 }
 
@@ -38,7 +38,7 @@ export function mapChildren<T>(n: Node, v: (c: Node) => T): T[] {
 }
 
 export function findChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-  return (n.childNodes).find<T>(c => p(c))
+  return n.childNodes.find(p)
 }
 
 export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
@@ -173,7 +173,7 @@ export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, in
   }
 }
 
-export type ElementPredicate<T extends Node = Node> = (n: T) => boolean
+export type ElementPredicate<T extends Node = Node> = (n: T, i?: number, a?: T[]) => boolean
 
 export function filterDescendants<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
   const a: T[] = []

@@ -4,7 +4,7 @@ import { SingleLineTextInputCursor } from '../manager/textInputCursor'
 import { YogaElementProps } from '../yogaDom'
 import { focusableProps } from './commonProps'
 
-interface InputProps extends JSX.PropsWithRef<Partial<YogaElementProps>>, ConcreteInputProps {
+export interface InputProps extends JSX.PropsWithRef<Partial<YogaElementProps>>, ConcreteInputProps {
 
 }
 
@@ -57,12 +57,12 @@ export interface ConcreteInputProps {
 export const defaultInputProps: Required<ConcreteInputProps> = {
   onInput(e) { },
   onChange(e) { },
-  changeKeys: e => !e.ctrl && e.name === 'enter',
+  changeKeys: e => e.name === 'enter',
   changeOnBlur: true,
   blurOnChange: true,
   value: '',
-  enableInputKeys: e => !e.ctrl && e.name === 'enter',
-  disableInputKeys: e => !e.ctrl && e.name === 'escape'
+  enableInputKeys: e => e.name === 'enter',
+  disableInputKeys: e => e.name === 'escape'
 }
 
 /**
@@ -111,7 +111,7 @@ export class Input extends Component<InputProps, {}> {
   }
 
   protected onKeyPressed(e: KeyEvent) {
-    if(this.props.onKeyPressed&&this.props.onKeyPressed(e)) {
+    if (this.props.onKeyPressed && this.props.onKeyPressed(e)) {
       return true
     }
     if (!this.element || !this.element.props.focused) {

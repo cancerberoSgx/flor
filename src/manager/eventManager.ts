@@ -2,6 +2,7 @@ import { PropertyOptional, RemoveProperties } from 'misc-utils-of-mine-generic'
 import { Event, KeyListener, MouseEvent, MouseListener, ProgramElement, RegisteredEventListener, RegisteredGlobalEventListener, StopPropagation } from '..'
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
 import { Node } from '../dom'
+import { debug } from '../util';
 
 type E<T= ProgramElement> = T extends ProgramElement ? T : never
 
@@ -26,15 +27,18 @@ export class EventManager {
   public get ignoreKeys() {
     return this._ignoreKeys
   }
+
   public set ignoreKeys(value) {
     this._ignoreKeys = value
   }
+
   protected onKeyPress(ch: string | undefined, e: ProgramKeyEvent) {
     if (this.ignoreKeys) {
       return
     }
+    // debug(ch, e)
     this.keyListeners
-    .filter(l=>!l.el || l.el.props.focused)
+    .filter(l => !l.el || l.el.props.focused)
     .some(l => {
       return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el  }as any)
     })

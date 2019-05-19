@@ -1,33 +1,33 @@
-import { ansi } from 'cli-driver'
-import { createPatch } from 'diff'
 import { DisplayProcessor } from 'jasmine-spec-reporter'
 import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter'
 import { removeEmptyLines } from 'misc-utils-of-mine-generic'
 import { notUndefined } from 'misc-utils-of-mine-typescript'
+import { createPatch } from 'diff';
+import { ansi } from 'cli-driver';
 
 export class CustomProcessor extends DisplayProcessor {
   displayFailedSpec(spec: CustomReporterResult, log: string): string {
-    return `
-  ${log}
+  //   return `
+  // ${log}
 
-  ${spec.description}
+  // ${spec.description}
 
-  ${spec.failedExpectations && spec.failedExpectations.map(e => e.stack).filter(notUndefined).join('\n\n')}
-  `
+  // ${spec.failedExpectations && spec.failedExpectations.map(e => e.stack).filter(notUndefined).join('\n\n')}
+  // `
     // return JSON.stringify(spec)
-    // const colored: string[] = []
-    // // debug(spec, log)
-    // if (spec.failedExpectations && spec.failedExpectations.length) {
-    //   spec.failedExpectations.forEach(s => {
-    //     const p = createPatch(s.message || '', s.actual || '', s.expected || '')
-    //     const c = (p || '')
-    //       .split('\n')
-    //       .map(l => (l.startsWith('-') ? ansi.format(l, ['red']) : l.startsWith('+') ? ansi.format(l, ['green']) : l))
-    //       .join('\n')
-    //     colored.push(removeEmptyLines(c))
-    //   })
-    // }
-    // return colored.join('\n\n\n')
+    const colored: string[] = []
+    // debug(spec, log)
+    if (spec.failedExpectations && spec.failedExpectations.length) {
+      spec.failedExpectations.forEach(s => {
+        const p = createPatch(s.message || '', s.actual || '', s.expected || '')
+        const c = (p || '')
+          .split('\n')
+          .map(l => (l.startsWith('-') ? ansi.format(l, ['red']) : l.startsWith('+') ? ansi.format(l, ['green']) : l))
+          .join('\n')
+        colored.push(removeEmptyLines(c))
+      })
+    }
+    return colored.join('\n\n\n')
   }
   displaySpecErrorMessages(spec: CustomReporterResult, log: string): string {
     // debug(log, spec)

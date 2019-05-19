@@ -4,14 +4,14 @@ import { Flor } from '../../src/jsx/createElement'
 import { nextTick } from '../../src/util/misc'
 import { FLEX_DIRECTION_COLUMN_REVERSE, FLEX_DIRECTION_ROW } from '../../src/yogaDom/types'
 const flor = new FlorDocument<YogaElement>({
-    documentImplementation: () => new YogaDocument()
-  })
+  documentImplementation: () => new YogaDocument()
+})
 
 interface P {
 
   }
 class App extends Component<P> {
-    render() {
+  render() {
       return <Box   height={.999} width={.999}
       flexDirection={ FLEX_DIRECTION_ROW}
     >
@@ -41,24 +41,24 @@ class App extends Component<P> {
       </Box>
     </Box>
     }
-  }
+}
   // const app =
 
 flor.focus.installDefaultChangeFocusKeys()
 const le = flor.create(<App/>)
 
 flor.program.on('resize', () => {
-    flor.body.width = flor.program.cols
-    flor.body.height = flor.program.rows
+  flor.body.width = flor.program.cols
+  flor.body.height = flor.program.rows
     // flor.body.forceUpdate(true)
 
-    le.width = flor.program.cols
-    le.height = flor.program.rows
+  le.width = flor.program.cols
+  le.height = flor.program.rows
 
     // le.doLayout()
-    le.forceUpdate(true)
-    nextTick(() => flor.render())
-  })
+  le.forceUpdate(true)
+  nextTick(() => flor.render())
+})
 
 flor.render()
 debug(flor.body.outerHTML)

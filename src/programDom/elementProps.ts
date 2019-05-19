@@ -21,34 +21,34 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
     // TODO: here we could notify focusManager
   }
 
-  public get id(): undefined|string {
+  public get id(): undefined | string {
     return this._data.id
-  } 
-  public set id(value: undefined|string) {
+  }
+  public set id(value: undefined | string) {
     this._data.id = value
-  } 
-  public get name(): undefined|string {
+  }
+  public get name(): undefined | string {
     return this._data.name
-  } 
-  public set name(value: undefined|string) {
+  }
+  public set name(value: undefined | string) {
     this._data.name = value
   }
-  public get classes(): undefined|string[] {
+  public get classes(): undefined | string[] {
     return this._data.classes
   }
-  public set classes(value: undefined|string[]) {
+  public set classes(value: undefined | string[]) {
     this._data.classes = value
   }
-  public get number(): undefined|number {
+  public get number(): undefined | number {
     return this._data.number
   }
-  public set number(value: undefined|number) {
+  public set number(value: undefined | number) {
     this._data.number = value
   }
-  public get elementType(): undefined|string {
+  public get elementType(): undefined | string {
     return this._data.elementType
   }
-  public set elementType(value: undefined|string) {
+  public set elementType(value: undefined | string) {
     this._data.elementType = value
   }
 
