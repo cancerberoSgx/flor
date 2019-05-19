@@ -1,5 +1,5 @@
 import { removeWhites, trimRightLines } from 'misc-utils-of-mine-generic'
-import { ProgramDocument, ComponentProps } from '../src'
+import { ComponentProps, ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'
 import { createProgramRendererDocument } from '../src/manager/programUtil'
@@ -76,7 +76,7 @@ describe('jsx', () => {
   })
 
   it('should render components', async done => {
-    class C extends Component<{ name: string, colors: string[] }&ComponentProps> {
+    class C extends Component<{ name: string, colors: string[] } & ComponentProps> {
       render() {
         return <el top={7} left={4} width={23} height={17} ch="_" bg="blue">
           <el top={1}>hello {this.props.name}</el>
@@ -120,7 +120,7 @@ describe('jsx', () => {
 
   it('should call  elementCreated and elementReady', async done => {
     let elementReady = false, elementCreated = false
-    class C extends Component<{ name: string, colors: string[] }&ComponentProps> {
+    class C extends Component<{ name: string, colors: string[] } & ComponentProps> {
       _elementReady() {
         elementReady = true
         this.element!.childNodes.filter(isElement).forEach((c, i) => {

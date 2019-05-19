@@ -1,6 +1,5 @@
-import { ElementProps, ProgramDocument, ProgramElement } from '..'
+import { ElementProps, KeyEvent, KeyPredicate, ProgramDocument, ProgramElement } from '..'
 import { Component, Flor } from '../jsx'
-import { KeyEvent, KeyPredicate } from '..'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
 
 interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, ConcreteInputProps {
@@ -109,7 +108,7 @@ export class Input extends Component<InputProps, {}> {
   set input(s: string) {
     if (this.element) {
       this.element.props.input = s
-      this.element.childNodes[0]!.textContent = this.element.props.input || ''
+      this.element.childNodes[0].textContent = this.element.props.input || ''
       this.props.onInput && this.props.onInput({ currentTarget: this.element, input: (this.element.props.input || '') })
       this.renderElement()
     }

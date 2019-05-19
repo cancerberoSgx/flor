@@ -42,16 +42,16 @@ export function getCurrentCommit() {
     .trim()
 }
 
-export async function willContain(renderer: ProgramDocumentRenderer|FlorDocument, text: string) {
+export async function willContain(renderer: ProgramDocumentRenderer | FlorDocument, text: string) {
   await waitForPredicate(() => asRenderer(renderer).printBuffer(true).includes(text), { interval: 100, timeoutError: 'expected to contain ' + text })
   expect(renderer.printBuffer(true)).toContain(text)
 }
 
-export function expectToContain(renderer: ProgramDocumentRenderer|FlorDocument, text: string) {
+export function expectToContain(renderer: ProgramDocumentRenderer | FlorDocument, text: string) {
   expect(asRenderer(renderer).printBuffer(true)).toContain(text)
 }
 
-export function expectNotToContain(renderer: ProgramDocumentRenderer|FlorDocument, text: string) {
+export function expectNotToContain(renderer: ProgramDocumentRenderer | FlorDocument, text: string) {
   expect(asRenderer(renderer).printBuffer(true)).not.toContain(text)
 }
 
@@ -63,6 +63,6 @@ export async function notToContain(renderer: ProgramDocumentRenderer, text: stri
 export function getPerformanceFileName(label: string) {
   return nowFormat().replace(/:/g, '_') + '_' + getCurrentCommit() + '_' + label + '.json'
 }
-function asRenderer(renderer: ProgramDocumentRenderer|FlorDocument){
-  return (renderer as any).renderer||renderer as ProgramDocumentRenderer
+function asRenderer(renderer: ProgramDocumentRenderer | FlorDocument) {
+  return (renderer as any).renderer || renderer as ProgramDocumentRenderer
 }

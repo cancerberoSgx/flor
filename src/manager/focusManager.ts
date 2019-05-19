@@ -1,8 +1,8 @@
-import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
+import { Event, isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
 import { ProgramMouseEvent } from '../declarations/program'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { EventManager, notifyListener } from './eventManager'
-import { Event } from "..";
+import { FocusEvent, BlurEvent } from '../programDom';
 
 /**
  *
@@ -61,7 +61,7 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
   }
 
   /**
-   * current element with focus
+   * Current element with focus
    */
   get focused() {
     return this._focused
@@ -140,12 +140,4 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
   public set locked(value) {
     this._locked = value
   }
-}
-
-export interface FocusEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
-  previous?: T
-}
-
-export interface BlurEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
-  focused?: T
 }

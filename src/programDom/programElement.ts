@@ -45,7 +45,7 @@ export class ProgramElement extends Element {
    */
   doLayout() {
     if (this.layout && (!this.layout.manualLayout || !this._layoutOnce)
-    && (this._positionDirty || this._boundsDirty)
+      && (this._positionDirty || this._boundsDirty)
     ) {
       layoutChildren({
         el: this, ...this.layout
@@ -256,7 +256,7 @@ export class ProgramElement extends Element {
     return this.width - (this.border ? 1 : 0)
   }
 
-/** @internal */
+  /** @internal */
   get _positionDirty() {
     return this.__positionDirty
   }
@@ -404,24 +404,38 @@ export class ProgramElement extends Element {
     // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
     return { ...this.props.data, children: (this.childNodes).map(e => isElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
   }
+
   /**
    * Returns a XML like string representation of this element instance.
    */
   debugAsXml(o: DebugOptions = { level: 0 }): string {
     return `${indent(o.level)}<${this.tagName} ${
-      Object.keys({  ...this.props.data })
-        // .filter(f => f !== '_data')
-        .map(p => `${p}=${
-          JSON.stringify(this.props.data[p])}`).join(' ')} ${this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${
-      (this.childNodes)
-        .map(e => isElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`).join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`
+      Object.keys({ ...this.props.data })
+        .map(p => `${p}=${JSON.stringify(this.props.data[p])}`)
+        .join(' ')} ${
+      this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${
+      this.childNodes
+        .map(e => isElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`)
+        .join(`\n${indent(o.level + 1)}`)}\n${
+      indent(o.level)}</${this.tagName}>\n`
   }
-  addKeyListener(l: KeyListener, name= 'keypress') {
+
+  addKeyListener(l: KeyListener, name = 'keypress') {
     this.ownerDocument.managersReady.then(({ events }) => events.addKeyListener(l, this, name))
   }
-  addMouseListener(l: MouseListener, name= 'click') {
+
+  removeKeyListener(l: KeyListener, name: string) {
+    this.ownerDocument.managersReady.then(({ events }) => events.removeKeyListener(l, this, name))
+  }
+
+  addMouseListener(l: MouseListener, name = 'click') {
     this.ownerDocument.managersReady.then(({ events }) => events.addMouseListener(l, this, name))
   }
+
+  removeMouseListener(l: MouseListener, name: string) {
+    this.ownerDocument.managersReady.then(({ events }) => events.removeMouseListener(l, this, name))
+  }
+
   /**
    * Makes the element to loose focus (if focused) and optionally makes [[focused]] to gain focus.
    */
@@ -437,7 +451,7 @@ export class ProgramElement extends Element {
   /**
    * Triggers a key event on this element.
    */
-  key(e: string | Partial<KeyEvent>, count= 1) {
+  key(e: string | Partial<KeyEvent>, count = 1) {
     array(count).forEach(() => {
       this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e === 'string' ? e : undefined, typeof e === 'string' ? { name: e } : e)
     })
@@ -452,7 +466,7 @@ export class ProgramElement extends Element {
   }
 }
 
-interface DebugJsonNode  {[s: string]: any, children: DebugJsonNode[]}
+interface DebugJsonNode { [s: string]: any, children: DebugJsonNode[] }
 
 interface DebugOptions {
   level: number

@@ -1,7 +1,7 @@
-import { BorderStyle, debug, Flor, FlorDocument, isElement, Layout } from '../src'
+import { BorderStyle, Flor, FlorDocument, isElement, Layout } from '../src'
 import { Button } from '../src/component/button'
 import { color } from './data'
-import { defaultTestSetup, willContain, expectToContain, expectNotToContain } from './testUtil'
+import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
 
 describe('button', () => {
 
@@ -26,21 +26,21 @@ describe('button', () => {
       }}>CLICK ME</Button>
     </el>
 
-    let button: Button
+    let button: Button = null as any
     flor.create(p)
     flor.render()
     await willContain(flor, 'CLICK ME')
-    expect(button!.element!.previousSibling()!.childNodes[0].textContent).toContain('sibl3')
+    expect(button.element!.previousSibling()!.childNodes[0].textContent).toContain('sibl3')
     expectToContain(flor, 'sibl1')
     expectToContain(flor, 'sibl2')
     expectToContain(flor, 'sibl3')
     expectNotToContain(flor, 'COUNT')
-    button!.element!.click()
+    button.element!.click()
     await willContain(flor, 'COUNT0')
     expectToContain(flor, 'sibl1')
     expectToContain(flor, 'sibl2')
     expectNotToContain(flor, 'sibl3')
-    button!.element!.click()
+    button.element!.click()
     await willContain(flor, 'CLICK ME')
     expectToContain(flor, 'COUNT1')
 

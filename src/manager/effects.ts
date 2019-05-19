@@ -1,7 +1,6 @@
-import { ProgramDocument } from '../programDom'
+import { ProgramDocument, FocusEvent } from '../programDom'
 import { YogaElement } from '../yogaDom'
-import { FocusEvent, FocusManager } from './focusManager'
-// import {di} from 'misc-utils-of-mine-generic'
+import { FocusManager } from './focusManager'
 
 interface State {
   dirty: boolean

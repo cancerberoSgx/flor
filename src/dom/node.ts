@@ -1,7 +1,7 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
+import { EventTarget } from '..'
 import { Document } from './document'
 import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, nodeHtml, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
-import { EventTarget } from '..';
 
 export class Node implements EventTarget {
 
@@ -197,11 +197,11 @@ export type NodeType = 10 | 3 | 1
 //   [Symbol.iterator]() {
 //     return this.list[Symbol.iterator]()
 //   }
-  
+
 //   get length() {
 //     return this.list.length
 //   }
-  
+
 //   item(i: number): T | null {
 //     return this.list[i] || null
 //   }

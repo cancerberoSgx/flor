@@ -1,8 +1,8 @@
 import { repeat } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
+import { Document } from './document'
+import { Element } from './element'
 import { Node, TextNode } from './node'
-import { Element } from './element';
-import { Document } from './document';
 
 export function nodeTypes(n: Node): number[] {
   const o: number[] = []
@@ -101,7 +101,7 @@ export function filterDescendantTextNodesContaining(
 }
 
 export function asElements(el: Element | Document): Element[] {
-  return (isDomElement(el) ? [el] : [el.body]).filter(isDomElement)  
+  return (isDomElement(el) ? [el] : [el.body]).filter(isDomElement)
 }
 
 /**

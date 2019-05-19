@@ -1,16 +1,19 @@
 import { ProgramElement } from '../programDom/programElement'
-import { RefObject, ComponentProps } from './types'
+import { ComponentProps } from './types'
+import { Deferred } from '../util/misc';
 
 /**
  * Simple abstract Component class (like React.Component) but without life cycle methods.
  *
  * Has a dummy state property that subclasses could implement some behavior for, right now it does nothing.
  */
-export abstract class Component<P extends ComponentProps =ComponentProps , S={}> {
+export abstract class Component<P extends ComponentProps = ComponentProps , S= {}> {
 
   constructor(protected props: P, protected state: S) {
-
+    this.elementReady = new Deferred<ProgramElement>()
   }
+
+  protected elementReady: Deferred<ProgramElement>
 
   /**
    * Called from `Flor.render` when [[element]] was just created. Take into account that its attributes and
@@ -29,6 +32,7 @@ export abstract class Component<P extends ComponentProps =ComponentProps , S={}>
    * @internal
    */
   _elementReady() {
+    this.elementReady.resolve(this.element!)
   }
 
   element: ProgramElement | undefined

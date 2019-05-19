@@ -7,5 +7,5 @@ export class Element  extends Node  {
     super(Node.ELEMENT_NODE)
     this._ownerDocument = ownerDocument
   }
-  
+
 }
