@@ -12,7 +12,7 @@ interface P {
   }
 class App extends Component<P> {
   render() {
-      return <Box   height={.999} width={.999}
+    return <Box   height={.999} width={.999}
       flexDirection={ FLEX_DIRECTION_ROW}
     >
       <Box id="left-column" width={.65} height={.999} flexShrink={1}
@@ -40,7 +40,7 @@ class App extends Component<P> {
         <Box width={.999} flexShrink={1} height={.4}></Box>
       </Box>
     </Box>
-    }
+  }
 }
   // const app =
 

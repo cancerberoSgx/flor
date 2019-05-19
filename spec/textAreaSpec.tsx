@@ -1,13 +1,10 @@
-import { trimRightLines, sleep } from 'misc-utils-of-mine-generic'
-import { Flor, FlorDocument, ElementOfComponent, debug } from '../src'
-import { Text, text } from '../src/component/text'
-import { BorderStyle } from '../src/util/border'
-import { defaultTestSetup, willContain, expectToContain } from './testUtil'
-import { TextArea } from '../src/component/textArea';
+import { Flor, FlorDocument } from '../src'
+import { TextArea } from '../src/component/textArea'
+import { defaultTestSetup, willContain } from './testUtil'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
-fdescribe('textArea', () => {
+describe('textArea', () => {
 
   let flor: FlorDocument
   defaultTestSetup(f => flor = f || flor)
@@ -26,7 +23,7 @@ tempor enim occaecat.
     >
       <TextArea focus={undefined}
         value={value} width={55} height={7} left={1} top={1} border={undefined}
-        bg="gray" fg="green" padding={{top: 1, left: 1, right: 1, bottom: 1}}
+        bg="gray" fg="green" padding={{ top: 1, left: 1, right: 1, bottom: 1 }}
       >
       </TextArea>
     </el>
@@ -44,39 +41,25 @@ tempor enim occaecat.
 
     await willContain(flor, expected)
 
-const ta =    le.childNodes.find(TextArea.is)!.getComponent()
-// await sleep(1000)
+    const ta =    le.childNodes.find(TextArea.is)!.getComponent()
 
-ta.element!.click()
+    ta.element!.click()
 
-// await sleep(1000)
-ta.element!.key('down')
-// ta.element!.key('tab')
-await ta.element!.enterText('Seba')
-expected = `
+    ta.element!.key('down')
+    await ta.element!.enterText('Seba')
+    expected = `
       Dolor velit eiusmod in in amet et sit ex
       Seba    non ipsum enim.
       Nostrud sint minim nostrud irure ullamco
                 sit cillum veniam id commodo.
            Velit occaecat pariatur minim enim aliqua
       tempor enim occaecat.`.trim()
-debug(flor.printBuffer(), '\n', expected)
-await willContain(flor,expected )
+    await willContain(flor,expected)
 
-
-      
-
-
-// debug(flor.printBuffer())
-// await sleep(1000)
-
-// ta.element!.key('tab')
-
-// // await sleep(1000)
-ta.element!.key('down')
-ta.element!.key('right', 5)
-ta.element!.key('delete', 4)
-await willContain(flor, `
+    ta.element!.key('down')
+    ta.element!.key('right', 5)
+    ta.element!.key('delete', 4)
+    await willContain(flor, `
       Dolor velit eiusmod in in amet et sit ex
       Seba    non ipsum enim.
       Nostrint minim nostrud irure ullamco
@@ -84,10 +67,19 @@ await willContain(flor, `
            Velit occaecat pariatur minim enim aliqua
       tempor enim occaecat.`.trim())
 
-// // debug(flor.printBuffer())
-
-// await sleep(1000)
-
+    ta.element!.key('right', 5)
+    ta.element!.key('enter')
+    await ta.element!.enterText('A new line.')
+    ta.element!.key('enter')
+    await willContain(flor, `
+      Dolor velit eiusmod in in amet et sit ex
+      Seba    non ipsum enim.
+      Nostrint m
+      A new line.
+      inim nostrud irure ullamco
+                sit cillum veniam id commodo.
+           Velit occaecat pariatur minim enim aliqua
+      tempor enim occaecat.`.trim())
     done()
   })
 

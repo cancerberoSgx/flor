@@ -28,7 +28,7 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
 class FlorJsxImpl implements FlorJsx {
   protected doc: ProgramDocument | undefined
 
-  private _render({ e, document, parent }: {e: JSX.Element<{}>}&Required<RenderOptions>) {
+  private _render({ e, document, parent }: {e: JSX.Element<{}>} & Required<RenderOptions>) {
     if (typeof e.type !== 'string') {
       throw new Error('unexpected undefined type ' + e)
     }

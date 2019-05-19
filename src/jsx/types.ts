@@ -89,7 +89,6 @@ export interface FlorJsx<E extends ProgramElement = ProgramElement> {
 
 }
 
-
 export interface RenderOptions {
   document?: ProgramDocument
   /**
@@ -97,7 +96,6 @@ export interface RenderOptions {
    */
   parent?: ProgramElement
 }
-
 
 /** @internal */
 export type BlessedJsxAttrs = { [a: string]: any } | undefined

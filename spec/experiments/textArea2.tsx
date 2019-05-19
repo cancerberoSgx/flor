@@ -1,7 +1,6 @@
-import { BorderStyle, Button, FlorDocument, Input, KeyListener, Layout, ProgramElement, YogaDocument, Component, ElementProps, KeyEvent, debug, SingleLineTextInputCursor, isElement, InputProps, defaultInputProps, ConcreteInputProps, YogaElement, YogaElementProps, KeyPredicate, createElement, layoutChildren } from '../../src'
+import { Button, Component, ConcreteInputProps, createElement, debug, defaultInputProps, FlorDocument, isElement, KeyEvent, KeyPredicate, Layout, ProgramElement, SingleLineTextInputCursor, YogaElementProps } from '../../src'
+import { baseProps } from '../../src/component/commonProps'
 import { Flor } from '../../src/jsx/createElement'
-import { baseProps } from '../../src/component/commonProps';
-import { runInThisContext } from 'vm';
 
 interface TextAreaProps extends Partial< ConcreteTextAreaProps>, Partial<YogaElementProps> {
 }
@@ -12,28 +11,28 @@ interface ConcreteTextAreaProps extends ConcreteInputProps {
   downKeys?: KeyPredicate
 }
 const defaultTextAreaProps: Required<ConcreteTextAreaProps> = {
-  ...defaultInputProps, 
-  currentLine: 0, 
-  changeKeys: e=>e.name==='escape',  
-  downKeys: e=>e.name === 'down',
-  upKeys: e=>e.name==='up',
-  newLineKeys: e=>e.name==='enter'// ignore return because an enter are two presses enter + return ||e.name==='return'
+  ...defaultInputProps,
+  currentLine: 0,
+  changeKeys: e => e.name === 'escape',
+  downKeys: e => e.name === 'down',
+  upKeys: e => e.name === 'up',
+  newLineKeys: e => e.name === 'enter'// ignore return because an enter are two presses enter + return ||e.name==='return'
   // newLineKeys: e=>(e.ctrl ) &&e.name==='r'
-  
+
 }
 
-class TextArea extends Component<TextAreaProps>{
+class TextArea extends Component<TextAreaProps> {
   protected lines: string[]
-  private _currentLine: number;
- protected p : Required<ConcreteTextAreaProps>
-  lineEditors: SingleLineTextInputCursor[];
+  private _currentLine: number
+  protected p: Required<ConcreteTextAreaProps>
+  lineEditors: SingleLineTextInputCursor[]
   constructor(p: TextAreaProps, s: {}) {
     super(p, s)
-    this.p = {...defaultTextAreaProps, ...this.props}
+    this.p = { ...defaultTextAreaProps, ...this.props }
     this.lines = (this.props.value || '').split('\n')
     this.onKey = this.onKey.bind(this)
-    this._currentLine = this.props.currentLine||0
-    this.lineEditors = this.lines.map(text=>new SingleLineTextInputCursor({
+    this._currentLine = this.props.currentLine || 0
+    this.lineEditors = this.lines.map(text => new SingleLineTextInputCursor({
       singleLine: true,
       text,
       pos: { col: 0, row: 0 },
@@ -43,11 +42,11 @@ class TextArea extends Component<TextAreaProps>{
   }
 
   public get currentLine(): number {
-    return this._currentLine;
+    return this._currentLine
   }
   public set currentLine(value: number) {
-    this._currentLine = value;
-    this.lineEditors.forEach(e=>e.enabled=false)
+    this._currentLine = value
+    this.lineEditors.forEach(e => e.enabled = false)
     this.lineEditors[value].enabled = true
   }
 
@@ -57,31 +56,28 @@ class TextArea extends Component<TextAreaProps>{
     //   return
     // }
     let preventEditorHandle = false
-    if(!this.element){
+    if (!this.element) {
       return
     }
-    if(this.p.changeKeys(e)){
+    if (this.p.changeKeys(e)) {
       // debug('changeKeys', this.p.changeKeys.toString(), {...e, currentTarget: undefined})
       this.element.props.value =  this.element.props.input
-      this.props.onChange && this.props.onChange({...e, currentTarget: this.element, value: this.element.props.value!})
+      this.props.onChange && this.props.onChange({ ...e, currentTarget: this.element, value: this.element.props.value! })
       // e.stopPropagation()
       // return
-    }
-    else if (this.p.upKeys(e)) {
-      if(this.currentLine>0){
+    } else if (this.p.upKeys(e)) {
+      if (this.currentLine > 0) {
         this.currentLine = this.currentLine - 1
-        preventEditorHandle=true
+        preventEditorHandle = true
       }
-    }
-    else if (this.p.downKeys(e)) {
-      if(this.currentLine<this.lines.length-1){
+    } else if (this.p.downKeys(e)) {
+      if (this.currentLine < this.lines.length - 1) {
         this.currentLine = this.currentLine + 1
-        preventEditorHandle=true
+        preventEditorHandle = true
       }
-    }
-    else if (this.p.newLineKeys(e)) {
+    } else if (this.p.newLineKeys(e)) {
 
-    this.cursor!.hide({name: 'textarea2'})
+      this.cursor!.hide({ name: 'textarea2' })
       // debug(this.element.ownerDocument.outerHTML)
       // debug('BEFORE')
 
@@ -95,22 +91,22 @@ class TextArea extends Component<TextAreaProps>{
       const line1 = l.substring(0, index)
       const line2 = l.substring(index, l.length)
       this.lines.splice(this.currentLine, 1, line1, line2)
-      const editor1 =this.createLineEditor(line1)
+      const editor1 = this.createLineEditor(line1)
       const editor2 = this.createLineEditor(line2)
       this.lineEditors.splice(this.currentLine, 1, editor1, editor2)
 
       const el = this.getCurrentLineElement()
-      const el1 = createElement(this.element.ownerDocument, {...el.props.data, tagName: 'el', children: [line1]})
-      const el2 = createElement(this.element.ownerDocument, {...el.props.data, tagName: 'el', children: [line2]})
+      const el1 = createElement(this.element.ownerDocument, { ...el.props.data, tagName: 'el', children: [line1] })
+      const el2 = createElement(this.element.ownerDocument, { ...el.props.data, tagName: 'el', children: [line2] })
       el.remove()
       this.element.insertChild(this.currentLine, el1)
-      this.element.insertChild(this.currentLine+1, el2)
+      this.element.insertChild(this.currentLine + 1, el2)
       // debug('AFTER')
 
       // debug('lines', this.lines)
       // debug('editors', this.lineEditors.map(ed=>ed.value))
       // debug('elements', this.element.childNodes.map(c=>c.innerHTML))
-      
+
       // debug(this.element.ownerDocument.outerHTML)
       // el1.
       // this.element.insertChild(this.currentLine, )
@@ -133,44 +129,42 @@ class TextArea extends Component<TextAreaProps>{
       this.renderElement(this.element.parentElement)
       // this.element.ownerDocument.body.erase()
       // this.element.ownerDocument.body.render()
-      
-      // debug(this.element.ownerDocument.outerHTML)
-      // debug(this.element.ownerDocument.outerHTML)
-      this.currentLine= this.currentLine +1
-    this.cursor!.show({name: 'textarea2',top: el2.absoluteContentTop+editor2.pos.row, left: el2.absoluteContentLeft+editor2.pos.col})
-    preventEditorHandle = true
 
-    }
-    else if (e.name === 'delete') {
+      // debug(this.element.ownerDocument.outerHTML)
+      // debug(this.element.ownerDocument.outerHTML)
+      this.currentLine = this.currentLine + 1
+      this.cursor!.show({ name: 'textarea2',top: el2.absoluteContentTop + editor2.pos.row, left: el2.absoluteContentLeft + editor2.pos.col })
+      preventEditorHandle = true
+
+    } else if (e.name === 'delete') {
+      // perhaps delete a line
+    } else if (e.name === 'backspace') {
       // perhaps delete a line
     }
-    else if (e.name === 'backspace') {
-      // perhaps delete a line
-    }
-    this.cursor!.hide({name: 'textarea2'})
+    this.cursor!.hide({ name: 'textarea2' })
 
     const ed = this.getCurrentLineEditor()
-    if(!preventEditorHandle){
+    if (!preventEditorHandle) {
       ed.onKey(e)
     }
     const el = this.getCurrentLineElement()
     el.childNodes[0].textContent = ed.value
     this.lines[this.currentLine] = ed.value
     this.element.props.input =  this.lines.join('\n')
-    this.props.onInput && this.props.onInput({...e, currentTarget: this.element, input:this.element.props.input!})
+    this.props.onInput && this.props.onInput({ ...e, currentTarget: this.element, input: this.element.props.input })
     this.renderElement()
-    this.cursor!.show({name: 'textarea2',top: el.absoluteContentTop+ed.pos.row, left: el.absoluteContentLeft+ed.pos.col})
+    this.cursor!.show({ name: 'textarea2',top: el.absoluteContentTop + ed.pos.row, left: el.absoluteContentLeft + ed.pos.col })
   }
 
   protected getCurrentLineElement(): ProgramElement {
-   const el =  this.element!.childNodes.filter(isElement)[this.currentLine] 
-   if(!el){
-     throw new Error('cannot find element for current line '+this.currentLine)
+    const el =  this.element!.childNodes.filter(isElement)[this.currentLine]
+    if (!el) {
+     throw new Error('cannot find element for current line ' + this.currentLine)
    }
-   return el
+    return el
   }
 
-  protected createLineEditor(text: string){
+  protected createLineEditor(text: string) {
     return new SingleLineTextInputCursor({
       singleLine: true,
       text,
@@ -180,16 +174,16 @@ class TextArea extends Component<TextAreaProps>{
   }
   protected getCurrentLineEditor(): SingleLineTextInputCursor {
     const ed = this.lineEditors[this.currentLine]
-    if(!ed){
-      throw new Error('cannot find editor for current line '+this.currentLine)
+    if (!ed) {
+      throw new Error('cannot find editor for current line ' + this.currentLine)
     }
     return ed
-   }
+  }
 
   render() {
     return <box focusable={true}  onKeyPressed={this.onKey}
       {...this.props}
-      layout={{ layout: Layout['topDown']}}
+      layout={{ layout: Layout['topDown'] }}
       // onFocus={this.program!.new}
     >
       {this.lines.map(l =>
@@ -200,7 +194,6 @@ class TextArea extends Component<TextAreaProps>{
     </box>
   }
 }
-
 
 try {
   test()
@@ -258,18 +251,13 @@ irure labore eiusmod reprehenderit non.
       >
       </TextArea>
 
-
     </el>
 
     const le = flor.create(app)
     flor.render()
-
-
 
   } catch (error) {
     debug(error)
   }
 
 }
-
-

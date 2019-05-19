@@ -34,7 +34,7 @@
     "yoga-layout": "^1.9.3",
     "autolayout": "^0.7.0",
     "word-wrap": "^1.2.3",
-    "misc-utils-of-mine-generic": "^0.2.1"
+    "misc-utils-of-mine-generic": "^0.2.2"
   },
   "devDependencies": {
     "@types/diff": "^4.0.2",

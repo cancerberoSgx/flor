@@ -57,10 +57,10 @@ export class Node implements EventTarget {
   get parentNode() {
     return this._parentNode
   }
-  set parentNode(n: Node|undefined) {
-    if(!n){
+  set parentNode(n: Node | undefined) {
+    if (!n) {
       this.remove()
-    }else {
+    } else {
       n.appendChild(this)
     }
   }
@@ -77,7 +77,7 @@ export class Node implements EventTarget {
     this.insertChild(this.childNodes.length, c)
   }
 
-  insertChild(index: number, c: Node){
+  insertChild(index: number, c: Node) {
     if (c.parentNode) {
       c.parentNode.removeChild(c)
     }
@@ -144,8 +144,8 @@ export class Node implements EventTarget {
     return mapChildren(this, v)
   }
 
-  findChildren<T extends Node = Node>(p: ElementPredicate): T|undefined {
-    return findChildren(this, p) as T|undefined
+  findChildren<T extends Node = Node>(p: ElementPredicate): T | undefined {
+    return findChildren(this, p) as T | undefined
   }
 
   filterChildren(p: ElementPredicate) {
@@ -206,14 +206,14 @@ export class Node implements EventTarget {
     }
   }
 
-  findSibling(p: ElementPredicate, o: VisitorOptions = {}): Node|undefined {
-    return this._parentNode ? this._parentNode.childNodes.find(c=>c!==this && p(c)) : undefined
+  findSibling(p: ElementPredicate, o: VisitorOptions = {}): Node | undefined {
+    return this._parentNode ? this._parentNode.childNodes.find(c => c !== this && p(c)) : undefined
   }
 
-  filterSibling(p: ElementPredicate, o: VisitorOptions = {}): Node[]{
-    return this._parentNode ? this._parentNode.childNodes.filter(c=>c!==this && p(c)) : []
+  filterSibling(p: ElementPredicate, o: VisitorOptions = {}): Node[] {
+    return this._parentNode ? this._parentNode.childNodes.filter(c => c !== this && p(c)) : []
   }
-  
+
 }
 
 export type NodeType = 10 | 3 | 1

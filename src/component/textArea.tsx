@@ -1,8 +1,8 @@
-import { BorderStyle, Button, FlorDocument, Input, KeyListener, Layout, ProgramElement, YogaDocument, Component, ElementProps, KeyEvent, debug, SingleLineTextInputCursor, isElement, InputProps, defaultInputProps, ConcreteInputProps, YogaElement, YogaElementProps, KeyPredicate, createElement, layoutChildren } from '..'
+import { Component, ConcreteInputProps, createElement, defaultInputProps, isElement, KeyEvent, KeyPredicate, Layout, ProgramElement, SingleLineTextInputCursor, YogaElementProps } from '..'
+import { Node } from '../dom'
 import { Flor } from '../jsx/createElement'
-import { focusableProps } from './commonProps';
-import { Node } from '../dom';
-import { ElementOfComponent } from '../programDom';
+import { ElementOfComponent } from '../programDom'
+import { focusableProps } from './commonProps'
 
 interface TextAreaProps extends Partial<ConcreteTextAreaProps>, Partial<YogaElementProps> {
 }
@@ -20,14 +20,14 @@ const defaultTextAreaProps: Required<ConcreteTextAreaProps> = {
   upKeys: e => e.name === 'up',
   // ignore return because an enter are two presses enter + return ||e.name==='return'
   newLineKeys: e => e.name === 'enter'
-  // newLineKeys: e=>(e.ctrl ) &&e.name==='r'  
+  // newLineKeys: e=>(e.ctrl ) &&e.name==='r'
 }
 
-export class TextArea extends Component<TextAreaProps>{
+export class TextArea extends Component<TextAreaProps> {
   protected lines: string[]
-  private _currentLine: number;
+  private _currentLine: number
   protected p: Required<ConcreteTextAreaProps>
-  protected lineEditors: SingleLineTextInputCursor[];
+  protected lineEditors: SingleLineTextInputCursor[]
 
   constructor(p: TextAreaProps, s: {}) {
     super(p, s)
@@ -45,10 +45,10 @@ export class TextArea extends Component<TextAreaProps>{
   }
 
   public get currentLine(): number {
-    return this._currentLine;
+    return this._currentLine
   }
   public set currentLine(value: number) {
-    this._currentLine = value;
+    this._currentLine = value
     this.lineEditors.forEach(e => e.enabled = false)
     this.lineEditors[value].enabled = true
   }
@@ -61,20 +61,17 @@ export class TextArea extends Component<TextAreaProps>{
     if (this.p.changeKeys(e)) {
       this.element.props.value = this.element.props.input
       this.props.onChange && this.props.onChange({ ...e, currentTarget: this.element, value: this.element.props.value! })
-    }
-    else if (this.p.upKeys(e)) {
+    } else if (this.p.upKeys(e)) {
       if (this.currentLine > 0) {
         this.currentLine = this.currentLine - 1
         preventEditorHandle = true
       }
-    }
-    else if (this.p.downKeys(e)) {
+    } else if (this.p.downKeys(e)) {
       if (this.currentLine < this.lines.length - 1) {
         this.currentLine = this.currentLine + 1
         preventEditorHandle = true
       }
-    }
-    else if (this.p.newLineKeys(e)) {
+    } else if (this.p.newLineKeys(e)) {
 
       this.cursor!.hide({ name: 'textarea2' })
       const l = this.lines[this.currentLine]
@@ -99,11 +96,9 @@ export class TextArea extends Component<TextAreaProps>{
       this.cursor!.show({ name: 'textarea2', top: el2.absoluteContentTop + editor2.pos.row, left: el2.absoluteContentLeft + editor2.pos.col })
       preventEditorHandle = true
 
-    }
-    else if (e.name === 'delete') {
+    } else if (e.name === 'delete') {
       // perhaps delete a line
-    }
-    else if (e.name === 'backspace') {
+    } else if (e.name === 'backspace') {
       // perhaps delete a line
     }
     this.cursor!.hide({ name: 'textarea2' })
@@ -116,7 +111,7 @@ export class TextArea extends Component<TextAreaProps>{
     el.childNodes[0].textContent = ed.value
     this.lines[this.currentLine] = ed.value
     this.element.props.input = this.lines.join('\n')
-    this.props.onInput && this.props.onInput({ ...e, currentTarget: this.element, input: this.element.props.input! })
+    this.props.onInput && this.props.onInput({ ...e, currentTarget: this.element, input: this.element.props.input })
     this.renderElement()
     this.cursor!.show({ name: 'textarea2', top: el.absoluteContentTop + ed.pos.row, left: el.absoluteContentLeft + ed.pos.col })
   }
@@ -146,11 +141,11 @@ export class TextArea extends Component<TextAreaProps>{
     return ed
   }
 
-  protected static elementType = "flor.textArea"
+  protected static elementType = 'flor.textArea'
   static is(n: Node): n is ElementOfComponent<TextArea> {
     return isElement(n) && n.props.elementType === TextArea.elementType
   }
-  
+
   render() {
     return <box {...focusableProps()} focusable={true} onKeyPressed={this.onKey}
       {...this.props}
