@@ -1,4 +1,4 @@
- import { debug, Flor, FlorDocument, isDomText, isElement, Layout, BorderStyle } from '../src'
+ import { BorderStyle, debug, Flor, FlorDocument, isElement, Layout } from '../src'
 import { Button } from '../src/component/button'
 import { color } from './data'
 import { defaultTestSetup } from './testUtil'
@@ -14,13 +14,13 @@ describe('button', () => {
       //   flor.destroy()
       // })
 
-      let flor: FlorDocument
-      defaultTestSetup(f => flor = f || flor)
+  let flor: FlorDocument
+  defaultTestSetup(f => flor = f || flor)
 
       // let flor: FlorDocument
       // defaultTestSetup(f => flor = f || flor)
 
-      xit('button Component', async done => {
+  xit('button Component', async done => {
         //   function msg(s:string){}
         //   const a = <el {...{ height: .9, width: .9, top: 0, left: 0, layout: { neverResizeContainer: true, layout: Layout['leftRight'] } }}>
         //   <el {...{ height: .9, width: .4, layout: { layout: Layout.topDown } }}>
@@ -76,7 +76,7 @@ describe('button', () => {
           flor.render()
         // </el>
 
-        // {/* <Randomel/> */}
+        // {/* <Rando          }
         // {/* <Button onClick={e => {
         //   e.currentTarget!.childNodes.item(0)!.textContent = 'clicked_' + counter++
         //   flor.renderer.renderElement(le)
@@ -93,4 +93,4 @@ describe('button', () => {
 
       })
 
-    })
+})

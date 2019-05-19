@@ -1,39 +1,8 @@
 import { PropertyOptional, RemoveProperties } from 'misc-utils-of-mine-generic'
 import { ProgramElement } from '..'
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
-import { Event, EventTarget, StopPropagation } from '../dom/event'
-
-export type RegisteredEventListener = { el: ProgramElement, name: string; listener: MouseListener | KeyListener }
-export type RegisteredGlobalEventListener = PropertyOptional<RegisteredEventListener, 'el'>
-export type MouseListener = (ev: MouseEvent) => void | boolean
-
-export type KeyListener = (ev: KeyEvent) => void | boolean
-
-interface AbstractEvent<T extends ProgramElement= ProgramElement, Action = string> extends Event<T> {
-  name: string
-  shift: boolean
-  ctrl: boolean
-  meta: boolean
-  action: Action
-  type: string
-  raw: [number, number, number, string]
-}
-
-export interface KeyEvent<T extends ProgramElement= ProgramElement> extends AbstractEvent<T, string>, ProgramKeyEvent {
-  full: string
-  sequence: string
-  bug: Buffer
-  ch: string
-}
-
-export type KeyPredicate = (e: KeyEvent) => boolean
-
-export interface MouseEvent<T extends ProgramElement= ProgramElement> extends AbstractEvent<T, MouseAction> , ProgramMouseEvent {
-  x: number
-  y: number
-  button: 'left' | 'right' | 'middle' | 'unknown'
-  bug: Buffer
-}
+import { Node } from '../dom';
+import { RegisteredEventListener, KeyListener, RegisteredGlobalEventListener, MouseEvent, StopPropagation, Event, MouseListener } from '..';
 
 /**
  * Manager class responsible of registering and dispatching keyboard and mouse events.
@@ -64,7 +33,7 @@ export class EventManager {
       return
     }
     this.keyListeners.some(l => {
-      return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el, target: l.el }as any)
+      return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el  }as any)
     })
   }
 
@@ -130,7 +99,7 @@ export class EventManager {
     this.mouseListeners.filter(l => l.name === e.action).forEach(({ el, name, listener }) => {
       // TODO: ignore detached, invisible and focused
       if (this._isMouseEventTarget(e, el)) {
-        const ev = {  ...e, currentTarget: el, target: el, type: name }
+        const ev = {  ...e, currentTarget: el, type: name }
         return notifyListener(listener, ev)
       } else {
         return false
@@ -195,7 +164,7 @@ export class EventManager {
   }
 }
 
-export function notifyListener<T extends EventTarget= EventTarget, E extends Event<T> = Event<T>>(l: KeyListener | MouseListener, ev: RemoveProperties<E, 'stopPropagation'>) {
+export function notifyListener<T extends Node= Node, E extends Event<T> = Event<T>>(l: KeyListener | MouseListener, ev: RemoveProperties<E, 'stopPropagation'>) {
   let stop = false;
   (l as any)({ ...ev, stopPropagation() {stop = true} } as any)
   return stop

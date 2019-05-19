@@ -1,7 +1,7 @@
 import { array, repeat, trimRightLines } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import * as wrap from 'word-wrap'
-import { isElement, Rectangle, TextNode, Node, Program, ProgramOptions } from '..'
+import { isElement, Node, Program, ProgramOptions, Rectangle, TextNode } from '..'
 import { isDomText } from '../dom/nodeUtil'
 import { ProgramElement } from '../programDom/programElement'
 import { PAttrs } from '../programDom/styleProps'

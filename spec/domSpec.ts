@@ -1,6 +1,6 @@
-import { Document, isDomDocument, isDomElement } from '../src/dom'
+import { removeWhites } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { removeWhites } from 'misc-utils-of-mine-generic';
+import { Document, isDomElement } from '../src'
 
 describe('dom', () => {
 
@@ -20,7 +20,7 @@ describe('dom', () => {
     const d = new Document()
     expect(d.childNodes.length).toBe(1)
     expect(d.childNodes.item(0)).toBe(d.body)
-   expect(removeWhites(d.outerHTML, '')).toContain('<document><body></body></document>')
+    expect(removeWhites(d.outerHTML, '')).toContain('<document><body></body></document>')
     expect(d.filterDescendants(notFalsy).length).toBe(1)
     expect(d.findDescendant(notFalsy)).toBe(d.body)
     done()
@@ -36,7 +36,7 @@ describe('dom', () => {
     d.body.appendChild(d2)
     d2.appendChild(d.createElement('div3'))
     div1.appendChild(d2)
-    
+
     expect(d.filterDescendants(d => isDomElement(d) && d.tagName === 'Div1').length).toBe(1)
     expect(d.filterDescendants(isDomElement).length).toBe(5)
     expect(d.body.filterDescendants(isDomElement).length).toBe(4)

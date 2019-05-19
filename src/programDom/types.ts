@@ -1,9 +1,11 @@
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer } from '../manager'
+import {   ProgramDocumentRenderer } from '../manager'
 import { BlurEvent, FocusEvent } from '../manager/focusManager'
 import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
+import { ProgramKeyEvent, MouseAction, ProgramMouseEvent } from '../declarations';
+import { PropertyOptional } from 'misc-utils-of-mine-generic';
 
 export interface Edges {
   top: number
@@ -96,6 +98,60 @@ export interface StyleProps extends Attrs {
 export interface BorderProps extends StyleProps {
   type?: BorderStyle
 }
+
+export interface EventTarget {
+  
+}
+
+export type EventListener<T extends EventTarget = EventTarget> = (evt: Event<T>) => void | boolean;
+
+export interface Event<T extends EventTarget = EventTarget> extends StopPropagation {
+  readonly currentTarget: T | undefined;
+  readonly type: string;
+}
+
+export interface StopPropagation {
+  stopPropagation(): void;
+}
+
+export interface RegisteredEventListener {
+  el: ProgramElement;
+  name: string;
+  listener: MouseListener | KeyListener;
+}
+
+export type RegisteredGlobalEventListener = PropertyOptional<RegisteredEventListener, 'el'>;
+
+export type MouseListener = (ev: MouseEvent) => void | boolean;
+
+export type KeyListener = (ev: KeyEvent) => void | boolean;
+interface AbstractEvent<T extends ProgramElement = ProgramElement, Action = string> extends Event<T> {
+  name: string;
+  shift: boolean;
+  ctrl: boolean;
+  meta: boolean;
+  action: Action;
+  type: string;
+  raw: [number, number, number, string];
+}
+
+export interface KeyEvent<T extends ProgramElement = ProgramElement> extends AbstractEvent<T, string>, ProgramKeyEvent {
+  full: string;
+  sequence: string;
+  bug: Buffer;
+  ch: string;
+}
+
+export type KeyPredicate = (e: KeyEvent) => boolean;
+
+export interface MouseEvent<T extends ProgramElement = ProgramElement> extends AbstractEvent<T, MouseAction>, ProgramMouseEvent {
+  x: number;
+  y: number;
+  button: 'left' | 'right' | 'middle' | 'unknown';
+  bug: Buffer;
+}
+
+
 
 export interface ElementProps extends StyleProps {
 

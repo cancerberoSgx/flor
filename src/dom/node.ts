@@ -1,9 +1,9 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document } from './document'
-import { EventTarget } from './event'
-import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions , nodeHtml} from './nodeUtil'
+import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, nodeHtml, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
+import { EventTarget } from '..';
 
-export class Node extends EventTarget {
+export class Node implements EventTarget {
 
   static DOCUMENT_TYPE_NODE: NodeType = 10
   static TEXT_NODE: NodeType = 3
@@ -27,7 +27,6 @@ export class Node extends EventTarget {
   }
 
   constructor(readonly nodeType: NodeType) {
-    super()
     this._children = []
     this.childNodes = new NodeList(this._children)
     this.attributes = new NamedNodeMap(this._attributes)
@@ -35,11 +34,13 @@ export class Node extends EventTarget {
   }
 
   protected _ownerDocument: Document | null = null
+
   get ownerDocument() {
     return this._ownerDocument
   }
 
   protected _textContent: string | null = null
+
   get textContent() {
     return this._textContent
   }
@@ -62,14 +63,10 @@ export class Node extends EventTarget {
   get innerHTML() {
     return nodeHtml(this, false)
   }
-  // set innerHTML(id: string | null) {throw new Error('not implemented')
-  // }
 
   get outerHTML() {
     return nodeHtml(this, true)
   }
-  // set outerHTML(id: string | null) {throw new Error('not implemented')
-  // }
 
   getAttribute(a: string) {
     return this._attributes[a] ? this._attributes[a].value : null
@@ -89,13 +86,6 @@ export class Node extends EventTarget {
       this._boundsDirty
     }
   }
-
-  // /**
-  //  * Returns whether node and otherNode have the same properties.
-  //  */
-  // isEqualNode(otherNode: Node | null): boolean {
-  //   return false // TODO
-  // }
 
   remove() {
     // boundsDirty in self and parentNode is take care by removeChild()
@@ -145,8 +135,8 @@ export class Node extends EventTarget {
       ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
   }
 
-  /** miscellaneous data */
-  _data: { [s: string]: any } = {}
+  // /** miscellaneous data */
+  // _data: { [s: string]: any } = {}
 
   visitChildren(v: (c: Node) => void) {
     visitChildren(this, v)
@@ -247,7 +237,6 @@ export class NamedNodeMap<T extends Attr> {
     return Object.values(this.map)[i] || null
   }
 }
-
 
 export class TextNode extends Node {
   constructor(_textContent: string | null, ownerDocument: Document) {

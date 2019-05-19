@@ -2,7 +2,7 @@ import { asArray, throttle } from 'misc-utils-of-mine-generic'
 import { animate, easing, ElementProps, isElement, ProgramDocument, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
-import { KeyEvent, KeyPredicate, MouseEvent, ProgramDocumentRenderer } from '../manager'
+import { KeyEvent, KeyPredicate, MouseEvent, ProgramDocumentRenderer } from '..'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
 
@@ -66,6 +66,7 @@ export interface ScrollHandlerProps {
    */
   disableMouseWheel?: boolean
 }
+
 interface ConcreteScrollableProps extends ScrollHandlerProps {
   /**
    * Listener notified when a scroll event happens.
@@ -202,7 +203,6 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this._renderChildren = this._renderChildren.bind(this)
     this.xOffset = 0 - this.p.leftExtraOffset
     this.handleScrollEnd = this.handleScrollEnd.bind(this)
-    // this.onKeyPressed = this.onKeyPressed.bind(this)
   }
 
   /**

@@ -1,4 +1,4 @@
-import { trimRightLines, removeWhites } from 'misc-utils-of-mine-generic'
+import { removeWhites, trimRightLines } from 'misc-utils-of-mine-generic'
 import { ProgramDocument } from '../src'
 import { Component } from '../src/jsx/component'
 import { Flor } from '../src/jsx/createElement'

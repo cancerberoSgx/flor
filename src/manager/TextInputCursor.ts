@@ -1,4 +1,4 @@
-import { KeyEvent, KeyListener, KeyPredicate } from '.'
+import { KeyEvent, KeyListener, KeyPredicate } from '..'
 import { ProgramElement } from '..'
 import { Pos } from './cursorManager'
 

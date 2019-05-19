@@ -1,4 +1,4 @@
-import { trimRightLines, removeWhites } from 'misc-utils-of-mine-generic'
+import { removeWhites, trimRightLines } from 'misc-utils-of-mine-generic'
 import { BorderStyle, Program, ProgramDocument, ProgramDocumentRenderer } from '../src'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000

@@ -1,5 +1,5 @@
 import { array, indent } from 'misc-utils-of-mine-generic'
-import { mouseActionNames, Element , layoutChildren, LayoutOptions,KeyEvent, KeyListener, MouseListener, BorderProps, FullProps, Padding, Component,ProgramDocument,ElementPropsImpl, createElement, isDocument, isElement, Rectangle , EventListener } from '..'
+import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isDocument, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
 
 export class ProgramElement extends Element {
   private static counter = 1

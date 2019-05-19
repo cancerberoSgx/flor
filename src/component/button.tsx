@@ -1,5 +1,5 @@
 import { Component, Flor } from '../jsx'
-import { MouseEvent } from '../manager'
+import { MouseEvent } from '..'
 import { YogaElementProps } from '../yogaDom'
 
 interface ButtonProps extends Partial<YogaElementProps> {

@@ -1,8 +1,8 @@
 import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
 import { ProgramMouseEvent } from '../declarations/program'
-import { Event } from '../dom/event'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { EventManager, notifyListener } from './eventManager'
+import { Event } from "..";
 
 /**
  *
@@ -132,7 +132,7 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
 
   private _locked = false
   /**
-   * if true the focus won't change.
+   * If true the focus won't change.
    */
   public get locked() {
     return this._locked
