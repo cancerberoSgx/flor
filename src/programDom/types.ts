@@ -168,7 +168,9 @@ export interface ElementProps extends StyleProps, ComponentProps {
   overflow: 'visible' | 'hidden'
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
-
+  
+  focus: Partial<StyleProps>
+  
   id: string
   name: string
   classes: string[]
