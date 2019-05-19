@@ -177,7 +177,7 @@ class FlorJsxImpl implements FlorJsx {
     return el!
   }
 
-  createRef<T extends ProgramElement | Component>(callback?: (current: T | undefined) => any): RefObject<T> {
+  createRef<T extends ProgramElement | Component>(callback?: (current: T ) => any): RefObject<T> {
     return ({
       current: undefined,
       callback

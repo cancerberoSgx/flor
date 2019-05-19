@@ -2,7 +2,7 @@ import { BorderStyle, Flor, installExitKeys, ProgramDocumentRenderer, YogaDocume
 import { isDomText } from '../src/dom/nodeUtil'
 import * as yoga from '../src/yogaDom/types'
 import { FlorDocumentTesting } from './florTestHelper'
-import { toContain } from './testUtil'
+import { willContain } from './testUtil'
 
 describe('yogaElement', () => {
   let flor: FlorDocumentTesting
@@ -29,7 +29,7 @@ describe('yogaElement', () => {
         <box height={13} width={32} flex={0}>2</box>
       </box>)
     renderer.renderElement(document.body)
-    await toContain(renderer, '────────')
+    await willContain(renderer, '────────')
     expect(renderer.printBuffer(true)).toContain(`
 
   ╭────────────────────────────────────────────────╮
@@ -77,7 +77,7 @@ describe('yogaElement', () => {
         ><box height={4} width={4}>4x4</box></box>
       </box>)
     flor.render()
-    await toContain(flor.renderer, '────────')
+    await willContain(flor.renderer, '────────')
     flor.test.toContain(`
 
   ╭──────────────────────────────╮
@@ -123,7 +123,7 @@ describe('yogaElement', () => {
       </box>)
     flor.render()
     // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
-    await toContain(flor.renderer, '═════════════')
+    await willContain(flor.renderer, '═════════════')
     flor.test.toContain(`
 
   ╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮╔═══════════════════════════════════╗
@@ -168,7 +168,7 @@ describe('yogaElement', () => {
         </box>
       </box>)
     flor.render()
-    await toContain(flor.renderer, 'Seba')
+    await willContain(flor.renderer, 'Seba')
     flor.test.toContain(`
   ······························
   ······························

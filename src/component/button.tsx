@@ -1,13 +1,13 @@
 import { Component, Flor } from '../jsx'
 import { MouseEvent } from '..'
-import { YogaElementProps } from '../yogaDom'
+import { ElementProps } from '../programDom';
 
-interface ButtonProps extends Partial<YogaElementProps> {
+interface ButtonProps extends JSX.PropsWithRef<Partial<ElementProps>> {
   children?: string[]
 }
 
 /**
- * Component specialized on rendering Button.
+ * Simple Button component.
  */
 export class Button extends Component<ButtonProps, {}> {
   protected defaultProps: ButtonProps = {
@@ -18,6 +18,7 @@ export class Button extends Component<ButtonProps, {}> {
     super(p, s)
     this.onClick = this.onClick.bind(this)
   }
+
   onClick(r: MouseEvent): boolean | void | undefined {
     if (this.props.onClick) {
       this.props.onClick(r)

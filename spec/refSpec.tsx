@@ -1,6 +1,6 @@
 import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { Component, Flor, FlorDocument, ProgramElement } from '../src'
-import { defaultTestSetup, toContain } from './testUtil'
+import { defaultTestSetup, willContain } from './testUtil'
 
 describe('ref', () => {
   let flor: FlorDocument
@@ -10,14 +10,14 @@ describe('ref', () => {
     let r = Flor.createRef()
     const b = flor.create(<el ref={r}>hello world</el>)
     flor.render()
-    await toContain(flor.renderer, 'hello world')
+    await willContain(flor.renderer, 'hello world')
     expect(r.current).toBe(b)
     done()
   })
 
   it('should call callback', async done => {
     let b2: ProgramElement | undefined
-    const b = flor.create(<el ref={Flor.createRef(c => { b2 = c })}>hello world</el>)
+    const b = flor.create(<el ref={Flor.createRef<ProgramElement>(c => { b2 = c })}>hello world</el>)
     flor.render()
     await waitForPredicate(() => !!b2)
     expect(b2).toBe(b)

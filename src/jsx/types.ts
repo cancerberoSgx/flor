@@ -12,15 +12,16 @@ declare global {
       box: OptionsProps<YogaElementProps>
     }
 
+
     /**
      * Adds extra props to Blessed options, like refs. TODO: we could add children here too ? and perhaps
      * unify the rest in one place (onClick, etc)
      */
-    type OptionsProps<T> = PropsWithRef<Partial<T>>
+    export type OptionsProps<T> = PropsWithRef<Partial<T>>
 
     type PropsWithRef<P> = P & {
       children?: FlorJsxNode ,
-      ref?: P extends { ref?: infer R } ? R : RefObject<ProgramElement>
+      ref?: P extends { ref?: infer R } ? R : RefObject<ProgramElement|Component>
     }
 
     export interface Element<P extends { children?: FlorJsxNode } = {}> {
@@ -85,7 +86,7 @@ export interface FlorJsx<E extends ProgramElement = ProgramElement> {
    * Creates reference object that will be associated with a [[ProgramElement]] or with a [[Component]] instance at render-time.
    * Similar to https://reactjs.org/docs/refs-and-the-dom.html.
    */
-  createRef<T extends E | Component = E>(callback?: (current: T | undefined) => void): RefObject<T>
+  createRef<T extends E | Component = E>(callback?: (current: T ) => void): RefObject<T>
 
 }
 

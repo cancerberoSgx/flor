@@ -5,7 +5,7 @@ import { isDomText } from '../dom/nodeUtil'
 import { Component, Flor } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
 
-interface TextProps extends Partial<ElementProps> {
+interface TextProps extends JSX.PropsWithRef<Partial<ElementProps>> {
   children?: string[]
   /**
    * Word direction. If 'column' words will be printed as columns instead of rows from top to bottom. In other words lines are represented with columns. Default value is 'row'

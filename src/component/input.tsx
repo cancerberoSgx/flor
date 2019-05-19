@@ -3,7 +3,7 @@ import { Component, Flor } from '../jsx'
 import { KeyEvent, KeyPredicate } from '..'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
 
-interface InputProps extends Partial<ElementProps>, ConcreteInputProps {
+interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, ConcreteInputProps {
 
 }
 
@@ -136,7 +136,7 @@ export class Input extends Component<InputProps, {}> {
   }
 
   render() {
-    return <el ref={Flor.createRef(c => this.boxEl = c!)} focusable={true} {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
+    return <el ref={Flor.createRef<ProgramElement>(c => this.boxEl = c)} focusable={true} {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
       onFocus={e => {
         this.inputEnable()
         if (this.props.onFocus) {

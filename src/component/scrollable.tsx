@@ -124,7 +124,7 @@ interface ConcreteScrollableProps extends ScrollHandlerProps {
   managed?: boolean
 }
 
-export interface ScrollableProps extends ConcreteScrollableProps, Partial<ElementProps> {
+export interface ScrollableProps extends ConcreteScrollableProps, JSX.PropsWithRef<Partial<ElementProps>> {
 
 }
 
