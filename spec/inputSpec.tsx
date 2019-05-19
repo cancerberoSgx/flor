@@ -21,6 +21,7 @@ describe('input', () => {
       expect(flor.renderer.printBuffer()).not.toContain('value===')
       done()
     })
+
     it('focus should not change state', done => {
       flor.events.click(el)
       expect(flor.renderer.program.cursorHidden).toBe(false)
@@ -29,6 +30,7 @@ describe('input', () => {
       expect(flor.renderer.printBuffer()).not.toContain('value===')
       done()
     })
+
     it('input "a"', done => {
       flor.events.click(el)
       flor.events.triggerKeyEvent('a')
@@ -37,6 +39,7 @@ describe('input', () => {
       expect(flor.renderer.printBuffer()).not.toContain('value===')
       done()
     })
+    
     it('input "b"', done => {
       flor.events.click(el)
       flor.events.triggerKeyEvent('a')

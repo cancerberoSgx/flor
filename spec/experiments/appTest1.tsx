@@ -20,8 +20,11 @@ try {
 
     <el height={0.33} width={.99} bg={'yellow'} fg="black" border={{ type: BorderStyle.triangleCorners }} padding={{ top: 2, left: 1, right: 1, bottom: 2 }} layout={{ layout: Layout['topDown'], neverResizeContainer: true }} textWrap={true}>
    <el width={.99}  height={0.2} textWrap={true}> Laboris commodo id proident minim est ad proident fugiat do non id velit. Esse ullamco sit elit magna et esse excepteur exercitation ut eiusmod sint sit irure enim. Proident excepteur quis elit incididunt eiusmod excepteur veniam eiusmod duis adipisicing velit qui tempor mollit. Elit qui non labore laborum do eu nulla adipisicing fugiat aliqua nisi voluptate. Ex Lorem sit laboris veniam id id cillum fugiat ad aliquip consequat cupidatat in duis. Est et duis pariatur sit aute id consequat velit velit tempor reprehenderit.</el>
+
     <Input width={.5} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => flor.debug(e.value)}></Input>
-    <el width={.99}  height={0.2} textWrap={true}>     Amet sunt magna cillum cupidatat magna adipisicing enim sint. Deserunt cillum aute non aliquip voluptate sunt tempor aliqua irure consequat et eiusmod amet ullamco. Id mollit reprehenderit quis ullamco aute dolore cupidatat. Adipisicing reprehenderit sit consequat nulla.</el>
+    <el width={.99}  height={0.2} textWrap={true}>     
+    
+    Amet sunt magna cillum cupidatat magna adipisicing enim sint. Deserunt cillum aute non aliquip voluptate sunt tempor aliqua irure consequat et eiusmod amet ullamco. Id mollit reprehenderit quis ullamco aute dolore cupidatat. Adipisicing reprehenderit sit consequat nulla.</el>
       </el>
 
     <el height={0.46} width={.99}  bg="white" fg="black" layout={{ layout: Layout['justifiedRows'] ,

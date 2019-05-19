@@ -1,6 +1,7 @@
 import { ElementProps, KeyEvent, KeyPredicate, ProgramDocument, ProgramElement } from '..'
 import { Component, Flor } from '../jsx'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
+import { debug } from '../util';
 
 interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, ConcreteInputProps {
 
@@ -13,31 +14,38 @@ export interface ConcreteInputProps {
    * value (like when pressing enter), use [[onChange]].
    */
   onInput?: (e: { currentTarget: ProgramElement, input: string }) => void
+
   /**
    * Emitted when the user explicitly gestures a change in the value, like when pressing enter, or blur.
    */
   onChange?(e: { currentTarget: ProgramElement, value: string }): void
+
   /**
    * Initial value for the input.
    */
   value?: string
+
   /**
    * Keys to change the value. By default is ENTER.
    */
   changeKeys?: KeyPredicate
+
   /**
    * Change the value on blur? By default is true.
    */
   changeOnBlur?: boolean
+
   /**
    * Input looses focus when user changes the value (pressing enter)
    */
   blurOnChange?: boolean
+
   /**
    * Keys that will enable the input again when the element is focused but the input is disabled. This only
    * applies when [[blurOnChange]] is false. By default is ENTER.
  */
   enableInputKeys?: KeyPredicate
+
   /**
    * Keys that will disable the input without making the element to loose focus and without changing the
    * value. This only applies when [[blurOnChange]] is false. By default is ESC.
@@ -110,12 +118,11 @@ export class Input extends Component<InputProps, {}> {
       this.element.props.input = s
       this.element.childNodes[0].textContent = this.element.props.input || ''
       this.props.onInput && this.props.onInput({ currentTarget: this.element, input: (this.element.props.input || '') })
-      this.renderElement()
     }
   }
 
   protected onKeyPressed(e: KeyEvent) {
-    if (!this.element || !this.element.props.focused) {
+    if (!this.element){// || !this.element.props.focused) {
       return
     }
     if (this.p.changeKeys(e)) {
@@ -123,8 +130,15 @@ export class Input extends Component<InputProps, {}> {
     }
     // call text input cursor listener and then get the resulting state (pos and value) and update our state.
     this.textInputCursorListener && this.textInputCursorListener(e)
-    this.cursor!.setPosition({ row: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row, col: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col })
+    
     this.input = this.textInputCursorManager!.value
+
+    this.renderElement()
+
+    this.cursor!.setPosition({ 
+      row: this.element.absoluteContentTop + this.textInputCursorManager!.pos.row, 
+      col: this.element.absoluteContentLeft + this.textInputCursorManager!.pos.col 
+    })
   }
 
   /**
