@@ -1,11 +1,11 @@
 import { asArray, throttle } from 'misc-utils-of-mine-generic'
-import { animate, easing, ElementProps, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '..'
+import { animate, easing, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
-import { focusableProps } from './commonProps';
-import { YogaElement, YogaElementProps } from '../yogaDom';
+import { YogaElementProps } from '../yogaDom'
+import { focusableProps } from './commonProps'
 
 interface ScrollEvent {
   currentTarget: ProgramElement

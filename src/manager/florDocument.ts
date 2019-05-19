@@ -1,15 +1,15 @@
 import { isObject } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
-import { ElementProps, FullProps, isElement, ProgramDocument, ProgramElement } from '..'
+import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
-import { addLogger, Layout } from '../util'
+import { addLogger } from '../util'
 import { CursorManager } from './cursorManager'
+import { StyleEffectsManager } from './effects'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
 import { installExitKeys } from './programUtil'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
-import { StyleEffectsManager } from './effects';
 
 export interface FlorDocumentOptions <E extends ProgramElement = ProgramElement, T extends ProgramDocument<E>= ProgramDocument<E>>  extends ProgramOptions, RendererCreateOptions {
   program?: Program
@@ -38,8 +38,8 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
   private _events: EventManager
   private _focus: FocusManager
   private _cursor: CursorManager
-  private _effects: StyleEffectsManager<E>;
- 
+  private _effects: StyleEffectsManager<E>
+
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
       const programDefaultOptions = { buffer: true }
@@ -161,7 +161,7 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
   }
 
   public get effects()  {
-    return this._effects;
+    return this._effects
   }
 
   /**
@@ -179,61 +179,23 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
     this.renderer.renderElement(el)
   }
 
-  // private _debugEl: ProgramElement | undefined
-
   /**
    * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
-  debug( ...args: any[]) {
-    // if (!this._debugEl) {
-    //   this._debugEl = this.create({   top: .7, left: .01, width: 200, height: .3, ...props, children: ['LOG']
-    //   , doLayout: { layout: Layout.justifiedRows }, preventChildrenCascade: true
-    //   })
-    // }
-    // this._debugEl.empty()
-    // if (typeof el === 'string') {
-    //   // this._debugEl.appendChild(this.create({  children: [el] }))
-    //   args.splice(0, 0, el)
-    // } else if (isElement(el)) {
-    //   // (el.debugAsXml() || '').split('\n').forEach((l, i) => {
-    //     // this._debugEl!.appendChild(this.create({   children: [l] }))
-    //   // })
-    //   args.splice(0, 0, el.debugAsXml)
-    // } else {
-    //   args.push(el)
-    // }
-    setTimeout(()=>{
-      // this.cursor.hide({name: 'flordebug'})
-
+  debug(...args: any[]) {
+    setTimeout(() => {
       this.program.saveCursor('flordebug')
-      args.map(a => typeof a === 'string' ? a : inspect(a, { sorted: true, compact: true,maxArrayLength: 44, breakLength: 120 }))
+      args.map(a => typeof a === 'string' ? [a] : inspect(a, { sorted: true, compact: true,maxArrayLength: 44, breakLength: 120 }).split('\n')).flat()
       .forEach((c, i) => {
-        // this._debugEl!.appendChild(this.create({  children: [c] }))
-        this.renderer.write(i, 0, c)     
+        this.renderer.write(i, 0, c)
       })
       this.program.restoreCursor('flordebug')
-
-
       setTimeout(() => {
-        // t.remove()
         this.program.saveCursor('flordebug')
         this.render()
         this.program.restoreCursor('flordebug')
-      }, 3000);
+      }, 3000)
     }, 1000)
-    // .join('\n')
-
-    // const t = this.create(text({value: s, width: 20, height: 20, top: 20, left: 20}))
-    // this.render(t)
-
-    // this._debugEl.forceUpdate(true)
-    // this.render(this._debugEl)
-    // if (props.hideTimeout) {
-      // setTimeout(() => {
-        // this._debugEl!.forceUpdate(true)
-        // this.render(this._debugEl)
-      // }, props.hideTimeout)
-    // }
   }
 
   private installLoggers() {

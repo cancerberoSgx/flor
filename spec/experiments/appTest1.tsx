@@ -1,7 +1,7 @@
 import { BorderStyle, borderStyles, debug, FlorDocument, Input, Layout } from '../../src'
+import { Button } from '../../src/component/button'
 import { Flor } from '../../src/jsx/createElement'
 import { color, float, item } from '../data'
-import { Button } from '../../src/component/button';
 
 try {
   const flor = new FlorDocument()
@@ -13,24 +13,21 @@ try {
        Do ad sunt est cillum. Laboris esse fugiat proident excepteur sit minim elit eiusmod et et aliquip consectetur ullamco. Adipisicing pariatur ad aute ipsum nulla consectetur. Aliquip sunt enim qui laboris ex labore ea eu consequat velit eiusmod reprehenderit et. Qui do nulla sit voluptate proident tempor. Non commodo incididunt ipsum pariatur excepteur.
       </el>
     <Button width={.5} height={3}> click me3</Button>
-      <el width={.49} height={.99}   border={{ type: BorderStyle.double }} fg="black"   textWrap={true}>Duis commodo sit excepteur excepteur. Est officia commodo in aliqua sunt magna est ipsum exercitation.  
+      <el width={.49} height={.99}   border={{ type: BorderStyle.double }} fg="black"   textWrap={true}>Duis commodo sit excepteur excepteur. Est officia commodo in aliqua sunt magna est ipsum exercitation.
       </el>
 </el>
 
     <el height={0.33} width={.99} bg={'yellow'} fg="black" border={{ type: BorderStyle.triangleCorners }} padding={{ top: 2, left: 1, right: 1, bottom: 2 }} layout={{ layout: Layout['topDown'], neverResizeContainer: true }} textWrap={true}>
    <el width={.99}  height={0.2} textWrap={true}> Laboris commodo id proident minim est ad proident fugiat do non id velit. Esse ullamco sit elit magna et esse excepteur exercitation ut eiusmod sint sit irure enim.</el>
 
-
    <Button width={.5} height={3}> click me</Button>
     <Input width={.5} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => {}}></Input>
     <Button width={.5} height={3}> click me2</Button>
-    
 
     <el width={.99}  height={0.2} textWrap={true}>
 
     Amet sunt magna cillum cupidatat magna adipisicing enim sint. Deserunt cillum aute non aliquip voluptate sunt tempor aliqua irure consequat et eiusmod amet ullamco. Id mollit reprehenderit quis ullamco aute dolore cupidatat. Adipisicing reprehenderit sit consequat nulla.</el>
       </el>
-
 
       <Button width={.5} height={3}> click me 4</Button>
 

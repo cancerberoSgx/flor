@@ -33,7 +33,9 @@ export class EventManager {
     if (this.ignoreKeys) {
       return
     }
-    this.keyListeners.some(l => {
+    this.keyListeners
+    .filter(l=>!l.el || l.el.props.focused)
+    .some(l => {
       return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el  }as any)
     })
   }

@@ -143,12 +143,11 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
 
   installDefaultChangeFocusKeys() {
     this.events.preppedKeyListener(e => {
-      if(e.name === 'tab' && !this.locked){
+      if (e.name === 'tab' && !this.locked) {
         if (!e.shift) {
           this.focusNext()
           e.stopPropagation()
-        }
-        else if (e.shift) {
+        } else if (e.shift) {
           this.focusPrevious()
           e.stopPropagation()
         }

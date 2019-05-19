@@ -1,6 +1,7 @@
 import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement } from '../src'
 import { SingleLineTextInputCursor } from '../src/manager/textInputCursor'
 import { defaultTestSetup } from './testUtil'
+import { sleep } from 'misc-utils-of-mine-generic';
 
 describe('cursorTextEditor', () => {
 
@@ -9,6 +10,7 @@ describe('cursorTextEditor', () => {
     let editor: SingleLineTextInputCursor
     let el: ProgramElement
     let flor: FlorDocument
+    
     defaultTestSetup(f => {
       flor = f || flor;
       ({ el, editor } = build())
@@ -109,7 +111,7 @@ describe('cursorTextEditor', () => {
 
     function build() {
       const initialValue = 'hello world'
-      el = flor.create(<el top={10} left={8} width={33} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e => {
+      el = flor.create(<el focusable={true} focused={true} top={10} left={8} width={33} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e => {
         keyListener(e)
         el.childNodes[0].textContent = editor.value
         el.render()

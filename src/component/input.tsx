@@ -1,9 +1,8 @@
-import { ElementProps, KeyEvent, KeyPredicate, ProgramDocument, ProgramElement } from '..'
+import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement } from '..'
 import { Component, Flor } from '../jsx'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
-import { focusableProps } from './commonProps';
-import { YogaElementProps } from '../yogaDom';
-import { debug } from '../util';
+import { YogaElementProps } from '../yogaDom'
+import { focusableProps } from './commonProps'
 
 interface InputProps extends JSX.PropsWithRef<Partial<YogaElementProps>>, ConcreteInputProps {
 
@@ -77,23 +76,19 @@ export class Input extends Component<InputProps, {}> {
 
   protected p: Required<ConcreteInputProps>
   protected boxEl: ProgramElement | undefined
-  protected textInputCursorManager: SingleLineTextInputCursor 
+  protected textInputCursorManager: SingleLineTextInputCursor
 
   constructor(p: InputProps, s: {}) {
     super(p, s)
     this.p = { ...defaultInputProps, ...this.props }
     this.onKeyPressed = this.onKeyPressed.bind(this)
-    // this.input = this.p.value  
-
     this.textInputCursorManager = new SingleLineTextInputCursor({
       singleLine: true,
-      text: this.props.value||'',
+      text: this.props.value || '',
       pos: { col: 0, row: 0 },
       addKeyListener: l => this.textInputCursorListener = l,
       enabled: true
     })
-    // this.inputEnable()
-
   }
 
   protected handleChangeValue() {
@@ -104,51 +99,32 @@ export class Input extends Component<InputProps, {}> {
     }
   }
 
-  // get value() {
-  //   return this.props.value || ''
-  // }
-
-  // /**
-  //  * Setting this property will cause the element to loose focus
-  //  */
-  // set value(i: string) {
-  //   if (i !== this.props.value) {
-      
-  //     this.props.value = i
-  //     this.handleChangeValue()
-  //   }
-  // }
-
-  // get input() {
-  //   return this.element && this.element.props.input || ''
-  // }
-
   /**
    * Setting this property will change the input text in the screen and call  `this.props.onInput` if any.
    */
   set input(s: string) {
     if (this.element) {
       this.element.props.input = s
-      // debug('input', s)
       this.element.childNodes[0].textContent = this.element.props.input || ''
       this.props.onInput && this.props.onInput({ currentTarget: this.element, input: (this.element.props.input || '') })
     }
   }
 
   protected onKeyPressed(e: KeyEvent) {
-    if (!this.element) {// || !this.element.props.focused) {
+    if(this.props.onKeyPressed&&this.props.onKeyPressed(e)) {
+      return true
+    }
+    if (!this.element || !this.element.props.focused) {
       return
     }
     if (this.p.changeKeys(e)) {
       this.handleChangeValue()
+      return
     }
     // call text input cursor listener and then get the resulting state (pos and value) and update our state.
     this.textInputCursorListener && this.textInputCursorListener(e)
-
     this.input = this.textInputCursorManager.value
-
     this.renderElement()
-
     this.cursor!.setPosition({
       row: this.element.absoluteContentTop + this.textInputCursorManager.pos.row,
       col: this.element.absoluteContentLeft + this.textInputCursorManager.pos.col
@@ -171,10 +147,10 @@ export class Input extends Component<InputProps, {}> {
     }
     this.renderElement()
     if (this.element && this.element.props.focused && this.cursor) {
-      this.cursor!.show({
+      this.cursor.show({
         name: 'Input',
-        top: this.element!.absoluteContentTop + this.textInputCursorManager.pos.row,
-        left: this.element!.absoluteContentLeft + this.textInputCursorManager.pos.col
+        top: this.element.absoluteContentTop + this.textInputCursorManager.pos.row,
+        left: this.element.absoluteContentLeft + this.textInputCursorManager.pos.col
       })
     }
   }
@@ -187,17 +163,14 @@ export class Input extends Component<InputProps, {}> {
     if (this.element && this.props.blurOnChange && this.element.props.focused) {
       this.element.blur()
     }
-    // if (this.textInputCursorManager) {
-      this.textInputCursorManager.enabled = false
-    // }
+    this.textInputCursorManager.enabled = false
     this.renderElement()
     if (this.cursor) {
-      this.cursor!.hide({ name: 'Input' })
+      this.cursor.hide({ name: 'Input' })
     }
   }
 
   render() {
-    // debug(this.props.value, this.props, this.input)
     return <el {...focusableProps()} height={3} ref={Flor.createRef<ProgramElement>(c => this.boxEl = c)}  {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
       onFocus={e => {
         this.inputEnable()
@@ -215,15 +188,7 @@ export class Input extends Component<InputProps, {}> {
         }
       }}
       onKeyPressed={this.onKeyPressed}
-      input={this.props.value||''}
-      // afterRender={() => {
-    // debug(this.props.value, this.props, this.input)
-
-        // // HEADS UP! at this point, we are absolutely sure the ref was resolved and the element is attached
-        // if (!this.textInputCursorManager) {
-          
-        // }
-      // }}
+      input={this.props.value || ''}
     >
 {this.props.value || ''}
     </el>

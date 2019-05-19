@@ -1,7 +1,6 @@
 import { Component, Flor } from '../jsx'
-import { ElementProps } from '../programDom'
+import { YogaElementProps } from '../yogaDom'
 import { focusableProps } from './commonProps'
-import { YogaElementProps } from '../yogaDom';
 
 interface ButtonProps extends Partial<YogaElementProps> {
   children?: string[]

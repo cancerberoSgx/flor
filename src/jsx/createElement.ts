@@ -2,7 +2,6 @@ import { ProgramDocument, ProgramElement } from '..'
 import { Node } from '../dom'
 import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
-import { debug } from '../util';
 
 interface RenderOptions {
   document?: ProgramDocument
@@ -37,7 +36,7 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
 class FlorJsxImpl implements FlorJsx {
   protected doc: ProgramDocument | undefined
 
-  private _render({ e, document, parentNode}: {e: JSX.Element<{}>, document: ProgramDocument, parentNode: Node}) {
+  private _render({ e, document, parentNode }: {e: JSX.Element<{}>, document: ProgramDocument, parentNode: Node}) {
     if (typeof e.type !== 'string') {
       throw new Error('unexpected undefined type ' + e)
     }
@@ -144,7 +143,7 @@ class FlorJsxImpl implements FlorJsx {
       throw new Error('Need to provide a document with setDocument() before render')
     }
     const document = options.document || this.doc!
-    const el =  this._render({ e, document , parentNode: options.parent || document.body})
+    const el =  this._render({ e, document , parentNode: options.parent || document.body })
     return el as E
   }
 
@@ -157,15 +156,15 @@ class FlorJsxImpl implements FlorJsx {
     let component: Component | undefined
     if (isComponentConstructor(tag)) {
       component = new tag({ ...attrs, children }, {})
-      el = component.render();
+      el = component.render()
       if (isJSXElementImpl(el)) {
         el._component = component
       }
     } else if (typeof tag === 'function') {
-      el = tag({ ...attrs, children });
+      el = tag({ ...attrs, children })
     } else if (typeof tag === 'string') {
-      el = new JSXElementImpl(tag, attrs);
-        this.installAttributesAndChildren(el! as any,         children)
+      el = new JSXElementImpl(tag, attrs)
+      this.installAttributesAndChildren(el as any,         children)
     }
     return el!
   }

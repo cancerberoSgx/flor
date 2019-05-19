@@ -10,13 +10,6 @@ export function isElement<E extends ProgramElement = ProgramElement>(n: any): n 
   return n && n.nodeType === Node.ELEMENT_NODE && n.props && n._childrenReady
 }
 
-// export function isDocument(n: any): n is ProgramDocument {
-//   return n && n.nodeType === Node.DOCUMENT_TYPE_NODE && isElement(n.body)&&
-//   (n as ProgramDocument).createElement && (n as ProgramDocument).create
-//   // &&
-//   // n instanceof ProgramDocument
-// }
-
 /**
  * important! right now it must match both ProgramDocument and YogaDocument
  */
@@ -81,30 +74,3 @@ export function createElement(doc: ProgramDocument, tagName: string | Partial<Fu
   }
   return el
 }
-
-// export function  renderElement(el: ProgramElement) {
-//   if(el.ownerDocument.renderer){
-//     el.ownerDocument.renderer.eraseElement(el);
-//     el.ownerDocument.renderer.renderElement(el);
-//   }
-// }
-
-// export function createOrRenderElement<T extends ProgramElement = ProgramElement>(el: ProgramElement | Partial<FullProps> | JSX.Element<{}>, parent: ProgramElement) {
-//   let r: ProgramElement | undefined;
-//   if (isElement(el)) {
-//     r = el;
-//   }
-//   else if (isJSXElementImpl(el) && parent.ownerDocument.renderer) {
-//     r =Flor.render(el); // TODO: we could pass the document but wont for performance
-//   }
-//   else if (isObject(el)) {
-//     r = parent.ownerDocument.create({ ...el as any });
-//   }
-//   if (r) {
-//      ((el as FullProps).parent ||parent).appendChild(r);
-//   }
-//   else {
-//     throw new Error('Could not create element for input ' + el);
-//   }
-//   return r as T;
-// }

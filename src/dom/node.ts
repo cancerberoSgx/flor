@@ -30,8 +30,8 @@ export class Node implements EventTarget {
     this._boundsDirty = true
   }
 
-  get nodeTypeName(){
-    return this.nodeType===Node.DOCUMENT_TYPE_NODE ? 'document' : this.nodeType===Node.ELEMENT_NODE? 'element': 'text'
+  get nodeTypeName() {
+    return this.nodeType === Node.DOCUMENT_TYPE_NODE ? 'document' : this.nodeType === Node.ELEMENT_NODE ? 'element' : 'text'
   }
   protected _ownerDocument: Document | null = null
 
@@ -180,13 +180,22 @@ export class Node implements EventTarget {
     return isDomText(this) ? [] : filterDescendantTextNodesContaining(this, name, o)
   }
 
-  previousSibling(): Node | undefined {
-    const i = this.parentNode && this.parentNode._childNodes.indexOf(this) || 0
-    if (i > 0) {
-      return this.parentNode!._childNodes[i - 1]
+  previousSibling<T extends Node = Node>(): T | undefined {
+    if(this.parentNode){
+      const i =  this.parentNode._childNodes.indexOf(this)
+      if (i!==-1 && i > 0) {
+        return this.parentNode._childNodes[i - 1] as T
+      }
     }
   }
-
+  nextSibling<T extends Node = Node>(): T | undefined {
+    if(this.parentNode){
+      const i =  this.parentNode._childNodes.indexOf(this)
+      if (i !==-1 && i<this.parentNode._childNodes.length-1) {
+        return this.parentNode._childNodes[i + 1] as T
+      }
+    }
+  }
 }
 
 export type NodeType = 10 | 3 | 1

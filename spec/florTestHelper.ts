@@ -1,7 +1,6 @@
 import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { borderStyles, FlorDocument, ProgramElement } from '../src'
-import { YogaElement } from '../src/yogaDom/yogaElement'
 import { color, int, item } from './data'
 
 interface Options { trimAndRemoveEmptyLines?: boolean }

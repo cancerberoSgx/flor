@@ -9,7 +9,7 @@ describe('input', () => {
       flor = new FlorDocument()
       el = f(flor)
       flor.render()
-      m=''
+      m = ''
     })
     afterEach(() => {
       flor.destroy()

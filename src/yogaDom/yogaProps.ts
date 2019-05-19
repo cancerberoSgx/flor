@@ -1,18 +1,6 @@
 import { ElementPropsImpl } from '..'
 import { Align, Direction, Display, Edge, FlexDirection, FlexWrap, JustifyContent, PositionType, Value, ValuedEdges, YogaElementProps } from './types'
-// const EDGE_COUNT: 9;
-// const EDGE_LEFT: 0;
-// const EDGE_TOP: 1;
-// const EDGE_RIGHT: 2;
-// const EDGE_BOTTOM: 3;
-// const EDGE_START: 4;
-// const EDGE_END: 5;
-// const EDGE_HORIZONTAL: 6;
-// const EDGE_VERTICAL: 7;
-// const EDGE_ALL: 8;
-// import {EDGE_COUNT} from 'yoga-layout'
-// export interface EdgeNameMapping {COUNT: yoga.YogaEdge.COUNT, ,LEFT: EDGE_LEFT,TOP: EDGE_TOP,RIGHT: EDGE_RIGHT,BOTTOM: EDGE_BOTTOM,START: EDGE_START,END: EDGE_END,HORIZONTAL: EDGE_HORIZONTAL,VERTICAL: EDGE_VERTICAL,ALL: EDGE_ALL
-// }
+
 export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements Partial<YogaElementProps> {
   public get heightAuto(): boolean | undefined {
     return this._data.heightAuto
@@ -157,7 +145,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this._data.flexWrap = value
       this.owner._boundsDirty = true
     }
-    // setYogaProps(this.owner.node.setFlexWrap())
   }
   public get flexDirection(): FlexDirection | undefined {
     return this._data.flexDirection

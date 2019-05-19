@@ -118,28 +118,9 @@ export class CursorManager {
     this.program.showCursor()
   }
 
-  // /**
-  //  * Moves cursor to the left n times.
-  //  */
-  // left(n: number) {
-  //   this.program.left(n)
-  // }
-
-  // right(n: number) {
-  //   this.program.right(n)
-  // }
 }
 
 export interface Pos {
   row: number
   col: number
 }
-
-// /**
-//  * Can move the cursor
-//  */
-// export interface CursorHandler {
-//   setPosition(pos: Pos): void
-//   // left(n: number): void
-//   // right(n: number): void
-// }

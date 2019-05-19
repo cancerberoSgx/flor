@@ -1,8 +1,6 @@
 import { Component, Flor } from '../jsx'
-import { YogaElementProps } from '../yogaDom';
-import { containerProps } from './commonProps';
-import { asArray } from 'misc-utils-of-mine-generic';
-import { isArray } from 'util';
+import { YogaElementProps } from '../yogaDom'
+import { containerProps } from './commonProps'
 
 interface BoxProps extends Partial<YogaElementProps> {
 }

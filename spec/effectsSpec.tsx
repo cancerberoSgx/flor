@@ -1,5 +1,4 @@
 import { Flor, FlorDocument, Layout } from '../src'
-import { StyleEffectsManager } from '../src/manager/effects'
 import { defaultTestSetup, expectToContain, willContain } from './testUtil'
 
 describe('effects', () => {

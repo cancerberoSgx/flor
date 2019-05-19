@@ -1,11 +1,10 @@
 import { array } from 'misc-utils-of-mine-generic'
 import * as yoga from 'yoga-layout'
-import { ElementProps } from '..'
 import { isDomText } from '../dom/nodeUtil'
 import { Component, Flor } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
-import { baseProps } from './commonProps';
-import { YogaElementProps } from '../yogaDom';
+import { YogaElementProps } from '../yogaDom'
+import { baseProps } from './commonProps'
 
 interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
   children?: string[]
@@ -28,7 +27,6 @@ interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
    * How should words be aligned/justified. Default: left. This is an alias for [[flexJustify]] (flex layout property)
    */
   wordsAlign?: 'left' | 'right' | 'center' | 'justify'
-  
 
   /**
    * How should lines be aligned/justified. Default: top. This is an alias for [[lignContent]] (flex layout property)

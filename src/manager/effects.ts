@@ -1,4 +1,4 @@
-import { FocusEvent, ProgramDocument, ProgramElement, StyleProps } from '../programDom'
+import { FocusEvent, ProgramElement, StyleProps } from '../programDom'
 import { FocusManager } from './focusManager'
 
 interface State {
@@ -75,11 +75,11 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     previous.render()
   }
 
-  setNormalExtraStyles(styles: Partial<StyleProps>){
-    this.options.normalExtraStyles = {...this.options.normalExtraStyles||{}, ...styles}
+  setNormalExtraStyles(styles: Partial<StyleProps>) {
+    this.options.normalExtraStyles = { ...this.options.normalExtraStyles || {}, ...styles }
   }
-  
-  setFocusedExtraStyles(styles: Partial<StyleProps>){
-    this.options.focusedExtraStyles = {...this.options.focusedExtraStyles||{}, ...styles}
+
+  setFocusedExtraStyles(styles: Partial<StyleProps>) {
+    this.options.focusedExtraStyles = { ...this.options.focusedExtraStyles || {}, ...styles }
   }
 }

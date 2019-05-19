@@ -60,7 +60,7 @@ export class ProgramElement extends Element {
     this._layoutOnce = false
     this._positionDirty = true
     this._boundsDirty = true
-    this.updateBounds(descendants, descendants)
+    this.updateBounds(descendants)
   }
 
   /**
@@ -108,20 +108,18 @@ export class ProgramElement extends Element {
    * updateBounds will be called for them individually
    */
   protected updateBounds(descendants?: boolean, force?: boolean) {
-    if(force){
-
+    if (force) {
       this._layoutOnce = false
       this._positionDirty = true
       this._boundsDirty = true
     }
     if (this._positionDirty || this._boundsDirty) {
-      // let a = this.absoluteLeft - this.absoluteBottom + this.absoluteRight
       this.doLayout()
       this._useExpression(this.absoluteBottom + this.absoluteRight)
       this._positionDirty = false
       this._boundsDirty = false
     }
-    if (descendants||force) {
+    if (descendants ) {
       this.getChildrenElements().forEach(e => {
         e.updateBounds(descendants, force)
       })
@@ -208,7 +206,7 @@ export class ProgramElement extends Element {
   public set padding(value: Padding | undefined) {
     this.props.padding = value
   }
-  
+
   public get border(): Partial<BorderProps> | undefined {
     return this.props.border
   }
@@ -229,7 +227,7 @@ export class ProgramElement extends Element {
   set width(value: number) {
     this.props.width = value
   }
-  
+
   get height() {
     return this.props.height
   }
@@ -369,10 +367,10 @@ export class ProgramElement extends Element {
     } else if (name === 'onBlur') {
       this.ownerDocument._registerListener({ type: 'blur', listener: { els: [this], listener } })
     } else if (name === 'onClicks') {
-        this.ownerDocument._registerListener({ type: 'clicks', listener: { el: this, listener } })
-      } else {
-        this.ownerDocument._registerListener({ type: 'event', listener: { el: this, name: _getEventName(name), listener } })
-      }
+      this.ownerDocument._registerListener({ type: 'clicks', listener: { el: this, listener } })
+    } else {
+      this.ownerDocument._registerListener({ type: 'event', listener: { el: this, name: _getEventName(name), listener } })
+    }
     function _getEventName(name: string): string {
       if (['onclick', 'click'].includes(name.toLowerCase())) {
         return 'mouseup'
