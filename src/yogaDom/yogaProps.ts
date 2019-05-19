@@ -14,7 +14,6 @@ import { Align, Direction, Display, Edge, FlexDirection, FlexWrap, JustifyConten
 // export interface EdgeNameMapping {COUNT: yoga.YogaEdge.COUNT, ,LEFT: EDGE_LEFT,TOP: EDGE_TOP,RIGHT: EDGE_RIGHT,BOTTOM: EDGE_BOTTOM,START: EDGE_START,END: EDGE_END,HORIZONTAL: EDGE_HORIZONTAL,VERTICAL: EDGE_VERTICAL,ALL: EDGE_ALL
 // }
 export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements Partial<YogaElementProps> {
-  private _heightAuto: boolean | undefined
   public get heightAuto(): boolean | undefined {
     return this._data.heightAuto
   }
@@ -42,7 +41,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _heightPercent: number | undefined
   public get heightPercent(): number | undefined {
     return this._data.heightPercent
   }
@@ -52,7 +50,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _marginAuto: Edge | undefined
   public get marginAuto(): Edge | undefined {
     return this._data.marginAuto
   }
@@ -71,7 +68,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _marginPercent: Partial<ValuedEdges<number>> | undefined
   public get marginPercent(): Partial<ValuedEdges<number>> | undefined {
     return this._data.marginPercent
   }
@@ -81,7 +77,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _maxHeightPercent: number | undefined
   public get maxHeightPercent(): number | undefined {
     return this._data.maxHeightPercent
   }
@@ -91,7 +86,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _maxWidthPercent: number | undefined
   public get maxWidthPercent(): number | undefined {
     return this._data.maxWidthPercent
   }
@@ -101,7 +95,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _minHeightPercent: number | undefined
   public get minHeightPercent(): number | undefined {
     return this._data.minHeightPercent
   }
@@ -111,7 +104,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _minWidthPercent: number | undefined
   public get minWidthPercent(): number | undefined {
     return this._data.minWidthPercent
   }
@@ -121,7 +113,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _position: Partial<ValuedEdges<Value | number>> | undefined
   public get position(): Partial<ValuedEdges<Value | number>> | undefined {
     return this._data.position
   }
@@ -131,7 +122,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _positionPercent: Partial<ValuedEdges<number>> | undefined
   public get positionPercent(): Partial<ValuedEdges<number>> | undefined {
     return this._data.positionPercent
   }
@@ -141,7 +131,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _paddingPercent: Partial<ValuedEdges<number>> | undefined
   public get paddingPercent(): Partial<ValuedEdges<number>> | undefined {
     return this._data.paddingPercent
   }
@@ -151,7 +140,6 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  private _margin: Partial<ValuedEdges<Value | number>> | undefined
   public get margin(): Partial<ValuedEdges<Value | number>> | undefined {
     return this._data.margin
   }

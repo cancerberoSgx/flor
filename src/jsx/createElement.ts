@@ -2,6 +2,7 @@ import { ProgramDocument, ProgramElement } from '..'
 import { Node } from '../dom'
 import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject } from './types'
+import { debug } from '../util';
 
 interface RenderOptions {
   document?: ProgramDocument
@@ -26,7 +27,7 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
   }
   children: any[] = []
   props: P
-  _type: 'string' | 'function' | 'class' | undefined
+  // _type: 'string' | 'function' | 'class' | undefined
 }
 
 /**
@@ -37,11 +38,12 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
 class FlorJsxImpl implements FlorJsx {
   protected doc: ProgramDocument | undefined
 
-  private _render({ e, document, wrapInElement }: {e: JSX.Element<{}>, document: ProgramDocument, wrapInElement?: string}) {
+  private _render({ e, document, parentNode}: {e: JSX.Element<{}>, document: ProgramDocument, parentNode: Node}) {
     if (typeof e.type !== 'string') {
       throw new Error('unexpected undefined type ' + e)
     }
     const el = document.createElement(e.type)
+    parentNode.appendChild(el)
     if (isJSXElementImpl(e) && e._component) {
       e._component.element = el;
       (el as any)._component = e._component
@@ -60,13 +62,14 @@ class FlorJsxImpl implements FlorJsx {
           if (isJSXElementImpl(c)) {
             let r: Node
             if (c.type === '__text') {
-
               r = document.createTextNode((c.props as any).textContent + '')
-
+              el.appendChild(r)
             } else {
-              r = this._render({ e: c, document, wrapInElement })
+              r = this._render({ e: c, document, parentNode: el })
             }
-            el.appendChild(r)
+            // if(r.parentNode){
+            //   debug('already has ', (r as any).tagName, r.nodeTypeName)
+            // }
           } else {
             throw new Error('Unrecognized child type ' + c)
           }
@@ -98,7 +101,7 @@ class FlorJsxImpl implements FlorJsx {
    * Default blessed Node factory for text like "foo" in <box>foo</box>
    */
   protected createTextNode(c: JSX.BlessedJsxText, el: JSXElementImpl) {
-    const t = { type: '__text', props: { textContent: c + '', children: [] }, children: [], _type: 'string' as any }
+    const t = { type: '__text', props: { textContent: c + '', children: [] }, children: [] }
     this.appendChild(el, t)
     return t
   }
@@ -145,8 +148,8 @@ class FlorJsxImpl implements FlorJsx {
       throw new Error('Need to provide a document with setDocument() before render')
     }
     const document = options.document || this.doc!
-    const el =  this._render({ e, document })
-    ;(options.parent || document.body).appendChild(el)
+    const el =  this._render({ e, document , parentNode: options.parent || document.body})
+    // ;(options.parent || document.body).appendChild(el)
     return el as E
   }
 
@@ -160,19 +163,19 @@ class FlorJsxImpl implements FlorJsx {
     if (isComponentConstructor(tag)) {
       component = new tag({ ...attrs, children }, {})
       el = component.render();
-      (el as any)._type = 'class'
+      // (el as any)._type = 'class'
       if (isJSXElementImpl(el)) {
         el._component = component
       }
     } else if (typeof tag === 'function') {
       el = tag({ ...attrs, children });
-      (el as any)._type = 'function'
+      // (el as any)._type = 'function'
     } else if (typeof tag === 'string') {
       el = new JSXElementImpl(tag, attrs);
-      (el as any)._type = 'string'
-    }
-    if (typeof tag === 'string') {
-      this.installAttributesAndChildren(el! as any,         children)
+      // (el as any)._type = 'string'
+      // if (typeof tag === 'string') {
+        this.installAttributesAndChildren(el! as any,         children)
+      // }
     }
     return el!
   }
@@ -189,7 +192,7 @@ class FlorJsxImpl implements FlorJsx {
 export const Flor: FlorJsx = new FlorJsxImpl()
 
 export function isJSXElementImpl(e: any): e is JSXElementImpl {
-  return e && e.props && e.children &&  ['string', 'function', 'class' , undefined].includes(e._type)
+  return e && e.props && e.children// &&  ['string', 'function', 'class' , undefined].includes(e._type)
 }
 
 export function isJsxNode(el: any): el is JSX.FlorJsxNode {

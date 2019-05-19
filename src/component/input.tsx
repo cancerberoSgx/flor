@@ -1,8 +1,10 @@
 import { ElementProps, KeyEvent, KeyPredicate, ProgramDocument, ProgramElement } from '..'
 import { Component, Flor } from '../jsx'
 import { SingleLineTextInputCursor } from '../manager/textInputCursor'
+import { focusableProps } from './commonProps';
+import { YogaElementProps } from '../yogaDom';
 
-interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, ConcreteInputProps {
+interface InputProps extends JSX.PropsWithRef<Partial<YogaElementProps>>, ConcreteInputProps {
 
 }
 
@@ -147,42 +149,6 @@ export class Input extends Component<InputProps, {}> {
     return
   }
 
-  render() {
-    return <el ref={Flor.createRef<ProgramElement>(c => this.boxEl = c)} focusable={true} {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
-      onFocus={e => {
-        this.inputEnable()
-        if (this.props.onFocus) {
-          this.props.onFocus(e)
-        }
-      }}
-      onBlur={e => {
-        this.disableInput()
-        if (this.props.changeOnBlur) {
-          this.handleChangeValue()
-        }
-        if (this.props.onBlur) {
-          this.props.onBlur(e)
-        }
-      }}
-      onKeyPressed={this.onKeyPressed}
-      afterRender={() => {
-        // HEADS UP! at this point, we are absolutely sure the ref was resolved and the element is attached
-        if (!this.textInputCursorManager) {
-          this.textInputCursorManager = new SingleLineTextInputCursor({
-            singleLine: true,
-            text: this.input,
-            pos: { col: 0, row: 0 },
-            addKeyListener: l => this.textInputCursorListener = l,
-            enabled: true
-          })
-          this.inputEnable()
-        }
-      }}
-    >
-      {this.props.value || this.input || ''}
-    </el>
-  }
-
   /**
    * Makes the element to show the cursor and let the user input text. The element must be focused.
    */
@@ -215,6 +181,42 @@ export class Input extends Component<InputProps, {}> {
       this.textInputCursorManager.enabled = false
     }
     this.renderElement()
+  }
+
+  render() {
+    return <el {...focusableProps()} ref={Flor.createRef<ProgramElement>(c => this.boxEl = c)}  {...{ ...this.props, onChange: undefined, onInput: undefined, value: undefined }}
+      onFocus={e => {
+        this.inputEnable()
+        if (this.props.onFocus) {
+          this.props.onFocus(e)
+        }
+      }}
+      onBlur={e => {
+        this.disableInput()
+        if (this.props.changeOnBlur) {
+          this.handleChangeValue()
+        }
+        if (this.props.onBlur) {
+          this.props.onBlur(e)
+        }
+      }}
+      onKeyPressed={this.onKeyPressed}
+      afterRender={() => {
+        // HEADS UP! at this point, we are absolutely sure the ref was resolved and the element is attached
+        if (!this.textInputCursorManager) {
+          this.textInputCursorManager = new SingleLineTextInputCursor({
+            singleLine: true,
+            text: this.input,
+            pos: { col: 0, row: 0 },
+            addKeyListener: l => this.textInputCursorListener = l,
+            enabled: true
+          })
+          this.inputEnable()
+        }
+      }}
+    >
+      {this.props.value || this.input || ''}
+    </el>
   }
 
 }

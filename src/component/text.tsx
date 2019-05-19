@@ -4,28 +4,34 @@ import { ElementProps } from '..'
 import { isDomText } from '../dom/nodeUtil'
 import { Component, Flor } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
+import { baseProps } from './commonProps';
+import { YogaElementProps } from '../yogaDom';
 
-interface TextProps extends JSX.PropsWithRef<Partial<ElementProps>> {
+interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
   children?: string[]
   /**
    * Word direction. If 'column' words will be printed as columns instead of rows from top to bottom. In other words lines are represented with columns. Default value is 'row'
    */
-  direction?: 'row' | 'column'
+
+  textDirection?: 'row' | 'column'
   /**
    * Adds extra width to words. For example, in 'row' direction, extraWidth===1 will separate words with 1 space. Default value 1
    */
   extraWidth?: number
+
   /**
    * Adds extra height for words, which by default is 1. For example, in 'row' direction, extraWidth===1 will make lines be separated by 1 row.
    */
   extraHeight?: number
-  /**
-   * How should words be aligned/justified. Default: top.
-   */
-  wordsAlign?: 'left' | 'right' | 'center' | 'justify'
 
   /**
-   * How should lines be aligned/justified. Default: top.
+   * How should words be aligned/justified. Default: left. This is an alias for [[flexJustify]] (flex layout property)
+   */
+  wordsAlign?: 'left' | 'right' | 'center' | 'justify'
+  
+
+  /**
+   * How should lines be aligned/justified. Default: top. This is an alias for [[lignContent]] (flex layout property)
    */
   linesAlign?: 'top' | 'bottom' | 'center'
 }
@@ -60,7 +66,7 @@ export class Text extends Component<TextProps, {}> {
     if (!this.yNode) {
       this.yNode = yoga.Node.create()
       this.yNode.setFlexWrap(yoga.WRAP_WRAP)
-      this.yNode.setFlexDirection(this.props.direction === 'column' ? yoga.FLEX_DIRECTION_COLUMN : yoga.FLEX_DIRECTION_ROW)
+      this.yNode.setFlexDirection(this.props.textDirection === 'column' ? yoga.FLEX_DIRECTION_COLUMN : yoga.FLEX_DIRECTION_ROW)
       const justifyContent = this.props.wordsAlign === 'right' ? yoga.JUSTIFY_FLEX_END : this.props.wordsAlign === 'center' ? yoga.JUSTIFY_CENTER : this.props.wordsAlign === 'justify' ? yoga.JUSTIFY_SPACE_BETWEEN : yoga.JUSTIFY_FLEX_START
       this.yNode.setJustifyContent(justifyContent)
       const alignItems = this.props.linesAlign === 'center' ? yoga.ALIGN_CENTER : this.props.linesAlign === 'bottom' ? yoga.ALIGN_FLEX_END : yoga.ALIGN_FLEX_START
@@ -89,7 +95,7 @@ export class Text extends Component<TextProps, {}> {
   }
 
   render() {
-    return <el {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</el>
+    return <el {...baseProps()} {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</el>
   }
 
 }

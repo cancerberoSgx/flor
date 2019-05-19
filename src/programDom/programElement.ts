@@ -357,8 +357,8 @@ export class ProgramElement extends Element {
     if (name === 'onFocus') {
       this.ownerDocument._registerListener({ type: 'focus', listener: { els: [this], listener } })
     } else if (name === 'onBlur') {
-        this.ownerDocument._registerListener({ type: 'blur', listener: { els: [this], listener } })
-      } else if (name === 'onClicks') {
+      this.ownerDocument._registerListener({ type: 'blur', listener: { els: [this], listener } })
+    } else if (name === 'onClicks') {
         this.ownerDocument._registerListener({ type: 'clicks', listener: { el: this, listener } })
       } else {
         this.ownerDocument._registerListener({ type: 'event', listener: { el: this, name: _getEventName(name), listener } })

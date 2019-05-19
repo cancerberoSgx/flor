@@ -73,7 +73,7 @@ describe('text', () => {
   })
 
   it('column direction', async done => {
-    const el = flor.create(<Text width={38} top={3} left={4} height={22} direction="column"
+    const el = flor.create(<Text width={38} top={3} left={4} height={22} textDirection="column"
       padding={{ top: 1, right: 2, left: 3, bottom: 1 }} border={{ type: BorderStyle.double }}>
       Eiusmod nostrud deserunt ex qui in non magna velit nulla sint adipisicing sit veniam consectetur. Non minim sit cupidatat nulla nostrud cillum proident labore. Sint amet eu pariatur magna laboris occaecat in anim consectetur labore ipsum esse Lorem nostrud. Labore eu aliqua dolore tempor ea in sint culpa ipsum.
      </Text>)

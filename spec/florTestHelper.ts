@@ -1,6 +1,6 @@
 import { waitForPredicate } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { borderStyles, FlorDocument } from '../src'
+import { borderStyles, FlorDocument, ProgramElement } from '../src'
 import { YogaElement } from '../src/yogaDom/yogaElement'
 import { color, int, item } from './data'
 
@@ -8,8 +8,8 @@ interface Options { trimAndRemoveEmptyLines?: boolean }
 
 const defaultOptions = { trimAndRemoveEmptyLines: false }
 
-class FlorTest {
-  constructor(protected flor: FlorDocument) {
+class FlorTest<E extends ProgramElement = ProgramElement> {
+  constructor(protected flor: FlorDocument<E>) {
   }
   toContain(s: string, o: Options = defaultOptions) {
     const b = this._textExtractor(o)
@@ -41,6 +41,6 @@ class FlorTest {
 
 }
 
-export class FlorDocumentTesting extends FlorDocument<YogaElement> {
+export class FlorDocumentTesting<E extends ProgramElement = ProgramElement> extends FlorDocument<E> {
   test = new FlorTest(this)
 }

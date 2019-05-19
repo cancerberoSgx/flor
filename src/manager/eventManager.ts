@@ -49,7 +49,11 @@ export class EventManager {
       this.keyListeners.push({ name, listener: l , el })
     }
   }
-
+  preppedKeyListener(l: KeyListener, el?: ProgramElement, name= 'keypress') {
+    if (!this.keyListeners.find(k => k.listener === l && k.el === el && k.name === name)) {
+      this.keyListeners.splice(0, 0, ({ name, listener: l , el }))
+    }
+  }
   /**
    * Removes a previously added key listener with [[addKeyListener]].
    */

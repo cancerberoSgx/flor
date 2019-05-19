@@ -3,6 +3,7 @@ import { ProgramElement } from '..'
 import { YogaElementProps } from './types'
 import { YogaDocument } from './yogaDocument'
 import { YogaElementPropsImpl } from './yogaProps'
+import { debug } from '../util';
 
 export class YogaElement extends ProgramElement {
 
@@ -25,34 +26,6 @@ export class YogaElement extends ProgramElement {
       })
     }
     return this._node
-
-    // TODO : yoga node interface
-      //  insertChild(child: Yoga$Node, index: number): void,
-  //  isDirty(): boolean,
-  //  markDirty(): void,
-  //  removeChild(child: Yoga$Node): void,
-  //  reset(): void,
-  //  getParent(): ?Yoga$Node,
-  //  getChild(index: number): Yoga$Node,
-  //  getChildCount(): number,
-  //  getComputedBorder(edge: Yoga$Edge): number,
-  //  getComputedBottom(): number,
-  //  getComputedHeight(): number,
-  //  getComputedLayout(): Layout,
-  //  getComputedLeft(): number,
-  //  getComputedMargin(edge: Yoga$Edge): number,
-  //  getComputedPadding(edge: Yoga$Edge): number,
-  //  getComputedRight(): number,
-  //  getComputedTop(): number,
-  //  getComputedWidth(): number,
-  //  calculateLayout(
-  //   width?: number,
-  //   height?: number,
-  //   direction?: Yoga$Direction,
-  // ): void,
-  // copyStyle(node: Yoga$Node): void,
-  // free(): void,
-  // freeRecursive(): void,
   }
 
   protected setPropsToNode() {
@@ -70,26 +43,27 @@ export class YogaElement extends ProgramElement {
   }
 
   protected calculateLayout() {
-    if (YogaElement.is(this.parentElement)) {
+    if (YogaElement.is(this.parentNode)) {
       this.left = this.node.getComputedLeft()
-      this. top = this.node.getComputedTop()
-      this. height = this.node.getComputedHeight()
+      this.top = this.node.getComputedTop()
+      this.height = this.node.getComputedHeight()
       this.width = this.node.getComputedWidth()
-      this.node.calculateLayout(isFinite(this.width) ? this.width : undefined,  isFinite(this.height) ? this.height : undefined, this.props.direction)
+      this.node.calculateLayout(isFinite(this.width) ? this.width : undefined, isFinite(this.height) ? this.height : undefined, this.props.direction)
+    }
+    else {
+      debugger
+      debug('calculateLayout node ignored parent:',this.parentNode && this.parentNode.nodeTypeName, 'self: ', this.innerHTML)
     }
     (this.childNodes).filter(YogaElement.is).forEach((c, i) =>
-        c.calculateLayout()
+      c.calculateLayout()
     )
   }
 
   doLayout() {
-    // this.setYogaProps()
-// this.node.calculateLayout(this.props.width, this.props.height, this.props.direction)
-// // this.calcBounds()
-// this.setYogaProps()
     this.setYogaProps()
     this.calculateLayout()
   }
+
   protected getFlexWidth(): number | undefined | string {
     if (this.props.widthPercent || this.props.widthAuto) {
       return undefined
@@ -105,7 +79,7 @@ export class YogaElement extends ProgramElement {
   }
 
   protected getFlexLeft(): string | number | undefined {
-    return (this.left !== 0 && this.left > -1 && this.left < 1) ? Math.trunc(this.left * 100) + '%' :  isFinite(this.left) ? this.left : undefined
+    return (this.left !== 0 && this.left > -1 && this.left < 1) ? Math.trunc(this.left * 100) + '%' : isFinite(this.left) ? this.left : undefined
   }
 
   protected getFlexTop(): string | number | undefined {

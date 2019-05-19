@@ -9,6 +9,7 @@ import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
 import { installExitKeys } from './programUtil'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
+import { StyleEffectsManager } from './effects';
 
 export interface FlorDocumentOptions <E extends ProgramElement = ProgramElement, T extends ProgramDocument<E>= ProgramDocument<E>>  extends ProgramOptions, RendererCreateOptions {
   program?: Program
@@ -37,7 +38,8 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
   private _events: EventManager
   private _focus: FocusManager
   private _cursor: CursorManager
-
+  private _effects: StyleEffectsManager<E>;
+ 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
     if (!o.program) {
       const programDefaultOptions = { buffer: true }
@@ -60,6 +62,9 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
     this.debug = this.debug.bind(this)
     this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this._cursor.enter()
+    this._effects = new StyleEffectsManager<E>({
+      focusManager: this.focus  as any
+    })
     // this.installLoggers()
   }
 
@@ -153,6 +158,10 @@ export class FlorDocument<E extends ProgramElement= ProgramElement> {
    */
   get focus() {
     return this._focus
+  }
+
+  public get effects()  {
+    return this._effects;
   }
 
   /**

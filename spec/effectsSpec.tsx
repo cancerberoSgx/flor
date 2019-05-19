@@ -15,7 +15,7 @@ describe('effects', () => {
         >button2</el>
         <el bg="black" ch="N" focus={{ bg: 'blue', ch: 'F' }} height={3} width={.9} focusable={true}
         >button3</el>
-        <el bg="black" ch="N" height={3} width={.9}
+        <el  ch="N" height={3} width={.9}
         >button4</el>
       </el>
     flor.create(a)
@@ -27,10 +27,9 @@ describe('effects', () => {
         flor.focus.focusPrevious()
       }
     })
-    const effects = new StyleEffectsManager({
-      document: flor.document,
-      focusManager: flor.focus
-    })
+    // const effects = new StyleEffectsManager({
+    //   focusManager: flor.focus
+    // })
 
     flor.render()
     await willContain(flor, 'button1')

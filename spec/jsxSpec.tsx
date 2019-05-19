@@ -9,7 +9,7 @@ describe('jsx', () => {
 
   it('createElement', async done => {
     const p = <el>hello</el>
-    expect(JSON.stringify(p)).toEqual(`{"type":"el","children":[{"type":"__text","props":{"textContent":"hello","children":[]},"children":[],"_type":"string"}],"props":{},"_type":"string"}`)
+    expect(JSON.stringify(p)).toEqual(`{"type":"el","children":[{"type":"__text","props":{"textContent":"hello","children":[]},"children":[]}],"props":{}}`)
     done()
   })
 

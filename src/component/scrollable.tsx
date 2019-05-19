@@ -4,6 +4,8 @@ import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
+import { focusableProps } from './commonProps';
+import { YogaElement, YogaElementProps } from '../yogaDom';
 
 interface ScrollEvent {
   currentTarget: ProgramElement
@@ -123,7 +125,7 @@ interface ConcreteScrollableProps extends ScrollHandlerProps {
   managed?: boolean
 }
 
-export interface ScrollableProps extends ConcreteScrollableProps, JSX.PropsWithRef<Partial<ElementProps>> {
+export interface ScrollableProps extends ConcreteScrollableProps, JSX.PropsWithRef<Partial<YogaElementProps>> {
 
 }
 
@@ -439,7 +441,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
 
   render() {
     const layout = this.props.layout ? { ...this.props.layout, neverResizeContainer: true } : undefined
-    return <el focusable={true}
+    return <el {...focusableProps()}
       {...{ ...this.props, onScroll: undefined, children: undefined }}
       layout={layout}
       onKeyPressed={this.onKeyPressed}

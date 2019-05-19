@@ -30,6 +30,9 @@ export class Node implements EventTarget {
     this._boundsDirty = true
   }
 
+  get nodeTypeName(){
+    return this.nodeType===Node.DOCUMENT_TYPE_NODE ? 'document' : this.nodeType===Node.ELEMENT_NODE? 'element': 'text'
+  }
   protected _ownerDocument: Document | null = null
 
   get ownerDocument() {

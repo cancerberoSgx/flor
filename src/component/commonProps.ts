@@ -6,11 +6,20 @@ export const baseProps: () => Partial<YogaElementProps> = () => ({
   fg: 'lightgray'
 })
 
+export const containerProps: () => Partial<YogaElementProps> = () => ({
+  ...baseProps(),
+  bg: 'gray',
+  border: { ...baseProps(), type: BorderStyle.round },
+})
+
 export const focusableProps: () => Partial<YogaElementProps> = () => ({
   ...baseProps(),
-  bg: 'lightgray',
-  fg: 'yellow',
-  border: { type: BorderStyle.round },
-  bold: true,
-  focusable: true
+  border: { ...baseProps(), type: BorderStyle.round },
+  focusable: true,
+  focus: {
+    border: {type: BorderStyle.heavier, fg: 'red', bold: true},
+    bold: true,
+    fg: 'black',
+    bg: 'lightgray'
+  }
 })

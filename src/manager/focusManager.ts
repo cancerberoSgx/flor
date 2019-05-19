@@ -12,7 +12,7 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
 
   constructor(private events: EventManager, protected document: ProgramDocument) {
     this.onMouseUp = this.onMouseUp.bind(this)
-    this.events.addBeforeAllMouseListener('mouseup',  this.onMouseUp)
+    this.events.addBeforeAllMouseListener('mouseup', this.onMouseUp)
   }
 
   private _focused: ProgramElement | undefined
@@ -139,5 +139,20 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
   }
   public set locked(value) {
     this._locked = value
+  }
+
+  installDefaultChangeFocusKeys() {
+    this.events.preppedKeyListener(e => {
+      if(e.name === 'tab' && !this.locked){
+        if (!e.shift) {
+          this.focusNext()
+          e.stopPropagation()
+        }
+        else if (e.shift) {
+          this.focusPrevious()
+          e.stopPropagation()
+        }
+      }
+    })
   }
 }

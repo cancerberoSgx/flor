@@ -2,15 +2,14 @@ import { FocusEvent, ProgramDocument, ProgramElement, StyleProps } from '../prog
 import { FocusManager } from './focusManager'
 
 interface State {
-  // notFocusedUndefinedStyle?:string[]
   dirty: boolean
   notFocusedStyle?: Partial<StyleProps>
 }
 
 interface Options<T extends ProgramElement = ProgramElement> {
   focusManager: FocusManager<T>
-  document: ProgramDocument
-  // getFocusedExtraStyle?(el: T): Partial<T>
+  focusedExtraStyles?: Partial<StyleProps>
+  normalExtraStyles?: Partial<StyleProps>
 }
 
 export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
@@ -54,19 +53,13 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     if (!focused || !s || !s.dirty || !focused.props.focus || !focused.props.focus.data) {
       return
     }
-    const focusStyle = focused.props.focus.data
+    const focusStyle = { ...this.options.focusedExtraStyles || {}, ...focused.props.focus.data }
     // TODO: if default style changes after this moment, we will loose the changes. Perhaps we need to remove the if()
     if (!s.notFocusedStyle) {
       const focusedKeys =  Object.keys(focusStyle)
-      s.notFocusedStyle = {}
-      //  s.notFocusedUndefinedStyle = []
+      s.notFocusedStyle = { ...this.options.normalExtraStyles || {} }
       focusedKeys.forEach(k => {
-        // if(typeof focused.props.data[k]==='undefined'){
-        //   (s.notFocusedUndefinedStyle as any).push(k)
-        // }
-        // else {
         (s.notFocusedStyle as any)[k]  = focused.props.data[k]
-        // }
       })
     }
     focused.props.assign(focusStyle)
@@ -78,17 +71,15 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     if (!previous || !s || !s.dirty || !s.notFocusedStyle) {
       return
     }
-    // debug('setNotFocusedStyle', s)
     previous.props.assign(s.notFocusedStyle)
-    // (s.notFocusedUndefinedStyle||[]).forEach(s=>{
-    //   (previous.props as any)[s] = undefined
-    // })
-    // previous.props.bg = undefined
     previous.render()
-
   }
-  // onBlur(e: BlurEvent) {
-  //   throw new Error('Method not implemented.');
-  // }
 
+  setNormalExtraStyles(styles: Partial<StyleProps>){
+    this.options.normalExtraStyles = {...this.options.normalExtraStyles||{}, ...styles}
+  }
+  
+  setFocusedExtraStyles(styles: Partial<StyleProps>){
+    this.options.focusedExtraStyles = {...this.options.focusedExtraStyles||{}, ...styles}
+  }
 }
