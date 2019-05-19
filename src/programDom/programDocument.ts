@@ -6,6 +6,7 @@ import { FocusManager } from '../manager/focusManager'
 import { Deferred } from '../util/misc'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
+import { clicks } from '../manager/clicks';
 
 interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
 
@@ -13,7 +14,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
   body: ProgramElement
 
   protected managers: Managers | undefined
-  private registerListenerQueue: {type: 'event' | 'blur' | 'focus', listener: any}[] = []
+  private registerListenerQueue: {type: 'event' | 'blur' | 'focus'|'clicks', listener: any}[] = []
 
   constructor() {
     super()
@@ -79,7 +80,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
   /**
    * @internal
    */
-  _registerListener(l: {type: 'event' | 'blur' | 'focus' , listener: any}) {
+  _registerListener(l: {type: 'event' | 'blur' | 'focus' |'clicks', listener: any}) {
     this.registerListenerQueue.push(l)
     if (this.managers) {
       this._emptyListenerQueue()
@@ -91,19 +92,18 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
       this.registerListenerQueue.forEach(l => {
         if (l.type === 'event') {
           this.managers!.events._registerEventListener(l.listener)
-        } else if (l.type === 'focus') {
+        } 
+        else if (l.type === 'focus') {
           this.managers!.focus.addFocusListener(l.listener)
-        } else if (l.type === 'blur') {
+        } 
+        else if (l.type === 'clicks') {
+          clicks({target: l.listener.el, handler: l.listener.listener})
+        } 
+        else if (l.type === 'blur') {
           this.managers!.focus.addBlurListener(l.listener)
         }
       })
       this.registerListenerQueue.length = 0
     }
   }
-
-  // static is(d: any): d is ProgramDocument {
-  //   return !!(d && d.body && (d as ProgramDocument).createElement && (d as ProgramDocument).create) && d instanceof ProgramDocument
-  // }
 }
-
-// type Resolve<T> =  (value?: T) => PromiseLike<T>

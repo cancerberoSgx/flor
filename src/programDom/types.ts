@@ -6,6 +6,7 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
+import { ClicksEvent } from '../manager/clicks';
 
 export interface Edges {
   top: number
@@ -201,14 +202,20 @@ export interface ElementProps extends StyleProps, ComponentProps {
   childrenReady?(): boolean
 
   /**
-   * Listener for when the element is clicked. The program must have the mouse enabled
-   * (`Program.enableMouse()`)
+   * Listener for when the element is clicked. The element must have the mouse enabled
+   * (`Program.enableMouse()`).
    */
   onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
-   * Listener for when the element is clicked. The program must have the mouse enabled
-   * (`Program.enableMouse()`)
+   * Listener for when the element is clicked several times in a short amount of time, like double click. 
+   * The element must have the mouse enabled (`Program.enableMouse()`).
+   */
+  onClicks?<T extends ProgramElement= ProgramElement>(r: ClicksEvent<T>): void | boolean
+
+  /**
+   * Listener for when the element is clicked. The element must have the mouse enabled
+   * (`Program.enableMouse()`).
    */
   onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void | boolean
 

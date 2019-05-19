@@ -55,7 +55,7 @@ export function expectNotToContain(renderer: ProgramDocumentRenderer | FlorDocum
   expect(asRenderer(renderer).printBuffer(true)).not.toContain(text)
 }
 
-export async function notToContain(renderer: ProgramDocumentRenderer, text: string) {
+export async function wontContain(renderer: ProgramDocumentRenderer, text: string) {
   await waitForPredicate(() => !renderer.printBuffer(true).includes(text))
   expect(renderer.printBuffer(true)).not.toContain(text)
 }

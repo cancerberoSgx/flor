@@ -1,29 +1,18 @@
 import { Component, Flor } from '../jsx'
-import { clicks, ClicksListener } from '../manager/clicks'
 import { ElementProps } from '../programDom'
+import { focusableProps } from './commonProps';
 
-interface ButtonProps extends  Partial<ElementProps> {
+interface ButtonProps extends Partial<ElementProps> {
   children?: string[]
-  onClicks?: ClicksListener
 }
 
 /**
  * Simple Button component. It supports multiple clicks like double click.
  */
 export class Button extends Component<ButtonProps, {}> {
-  protected defaultProps: ButtonProps = {
-
-  }
-
-  constructor(p: ButtonProps, s: {}) {
-    super(p, s)
-    if (this.props.onClicks) {
-      this.elementReady.then(target => clicks({ target, handler: this.props.onClicks! }))
-    }
-  }
 
   render() {
-    return <box {...this.defaultProps}{...this.props} onClick={this.props.onClick}>{this.props.children}</box>
+    return <box {...focusableProps()} {...this.props}>{this.props.children}</box>
   }
 
 }
