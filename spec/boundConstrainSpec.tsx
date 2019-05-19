@@ -42,24 +42,21 @@ interface View<Names extends string = string> {
    */
   readonly height: number
   /**
-   * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.
-
-When the width has been explicitly set using setSize, the fittingWidth will always be the same as the explicitly set width. To calculate the size based on the content, use:
-
-```
-var view = new AutoLayout.View({
-  constraints: VisualFormat.parse('|-[view1]-[view2]-'),
-  spacing: 20
-});
-view.subViews.view1.intrinsicWidth = 100;
-view.subViews.view2.intrinsicWidth = 100;
-console.log('fittingWidth: ' + view.fittingWidth); // 260
-``` 
+   * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.  
+   * When the width has been explicitly set using setSize, the fittingWidth will always be the same as the
+   * explicitly set width. To calculate the size based on the content, use:
+   *
+  ```
+   * var view = new AutoLayout.View({constraints: VisualFormat.parse('|-[view1]-[view2]-'), spacing: 20
+  });
+   * view.subViews.view1.intrinsicWidth = 100; view.subViews.view2.intrinsicWidth = 100;
+   * console.log('fittingWidth: ' + view.fittingWidth); // 260
+  ``` 
 */
   fittingWidth: number
   /**
-   * Height that is calculated from the constraints and the .intrinsicHeight of the sub-views.
-   * See .[[fittingWidth]].
+   * Height that is calculated from the constraints and the .intrinsicHeight of the sub-views. See
+   * .[[fittingWidth]].
    */
   fittingHeight: number
   /** 
@@ -72,25 +69,29 @@ console.log('fittingWidth: ' + view.fittingWidth); // 260
   setSize(width: number, height: number): View
   /**
    * Sets the spacing for the view.
-  
-  The spacing can be set for 7 different variables: top, right, bottom, left, width, height and zIndex. The left-spacing is used when a spacer is used between the parent-view and a sub-view (e.g. |-[subView]). The same is true for the right, top and bottom spacers. The width and height are used for spacers in between sub-views (e.g. [view1]-[view2]).
-  
-  Instead of using the full spacing syntax, it is also possible to use shorthand notations:
-  
-  |Syntax|Type|Description|
+   *
+   * The spacing can be set for 7 different variables: top, right, bottom, left, width, height and zIndex. The
+   * left-spacing is used when a spacer is used between the parent-view and a sub-view (e.g. |-[subView]). The
+   * same is true for the right, top and bottom spacers. The width and height are used for spacers in between
+   * sub-views (e.g. [view1]-[view2]).
+   *
+   * Instead of using the full spacing syntax, it is also possible to use shorthand notations:
+   *
+   * |Syntax|Type|Description|
   |---|---|---|
-  |[top, right, bottom, left, width, height, zIndex]|Array(7)|Full syntax including z-index (clockwise order).|
-  |[top, right, bottom, left, width, height]|Array(6)|Full horizontal & vertical spacing syntax (no z-index) (clockwise order).|
-  |[horizontal, vertical, zIndex]|Array(3)|Horizontal = left, right, width, vertical = top, bottom, height.|
-  |[horizontal, vertical]|Array(2)|Horizontal = left, right, width, vertical = top, bottom, height, z-index = 1.|
-  |spacing|number|Horizontal & vertical spacing are all the same, z-index = 1.|
-  
-  Examples:
+   * |[top, right, bottom, left, width, height, zIndex]|Array(7)|Full syntax including z-index (clockwise
+   * order).| |[top, right, bottom, left, width, height]|Array(6)|Full horizontal & vertical spacing syntax
+   * (no z-index) (clockwise order).| |[horizontal, vertical, zIndex]|Array(3)|Horizontal = left, right,
+   * width, vertical = top, bottom, height.| |[horizontal, vertical]|Array(2)|Horizontal = left, right, width,
+   * vertical = top, bottom, height, z-index = 1.| |spacing|number|Horizontal & vertical spacing are all the
+   * same, z-index = 1.|
+   *
+   * Examples:
   ```
-  view.setSpacing(10); // horizontal & vertical spacing 10
-  view.setSpacing([10, 15, 2]); // horizontal spacing 10, vertical spacing 15, z-axis spacing 2
-  view.setSpacing([10, 20, 10, 20, 5, 5]); // top, right, bottom, left, horizontal, vertical
-  view.setSpacing([10, 20, 10, 20, 5, 5, 1]); // top, right, bottom, left, horizontal, vertical, z
+   * view.setSpacing(10); // horizontal & vertical spacing 10 view.setSpacing([10, 15, 2]); // horizontal
+   * spacing 10, vertical spacing 15, z-axis spacing 2 view.setSpacing([10, 20, 10, 20, 5, 5]); // top, right,
+   * bottom, left, horizontal, vertical view.setSpacing([10, 20, 10, 20, 5, 5, 1]); // top, right, bottom,
+   * left, horizontal, vertical, z
   ```
   */
   setSpacing(spacing: number | number[]): View
@@ -100,23 +101,24 @@ console.log('fittingWidth: ' + view.fittingWidth); // 260
 }
 interface VisualFormat {
   /**
-   * Parses one or more visual format strings into an array of constraint definitions.
-   * When the visual-format could not be succesfully parsed an exception is thrown containing additional info about the parse error and column position.
+   * Parses one or more visual format strings into an array of constraint definitions. When the visual-format
+   * could not be succesfully parsed an exception is thrown containing additional info about the parse error
+   * and column position.
    */
   parse(constraints: string[], options?: ParseOptions): Constraint[]
   /**
-   * Parses a single line of vfl into an array of constraint definitions.
-   * When the visual-format could not be successfully parsed an exception is thrown containing additional info about the parse error and column position.
+   * Parses a single line of vfl into an array of constraint definitions. When the visual-format could not be
+   * successfully parsed an exception is thrown containing additional info about the parse error and column
+   * position.
    */
   parseLine(visualFormat: string, options?: ParseLineOptions): Constraint[]
 
   /**
 Parses meta information from the comments in the VFL.
 
-Additional meta information can be specified in the comments
-for previewing and rendering purposes. For instance, the view-port
-aspect-ratio, sub-view widths and colors, can be specified. The
-following example renders three colored circles in the visual-format editor:
+Additional meta information can be specified in the comments for previewing and rendering purposes. For
+instance, the view-port aspect-ratio, sub-view widths and colors, can be specified. The following example
+renders three colored circles in the visual-format editor:
 
 ```vfl
 //viewport aspect-ratio:3/1 max-height:300
@@ -204,15 +206,13 @@ interface SubView {
   height: number
   name: string
   /** 
-   * Intrinsic width of the sub-view.
-   * Use this property to explicitly set the width of the sub-view, e.g.:
-
+   * Intrinsic width of the sub-view. Use this property to explicitly set the width of the sub-view, e.g.:
+   *
 ```
-var view = new AutoLayout.View(AutoLayout.VisualFormat.parse('|[child1][child2]|'), {
-  width: 500
+   * var view = new AutoLayout.View(AutoLayout.VisualFormat.parse('|[child1][child2]|'), {width: 500
 });
-view.subViews.child1.intrinsicWidth = 100;
-console.log('child2 width: ' + view.subViews.child2.width); // 400
+   * view.subViews.child1.intrinsicWidth = 100; console.log('child2 width: ' + view.subViews.child2.width); //
+   * 400
 ```
    */
   intrinsicWidth: number
@@ -245,8 +245,7 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
       if (c.height) {
         v.intrinsicHeight = c.height
       }
-      // v.left = c.left
-      // v.top = c.top
+      // v.left = c.left v.top = c.top
     } else {
       debug('Warning, child without name will be ignored in the layout.');
     }
@@ -268,8 +267,12 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
         }
       })
     },
-    apply() {
+    apply(options: {fitContainerBounds?: boolean} = {}) {
       view.setSize(el.contentWidth, el.contentHeight);
+      if(options.fitContainerBounds){
+        el.contentWidth = Math.round(view.fittingWidth)
+        el.contentHeight = Math.round(view.fittingHeight)
+      }
       el.childNodes.filter(isElement).forEach((c, i) => {
         if (c.props.name) {
           const v = view.subViews[c.props.name]
@@ -294,8 +297,8 @@ function extractBounds(view: SubView) {
     width: view.width, height: view.height
   }
 }
-// function extractBounds(sv: SubView){
-// return   {top: sv.getValue('top'), left: sv.getValue('left'), width: sv.getValue('width'), height: sv.getValue('height')}
+// function extractBounds(sv: SubView){return   {top: sv.getValue('top'), left: sv.getValue('left'), width:
+// sv.getValue('width'), height: sv.getValue('height')}
 // }
 
 
@@ -367,7 +370,7 @@ describe('auto layout - boundConstrain', () => {
       'C:child3.height(==child2.height*1.6).width(==child1.width*2.5).bottom(<=child2.top).right(<=child1.left)',
     ], { extended: true, spacing: 1 })
 
-    autoLayout.apply()
+    autoLayout.apply({fitContainerBounds: true})
     flor.render()
     await sleep(100)
     expectToContain(flor, `
@@ -396,65 +399,56 @@ describe('auto layout - boundConstrain', () => {
   it('1', async done => {
 
 
-    //     const el = flor.create(
-    //     <box width={.9} height={.9} top={.1} left={.1}>test123
-    // {array(10).map(i=><box top={i*2} left={i*10} width={10} height={4} bg={color()}></box>)}
-    //     </box>
+    //     const el = flor.create(<box width={.9} height={.9} top={.1} left={.1}>test123
+    //     {array(10).map(i=><box top={i*2} left={i*10} width={10} height={4} bg={color()}></box>)} </box>
     //     )
 
-    // (view[.{attribute}]['*'|'/'{value}]['+'|'-'{value}])
-    // To, for instance, make the width or height proportional to another view, use:
+    // (view[.{attribute}]['*'|'/'{value}]['+'|'-'{value}]) To, for instance, make the width or height
+    // proportional to another view, use:
 
-    // |-[view1(==view2/2)]-[view2]-|  // view1 is half the width of view2
-    // |-[view1(==view2*4-100)]-[view2]-|  // view1 is four times the width minus 100 of view2
+    // |-[view1(==view2/2)]-[view2]-|  // view1 is half the width of view2 |-[view1(==view2*4-100)]-[view2]-|
+    // // view1 is four times the width minus 100 of view2
 
     // function createAutoLayout(el: ProgramElement, constraints: string[]) {
 
     // }
-    // var constraints = AutoLayout.VisualFormat.parse([
-    //   'H:|[view1(==view2/1.5)]-10-[view2(==20)]-10-[view3(==view1*2)]|',
-    //   'C:view1.top(10).height(>=10)',
-    //   // 'C:view1.top(>=12)',//(C:view1.centerX(view2.centerX))
-    //   'V:|[view1(==20)]-10-[view2(==20)]-10-[view3(==20)]|'
-    // ], { extended: true, spacing: 1 });
-    // var view = new AutoLayout.View<'view1' | 'view2' | 'view3'>({ constraints: constraints });
-    // view.setSize(100, 50);
+    // var constraints =
+    //   AutoLayout.VisualFormat.parse(['H:|[view1(==view2/1.5)]-10-[view2(==20)]-10-[view3(==view1*2)]|',
+    //   'C:view1.top(10).height(>=10)', // 'C:view1.top(>=12)',//(C:view1.centerX(view2.centerX))
+    //   'V:|[view1(==20)]-10-[view2(==20)]-10-[view3(==20)]|'], { extended: true, spacing: 1 }); var view =
+    //   new AutoLayout.View<'view1' | 'view2' | 'view3'>({ constraints: constraints }); view.setSize(100,
+    //   50);
 
     // const bounds = Object.keys(view.subViews).map(k => extractBounds((view.subViews as any)[k]))
     // console.log(bounds);
 
     //     flor.render()
 
-    // expect(YogaDocument.is(flor.document)).toBe(false)
-    // await sleep(1000)
+    // expect(YogaDocument.is(flor.document)).toBe(false) await sleep(1000)
 
 
 
-    // function extractBounds(view: SubView) {
-    //   return {
-    //     left: view.left, top: view.top,
-    //     // right: view.right, bottom: view.bottom, 
-    //     width: view.width, height: view.height
+    // function extractBounds(view: SubView) {return {left: view.left, top: view.top, // right: view.right,
+    //   bottom: view.bottom, width: view.width, height: view.height
     //   }
     // }
 
-    // const b2 = el.findDescendantContaining<ProgramElement>('view2')!;
-    // const b1 = el.findDescendantContaining<ProgramElement>('view1')!;
-    // debug(!!b1, !!b2, b1 &&   b1.parentNode!!, b2 && !!b2.parentNode!!);
-    // b2 && isElement(b2.parentNode) && b2.parentNode.props.assign(extractBounds(view.subViews.view2));
-    // b1 && isElement(b1.parentNode)&& b1.parentNode&& b1.parentNode!.props.assign(extractBounds(view.subViews.view1));
-    // await sleep(122)
+    // const b2 = el.findDescendantContaining<ProgramElement>('view2')!; const b1 =
+    // el.findDescendantContaining<ProgramElement>('view1')!; debug(!!b1, !!b2, b1 &&   b1.parentNode!!, b2 &&
+    // !!b2.parentNode!!); b2 && isElement(b2.parentNode) &&
+    // b2.parentNode.props.assign(extractBounds(view.subViews.view2)); b1 && isElement(b1.parentNode)&&
+    // b1.parentNode&& b1.parentNode!.props.assign(extractBounds(view.subViews.view1)); await sleep(122)
     // flor.render()
 
     // // extractBounds(view.subViews.view1)
 
-    // // debug(view.subViews.view1); // {left: 0, top: 0, width: 195, height: 500}
-    // // debug(view.subViews.view2); // {left: 205, top: 0, width: 195, height: 500}
+    // // debug(view.subViews.view1); // {left: 0, top: 0, width: 195, height: 500} //
+    // debug(view.subViews.view2); // {left: 205, top: 0, width: 195, height: 500}
 
     // await sleep(50000)
 
-    // // el.findDescendantContaining<ProgramElement>('view2')!.props.assign(view.subViews.view2)
-    // // flor.destroy()
+    // // el.findDescendantContaining<ProgramElement>('view2')!.props.assign(view.subViews.view2) //
+    // flor.destroy()
     done()
   })
 })

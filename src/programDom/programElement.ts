@@ -237,11 +237,19 @@ export class ProgramElement extends Element {
   get absoluteContentLeft() {
     return this.absoluteLeft + (this.border ? 1 : 0) + (this.padding ? this.padding.left : 0)
   }
+  
   get contentHeight() {
     return this.height - (this.border ? 2 : 0) - (this.padding ? (this.padding.top + this.padding.bottom) : 0)
   }
+  set contentHeight(value: number) {
+    this.height = value + (this.border ? 2 : 0) + (this.padding ? (this.padding.top + this.padding.bottom) : 0)
+  }
+
   get contentWidth() {
     return this.width - (this.border ? 2 : 0) - (this.padding ? (this.padding.left + this.padding.right) : 0)
+  }
+  set contentWidth(value: number) {
+    this.width = value + (this.border ? 2 : 0) + (this.padding ? (this.padding.left + this.padding.right) : 0)
   }
 
   get absoluteInnerTop() {
