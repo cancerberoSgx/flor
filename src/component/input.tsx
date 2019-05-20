@@ -1,7 +1,7 @@
-import { KeyEvent, KeyPredicate,   ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..'
+import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..'
+import { Component, Flor } from '../jsx'
 import { YogaElementProps } from '../yogaDom'
 import { focusableProps } from './commonProps'
-import { Component, Flor } from '../jsx'
 
 export interface InputProps extends JSX.PropsWithRef<Partial<YogaElementProps>>, ConcreteInputProps {
 

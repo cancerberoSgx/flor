@@ -62,7 +62,7 @@ Commodo labore adipisicing ut enim in voluptate.
       const ed = new TextInputCursorMulti({
         text: `
 Que los cumplas feliz,
-QUe los cumplas feliz, 
+QUe los cumplas feliz,
 Que los cumplas, que los cumplas
 Que los cumplas feliz.
       `.trim(),
@@ -92,7 +92,7 @@ Que los cumplas feliz.
       expect(ed.value).toContain(`
 Que los cumplas feliz,
 QUe los cumplas
- feliz, 
+ feliz,
 Que los cumplas, que los cumplas
 Que los cumplas feliz.`.trim())
       expect(ed.charAtPos()).toBe(' ')
@@ -107,4 +107,3 @@ Que los cumplas feliz.`.trim())
 
   })
 })
-

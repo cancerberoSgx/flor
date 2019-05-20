@@ -71,7 +71,8 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
   down: e => noModifiers(e, 'down'),
   backspace: e => noModifiers(e, 'backspace'),
   delete: e => noModifiers(e, 'delete'),
-  enter: e => e.name === 'enter' || e.name === 'return',
+  // heads up: when 'enter' key is pressed two events are emitted, 'enter' and 'return' we want to handle only one. 
+  enter: e => e.name === 'enter',//  || e.name === 'return',  
   controlLeft: e => e.name === 'left' && e.ctrl && !e.shift && !e.meta,
   controlRight: e => e.name === 'right' && e.ctrl && !e.shift && !e.meta,
   controlUp: e => e.name === 'up' && e.ctrl && !e.shift && !e.meta,
@@ -115,7 +116,7 @@ export class SingleLineTextInputCursor {
   }
 
   protected get lines() {
-    return this._lines;
+    return this._lines
   }
 
   set value(v: string) {
@@ -131,16 +132,17 @@ export class SingleLineTextInputCursor {
   public set enabled(value: boolean) {
     this._enabled = value
   }
-  
+
   get pos() {
     return { col: this.x, row: this.y }
   }
   set pos(p: Pos) {
-    this.x = p.col; 
-    this.y = p.row;
-    this.lineText = this._lines[this.y];
+    this.x = p.col
+    this.y = p.row
+    this.lineText = this._lines[this.y]
   }
 
+  protected previousEvent: KeyEvent|undefined
   /**
    * Notification of a key press event. We update out internal state [[pos]] and [[text]] user is responsible of the rest (update the UI, render(), absolute position, etc)
    */
@@ -149,7 +151,10 @@ export class SingleLineTextInputCursor {
       this.invalidAction({
         key: e.name, reason: 'TextInputCursor disabled'
       })
-    } else if (this.keys.right(e)) {
+    } else if(this.previousEvent &&['enter', 'return'].includes(this.previousEvent.name)&& ['enter', 'return'].includes( e.name)){
+      // wne 'enter' hwy is pressed two events are emitted 'enter', 'return and we want to to handle only one of them.
+    }
+      else if (this.keys.right(e)) {
       this.right()
     } else if (this.keys.controlRight(e)) {
       this.rightWord()
@@ -170,13 +175,15 @@ export class SingleLineTextInputCursor {
     } else {
       const c = this.validInputChar(e)
       if (c) {
-        this.insertString(c || 'd')
+        this.lineText = this.lineText.substring(0, this.x) + c + this.lineText.substring(this.x, this.lineText.length)
+        this.x++
       } else {
         this.invalidAction({
           key: e.name, reason: 'key not implemented'
         })
       }
     }
+    this.previousEvent = e
   }
 
   protected validInputChar(e: KeyEvent<ProgramElement>) {
@@ -186,11 +193,10 @@ export class SingleLineTextInputCursor {
     // TODO else {
   }
 
-  insertString(c: string) {
-    this.lineText = this.lineText.substring(0, this.x) + c + this.lineText.substring(this.x, this.lineText.length)
-    this.x++
-  }
-
+  // protected insertString(c: string) {
+  //   this.lineText = this.lineText.substring(0, this.x) + c + this.lineText.substring(this.x, this.lineText.length)
+  //   this.x++
+  // }
   right() {
     if (!this.enabled) {
       return this.invalidAction({
@@ -332,5 +338,3 @@ export class SingleLineTextInputCursor {
     this.options.onInvalidAction && this.options.onInvalidAction(a)
   }
 }
-
-

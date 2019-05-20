@@ -1,6 +1,5 @@
-import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement } from '../src'
-import { SingleLineTextInputCursor } from '../src'
-import { defaultTestSetup } from './testUtil'
+import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement, SingleLineTextInputCursor, TextInputCursorMulti } from '../src';
+import { defaultTestSetup, willContain, expectToContain, expectNotToContain } from './testUtil';
 
 describe('cursorTextEditor', () => {
 
@@ -133,5 +132,66 @@ describe('cursorTextEditor', () => {
       return { el, editor }
     }
 
+  })
+
+
+  describe('multi line', () => {
+
+    let flor: FlorDocument
+    defaultTestSetup(f =>
+      flor = f || flor
+    )
+
+    it('should render value and cursor pos initially', async done => {
+      const text = `
+Que los cumplas feliz,
+QUe los cumplas feliz,
+Que los cumplas, que los cumplas
+Que los cumplas feliz.
+      `.trim()
+      const ed = new TextInputCursorMulti({
+        text,
+        pos: { col: 0, row: 0 },
+        enabled: true
+      })
+      const el = flor.create(<el focusable={true} focused={true} top={10} left={18} width={33} height={23} border={{ type: BorderStyle.heavy }} bg="blue" onKeyPressed={e => {
+        ed.onKey(e)
+        el.empty()
+        ed.value.split('\n').forEach((line, i) => {
+          el.create({ children: [line], top: i, left: 0, width: .99, height: 1 })
+        })
+        el.childNodes[0].textContent = ed.value
+        el.render()
+        flor.cursor.show({
+          name: 'cursorTextEditorTest1', top: el.absoluteContentTop + ed.pos.row, left: el.absoluteContentLeft + ed.pos.col
+        })
+      }}
+      >{text.split('\n').map((line, i) => <el {...{ top: i, left: 0, width: .99, height: 1 }}>{line}</el>)}</el>)
+      flor.render()
+      flor.cursor.show({
+        name: 'cursorTextEditorTest1', top: el.absoluteContentTop, left: el.absoluteContentLeft
+      })
+      await willContain(flor, 'Que los cumplas,')
+      expectNotToContain(flor, '*um*')
+      expectNotToContain(flor, '*plas*')
+      el.key({name: 'right', ctrl: true})
+      el.key({name: 'right', ctrl: true})
+      el.key('right', 2)
+      el.key('down')
+      el.key('*')
+      el.key('enter')
+      el.key('*')
+        el.key('right', 2)
+      el.key('*')
+      el.key('enter')
+      el.key('*')
+      el.key({name: 'right', ctrl: true})
+      el.key('*')
+      el.key('enter')
+      expectToContain(flor, '*um*')
+      expectToContain(flor, '*plas*')
+
+      done()
+    })
   })
 })

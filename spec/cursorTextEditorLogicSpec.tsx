@@ -1,4 +1,4 @@
-import { SingleLineTextInputCursor, TextInputCursorMulti } from '../src'
+import { SingleLineTextInputCursor } from '../src'
 
 describe('should move right, left, rightWord, leftWord', () => {
   it('shoul1', async done => {
@@ -49,6 +49,5 @@ Hello world
 
     done()
   })
-
 
 })

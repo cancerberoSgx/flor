@@ -1,5 +1,5 @@
-import { KeyEvent } from '../..';
-import { SingleLineTextInputCursor, Options } from './singleLine';
+import { KeyEvent } from '../..'
+import { Options, SingleLineTextInputCursor } from './singleLine'
 
 /**
  * Synchronizes text being edited with cursor movement. Based on [[SingleLineTextInputCursor]]
@@ -17,44 +17,41 @@ import { SingleLineTextInputCursor, Options } from './singleLine';
  */
 export class TextInputCursorMulti extends SingleLineTextInputCursor {
   constructor(options: Options) {
-    super(options);
-    this.y = options.pos && options.pos.row || 0;
-  }
- 
-  onKey(e: KeyEvent) {
-    if (!this.enabled) {
-      this.invalidAction({
-        key: e.name, reason: 'TextInputCursor disabled'
-      });
-    }
-    else if (this.keys.up(e)) {
-      this.up();
-    }
-    else if (this.keys.down(e)) {
-      this.down();
-    }
-    else {
-      super.onKey(e);
-    }
+    super(options)
+    this.y = options.pos && options.pos.row || 0
   }
 
+  // onKey(e: KeyEvent) {
+  //   if (!this.enabled) {
+  //     this.invalidAction({
+  //       key: e.name, reason: 'TextInputCursor disabled'
+  //     })
+  //   } else if (this.keys.up(e)) {
+  //     this.up()
+  //   } else if (this.keys.down(e)) {
+  //     this.down()
+  //   } else if (this.keys.enter(e)) {
+  //     this.enter(e)
+  //   } else {
+  //     super.onKey(e)
+  //   }
+  // }
+
   down() {
-    if (this.pos.row === this.lines.length) {
-      super.down();
-    }
-    else {
+    if (this.pos.row === this.lines.length-1) {
+      super.down()
+    } else {
       debugger
-      this.pos = { 
-        row: this.pos.row + 1, col: Math.min(this.x, this.lines[this.pos.row ].length) };
+      this.pos = {
+        row: this.pos.row + 1, col: Math.min(this.x, this.lines[this.pos.row ].length) }
     }
   }
 
   up() {
     if (this.pos.row === 0) {
-      super.up();
-    }
-    else {
-      this.pos = { row: this.pos.row - 1, col: Math.min(this.x, this.lines[this.pos.row-1].length) };
+      super.up()
+    } else {
+      this.pos = { row: this.pos.row - 1, col: Math.min(this.x, this.lines[this.pos.row - 1].length) }
     }
   }
 
@@ -62,7 +59,7 @@ export class TextInputCursorMulti extends SingleLineTextInputCursor {
     const line1 = this.lineText.substring(0, this.x)
     const line2 = this.lineText.substring(this.x, this.lineText.length)
     this._lines .splice(this.y, 1, line1, line2)
-    this.pos = {       row: this.y+1 , col: 0}
+    this.pos = {       row: this.y + 1 , col: 0 }
   }
 
 }
