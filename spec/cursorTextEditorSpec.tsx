@@ -1,5 +1,5 @@
 import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement } from '../src'
-import { SingleLineTextInputCursor } from '../src/manager/textInputCursor'
+import { SingleLineTextInputCursor } from '../src'
 import { defaultTestSetup } from './testUtil'
 
 describe('cursorTextEditor', () => {

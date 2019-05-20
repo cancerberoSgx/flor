@@ -1,4 +1,4 @@
-import { SingleLineTextInputCursor, TextInputCursorMulti } from '../src/manager/textInputCursor'
+import { SingleLineTextInputCursor, TextInputCursorMulti } from '../src'
 
 describe('should move right, left, rightWord, leftWord', () => {
   it('shoul1', async done => {
@@ -50,27 +50,5 @@ Hello world
     done()
   })
 
-  describe('multi up and down', () => {
-    xit('shoul1', async done => {
-      const ed = new TextInputCursorMulti({
-        text: `
-Nulla ullamco esse in commodo commodo veniam.
-Eiusmod voluptate cillum pariatur aliquip.
-Laborum voluptate proident id proident ex non.
-Non deserunt Lorem mollit qui sunt sint magna.
-Commodo labore adipisicing ut enim in voluptate.
-      `.trim(),
-        pos: { col: 0, row: 0 },
-        enabled: true
-      })
-      expect(ed.charAtPos()).toBe('N')
-
-      ed.down()
-      expect(ed.charAtPos()).toBe('E')
-      expect(ed.pos).toEqual({ row: 1, col: 0 })
-
-      done()
-    })
-  })
 
 })
