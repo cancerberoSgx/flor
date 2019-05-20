@@ -1,7 +1,6 @@
 import { KeyEvent } from '../..';
-import { Pos } from '../../manager/cursorManager';
 import { SingleLineTextInputCursor, Options } from './singleLine';
-let multiLine;
+
 /**
  * Synchronizes text being edited with cursor movement. Based on [[SingleLineTextInputCursor]]
  *
@@ -15,23 +14,13 @@ let multiLine;
  *    line
  *  * input backspace: 1) if cursor is not at col===0 willi remove previous char 2) else will move current
  *    line up and append it to the previous one. The cursor will be in the middle of two.
- *
  */
 export class TextInputCursorMulti extends SingleLineTextInputCursor {
   constructor(options: Options) {
     super(options);
     this.y = options.pos && options.pos.row || 0;
   }
-
-  // set value(v: string) {
-  //   this._lines = v.split('\n');
-  //   const row = Math.max(this._lines.length - 1);
-  //   const col = Math.max(this.x);
-  // }
-
-  // get value() {
-  //   return this.lines.join('\n');
-  // }
+ 
   onKey(e: KeyEvent) {
     if (!this.enabled) {
       this.invalidAction({
@@ -48,23 +37,32 @@ export class TextInputCursorMulti extends SingleLineTextInputCursor {
       super.onKey(e);
     }
   }
+
   down() {
     if (this.pos.row === this.lines.length) {
       super.down();
     }
     else {
       debugger
-      this.pos = { row: this.pos.row + 1, col: Math.min(this.x, this.lines[this.pos.row ].length) };
-      // this.x = this.pos.col;
-      this.lineText = this.lines[this.y];
+      this.pos = { 
+        row: this.pos.row + 1, col: Math.min(this.x, this.lines[this.pos.row ].length) };
     }
   }
+
   up() {
     if (this.pos.row === 0) {
       super.up();
     }
     else {
-      this.pos = { row: this.pos.row - 1, col: Math.min(this.x, this.lines[this.pos.row ].length) };
+      this.pos = { row: this.pos.row - 1, col: Math.min(this.x, this.lines[this.pos.row-1].length) };
     }
   }
+
+  enter() {
+    const line1 = this.lineText.substring(0, this.x)
+    const line2 = this.lineText.substring(this.x, this.lineText.length)
+    this._lines .splice(this.y, 1, line1, line2)
+    this.pos = {       row: this.y+1 , col: 0}
+  }
+
 }

@@ -1,11 +1,12 @@
 
 import { appendFileSync } from 'fs'
 import { format } from 'util'
+import { rm } from 'shelljs';
 
 const argv = process.argv.slice(2)
 const configFile = argv.shift()
 
-// rm('-rf', 'test_output.txt')
+rm('-rf', 'test_output.txt')
 
 let Jasmine = require('jasmine')
 

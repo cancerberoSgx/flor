@@ -114,7 +114,7 @@ export class SingleLineTextInputCursor {
     this._lines[this.y] = value
   }
 
-  get lines() {
+  protected get lines() {
     return this._lines;
   }
 
@@ -122,7 +122,7 @@ export class SingleLineTextInputCursor {
     this._lines = v.split('\n')
   }
   get value() {
-    return this.lineText + ''
+    return this._lines.join('\n')
   }
 
   public get enabled(): boolean {
