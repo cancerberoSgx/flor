@@ -65,7 +65,7 @@ function yogaFlorText() {
   array(root.getChildCount()).forEach(i => {
     const c = root.getChild(i)
     debug(c.getComputedLayout())
-    const el = flor.create({ ...c.getComputedLayout(), fg: color(),   children: [text[i]] })
+    const el = flor.create({ ...c.getComputedLayout(), fg: color(), children: [text[i]] })
   })
   flor.render()
 }

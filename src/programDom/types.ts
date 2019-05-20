@@ -31,13 +31,13 @@ export interface Attrs {
 }
 
 export interface StyleProps extends Attrs {
-    /**
-   * Width of the element (number of columns or fraction).
-   *
-   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentHeight]]
-   * multiplied for that number. For example, width==0.5 will be half the parent's [[contentHeight]].
-   * Otherwise is columns.
-   */
+  /**
+ * Width of the element (number of columns or fraction).
+ *
+ * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentHeight]]
+ * multiplied for that number. For example, width==0.5 will be half the parent's [[contentHeight]].
+ * Otherwise is columns.
+ */
   width: number
   /**
    * Height of the element (number of rows or fraction).
@@ -153,11 +153,11 @@ export interface MouseEvent<T extends ProgramElement = ProgramElement> extends A
   bug: Buffer
 }
 
-export interface FocusEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
+export interface FocusEvent<T extends ProgramElement = ProgramElement> extends Event<T> {
   previous?: T
 }
 
-export interface BlurEvent<T extends ProgramElement = ProgramElement>  extends Event<T> {
+export interface BlurEvent<T extends ProgramElement = ProgramElement> extends Event<T> {
   focused?: T
 }
 
@@ -235,27 +235,27 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * Listener for when the element is clicked. The element must have the mouse enabled
    * (`Program.enableMouse()`).
    */
-  onClick?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onClick?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
    * Listener for when the element is clicked several times in a short amount of time, like double click. The
    * element must have the mouse enabled (`Program.enableMouse()`).
    */
-  onClicks?<T extends ProgramElement= ProgramElement>(r: ClicksEvent<T>): void | boolean
+  onClicks?<T extends ProgramElement = ProgramElement>(r: ClicksEvent<T>): void | boolean
 
   /**
    * Listener for when the element is clicked. The element must have the mouse enabled
    * (`Program.enableMouse()`).
    */
-  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void | boolean
+  onKeyPressed?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
 
-  onMouse?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseOut?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseOver?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
-  onWheelDown?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
-  onWheelUp?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseMove?<T extends ProgramElement= ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouse?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseOut?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseOver?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseDown?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onWheelDown?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onWheelUp?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseMove?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
    * Current input for input elements like input, textarea, etc.

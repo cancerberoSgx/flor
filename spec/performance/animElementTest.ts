@@ -10,30 +10,30 @@ async function main() {
   let result: any
 
   // renderer =;
-  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true }), noBuffer: true }),'buffer_true-debug_false')
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true }), noBuffer: true }), 'buffer_true-debug_false')
   data.push({ label: 'buffer_true-debug_false', result })
 
   // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: false }), debug: false });
-  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: false }), noBuffer: true }),'buffer_false-debug_false')
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: false }), noBuffer: true }), 'buffer_false-debug_false')
   data.push({ label: 'buffer_false-debug_false', result })
 
   let differ = require('ansi-diff-stream')
   let diff = differ()
   diff.pipe(process.stdout)
-// diff.on('data', c=>process.stdout.write(c))
+  // diff.on('data', c=>process.stdout.write(c))
   // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: false }), debug: false });
-  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true, input: diff }),noBuffer: true }),'buffer_true-debug_false-diff_true')
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true, input: diff }), noBuffer: true }), 'buffer_true-debug_false-diff_true')
   data.push({ label: 'buffer_true-debug_false-diff_true', result })
 
   // await test(renderer, 'buffer_false-debug_false');
   // renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: true }), debug: true });
   // await test(renderer, 'buffer_true-debug_true');
-  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true }) }),'buffer_true-debug_true')
+  result = await test(new ProgramDocumentRenderer({ program: new Program({ buffer: true }) }), 'buffer_true-debug_true')
   data.push({ label: 'buffer_true-debug_true', result })
 
   renderer = new ProgramDocumentRenderer({ program: new Program({ buffer: false }) })
   // await test(renderer, 'buffer_false-debug_true');
-  result = await test(renderer,'buffer_false-debug_true')
+  result = await test(renderer, 'buffer_false-debug_true')
   data.push({ label: 'buffer_false-debug_true', result })
 
   // const result = {label: testLabel, fps}

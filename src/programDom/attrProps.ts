@@ -4,7 +4,7 @@ import { ColorString, PAttrs } from './styleProps'
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs | undefined, owner: Partial<CommonElementImpl>) {
     this._data = p as any || {}
-    this.owner = owner as  CommonElementImpl
+    this.owner = owner as CommonElementImpl
   }
   assign(o: Partial<CommonElementProps>) {
     Object.assign(this._data, o || {})

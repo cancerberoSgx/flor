@@ -53,7 +53,7 @@ describe('yogaElement', () => {
   │                                                │
   ╰────────────────────────────────────────────────╯
 `)
-// debug('expect: /n' +renderer.printBuffer(true) + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
+    // debug('expect: /n' +renderer.printBuffer(true) + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     renderer.destroy()
     done()
   })
@@ -65,15 +65,15 @@ describe('yogaElement', () => {
         display={yoga.DISPLAY_FLEX}
       >
         <box
-        heightAuto
-        widthAuto
-        border={{ type: BorderStyle.heavyDoubleDash }}
-        flexGrow={1}
+          heightAuto
+          widthAuto
+          border={{ type: BorderStyle.heavyDoubleDash }}
+          flexGrow={1}
         >1</box>
         <box
-        widthAuto
-        border={{ type: BorderStyle.heavyDoubleDash }}
-        heightAuto
+          widthAuto
+          border={{ type: BorderStyle.heavyDoubleDash }}
+          heightAuto
         ><box height={4} width={4}>4x4</box></box>
       </box>)
     flor.render()

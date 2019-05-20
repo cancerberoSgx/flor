@@ -29,7 +29,7 @@ class Api {
 }
 ```
  */
-export class Deferred<R, J= any> {
+export class Deferred<R, J = any> {
   resolve: (r: R) => void
   reject: (r: J) => void
   private promise: Promise<R>

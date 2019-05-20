@@ -51,7 +51,7 @@ type BoxStyles = { [s in BorderStyle]: { [side in BorderSide]: string } }
 let boxStyles: BoxStyles | undefined
 
 interface RenderBorderBoxOptions {
-  coords: {xi: number, yi: number, xl: number ,yl: number},
+  coords: { xi: number, yi: number, xl: number, yl: number },
   write: (y: number, x: number, s: string) => void
   borderStyle: BorderStyle
 }

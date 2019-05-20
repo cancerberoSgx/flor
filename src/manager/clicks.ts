@@ -4,7 +4,7 @@ export interface ClicksEvent<T extends ProgramElement = ProgramElement> extends 
   count: number
 }
 
-export type ClicksListener <T extends ProgramElement = ProgramElement>= (e: ClicksEvent<T>) => void
+export type ClicksListener<T extends ProgramElement = ProgramElement> = (e: ClicksEvent<T>) => void
 
 interface Options<T extends ProgramElement = ProgramElement> {
   /**

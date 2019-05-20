@@ -45,7 +45,7 @@ interface TputFeatures {
   acscr: { [c: string]: string }
 }
 
-interface TputsOptions  {
+interface TputsOptions {
   terminal?: string
   extended?: boolean
   debug?: boolean
@@ -58,7 +58,7 @@ interface TputsOptions  {
 /**
  * Low level implementation of tput protocol to dialogue with terminal implementations.
  */
-export declare class TPut implements   TputFeatures {
+export declare class TPut implements TputFeatures {
 
   constructor(opts: TputsOptions)
 
@@ -1127,8 +1127,8 @@ Width trick:    10
 A string
 ```
 ` */
-export function sprintf(format:string, ...args: any[]){return ''}
+export function sprintf(format: string, ...args: any[]) { return '' }
 
-module.exports.TPut =  require('../blessed/tput')
-module.exports. sprintf = require('../blessed/tput').sprintf
+module.exports.TPut = require('../blessed/tput')
+module.exports.sprintf = require('../blessed/tput').sprintf
 // exports.tryRead = tryRead;

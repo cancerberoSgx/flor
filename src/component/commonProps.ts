@@ -17,7 +17,7 @@ export const containerProps: () => Partial<YogaElementProps> = () => ({
 
 export const focusableProps: () => Partial<YogaElementProps> = () => ({
   ...baseProps(),
-  border: { ...baseProps(), type: BorderStyle.round , fg: 'blue' },
+  border: { ...baseProps(), type: BorderStyle.round, fg: 'blue' },
   focusable: true,
   focus: {
     border: { fg: 'red' },

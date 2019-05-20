@@ -7,7 +7,7 @@ import { ComponentProps } from './types'
  *
  * Has a dummy state property that subclasses could implement some behavior for, right now it does nothing.
  */
-export abstract class Component<P extends ComponentProps = ComponentProps , S= {}> {
+export abstract class Component<P extends ComponentProps = ComponentProps, S = {}> {
 
   constructor(protected props: P, protected state: S) {
     this.elementReady = new Deferred<ProgramElement>()

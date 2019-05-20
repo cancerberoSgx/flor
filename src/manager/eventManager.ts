@@ -3,7 +3,7 @@ import { Event, KeyListener, MouseEvent, MouseListener, ProgramElement, Register
 import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
 import { Node } from '../dom'
 
-type E<T= ProgramElement> = T extends ProgramElement ? T : never
+type E<T = ProgramElement> = T extends ProgramElement ? T : never
 
 /**
  * Manager class responsible of registering and dispatching keyboard and mouse events.
@@ -37,10 +37,10 @@ export class EventManager {
     }
     // debug(ch, e)
     this.keyListeners
-    .filter(l => !l.el || l.el.props.focused)
-    .some(l => {
-      return  notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el  }as any)
-    })
+      .filter(l => !l.el || l.el.props.focused)
+      .some(l => {
+        return notifyListener(l.listener, { type: l.name, ch, ...e, currentTarget: l.el } as any)
+      })
   }
 
   private keyListeners: (PropertyOptional<RegisteredEventListener, 'el'>)[] = []
@@ -49,14 +49,14 @@ export class EventManager {
    * Adds a key event listener [[l]]. if [[el]] is passed it will be notified only when given element emits
    * key events, otherwise on any key event.
    */
-  addKeyListener(l: KeyListener, el?: ProgramElement, name= 'keypress') {
+  addKeyListener(l: KeyListener, el?: ProgramElement, name = 'keypress') {
     if (!this.keyListeners.find(k => k.listener === l && k.el === el && k.name === name)) {
-      this.keyListeners.push({ name, listener: l , el })
+      this.keyListeners.push({ name, listener: l, el })
     }
   }
-  preppedKeyListener(l: KeyListener, el?: ProgramElement, name= 'keypress') {
+  preppedKeyListener(l: KeyListener, el?: ProgramElement, name = 'keypress') {
     if (!this.keyListeners.find(k => k.listener === l && k.el === el && k.name === name)) {
-      this.keyListeners.splice(0, 0, ({ name, listener: l , el }))
+      this.keyListeners.splice(0, 0, ({ name, listener: l, el }))
     }
   }
   /**
@@ -76,7 +76,7 @@ export class EventManager {
    */
   addBeforeAllMouseListener<T extends ProgramElement = ProgramElement>(name: string, listener: (e: MouseEvent & StopPropagation) => boolean | void) {
     // if (!this.beforeAllMouseListeners.find(ll => l !== ll)) {
-    this.beforeAllMouseListeners.push({ name: this.toProgramEventName(name).name, listener  })// .name === 'click' ? { ...l, name: 'mouseout' } : l)
+    this.beforeAllMouseListeners.push({ name: this.toProgramEventName(name).name, listener })// .name === 'click' ? { ...l, name: 'mouseout' } : l)
     // }
   }
 
@@ -111,7 +111,7 @@ export class EventManager {
       return
     }
     const r = this.beforeAllMouseListeners.filter(l => l.name === e.action).some(l => {
-      const ev = {  ...e }
+      const ev = { ...e }
       return notifyListener(l.listener as any, ev as any)
     })
     if (r) {
@@ -120,7 +120,7 @@ export class EventManager {
     this.mouseListeners.filter(l => l.name === e.action).forEach(({ el, name, listener }) => {
       // TODO: ignore detached, invisible and focused
       if (this._isMouseEventTarget(e, el)) {
-        const ev = {  ...e, currentTarget: el, type: name }
+        const ev = { ...e, currentTarget: el, type: name }
         return notifyListener(listener, ev)
       } else {
         return false
@@ -134,11 +134,11 @@ export class EventManager {
   }
 
   _registerEventListener<T extends ProgramElement = ProgramElement>(o: RegisteredEventListener<T>): any {
-    const { name,type } = this.toProgramEventName(o.name)
+    const { name, type } = this.toProgramEventName(o.name)
     if (type === 'key') {
       // TODO: support on('key a')
       this.keyListeners.push({ ...o, name })
-    } else        {
+    } else {
       this.mouseListeners.push({ ...o, name })
     }
   }
@@ -149,7 +149,7 @@ export class EventManager {
   protected toProgramEventName(n: string) {
     n = n.toLowerCase()
     let name = n.startsWith('on') ? n.substr(2) : n
-    name = name === 'click' ? 'mouseup' : (name === 'keypress' || name === 'onkeypress' || name === 'onkeypressed') ? 'keypress'  : name
+    name = name === 'click' ? 'mouseup' : (name === 'keypress' || name === 'onkeypress' || name === 'onkeypressed') ? 'keypress' : name
     const keyPressed = name === 'keypress' || name === 'onkeypress' || name === 'onkeypressed'
     const type = (keyPressed || name.startsWith('key')) ? 'key' : 'mouse'
     return { name, type }
@@ -158,14 +158,14 @@ export class EventManager {
   /**
    * Triggers a mouse element of given type and on given coordinates.
    */
-  triggerMouseEvent(e: Partial<ProgramMouseEvent> & {action: MouseAction, x: number, y: number}) {
+  triggerMouseEvent(e: Partial<ProgramMouseEvent> & { action: MouseAction, x: number, y: number }) {
     this.onMouse({ ...e as ProgramMouseEvent, button: e.button || 'left', action: e.action === 'click' ? MouseAction.mouseup : e.action })
   }
 
   /**
    * Triggers a key event with given properties.
    */
-  triggerKeyEvent(ch: string | undefined, e: Partial<ProgramKeyEvent>= {}) {
+  triggerKeyEvent(ch: string | undefined, e: Partial<ProgramKeyEvent> = {}) {
     this.onKeyPress(ch, { ...e as ProgramKeyEvent })
   }
 
@@ -186,8 +186,8 @@ export class EventManager {
  * calls given event listener with given event object, supporting stopPropagation() event method. Returns true if handler calls event.stopPropagation() orhterwise false.
  * @internal
  */
-export function notifyListener<T extends Node= Node, E extends Event<T> = Event<T>>(l: KeyListener | MouseListener, ev: RemoveProperties<E, 'stopPropagation'>) {
+export function notifyListener<T extends Node = Node, E extends Event<T> = Event<T>>(l: KeyListener | MouseListener, ev: RemoveProperties<E, 'stopPropagation'>) {
   let stop = false;
-  (l as any)({ ...ev, stopPropagation() {stop = true} } as any)
+  (l as any)({ ...ev, stopPropagation() { stop = true } } as any)
   return stop
 }

@@ -1,8 +1,6 @@
 
 import { appendFileSync } from 'fs'
-import { SpecReporter } from 'jasmine-spec-reporter'
-import { format, inspect, isString } from 'util'
-import { CustomProcessor } from './errorDiffProcessor'
+import { format } from 'util'
 
 const argv = process.argv.slice(2)
 const configFile = argv.shift()
@@ -29,7 +27,7 @@ j.configureDefaultReporter({
           // }
           // else if (isString(a)){
           //   return a
-          // } 
+          // }
           // else {
           //   return inspect(a)
           // }

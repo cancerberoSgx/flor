@@ -97,7 +97,7 @@ export class CursorManager {
   /**
    * API for component implementations to hide the cursor, restoring it to its previews state before [[show]] was called.
    */
-  hide(options: {name: string}) {
+  hide(options: { name: string }) {
     this.program.hideCursor()
     this.program.restoreCursor(options.name)
   }
@@ -105,7 +105,7 @@ export class CursorManager {
   /**
    * API for component implementations to show the cursor on given coordinates, saving its current state under given name.
    */
-  show(options: {name: string, top: number, left: number}) {
+  show(options: { name: string, top: number, left: number }) {
     this.program.saveCursor(options.name)
     this.setPosition({ row: options.top, col: options.left })
   }

@@ -2,7 +2,7 @@ import { Button, Component, ConcreteInputProps, createElement, debug, defaultInp
 import { baseProps } from '../../src/component/commonProps'
 import { Flor } from '../../src/jsx/createElement'
 
-interface TextAreaProps extends Partial< ConcreteTextAreaProps>, Partial<YogaElementProps> {
+interface TextAreaProps extends Partial<ConcreteTextAreaProps>, Partial<YogaElementProps> {
 }
 interface ConcreteTextAreaProps extends ConcreteInputProps {
   currentLine?: number
@@ -61,7 +61,7 @@ class TextArea extends Component<TextAreaProps> {
     }
     if (this.p.changeKeys(e)) {
       // debug('changeKeys', this.p.changeKeys.toString(), {...e, currentTarget: undefined})
-      this.element.props.value =  this.element.props.input
+      this.element.props.value = this.element.props.input
       this.props.onChange && this.props.onChange({ ...e, currentTarget: this.element, value: this.element.props.value! })
       // e.stopPropagation()
       // return
@@ -133,7 +133,7 @@ class TextArea extends Component<TextAreaProps> {
       // debug(this.element.ownerDocument.outerHTML)
       // debug(this.element.ownerDocument.outerHTML)
       this.currentLine = this.currentLine + 1
-      this.cursor!.show({ name: 'textarea2',top: el2.absoluteContentTop + editor2.pos.row, left: el2.absoluteContentLeft + editor2.pos.col })
+      this.cursor!.show({ name: 'textarea2', top: el2.absoluteContentTop + editor2.pos.row, left: el2.absoluteContentLeft + editor2.pos.col })
       preventEditorHandle = true
 
     } else if (e.name === 'delete') {
@@ -150,17 +150,17 @@ class TextArea extends Component<TextAreaProps> {
     const el = this.getCurrentLineElement()
     el.childNodes[0].textContent = ed.value
     this.lines[this.currentLine] = ed.value
-    this.element.props.input =  this.lines.join('\n')
+    this.element.props.input = this.lines.join('\n')
     this.props.onInput && this.props.onInput({ ...e, currentTarget: this.element, input: this.element.props.input })
     this.renderElement()
-    this.cursor!.show({ name: 'textarea2',top: el.absoluteContentTop + ed.pos.row, left: el.absoluteContentLeft + ed.pos.col })
+    this.cursor!.show({ name: 'textarea2', top: el.absoluteContentTop + ed.pos.row, left: el.absoluteContentLeft + ed.pos.col })
   }
 
   protected getCurrentLineElement(): ProgramElement {
-    const el =  this.element!.childNodes.filter(isElement)[this.currentLine]
+    const el = this.element!.childNodes.filter(isElement)[this.currentLine]
     if (!el) {
-     throw new Error('cannot find element for current line ' + this.currentLine)
-   }
+      throw new Error('cannot find element for current line ' + this.currentLine)
+    }
     return el
   }
 
@@ -181,16 +181,16 @@ class TextArea extends Component<TextAreaProps> {
   }
 
   render() {
-    return <box focusable={true}  onKeyPressed={this.onKey}
+    return <box focusable={true} onKeyPressed={this.onKey}
       {...this.props}
       layout={{ layout: Layout['topDown'] }}
-      // onFocus={this.program!.new}
+    // onFocus={this.program!.new}
     >
       {this.lines.map(l =>
-      <el width={.999} height={1} value={l} focusable={false}
-       border={undefined} fg="white" bg="black" focus={undefined}>{l}
-     </el>
-    )}
+        <el width={.999} height={1} value={l} focusable={false}
+          border={undefined} fg="white" bg="black" focus={undefined}>{l}
+        </el>
+      )}
     </box>
   }
 }
@@ -208,15 +208,15 @@ async function test() {
       // documentImplementation: () => new YogaDocument()
     })
 
-  // flor.program.alternateBuffer();
-  // flor.program.put.keypad_xmit();
-  // // flor.program.csr(0, flor.height - 1);
-  // flor.program.hideCursor();
-  // flor.program.cup(0, 0);
-  // // We need flor for tmux now:
-  // if (flor.program.tput.strings.ena_acs) {
-  //   flor.program._write(flor.program.tput.enacs());
-  // }
+    // flor.program.alternateBuffer();
+    // flor.program.put.keypad_xmit();
+    // // flor.program.csr(0, flor.height - 1);
+    // flor.program.hideCursor();
+    // flor.program.cup(0, 0);
+    // // We need flor for tmux now:
+    // if (flor.program.tput.strings.ena_acs) {
+    //   flor.program._write(flor.program.tput.enacs());
+    // }
 
     // flor.program.alternate()
     // if ((flor.program.input as any).setRawMode && !(flor.program.input as any).isRaw) {
@@ -233,12 +233,12 @@ nostrud aliquip. In veniam quis esse eiusmod. Laborum proident
 exercitation excepteur culpa consequat laboris mollit et
 irure labore eiusmod reprehenderit non.
   `
-// const value = `
-// Dolor velit
-// eiusmod in in amet
-// et sit ex non ipsum enim.
-// `.trim()
-    const app = <el  width={.9} height={.9} left={0} top={0}
+    // const value = `
+    // Dolor velit
+    // eiusmod in in amet
+    // et sit ex non ipsum enim.
+    // `.trim()
+    const app = <el width={.9} height={.9} left={0} top={0}
       bg="white" fg="green"
     >
       hello!

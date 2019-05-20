@@ -17,8 +17,8 @@ program.key(['q', 'escape', 'C-c'], function() {
 // tslint:disable-next-line: no-floating-promises
 (async() => {
 
-  for (let i = 0; i < program.cols; i++) {
-    for (let j = 0; j < program.rows; j++) {
+  for (let i = 0;i < program.cols;i++) {
+    for (let j = 0;j < program.rows;j++) {
       program._write(program.setab(int(0, 7)) + 'X' + program.sgr0())
     }
   }

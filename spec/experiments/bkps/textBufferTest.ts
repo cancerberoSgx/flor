@@ -1,7 +1,6 @@
 // import * as TextBuffer from 'text-buffer'
 // import { equal, ok } from 'assert';
 
-
 // const buffer = new TextBuffer({text: "abcdefghijklmnopqrstuvwxyz"})
 // const markerCreations : TextBuffer.Marker[]= []
 //  buffer.onDidCreateMarker (marker=> markerCreations.push(marker))
@@ -13,11 +12,11 @@
 
 //     buffer.setTextInRange([[0,0], [0,2]],'')
 //     console.log(marker.getRange());
-    
+
 //     // ok(marker.getRange().isEqual([[0, 3], [0, 6]]))
 
 //     console.log(buffer.getText());
-    
+
 //     // marker.
 
 //     // expect(marker.getHeadPosition()).toEqual [0, 6]

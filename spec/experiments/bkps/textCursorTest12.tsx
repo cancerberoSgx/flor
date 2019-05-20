@@ -1,47 +1,42 @@
-import { trimRightLines, RemoveProperties, array } from 'misc-utils-of-mine-generic'
-import { Flor, FlorDocument, Component, KeyEvent } from '../../../src'
-import { Text, text, TextProps } from '../../../src/component/text'
-import { BorderStyle } from '../../../src/util/border'
-import { defaultTestSetup } from '../../testUtil'
-import { ok } from 'assert';
+import { ok } from 'assert'
+import { array, trimRightLines } from 'misc-utils-of-mine-generic'
 import * as yoga from 'yoga-layout'
-import { posix } from 'path';
+import { Flor, FlorDocument, KeyEvent } from '../../../src'
+import { Text, TextProps } from '../../../src/component/text'
+import { BorderStyle } from '../../../src/util/border'
 
-interface Pos  {x:number, y: number}
+interface Pos { x: number, y: number }
 interface TextCursorProps extends TextProps {
-  pos?:Pos
+  pos?: Pos
 }
-class TextCursor extends Text<TextCursorProps>{
-  originalAfterRender: (() => void) | undefined;
-  pos: { x: number; y: number; };
-  originalBeforeRender: (() => boolean) | undefined;
-  nodeAtPos: number | undefined;
-  originalOnKeyPressed: undefined|((e: KeyEvent)=>boolean | void)
-  
-  onKey(k: KeyEvent){
-    if (!this.yNode||!this.cursor) {
+class TextCursor extends Text<TextCursorProps> {
+  originalAfterRender: (() => void) | undefined
+  pos: { x: number; y: number; }
+  originalBeforeRender: (() => boolean) | undefined
+  nodeAtPos: number | undefined
+  originalOnKeyPressed: undefined | ((e: KeyEvent) => boolean | void)
+
+  onKey(k: KeyEvent) {
+    if (!this.yNode || !this.cursor) {
       return
     }
-    if(!this.nodeAtPos){
-      this.nodeAtPos = findNodeAtPos(this.yNode, this.pos);
+    if (!this.nodeAtPos) {
+      this.nodeAtPos = findNodeAtPos(this.yNode, this.pos)
     }
-    if(!this.nodeAtPos){
-      throw new Error('Cannot find yoga node at pos '+this.pos.x+', '+this.pos.y)
+    if (!this.nodeAtPos) {
+      throw new Error('Cannot find yoga node at pos ' + this.pos.x + ', ' + this.pos.y)
     }
 
-    if(k.name==='up'){
+    if (k.name === 'up') {
+
+    } else if (k.name === 'down') {
+
+    } else if (['left', 'right'].includes(k.name) || this.validInputChar(k)) {
+
+    } else if (this.validInputChar(k)) {
 
     }
-    else if(k.name==='down'){
-
-    }
-    else if (['left', 'right'].includes(k.name)||this.validInputChar(k)){
-
-    }
-    else if(this.validInputChar(k)){
-
-    }
-    this.cursor.show({name: 'florTextCursor', top: this.pos.y, left: this.pos.x})
+    this.cursor.show({ name: 'florTextCursor', top: this.pos.y, left: this.pos.x })
 
     this.originalOnKeyPressed && this.originalOnKeyPressed(k)
   }
@@ -53,36 +48,36 @@ class TextCursor extends Text<TextCursorProps>{
   }
   // protected afterRender(){
   //   this.originalAfterRender && this.originalAfterRender()
-    
+
   // }
 
-  protected beforeRender(){
-    this.cursor && this.cursor.hide({name: 'florTextCursor'})
-    return !!this.originalBeforeRender&&this.originalBeforeRender()
+  protected beforeRender() {
+    this.cursor && this.cursor.hide({ name: 'florTextCursor' })
+    return !!this.originalBeforeRender && this.originalBeforeRender()
   }
 
-  constructor(p:TextCursorProps, s:{}){
+  constructor(p: TextCursorProps, s: {}) {
     super(p, s)
-    this.pos = this.props.pos || {x: 0, y: 0}
+    this.pos = this.props.pos || { x: 0, y: 0 }
     // this.afterRender = this.afterRender.bind(this)
     // this.originalAfterRender = this.props.afterRender
     this.originalBeforeRender = this.props.beforeRender
-    this.originalOnKeyPressed=this.props.onKeyPressed
+    this.originalOnKeyPressed = this.props.onKeyPressed
     // this.props.afterRender=this.afterRender.bind(this)
-    this.props.beforeRender=this.beforeRender.bind(this)
+    this.props.beforeRender = this.beforeRender.bind(this)
     this.props.onKeyPressed = this.onKey.bind(this)
 
   }
 
   protected createYNode(word: string, index: number) {
     const node = super.createYNode(word, index)
-    this.setNodeWord(node, { word, index});
+    this.setNodeWord(node, { word, index })
     // debugger
     return node
     // node.setr
   }
 
-  private setNodeWord(node: any, p:{word: string, index: number}) {
+  private setNodeWord(node: any, p: { word: string, index: number }) {
     node.florTextCursor = p
   }
   // render(){
@@ -92,15 +87,12 @@ class TextCursor extends Text<TextCursorProps>{
 }
 
 function findNodeAtPos(parent: yoga.YogaNode, pos: Pos) {
-    return array(parent.getChildCount()).find(i => {
-      const c = parent!.getChild(i);
-      const l = c.getComputedLayout();
-      return l.left <= pos.x && l.right >= pos.x && l.top <= pos.y && l.bottom >= pos.y;
-    })
-  }
-
-
-
+  return array(parent.getChildCount()).find(i => {
+    const c = parent.getChild(i)
+    const l = c.getComputedLayout()
+    return l.left <= pos.x && l.right >= pos.x && l.top <= pos.y && l.bottom >= pos.y
+  })
+}
 
 let flor: FlorDocument
 flor = new FlorDocument()
@@ -129,4 +121,3 @@ ok(flor.renderer.printBuffer(true).includes(trimRightLines(`
     ║                                    ║
     ╚════════════════════════════════════╝
 `)))
-

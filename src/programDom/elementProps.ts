@@ -4,7 +4,7 @@ import { Node } from '../dom'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps, StyleProps } from './types'
 
-export class ElementPropsImpl< T extends ElementProps = ElementProps> extends StylePropsImpl< T> implements Partial<ElementProps> {
+export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<ElementProps> {
 
   public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow
@@ -52,11 +52,11 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
     this._data.elementType = value
   }
 
-  public get focus(): Partial<StyleProps> & {readonly data: any} | undefined {
+  public get focus(): Partial<StyleProps> & { readonly data: any } | undefined {
     return this._dataFocus
   }
   private _dataFocus: StylePropsImpl | undefined
-  public set focus(value: Partial<StyleProps> & {readonly data: any}  | undefined) {
+  public set focus(value: Partial<StyleProps> & { readonly data: any } | undefined) {
     if (!this._dataFocus) {
       this._dataFocus = new StylePropsImpl(undefined, this.owner)
     }
@@ -89,7 +89,7 @@ export class ElementPropsImpl< T extends ElementProps = ElementProps> extends St
   beforeRender?(): boolean
 
   onClick?(r: MouseEvent): void
-  onKeyPressed?<T extends ProgramElement= ProgramElement>(e: KeyEvent<T>): void
+  onKeyPressed?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void
   onMouse?(r: MouseEvent): void
   onMouseOut?(r: MouseEvent): void
   onMouseOver?(r: MouseEvent): void

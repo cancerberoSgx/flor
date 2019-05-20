@@ -73,7 +73,7 @@ export class Text<P extends TextProps = TextProps> extends Component<P, {}> {
     if (!this.words) {
       this.words = (this.element!.childNodes).filter(isDomText).map(t => t.textContent).join(' ').split(' ')
       this.words.forEach((l, i) => {
-        this.createYNode(l, i);
+        this.createYNode(l, i)
       })
     }
     if (this.calculateLayout) {
@@ -90,10 +90,10 @@ export class Text<P extends TextProps = TextProps> extends Component<P, {}> {
   }
 
   protected createYNode(l: string, i: number) {
-    const node = yoga.Node.create();
-    node.setWidth(l.length + (this.props.extraWidth || 1));
-    node.setHeight(1 + ((this.props.extraHeight || 0)));
-    this.yNode!.insertChild(node, i);
+    const node = yoga.Node.create()
+    node.setWidth(l.length + (this.props.extraWidth || 1))
+    node.setHeight(1 + ((this.props.extraHeight || 0)))
+    this.yNode!.insertChild(node, i)
     return node
   }
 

@@ -39,12 +39,12 @@ export interface Rectangle {
 type R = Rectangle
 export function rectangleIntersects(a: R, b: R) {
   return (a.xi <= b.xl &&
-            b.xi <= a.xl &&
-            a.yi <= b.yl &&
-            b.yi <= a.yl)
+    b.xi <= a.xl &&
+    a.yi <= b.yl &&
+    b.yi <= a.yl)
 }
 
-export function rectanglePlusOffsets(r: R,xOffset= 0, yOffset= 0) {
+export function rectanglePlusOffsets(r: R, xOffset = 0, yOffset = 0) {
   return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
 }
 
@@ -77,4 +77,4 @@ export function createElement(doc: ProgramDocument, tagName: string | Partial<Fu
   return el
 }
 
-export type ElementOfComponent<C extends Component, E extends ProgramElement = ProgramElement> = {getComponent(): C } & E & RemoveProperties<E, 'getComponent'>
+export type ElementOfComponent<C extends Component, E extends ProgramElement = ProgramElement> = { getComponent(): C } & E & RemoveProperties<E, 'getComponent'>

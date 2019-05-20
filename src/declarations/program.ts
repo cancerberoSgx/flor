@@ -39,16 +39,16 @@ export interface ProgramKeyEvent extends UIEvent {
 // }
 
 export enum MouseAction {
-'mouse' = 'mouse',
-'mouseout' = 'mouseout',
-'mouseover' = 'mouseover',
-'mousedown' = 'mousedown',
-'mouseup' = 'mouseup',
-'mousewheel' = 'mousewheel',
-'wheeldown' = 'wheeldown',
-'wheelup' = 'wheelup',
-'mousemove' = 'mousemove',
-'click' = 'click',
+  'mouse' = 'mouse',
+  'mouseout' = 'mouseout',
+  'mouseover' = 'mouseover',
+  'mousedown' = 'mousedown',
+  'mouseup' = 'mouseup',
+  'mousewheel' = 'mousewheel',
+  'wheeldown' = 'wheeldown',
+  'wheelup' = 'wheelup',
+  'mousemove' = 'mousemove',
+  'click' = 'click',
 }
 
 export const mouseActionNames = enumKeys(MouseAction)
@@ -74,15 +74,15 @@ export const mouseActionNames = enumKeys(MouseAction)
 'parsed content':  Received when element [[content]] is parsed.
 */
 type NodeGenericEventType =
-| 'resize'
-| 'prerender'
-| 'render'
-| 'destroy'
-| 'move'
-| 'show'
-| 'hide'
-| 'set content'
-| 'parsed content'
+  | 'resize'
+  | 'prerender'
+  | 'render'
+  | 'destroy'
+  | 'move'
+  | 'show'
+  | 'hide'
+  | 'set content'
+  | 'parsed content'
 
 export type KeyEventListener = (ch: string, key: ProgramKeyEvent) => void
 
@@ -315,7 +315,7 @@ program.getWindowSize(function(err:any, data:any) {
 });
 ```
 */
-export declare class Program extends TPut  implements  EventEmitter {
+export declare class Program extends TPut implements EventEmitter {
 
   /** @internal */
   static instances: Program[]
@@ -339,9 +339,9 @@ export declare class Program extends TPut  implements  EventEmitter {
    * [[cols]] 
    */
   x: number
-/**
- * alias for [[rows]]
- */
+  /**
+   * alias for [[rows]]
+   */
   y: number
 
   savedX: number
@@ -354,11 +354,11 @@ export declare class Program extends TPut  implements  EventEmitter {
    * current terminal rows
    */
   rows: number
-  
+
   tput: TPut
 
   scrollTop: number
-  
+
   /** 
    * Examples usage: 
    * 
@@ -588,7 +588,7 @@ this.program.csr(0, this.height - 1);
    */
   write(text: string): boolean
 
-   /**
+  /**
 Writes given string to [[output]] to the buffer. It doesn't parse given parameters. Example: write : `ESC # 3 `DEC line height/width`
 
 ```
@@ -596,12 +596,12 @@ Writes given string to [[output]] to the buffer. It doesn't parse given paramete
 program._write('\x1b#3');
 ```
 
-  Example writing a CSI secuence `CSI Ps A` Cursor Up Ps Times (default = 1) (CUU):
+ Example writing a CSI secuence `CSI Ps A` Cursor Up Ps Times (default = 1) (CUU):
 
 ```
 this._write('\x1b[' + (param || '') + 'A');
 ```
-   */
+  */
   _write(text: string): boolean
 
   /**
@@ -677,7 +677,7 @@ this._write('\x1b[' + (param || '') + 'A');
   /**
    * Inserts `ch` repeated `i` times with given optional attrs at current cursor position.
    */
-  simpleInsert(ch: string , i?: number, attr?: boolean): boolean
+  simpleInsert(ch: string, i?: number, attr?: boolean): boolean
 
   /**
    * returns `ch` repeated `i` times.
@@ -702,7 +702,7 @@ this._write('\x1b[' + (param || '') + 'A');
   /**
    * set's cursor color.
    */
-  cursorColor(color: string|number): boolean
+  cursorColor(color: string | number): boolean
 
   /**
    * Reset all tput current modes.
@@ -763,7 +763,7 @@ program.getCursor(function(err, data) {
    * Saves current cursor state so it can be restored with [[restoreCursor]]
    */
   saveCursor(key: string): boolean
-    /** alias for [[saveCursor]] */
+  /** alias for [[saveCursor]] */
   sc(key: string): boolean
   /**
    * restore previously saved cursor with [[saveCursor]]
@@ -833,7 +833,7 @@ program.getCursor(function(err, data) {
    * Cursor Position [ row;column ] (default = [ 1,1 ]) (CUP).
    */
   cursorPos(row?: number, col?: number): boolean
-    /** Alias for [[cursorPos]] */
+  /** Alias for [[cursorPos]] */
   cup(row?: number, col?: number): boolean
   /** Alias for [[cursorPos]] */
   pos(row?: number, col?: number): boolean
@@ -1026,7 +1026,7 @@ same as CSI Ps B ?
 
   VPositionRelative(param?: number): boolean
   vpr(param?: number): boolean
-  
+
   HVPosition(row?: number, col?: number): boolean
   hvp(row?: number, col?: number): boolean
   /**
@@ -1341,7 +1341,7 @@ CSI s
    * it contains all tput operations bind to [[input]] so automatically call [[_write]]  using the return value. Example: 
    * `this.put.pad()` is the equivalent to `this._write(this.tput.pad())`.
    */
-put: {[s: string]: (...args: any[])=> any}
+  put: { [s: string]: (...args: any[]) => any }
   /**
 ```
    CSI Ps ; Ps ; Ps ; Ps ; Ps T
@@ -1803,4 +1803,4 @@ CSI Ps ; Pu ' z
 
 // export {p as Program2}
 
-module.exports.Program =  require('../blessed/program')
+module.exports.Program = require('../blessed/program')

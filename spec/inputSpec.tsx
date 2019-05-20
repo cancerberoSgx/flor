@@ -79,7 +79,7 @@ describe('input', () => {
     m = 'msg:' + s
   }
   describe('component', () => {
-    test(flor => flor.create(<Input top={10} left={8} width={15} height={3}  border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => msg('*value===' + e.value + '*')} />))
+    test(flor => flor.create(<Input top={10} left={8} width={15} height={3} border={{ type: BorderStyle.heavy }} bg="blue" onChange={e => msg('*value===' + e.value + '*')} />))
   })
 
   describe('plain function', () => {

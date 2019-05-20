@@ -1,6 +1,5 @@
 import { KeyEvent, KeyListener, KeyPredicate, ProgramElement } from '..'
 import { Pos } from './cursorManager'
-import {getPreviousMatchingPos} from 'misc-utils-of-mine-generic'
 
 interface TextInputCursorKeys {
   left: KeyPredicate
@@ -89,27 +88,27 @@ export class SingleLineTextInputCursor {
 
   protected x: number
   protected y: number
-  
+
   private _enabled: boolean = false
   protected keys: TextInputCursorKeys
-  protected _lines: string[];
+  protected _lines: string[]
 
   constructor(protected options: Options) {
     this._lines = (options.text || '').split('\n')
     this.enabled = !!options.enabled
     this.x = options.pos ? options.pos.col : 0
-    this.y = options.pos ? options.pos.row : 0 
+    this.y = options.pos ? options.pos.row : 0
     this.keys = { ...defaultTextInputCursorKeys, ...options.keys || {} }
     this.onKey = this.onKey.bind(this)
     options.addKeyListener && options.addKeyListener(this.onKey)
   }
-  
+
   charAtPos() {
     return this.lineText.charAt(this.x)
   }
 
   protected get lineText(): string {
-    return  this._lines[this.y]
+    return this._lines[this.y]
   }
   protected set lineText(value: string) {
     this._lines[this.y] = value
@@ -132,7 +131,7 @@ export class SingleLineTextInputCursor {
   }
   set pos(p: Pos) {
     this.x = p.col
-    this.y = p.row||0
+    this.y = p.row || 0
   }
 
   /**
@@ -143,7 +142,7 @@ export class SingleLineTextInputCursor {
       this.invalidAction({
         key: e.name, reason: 'TextInputCursor disabled'
       })
-    } else  if (this.keys.right(e)) {
+    } else if (this.keys.right(e)) {
       this.right()
     } else if (this.keys.controlRight(e)) {
       this.rightWord()
@@ -314,7 +313,7 @@ export class SingleLineTextInputCursor {
       this.x = this.lineText.split('').reverse().findIndex((s, i, a) => i > a.length - this.x && !s.trim())
       this.x = this.x === -1 ? 0 : this.x
       // console.log(a, this.x, this.lineText[a], this.lineText[this.x]);
-      
+
     } else {
       this.invalidAction({
         key: 'controlLeft', reason: 'cannot go further left when at the beginning of file'
@@ -350,7 +349,7 @@ export class TextInputCursorMulti extends SingleLineTextInputCursor {
     this.y = options.pos && options.pos.row || 0
   }
   set value(v: string) {
-    this._lines = v.split('\n') 
+    this._lines = v.split('\n')
     const row = Math.max(this._lines.length - 1)
     const col = Math.max(this.x)
   }
@@ -378,9 +377,9 @@ export class TextInputCursorMulti extends SingleLineTextInputCursor {
         key: e.name, reason: 'TextInputCursor disabled'
       })
     } else if (this.keys.up(e)) {
-      this.up();
+      this.up()
     } else if (this.keys.down(e)) {
-      this.down();
+      this.down()
     } else {
       super.onKey(e)
     }
@@ -388,21 +387,19 @@ export class TextInputCursorMulti extends SingleLineTextInputCursor {
 
   down() {
     if (this.pos.row === this.lines.length) {
-      super.down();
-    }
-    else {
-      this.pos = { row: this.pos.row + 1, col: Math.max(this.pos.col, this.lines[this.pos.row + 1].length) };
-      this.x = this.pos.col;
-      this.lineText = this.lines[this.x];
+      super.down()
+    } else {
+      this.pos = { row: this.pos.row + 1, col: Math.max(this.pos.col, this.lines[this.pos.row + 1].length) }
+      this.x = this.pos.col
+      this.lineText = this.lines[this.x]
     }
   }
 
   up() {
     if (this.pos.row === 0) {
-      super.up();
-    }
-    else {
-      this.pos = { row: this.pos.row - 1, col: Math.max(this.pos.col, this.lines[this.pos.row - 1].length) };
+      super.up()
+    } else {
+      this.pos = { row: this.pos.row - 1, col: Math.max(this.pos.col, this.lines[this.pos.row - 1].length) }
     }
   }
 }

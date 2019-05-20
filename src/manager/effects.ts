@@ -56,10 +56,10 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     const focusStyle = { ...this.options.focusedExtraStyles || {}, ...focused.props.focus.data }
     // TODO: if default style changes after this moment, we will loose the changes. Perhaps we need to remove the if()
     if (!s.notFocusedStyle) {
-      const focusedKeys =  Object.keys(focusStyle)
+      const focusedKeys = Object.keys(focusStyle)
       s.notFocusedStyle = { ...this.options.normalExtraStyles || {} }
       focusedKeys.forEach(k => {
-        (s.notFocusedStyle as any)[k]  = focused.props.data[k]
+        (s.notFocusedStyle as any)[k] = focused.props.data[k]
       })
     }
     focused.props.assign(focusStyle)

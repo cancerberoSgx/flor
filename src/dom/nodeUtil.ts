@@ -108,7 +108,7 @@ export function asElements(el: Element | Document): Element[] {
  * returns the first descendant node that contains given text. Warning, if you use the type parameter to
  * cast the result, be aware that this method doesn't perform any verification on the returned type.
  */
-export function  findDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T | undefined {
+export function findDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T | undefined {
   return findDescendant(n, n => (n.textContent || '').includes(text), o)
 }
 
@@ -116,7 +116,7 @@ export function  findDescendantContaining<T extends Node = Node>(n: Node, text: 
  * returns the first descendant node that contains given text. Warning, if you use the type parameter to
  * cast the result, be aware that this method doesn't perform any verification on the returned type.
  */
-export function  filterDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T [] {
+export function filterDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T[] {
   return filterDescendants(n, n => (n.textContent || '').includes(text), o)
 }
 
@@ -144,7 +144,7 @@ export interface VisitorOptions {
  * options. By default, first the parent is evaluated which is configurable configurable with
  * [[[VisitorOptions.childrenFirst]]
  * */
-export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion= false): boolean {
+export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion = false): boolean {
   let r = false
   if (o.childrenFirst) {
     r = n.childNodes.some(c => visitDescendants(c, v, o, true))
@@ -165,7 +165,7 @@ export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, in
       if (!o.visitDescendantsOnSelfSignalAnyway) {
         return true
       } else {
-        return n.childNodes.some(c => visitDescendants(c, v, o ,true)) || true // true because self was signaled
+        return n.childNodes.some(c => visitDescendants(c, v, o, true)) || true // true because self was signaled
       }
     } else {
       return n.childNodes.some(c => visitDescendants(c, v, o, true))
@@ -219,7 +219,7 @@ export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredica
   return a
 }
 
-export function nodeHtml(node: Node, outer = true, _level= 0): string {
+export function nodeHtml(node: Node, outer = true, _level = 0): string {
   if (isDomDocument(node)) {
     return `<document>${elementHtml(node.body, outer, _level) + '\n' + repeat(_level, '  ')}</document>`
   } else if (isDomElement(node)) {
@@ -229,8 +229,8 @@ export function nodeHtml(node: Node, outer = true, _level= 0): string {
   }
 }
 
-function elementHtml(node: Element, outer: boolean, _level= 0) {
-  const attrs = [  ...Object.keys((node as any).props && (node as any).props.data || {})
+function elementHtml(node: Element, outer: boolean, _level = 0) {
+  const attrs = [...Object.keys((node as any).props && (node as any).props.data || {})
     .map(k => ({ name: k, value: (node as any).props[k] }))]
   return `${'\n' + repeat(_level, '  ')}${outer ? `<${node.tagName}${attrs.length ? ' ' : ''}${attrs.map(a => a.value && `${a.name}="${a.value.toString ? a.value.toString() : a.value}"`)
     .filter(a => a)

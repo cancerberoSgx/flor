@@ -6,7 +6,7 @@ describe('dom', () => {
 
   it('createElement, appendChild, createTextNode, innerHTML, outerHTML', async done => {
     const d = new Document()
-    const div1  = d.createElement('Div')
+    const div1 = d.createElement('Div')
     d.appendChild(div1)
     div1.appendChild(d.createElement('Div'))
     div1.appendChild(d.createTextNode('text'))
@@ -28,11 +28,11 @@ describe('dom', () => {
 
   it('findDescendant', async done => {
     const d = new Document()
-    const div1  = d.createElement('Div1')
+    const div1 = d.createElement('Div1')
     d.body.appendChild(div1)
     div1.appendChild(d.createElement('Div11'))
     div1.appendChild(d.createTextNode('text'))
-    const d2  = d.createElement('d2')
+    const d2 = d.createElement('d2')
     d.body.appendChild(d2)
     d2.appendChild(d.createElement('div3'))
     div1.appendChild(d2)

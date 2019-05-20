@@ -1,7 +1,7 @@
 import { Flor, FlorDocument, Scrollable } from '../src'
 import { TextArea } from '../src/component/textArea'
+import { longText } from './data'
 import { defaultTestSetup, willContain } from './testUtil'
-import { longText } from './data';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
@@ -20,7 +20,7 @@ Nostrud sint minim nostrud irure ullamco
      Velit occaecat pariatur minim enim aliqua
 tempor enim occaecat.
   `.trim()
-    const app = <el  width={.9} height={.9} left={4} top={3}
+    const app = <el width={.9} height={.9} left={4} top={3}
     >
       <TextArea focus={undefined}
         value={value} width={55} height={7} left={1} top={1} border={undefined}
@@ -31,7 +31,7 @@ tempor enim occaecat.
     const le = flor.create(app)
     flor.render()
 
-    let expected =     `
+    let expected = `
       Dolor velit eiusmod in in amet et sit ex
           non ipsum enim.
       Nostrud sint minim nostrud irure ullamco
@@ -42,7 +42,7 @@ tempor enim occaecat.
 
     await willContain(flor, expected)
 
-    const ta =    le.childNodes.find(TextArea.is)!.getComponent()
+    const ta = le.childNodes.find(TextArea.is)!.getComponent()
 
     ta.element!.click()
 
@@ -55,7 +55,7 @@ tempor enim occaecat.
                 sit cillum veniam id commodo.
            Velit occaecat pariatur minim enim aliqua
       tempor enim occaecat.`.trim()
-    await willContain(flor,expected)
+    await willContain(flor, expected)
 
     ta.element!.key('down')
     ta.element!.key('right', 5)
@@ -84,24 +84,20 @@ tempor enim occaecat.
     done()
   })
 
-
-
   xit('should render text, allow to focus, move cursor and insert text', async done => {
     const value = longText()
-    const app = <el  width={.9} height={.9} left={.1} top={.1}    >
+    const app = <el width={.9} height={.9} left={.1} top={.1}    >
       <Scrollable width={.9} height={.9} left={1} top={1}>
         <TextArea focus={undefined}
-      value={value} width={888} height={88} left={1} top={1} border={undefined}  
-      bg="gray" fg="green" padding={{ top: 1, left: 1, right: 1, bottom: 1 }}
-      >
-      </TextArea>
+          value={value} width={888} height={88} left={1} top={1} border={undefined}
+          bg="gray" fg="green" padding={{ top: 1, left: 1, right: 1, bottom: 1 }}
+        >
+        </TextArea>
       </Scrollable>
     </el>
     const le = flor.create(app)
     flor.render()
 
   })
-
-
 
 })

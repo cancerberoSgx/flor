@@ -7,13 +7,13 @@ import { notUndefined } from 'misc-utils-of-mine-typescript'
 
 export class CustomProcessor extends DisplayProcessor {
   displayFailedSpec(spec: CustomReporterResult, log: string): string {
-  //   return `
-  // ${log}
+    //   return `
+    // ${log}
 
-  // ${spec.description}
+    // ${spec.description}
 
-  // ${spec.failedExpectations && spec.failedExpectations.map(e => e.stack).filter(notUndefined).join('\n\n')}
-  // `
+    // ${spec.failedExpectations && spec.failedExpectations.map(e => e.stack).filter(notUndefined).join('\n\n')}
+    // `
     // return JSON.stringify(spec)
     const colored: string[] = []
     // debug(spec, log)

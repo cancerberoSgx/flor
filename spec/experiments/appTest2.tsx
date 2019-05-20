@@ -9,27 +9,27 @@ const flor = new FlorDocument<YogaElement>({
 
 interface P {
 
-  }
+}
 class App extends Component<P> {
   render() {
-    return <Box   height={.999} width={.999}
-      flexDirection={ FLEX_DIRECTION_ROW}
+    return <Box height={.999} width={.999}
+      flexDirection={FLEX_DIRECTION_ROW}
     >
       <Box id="left-column" width={.65} height={.999} flexShrink={1}
-        flexDirection={ FLEX_DIRECTION_COLUMN_REVERSE}>
+        flexDirection={FLEX_DIRECTION_COLUMN_REVERSE}>
 
         <Box width={.999} flexShrink={1} border={{ type: BorderStyle.round }} height={.3}
-        fg="red"
+          fg="red"
         ></Box>
         <Box id="output-panel" width={.999} height={.7} flexShrink={1}
-     ch="/"
+          ch="/"
         >
         </Box>
       </Box>
       <Box id="right-column" width={.35} flexShrink={1} height={.999}
         flexDirection={FLEX_DIRECTION_COLUMN_REVERSE}>
         <Box width={.999} height={.3} flexShrink={1}
-        ch="."
+          ch="."
         >
         </Box>
         <Box width={.999} height={.3}
@@ -42,20 +42,20 @@ class App extends Component<P> {
     </Box>
   }
 }
-  // const app =
+// const app =
 
 flor.focus.installDefaultChangeFocusKeys()
-const le = flor.create(<App/>)
+const le = flor.create(<App />)
 
 flor.program.on('resize', () => {
   flor.body.width = flor.program.cols
   flor.body.height = flor.program.rows
-    // flor.body.forceUpdate(true)
+  // flor.body.forceUpdate(true)
 
   le.width = flor.program.cols
   le.height = flor.program.rows
 
-    // le.doLayout()
+  // le.doLayout()
   le.forceUpdate(true)
   nextTick(() => flor.render())
 })

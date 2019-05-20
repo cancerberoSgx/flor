@@ -19,7 +19,7 @@ declare global {
     export type OptionsProps<T> = PropsWithRef<Partial<T>>
 
     type PropsWithRef<P> = P & {
-      children?: FlorJsxNode ,
+      children?: FlorJsxNode,
       ref?: P extends { ref?: infer R } ? R : RefObject<ProgramElement | Component>
     }
 
@@ -41,13 +41,13 @@ declare global {
 
     type BlessedJsxText = string | number
 
-    type BlessedJsxChild<P extends { children?: FlorJsxNode } = {}>  = Element<P>  | BlessedJsxText
+    type BlessedJsxChild<P extends { children?: FlorJsxNode } = {}> = Element<P> | BlessedJsxText
 
-    export interface ReactNodeArray extends Array<FlorJsxNode> {}
+    export interface ReactNodeArray extends Array<FlorJsxNode> { }
 
     export type BlessedJsxFragment = {} | ReactNodeArray
 
-    export type FlorJsxNode<P extends { children?: FlorJsxNode } = {}>  =
+    export type FlorJsxNode<P extends { children?: FlorJsxNode } = {}> =
       | BlessedJsxChild<P>
       | BlessedJsxFragment
       | boolean

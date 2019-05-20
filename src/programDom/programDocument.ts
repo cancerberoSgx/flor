@@ -8,39 +8,39 @@ import { Deferred } from '../util/misc'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
 
-interface Managers {events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager}
+interface Managers { events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager }
 
 export class ProgramDocument<E extends ProgramElement = ProgramElement> extends Document<E> {
   body: ProgramElement
 
   protected managers: Managers | undefined
-  private registerListenerQueue: {type: 'event' | 'blur' | 'focus' | 'clicks', listener: any}[] = []
+  private registerListenerQueue: { type: 'event' | 'blur' | 'focus' | 'clicks', listener: any }[] = []
 
   constructor() {
     super()
     this.empty()
-    this.body =  this.createElement('body')
+    this.body = this.createElement('body')
     this.appendChild(this.body)
   }
 
   get program() {
-    return this.managers &&  this.managers.renderer.program
+    return this.managers && this.managers.renderer.program
   }
 
   get renderer() {
-    return this.managers &&  this.managers.renderer
+    return this.managers && this.managers.renderer
   }
 
   get cursor() {
-    return this.managers &&  this.managers.cursor
+    return this.managers && this.managers.cursor
   }
 
   get focus() {
-    return this.managers &&  this.managers.focus
+    return this.managers && this.managers.focus
   }
 
   get events() {
-    return this.managers &&  this.managers.events
+    return this.managers && this.managers.events
   }
 
   createElement(t: string): E {
@@ -56,7 +56,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     return el
   }
 
-  managersReady =  new Deferred<Managers>()
+  managersReady = new Deferred<Managers>()
   /**
    * @internal
    */
@@ -69,7 +69,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     this._emptyListenerQueue()
     this._setManagersListeners.forEach(l => l())
     this._setManagersListeners = []
-    if (!this. managersReady) {
+    if (!this.managersReady) {
       this.managersReady = new Deferred<Managers>()
     }
     this.managersReady.resolve(managers)
@@ -80,7 +80,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
   /**
    * @internal
    */
-  _registerListener(l: {type: 'event' | 'blur' | 'focus' | 'clicks', listener: any}) {
+  _registerListener(l: { type: 'event' | 'blur' | 'focus' | 'clicks', listener: any }) {
     this.registerListenerQueue.push(l)
     if (this.managers) {
       this._emptyListenerQueue()

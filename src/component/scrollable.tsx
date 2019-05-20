@@ -436,8 +436,8 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * will be used if any.
    */
   scrollRatio(offsetRatio: { x?: number, y?: number }) {
-    this.xOffset = typeof offsetRatio.x!=='undefined' ?  offsetRatio.x* (this.xl-this.xi) : this.xOffset
-    this.yOffset = typeof offsetRatio.y!=='undefined' ?  offsetRatio.y* (this.yl-this.yi): this.yOffset
+    this.xOffset = typeof offsetRatio.x !== 'undefined' ? offsetRatio.x * (this.xl - this.xi) : this.xOffset
+    this.yOffset = typeof offsetRatio.y !== 'undefined' ? offsetRatio.y * (this.yl - this.yi) : this.yOffset
   }
 
   render() {

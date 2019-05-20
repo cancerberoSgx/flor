@@ -190,7 +190,7 @@ export class Input extends Component<InputProps, {}> {
       onKeyPressed={this.onKeyPressed}
       input={this.props.value || ''}
     >
-{this.props.value || ''}
+      {this.props.value || ''}
     </el>
   }
 

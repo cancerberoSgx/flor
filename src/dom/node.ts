@@ -190,7 +190,7 @@ export class Node implements EventTarget {
 
   previousSibling<T extends Node = Node>(): T | undefined {
     if (this.parentNode) {
-      const i =  this.parentNode._childNodes.indexOf(this)
+      const i = this.parentNode._childNodes.indexOf(this)
       if (i !== -1 && i > 0) {
         return this.parentNode._childNodes[i - 1] as T
       }
@@ -199,7 +199,7 @@ export class Node implements EventTarget {
 
   nextSibling<T extends Node = Node>(): T | undefined {
     if (this.parentNode) {
-      const i =  this.parentNode._childNodes.indexOf(this)
+      const i = this.parentNode._childNodes.indexOf(this)
       if (i !== -1 && i < this.parentNode._childNodes.length - 1) {
         return this.parentNode._childNodes[i + 1] as T
       }

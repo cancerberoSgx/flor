@@ -1,11 +1,11 @@
 {
-  "insertSpaceBeforeAndAfterBinaryOperators": false,
-  "insertSpaceAfterCommaDelimiter": false,
+  "insertSpaceBeforeAndAfterBinaryOperators": true,
+  "insertSpaceAfterCommaDelimiter": true,
   "insertSpaceAfterSemicolonInForStatements": false,
   "insertSpaceAfterConstructor": false,
   "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
   "insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
-  "insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+  "insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
   "insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
   "insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
   "insertSpaceAfterTypeAssertion": false,
@@ -13,7 +13,7 @@
   "placeOpenBraceOnNewLineForFunctions": false,
   "placeOpenBraceOnNewLineForControlBlocks": false,
   "insertSpaceBeforeTypeAnnotation": false,
-  "indentMultiLineObjectLiteralBeginningOnBlankLine": false,
+  "indentMultiLineObjectLiteralBeginningOnBlankLine": true,
   "indentSize": 2,
   "tabSize": 2,
   "convertTabsToSpaces": true

@@ -38,10 +38,10 @@ export function handleJustifiedLayout(o: LayoutOptions & {
     children.forEach((c, i) => {
       const r = result.boxes[i]
       if (r) {
-        c.props.top =  Math.trunc(r.top)
-        c.props.left =  Math.trunc(r.left)
-        c.props.width =  Math.trunc(r.width)
-        c.props.height =  Math.trunc(r.height)
+        c.props.top = Math.trunc(r.top)
+        c.props.left = Math.trunc(r.left)
+        c.props.width = Math.trunc(r.width)
+        c.props.height = Math.trunc(r.height)
         // c.props.assign({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) })
       }
     })

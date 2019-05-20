@@ -24,7 +24,7 @@ export function animate({
   let start = Date.now()
   let progress = 0
   let stopped = false
-  onStop && onStop(() => {stopped = true})
+  onStop && onStop(() => { stopped = true })
   requestAnimationFrame(function anim(time) {
     if (stopped) {
       onEnd && onEnd()
@@ -55,7 +55,7 @@ export namespace easing {
   }
 
   function bounceFn(timeFraction: number) {
-    for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
+    for (let a = 0, b = 1, result;1;a += b, b /= 2) {
       if (timeFraction >= (7 - 4 * a) / 11) {
         return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
       }
@@ -115,7 +115,7 @@ export namespace easing {
         if (a < Math.abs(c)) {
           a = c
           let s = p / 4
-        } else {  s = (p / (2 * Math.PI)) * Math.asin(c / a)}
+        } else { s = (p / (2 * Math.PI)) * Math.asin(c / a) }
         return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin(((t * d - s) * (2 * Math.PI)) / p)) + b
       }
     } as any)
@@ -219,7 +219,7 @@ export namespace easing {
         if (a < Math.abs(c)) {
           a = c
           let s = p / 4
-        } else { s = (p / (2 * Math.PI)) * Math.asin(c / a)}
+        } else { s = (p / (2 * Math.PI)) * Math.asin(c / a) }
         if (t < 1) return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin(((t * d - s) * (2 * Math.PI)) / p)) + b
         return a * Math.pow(2, -10 * (t -= 1)) * Math.sin(((t * d - s) * (2 * Math.PI)) / p) * 0.5 + c + b
       }
@@ -237,7 +237,7 @@ export namespace easing {
         if (a < Math.abs(c)) {
           a = c
           let s = p / 4
-        } else {s = (p / (2 * Math.PI)) * Math.asin(c / a)}
+        } else { s = (p / (2 * Math.PI)) * Math.asin(c / a) }
         return a * Math.pow(2, -10 * t) * Math.sin(((t * d - s) * (2 * Math.PI)) / p) + c + b
       }
     } as any)

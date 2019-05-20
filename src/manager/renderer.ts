@@ -238,11 +238,11 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   write(y: number, x: number, s: string) {
     const { xi, xl, yi, yl } = this._writeArea
     if (
-      y < yi  ||
-      y >= yl  ||
+      y < yi ||
+      y >= yl ||
       (x + s.length < xi) ||
       x > xl
-      ) {
+    ) {
       return
     }
     if (x < 0) {
@@ -262,7 +262,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     this._program.cursorPos(y, x)
     this._program._write(s)
     if (this.useBuffer) {
-      for (let i = 0; i < s.length; i++) {
+      for (let i = 0;i < s.length;i++) {
         if (this.buffer[y]) {
           this.buffer[y][x + i] = { ch: s[i], bg: this._currentAttrs.bg || '', fg: this._currentAttrs.fg || '' }
         }
@@ -442,7 +442,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
         const { xi, xl, yi, yl } = el.getInnerBounds()
         const width = xl - xi
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
-        for (let i = yi; i <  yl; i++) {
+        for (let i = yi;i < yl;i++) {
           this.write(i, xi, s)
         }
       }
@@ -467,7 +467,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
    */
   fillRectangle(top: number, left: number, height: number, width: number, ch = this._currentAttrs.ch) {
     const s = this._program.repeat(ch, width)
-    for (let i = 0; i < height; i++) {
+    for (let i = 0;i < height;i++) {
       this.write(top + i, left, s)
     }
   }
@@ -492,11 +492,11 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
     this.write(yl - 1, xi, getBoxStyleChar(type, BorderSide.bottomLeft))
     this.write(yl - 1, xl - 1, getBoxStyleChar(type, BorderSide.bottomRight))
-    for (let j = yi + 1; j < yl - 1; j++) {
+    for (let j = yi + 1;j < yl - 1;j++) {
       this.write(j, xi, getBoxStyleChar(type, BorderSide.left))
       this.write(j, xl - 1, getBoxStyleChar(type, BorderSide.right))
     }
-    for (let i = xi + 1; i < xl - 1; i++) {
+    for (let i = xi + 1;i < xl - 1;i++) {
       this.write(yi, i, getBoxStyleChar(type, BorderSide.top))
       this.write(yl - 1, i, getBoxStyleChar(type, BorderSide.bottom))
     }

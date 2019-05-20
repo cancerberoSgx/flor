@@ -122,7 +122,7 @@ describe('cursorTextEditor', () => {
         name: 'cursorTextEditorTest1', top: 11, left: 9
       })
 
-      let keyListener: KeyListener = e => {} // overrided by trextinputcursorr dont call!!
+      let keyListener: KeyListener = e => { } // overrided by trextinputcursorr dont call!!
       editor = new SingleLineTextInputCursor({
         singleLine: true,
         text: initialValue,

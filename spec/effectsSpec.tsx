@@ -14,7 +14,7 @@ describe('effects', () => {
         >button2</el>
         <el bg="black" ch="N" focus={{ bg: 'blue', ch: 'F' }} height={3} width={.9} focusable={true}
         >button3</el>
-        <el  ch="N" height={3} width={.9}
+        <el ch="N" height={3} width={.9}
         >button4</el>
       </el>
     flor.create(a)

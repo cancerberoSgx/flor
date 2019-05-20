@@ -266,7 +266,7 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
         }
       })
     },
-    apply(options: {fitContainerBounds?: boolean} = {}) {
+    apply(options: { fitContainerBounds?: boolean } = {}) {
       view.setSize(el.contentWidth, el.contentHeight)
       if (options.fitContainerBounds) {
         el.contentWidth = Math.round(view.fittingWidth)
@@ -328,7 +328,7 @@ describe('auto layout - boundConstrain', () => {
   it('createAutoLayout', async done => {
     const el = flor.create(
       <box width={44} height={15} top={2} left={2}
-      border={{ type: BorderStyle.round }}
+        border={{ type: BorderStyle.round }}
       >test123
     <box name="child1" ch="1" top={2} left={10} width={10} height={4} bg={color()}></box>
         <box name="child2" ch="2" top={4} left={20} width={10} height={4} bg={color()}></box>

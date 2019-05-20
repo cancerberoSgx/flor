@@ -34,7 +34,7 @@ class FlorTest<E extends ProgramElement = ProgramElement> {
 
   randomBounds() {
     return {
-      top: int(5, this.flor.program.rows / 4), left: int(5, this.flor.program.cols / 4), width: int(5, this.flor.program.cols / 4),  height: int(5, this.flor.program.rows / 4), border: { border: item(borderStyles) }, bg: color(), fg: color()
+      top: int(5, this.flor.program.rows / 4), left: int(5, this.flor.program.cols / 4), width: int(5, this.flor.program.cols / 4), height: int(5, this.flor.program.rows / 4), border: { border: item(borderStyles) }, bg: color(), fg: color()
     }
   }
 

@@ -48,7 +48,7 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   public get border() {
     return this._data.border
   }
-  public set border(value: Partial<BorderProps>  | undefined) {
+  public set border(value: Partial<BorderProps> | undefined) {
     if (!!this._data.border !== !!value) {
       this.owner._boundsDirty = true
       this.owner._positionDirty = true

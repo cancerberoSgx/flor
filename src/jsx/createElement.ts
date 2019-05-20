@@ -4,14 +4,14 @@ import { Component } from './component'
 import { BlessedJsxAttrs, FlorJsx, RefObject, RenderOptions } from './types'
 
 interface ComponentConstructor<P = {}, S = {}> {
-  new (p: P, s: S): Component
+  new(p: P, s: S): Component
 }
 
 function isComponentConstructor(tag: any): tag is ComponentConstructor {
   return typeof tag === 'function' && tag.prototype && tag.prototype.render
 }
 
-class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array<JSX.FlorJsxNode>}> implements JSX.Element<P> {
+class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = { children: Array<JSX.FlorJsxNode> }> implements JSX.Element<P> {
   _component?: Component | undefined
   constructor(public type: string, attrs: BlessedJsxAttrs) {
     this.props = { ...attrs || {} } as any
@@ -28,7 +28,7 @@ class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = {children: Array
 class FlorJsxImpl implements FlorJsx {
   protected doc: ProgramDocument | undefined
 
-  private _render({ e, document, parent }: {e: JSX.Element<{}>} & Required<RenderOptions>) {
+  private _render({ e, document, parent }: { e: JSX.Element<{}> } & Required<RenderOptions>) {
     if (typeof e.type !== 'string') {
       throw new Error('unexpected undefined type ' + e)
     }
@@ -123,10 +123,10 @@ class FlorJsxImpl implements FlorJsx {
   protected installRefs(el: JSX.FlorJsxNode, component?: Component): any {
     if (component && (component as any).props && (component as any).props.ref) {
       (component as any).props.ref.current = component
-      ;(component as any).props.ref.callback && (component as any).props.ref.callback(component)
+        ; (component as any).props.ref.callback && (component as any).props.ref.callback(component)
     } else if ((el! as any) && (el! as any).props && (el! as any).props.ref && !(el! as any).props.ref.current) {
       (el! as any).props.ref.current = el! as any
-      ;(el! as any).props.ref.callback && (el! as any).props.ref.callback(el)
+        ; (el! as any).props.ref.callback && (el! as any).props.ref.callback(el)
     }
   }
 
@@ -135,7 +135,7 @@ class FlorJsxImpl implements FlorJsx {
       throw new Error('Need to provide a document with setDocument() before render')
     }
     const document = options.document || this.doc!
-    const el =  this._render({ e, document , parent: options.parent || document.body })
+    const el = this._render({ e, document, parent: options.parent || document.body })
     return el as E
   }
 
@@ -156,7 +156,7 @@ class FlorJsxImpl implements FlorJsx {
       el = tag({ ...attrs, children })
     } else if (typeof tag === 'string') {
       el = new JSXElementImpl(tag, attrs)
-      this.installAttributesAndChildren(el as any,         children)
+      this.installAttributesAndChildren(el as any, children)
     }
     return el!
   }
