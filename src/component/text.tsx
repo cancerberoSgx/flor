@@ -6,7 +6,7 @@ import { ProgramDocumentRenderer } from '../manager'
 import { YogaElementProps } from '../yogaDom'
 import { baseProps } from './commonProps'
 
-interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
+export interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
   children?: string[]
   /**
    * Word direction. If 'column' words will be printed as columns instead of rows from top to bottom. In other words lines are represented with columns. Default value is 'row'
@@ -42,13 +42,13 @@ interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
  *  * update when bounds change
  *  * getters and setters for wordsAlign, linesAlign,
  */
-export class Text extends Component<TextProps, {}> {
+export class Text<P extends TextProps = TextProps> extends Component<P, {}> {
 
   protected yNode: yoga.YogaNode | undefined
   protected words: string[] | undefined
   protected calculateLayout: boolean
 
-  constructor(p: TextProps, s: {}) {
+  constructor(p: P, s: {}) {
     super(p, s)
     this.renderChildren = this.renderChildren.bind(this)
     this.beforeRender = this.beforeRender.bind(this)
@@ -73,10 +73,7 @@ export class Text extends Component<TextProps, {}> {
     if (!this.words) {
       this.words = (this.element!.childNodes).filter(isDomText).map(t => t.textContent).join(' ').split(' ')
       this.words.forEach((l, i) => {
-        const node = yoga.Node.create()
-        node.setWidth(l.length + (this.props.extraWidth || 1))
-        node.setHeight(1 + ((this.props.extraHeight || 0)))
-        this.yNode!.insertChild(node, i)
+        this.createYNode(l, i);
       })
     }
     if (this.calculateLayout) {
@@ -90,6 +87,14 @@ export class Text extends Component<TextProps, {}> {
       const l = { top: c.getComputedTop(), left: c.getComputedLeft() }
       this.renderer!.write(this.element!.absoluteContentTop + l.top, this.element!.absoluteContentLeft + l.left, this.words![i])
     })
+  }
+
+  protected createYNode(l: string, i: number) {
+    const node = yoga.Node.create();
+    node.setWidth(l.length + (this.props.extraWidth || 1));
+    node.setHeight(1 + ((this.props.extraHeight || 0)));
+    this.yNode!.insertChild(node, i);
+    return node
   }
 
   render() {

@@ -1,10 +1,10 @@
-import { array, waitForPredicate } from 'misc-utils-of-mine-generic'
-import { BorderStyle, easing, FlorDocument, Layout } from '../src'
+import { array, waitForPredicate, sleep } from 'misc-utils-of-mine-generic'
+import { BorderStyle, easing, FlorDocument, Layout , DISPLAY_FLEX, FLEX_DIRECTION_COLUMN, debug} from '../src'
 import { Scrollable } from '../src/component/scrollable'
 import { Text } from '../src/component/text'
 import { Flor } from '../src/jsx/createElement'
-import { char, color, int, words } from './data'
-import { defaultTestSetup, willContain } from './testUtil'
+import { char, color, int, words, longText } from './data'
+import { defaultTestSetup, willContain, expectNotToContain } from './testUtil'
 
 describe('scrollable', () => {
 
@@ -94,6 +94,32 @@ describe('scrollable', () => {
     el.getComponent<Scrollable>()!.scroll({ x: 18, y: 20 })
     flor.render()
     await willContain(flor.renderer, 'Eiusmod nostrud')
+    done()
+  })
+
+  it('should scroll long text ', async done => {
+    const a = (
+      <Scrollable top={0} left={0} width={50} height={30} rightExtraOffset={3} bottomExtraOffset={3} focus={undefined}
+        border={{ type: BorderStyle.double }}  
+         layout={{layout: Layout.topDown}} preventChildrenCascade={true}  >
+        {['First paragraph. ', ...longText().split('\n')].map(text=>
+           <Text width={.999} border={undefined} focus={undefined}
+           padding={{ top: 1, right: 2, left: 3, bottom: 1 }}
+           >
+           {text}</Text>
+           )}        
+      </Scrollable>
+    )
+    const el = flor.create(a)
+    el.getComponent<Scrollable>()!.scroll({ x: 0, y: 0 })
+    flor.render()
+    await willContain(flor.renderer, 'First paragraph')
+    expectNotToContain(flor.renderer, 'Aliquip tempor')
+    el.getComponent<Scrollable>()!.scroll({ x: 0, y: 100 })
+    flor.render()
+    debug(flor.printBuffer())
+    await willContain(flor.renderer, 'Aliquip tempor')
+    expectNotToContain(flor.renderer, 'First paragraph')
     done()
   })
 

@@ -1,7 +1,7 @@
 
 import { appendFileSync } from 'fs'
 import { SpecReporter } from 'jasmine-spec-reporter'
-import { format, inspect } from 'util'
+import { format, inspect, isString } from 'util'
 import { CustomProcessor } from './errorDiffProcessor'
 
 const argv = process.argv.slice(2)
@@ -23,11 +23,16 @@ j.configureDefaultReporter({
       'print: ' +
       args
         .map(a => {
-          if (a instanceof Error) {
-            return `${a}\n${a && a.stack && (a.stack || '').split('\n').join('\n')}`
-          } else {
-            return inspect(a)
-          }
+          return format.apply(this, arguments as any)
+          // if (a instanceof Error) {
+          //   return `${a}\n${a && a.stack && (a.stack || '').split('\n').join('\n')}`
+          // }
+          // else if (isString(a)){
+          //   return a
+          // } 
+          // else {
+          //   return inspect(a)
+          // }
         })
         .join(', ')
     )
@@ -46,9 +51,9 @@ j.onComplete(function(passed: boolean) {
   }
 })
 
-jasmine.getEnv().clearReporters()
-jasmine.getEnv().addReporter(new SpecReporter({
-  customProcessors: [CustomProcessor]
-}))
+// jasmine.getEnv().clearReporters()
+// jasmine.getEnv().addReporter(new SpecReporter({
+//   customProcessors: [CustomProcessor]
+// }))
 
 j.execute()

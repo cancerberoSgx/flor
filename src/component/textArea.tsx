@@ -11,10 +11,18 @@ interface ConcreteTextAreaProps extends ConcreteInputProps {
   newLineKeys?: KeyPredicate
   upKeys?: KeyPredicate
   downKeys?: KeyPredicate
+  /**
+   * TODO.
+   * If true it will wrap lines outside the content area in a new line. 
+   * It will not modify given text, just visualize long lines wrapped in the following line.
+   */
+  wordWrap?: boolean
+
 }
 const defaultTextAreaProps: Required<ConcreteTextAreaProps> = {
   ...defaultInputProps,
   currentLine: 0,
+  wordWrap: false,
   changeKeys: e => e.name === 'escape',
   downKeys: e => e.name === 'down',
   upKeys: e => e.name === 'up',
@@ -153,7 +161,7 @@ export class TextArea extends Component<TextAreaProps> {
       elementType={TextArea.elementType}
     >
       {this.lines.map(l =>
-        <el width={.999} height={1} value={l} focusable={false}
+        <el width={.999} height={} value={l} focusable={false}
           border={undefined} fg="white" bg="black" focus={undefined}>{l}
         </el>
       )}

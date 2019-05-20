@@ -1,6 +1,7 @@
-import { Flor, FlorDocument } from '../src'
+import { Flor, FlorDocument, Scrollable } from '../src'
 import { TextArea } from '../src/component/textArea'
 import { defaultTestSetup, willContain } from './testUtil'
+import { longText } from './data';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 
@@ -82,5 +83,25 @@ tempor enim occaecat.
       tempor enim occaecat.`.trim())
     done()
   })
+
+
+
+  xit('should render text, allow to focus, move cursor and insert text', async done => {
+    const value = longText()
+    const app = <el  width={.9} height={.9} left={.1} top={.1}    >
+      <Scrollable width={.9} height={.9} left={1} top={1}>
+        <TextArea focus={undefined}
+      value={value} width={888} height={88} left={1} top={1} border={undefined}  
+      bg="gray" fg="green" padding={{ top: 1, left: 1, right: 1, bottom: 1 }}
+      >
+      </TextArea>
+      </Scrollable>
+    </el>
+    const le = flor.create(app)
+    flor.render()
+
+  })
+
+
 
 })
