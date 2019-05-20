@@ -1,5 +1,5 @@
-import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement, SingleLineTextInputCursor, TextInputCursorMulti } from '../src';
-import { defaultTestSetup, willContain, expectToContain, expectNotToContain } from './testUtil';
+import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement, SingleLineTextInputCursor, TextInputCursorMulti } from '../src'
+import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
 
 describe('cursorTextEditor', () => {
 
@@ -134,7 +134,6 @@ describe('cursorTextEditor', () => {
 
   })
 
-
   describe('multi line', () => {
 
     let flor: FlorDocument
@@ -174,18 +173,18 @@ Que los cumplas feliz.
       await willContain(flor, 'Que los cumplas,')
       expectNotToContain(flor, '*um*')
       expectNotToContain(flor, '*plas*')
-      el.key({name: 'right', ctrl: true})
-      el.key({name: 'right', ctrl: true})
+      el.key({ name: 'right', ctrl: true })
+      el.key({ name: 'right', ctrl: true })
       el.key('right', 2)
       el.key('down')
       el.key('*')
       el.key('enter')
       el.key('*')
-        el.key('right', 2)
+      el.key('right', 2)
       el.key('*')
       el.key('enter')
       el.key('*')
-      el.key({name: 'right', ctrl: true})
+      el.key({ name: 'right', ctrl: true })
       el.key('*')
       el.key('enter')
       expectToContain(flor, '*um*')

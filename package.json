@@ -1,6 +1,6 @@
 {
   "name": "flor",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Command line user interface JavaScript toolkit",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -19,10 +19,11 @@
     "clean": "rm -rf dist",
     "docs": "npm run docs-readme-toc",
     "format": "npx ts-refactor format \"src/**/*.ts*\" \"spec/**/*.ts*\" ./formatCodeSettings.json --tsConfigPath ./tsconfig.json --dontAsk",
+    "lint": "npm run organizeImports && npm run format && npm run tslint",
     "docs-readme-toc": "npx markdown-toc README.md -i",
     "docs-api-md": "D=docs/api/md && rm -rf $D; mkdir $D ; npx typedoc --options typedoc.ts --theme markdown --out $D",
     "all-test": "npm run clean   && npm run build && npm test && npm run test-quick-js ",
-    "all": "npm run clean && npm run organizeImports && npm run tslint &&  npm run build && npm run all-test",
+    "all": "npm run clean && npm run lint &&  npm run build && npm run all-test",
     "organizeImports": "npx ts-refactor organizeImports \"src/**/*.ts*\" \"spec/**/*.ts*\" --dontAsk ",
     "tslint": "npx tslint -p ./tsconfig.json --fix; echo linted",
     "browserify": "rm -rf dist build && npm run build && mkdir -p build && npx browserify dist/test/programTest.js -o build/programTest.js && npx terser build/programTest.js -o build/programTest.js"

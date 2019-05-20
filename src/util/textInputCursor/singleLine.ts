@@ -9,13 +9,18 @@ interface TextInputCursorKeys {
   backspace: KeyPredicate
   delete: KeyPredicate
   enter: KeyPredicate
-  controlLeft: KeyPredicate
-  controlRight: KeyPredicate
+  leftWord: KeyPredicate
+  rightWord: KeyPredicate
   controlUp: KeyPredicate
   controlDown: KeyPredicate
   controlBackspace: KeyPredicate
   controlDelete: KeyPredicate
+  shiftLeft: KeyPredicate
   shiftRight: KeyPredicate
+  pagedown: KeyPredicate
+  pageup: KeyPredicate
+  home: KeyPredicate
+  end: KeyPredicate
 }
 
 export interface Options {
@@ -49,6 +54,11 @@ export interface Options {
    * 'down' at the end of the file. Listeners can right a bell for example.
    */
   onInvalidAction?(a: Action): void
+
+  /**
+   * For pageup / pagedown actions, since this component is purely logic and independent from UI implementation it needs to be provided the page size.
+   */
+  pageSize?: number
 }
 
 /**
@@ -69,17 +79,22 @@ const defaultTextInputCursorKeys: TextInputCursorKeys = {
   right: e => noModifiers(e, 'right'),
   up: e => noModifiers(e, 'up'),
   down: e => noModifiers(e, 'down'),
+  home: e => noModifiers(e, 'home'),
+  end: e => noModifiers(e, 'end'),
   backspace: e => noModifiers(e, 'backspace'),
   delete: e => noModifiers(e, 'delete'),
-  // heads up: when 'enter' key is pressed two events are emitted, 'enter' and 'return' we want to handle only one. 
-  enter: e => e.name === 'enter',//  || e.name === 'return',  
-  controlLeft: e => e.name === 'left' && e.ctrl && !e.shift && !e.meta,
-  controlRight: e => e.name === 'right' && e.ctrl && !e.shift && !e.meta,
+  // heads up: when 'enter' key is pressed two events are emitted, 'enter' and 'return' we want to handle only one.
+  enter: e => e.name === 'enter',//  || e.name === 'return',
+  leftWord: e => e.name === 'left' && e.ctrl && !e.shift && !e.meta,
+  rightWord: e => e.name === 'right' && e.ctrl && !e.shift && !e.meta,
   controlUp: e => e.name === 'up' && e.ctrl && !e.shift && !e.meta,
   controlDown: e => e.name === 'down' && e.ctrl && !e.shift && !e.meta,
   controlBackspace: e => e.name === 'backspace' && e.ctrl && !e.shift && !e.meta,
   controlDelete: e => e.name === 'delete' && e.ctrl && !e.shift && !e.meta,
-  shiftRight: e => e.name === 'right' && !e.ctrl && e.shift && !e.meta
+  shiftLeft: e => e.name === 'right' && !e.ctrl && e.shift && !e.meta,
+  shiftRight: e => e.name === 'right' && !e.ctrl && e.shift && !e.meta,
+  pageup: e => noModifiers(e, 'pageup'),
+  pagedown: e => noModifiers(e, 'home')
 }
 
 /**
@@ -142,7 +157,7 @@ export class SingleLineTextInputCursor {
     this.lineText = this._lines[this.y]
   }
 
-  protected previousEvent: KeyEvent|undefined
+  protected previousEvent: KeyEvent | undefined
   /**
    * Notification of a key press event. We update out internal state [[pos]] and [[text]] user is responsible of the rest (update the UI, render(), absolute position, etc)
    */
@@ -151,16 +166,15 @@ export class SingleLineTextInputCursor {
       this.invalidAction({
         key: e.name, reason: 'TextInputCursor disabled'
       })
-    } else if(this.previousEvent &&['enter', 'return'].includes(this.previousEvent.name)&& ['enter', 'return'].includes( e.name)){
+    } else if (this.previousEvent && ['enter', 'return'].includes(this.previousEvent.name) && ['enter', 'return'].includes(e.name)) {
       // wne 'enter' hwy is pressed two events are emitted 'enter', 'return and we want to to handle only one of them.
-    }
-      else if (this.keys.right(e)) {
+    } else if (this.keys.right(e)) {
       this.right()
-    } else if (this.keys.controlRight(e)) {
+    } else if (this.keys.rightWord(e)) {
       this.rightWord()
     } else if (this.keys.left(e)) {
       this.left()
-    } else if (this.keys.controlLeft(e)) {
+    } else if (this.keys.leftWord(e)) {
       this.leftWord()
     } else if (this.keys.up(e)) {
       this.up()
@@ -172,6 +186,14 @@ export class SingleLineTextInputCursor {
       this.backspace()
     } else if (this.keys.delete(e)) {
       this.delete()
+    } else if (this.keys.end(e)) {
+      this.end()
+    } else if (this.keys.home(e)) {
+      this.home()
+    } else if (this.keys.pageup(e)) {
+      this.pageup()
+    } else if (this.keys.pagedown(e)) {
+      this.pagedown()
     } else {
       const c = this.validInputChar(e)
       if (c) {
@@ -193,16 +215,47 @@ export class SingleLineTextInputCursor {
     // TODO else {
   }
 
-  // protected insertString(c: string) {
-  //   this.lineText = this.lineText.substring(0, this.x) + c + this.lineText.substring(this.x, this.lineText.length)
-  //   this.x++
-  // }
-  right() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'right', reason: 'TextInputCursor disabled'
+  pagedown(): any {
+    if (this.x >= this.lineText.length) {
+      this.invalidAction({
+        key: 'pagedown', reason: 'cannot go further down when at the end of file'
+      })
+    } else {
+      this.x = this.lineText.length
+    }
+  }
+
+  pageup(): any {
+    if (this.x > 0) {
+      this.x = 0
+    } else {
+      this.invalidAction({
+        key: 'pageup', reason: 'cannot go further up when at the beginning of file'
       })
     }
+  }
+
+  home(): any {
+    if (this.x > 0) {
+      this.x = 0
+    } else {
+      this.invalidAction({
+        key: 'pageup', reason: 'cannot go further up when at the beginning of file'
+      })
+    }
+  }
+
+  end(): any {
+    if (this.x >= this.lineText.length) {
+      this.invalidAction({
+        key: 'pagedown', reason: 'cannot go further down when at the end of file'
+      })
+    } else {
+      this.x = this.lineText.length
+    }
+  }
+
+  right() {
     if (this.x < this.lineText.length) {
       this.x++
     } else {
@@ -213,11 +266,6 @@ export class SingleLineTextInputCursor {
   }
 
   left() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'left', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x > 0) {
       this.x--
     } else {
@@ -228,11 +276,6 @@ export class SingleLineTextInputCursor {
   }
 
   up() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'up', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x > 0) {
       this.x = 0
     } else {
@@ -243,11 +286,6 @@ export class SingleLineTextInputCursor {
   }
 
   down() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'down', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x >= this.lineText.length) {
       this.invalidAction({
         key: 'down', reason: 'cannot go further down when at the end of file'
@@ -258,22 +296,12 @@ export class SingleLineTextInputCursor {
   }
 
   enter() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'enter', reason: 'TextInputCursor disabled'
-      })
-    }
     this.invalidAction({
       key: 'enter', reason: 'enter not supposed by single line'
     })
   }
 
   backspace() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'backspace', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x > 0) {
       this.lineText = this.lineText.substring(0, this.x - 1) + this.lineText.substring(this.x, this.lineText.length)
       this.x--
@@ -285,11 +313,6 @@ export class SingleLineTextInputCursor {
   }
 
   delete() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'delete', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x < this.lineText.length) {
       this.lineText = this.lineText.substring(0, this.x) + this.lineText.substring(this.x + 1, this.lineText.length)
     } else {
@@ -300,11 +323,6 @@ export class SingleLineTextInputCursor {
   }
 
   rightWord() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'controlRight', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x < this.lineText.length) {
       this.x = this.lineText.split('').findIndex((s, i, a) => i > this.x && !s.trim())
       this.x = this.x === -1 ? this.lineText.length : this.x
@@ -316,11 +334,6 @@ export class SingleLineTextInputCursor {
   }
 
   leftWord() {
-    if (!this.enabled) {
-      return this.invalidAction({
-        key: 'controlLeft', reason: 'TextInputCursor disabled'
-      })
-    }
     if (this.x > 0) {
       // const a = getPreviousMatchingPos(this.lineText, this.x, c=>!c.trim())
       this.x = this.lineText.split('').reverse().findIndex((s, i, a) => i > a.length - this.x && !s.trim())
