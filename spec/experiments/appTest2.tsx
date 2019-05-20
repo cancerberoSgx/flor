@@ -21,9 +21,9 @@ class App extends Component<P> {
         <Box width={.999} flexShrink={1} border={{ type: BorderStyle.round }} height={.3}
           fg="red"
         ></Box>
-        <Box id="output-panel" width={.999} height={.7} flexShrink={1}
-          ch="/"
+        <Box id="output-panel" width={.999} height={.7} flexShrink={1} ch="/"
         >
+        
         </Box>
       </Box>
       <Box id="right-column" width={.35} flexShrink={1} height={.999}

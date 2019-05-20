@@ -167,9 +167,9 @@ Que los cumplas feliz.
       }}
       >{text.split('\n').map((line, i) => <el {...{ top: i, left: 0, width: .99, height: 1 }}>{line}</el>)}</el>)
       flor.render()
-      flor.cursor.show({
-        name: 'cursorTextEditorTest1', top: el.absoluteContentTop, left: el.absoluteContentLeft
-      })
+      // flor.cursor.show({
+      //   name: 'cursorTextEditorTest1', top: el.absoluteContentTop, left: el.absoluteContentLeft
+      // })
       await willContain(flor, 'Que los cumplas,')
       expectNotToContain(flor, '*um*')
       expectNotToContain(flor, '*plas*')

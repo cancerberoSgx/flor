@@ -23,7 +23,7 @@ interface TextInputCursorKeys {
   end: KeyPredicate
 }
 
-export interface Options {
+export interface TextInputCursorOptions {
   /**
    * if true it won't allow to create new lines.
    */
@@ -74,7 +74,7 @@ function noModifiers(e: KeyEvent, name?: string) {
   return !e.ctrl && !e.meta && !e.ctrl && !e.shift && (name ? e.name === name : true)
 }
 
-const defaultTextInputCursorKeys: TextInputCursorKeys = {
+export const defaultTextInputCursorKeys: TextInputCursorKeys = {
   left: e => noModifiers(e, 'left'),
   right: e => noModifiers(e, 'right'),
   up: e => noModifiers(e, 'up'),
@@ -109,7 +109,7 @@ export class SingleLineTextInputCursor {
   protected keys: TextInputCursorKeys
   protected _lines: string[]
 
-  constructor(protected options: Options) {
+  constructor(protected options: TextInputCursorOptions) {
     this._lines = (options.text || '').split('\n')
     this.enabled = !!options.enabled
     this.x = options.pos ? options.pos.col : 0
@@ -131,6 +131,9 @@ export class SingleLineTextInputCursor {
   }
 
   protected get lines() {
+    return this._lines
+  }  
+  getValueLines()  {
     return this._lines
   }
 

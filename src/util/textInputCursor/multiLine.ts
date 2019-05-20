@@ -1,4 +1,4 @@
-import { Options, SingleLineTextInputCursor } from './singleLine'
+import { TextInputCursorOptions, SingleLineTextInputCursor } from './singleLine'
 
 /**
  * Synchronizes text being edited with cursor movement. Based on [[SingleLineTextInputCursor]]
@@ -15,8 +15,9 @@ import { Options, SingleLineTextInputCursor } from './singleLine'
  *    line up and append it to the previous one. The cursor will be in the middle of two.
  */
 export class TextInputCursorMulti extends SingleLineTextInputCursor {
+
   defaultPageSize: number = 20
-  constructor(options: Options) {
+  constructor(options: TextInputCursorOptions) {
     super(options)
     this.y = options.pos && options.pos.row || 0
   }
