@@ -22,9 +22,9 @@ export const focusableProps: () => Partial<YogaElementProps> = () => ({
   border: { ...baseProps(), type: BorderStyle.round, fg: 'blue' },
   focusable: true,
   focus: {
-    border: { fg: 'red' },
+    border: { ...baseProps(), type: BorderStyle.double, fg: 'red' },
     bold: true,
-    fg: 'white',
+    fg: 'green',
     bg: 'gray'
   }
 })

@@ -242,7 +242,10 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     }
     setTimeout(() => {
       this.program.saveCursor('flor.debug')
-      args.map(a => typeof a === 'string' ? [a] : inspect(a, { sorted: true, compact: true, maxArrayLength: 4, breakLength: 44 }).split('\n')).flat()
+      args.map(a => JSON.stringify(a))
+      // inspect(a, { sorted: true, compact: true, maxArrayLength: 4, breakLength: 44 })
+      // .split('\n'))
+      // .flat()
         .forEach((c, i) => {
           // this.program.saveCursor(  'flor.debug')
           const writeArea = {...this.renderer.writeArea}

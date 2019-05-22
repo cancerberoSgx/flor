@@ -1,4 +1,4 @@
-import { array, indent } from 'misc-utils-of-mine-generic'
+import { array, indent, objectKeys, objectFilter, objectMap } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
@@ -7,9 +7,9 @@ import { RenderElementOptions } from '../manager';
 import { ElementProps } from './types';
 
 export class ProgramElement extends Element {
-  resolvePropValue<K extends keyof ElementProps = keyof ElementProps>(k: K): ElementProps[K] {
-    return this.props.data[k]||this.parentElement && this.parentElement.resolvePropValue(k)||undefined
-  }
+  // resolvePropValue<K extends keyof ElementProps = keyof ElementProps>(k: K): ElementProps[K] {
+  //   return this.props.data[k]||this.parentElement && this.parentElement.resolvePropValue(k)||undefined
+  // }
   private static counter = 1
 
   props: ElementPropsImpl
@@ -457,9 +457,10 @@ export class ProgramElement extends Element {
    * Returns a XML like string representation of this element instance.
    */
   debugAsXml(o: DebugOptions = { level: 0 }): string {
+    const noF = objectMap(this.props.data, (k, v)=>typeof v === 'function' ? v.toString(): v)
     return `${indent(o.level)}<${this.tagName} ${
-      Object.keys({ ...this.props.data })
-        .map(p => `${p}=${JSON.stringify(this.props.data[p])}`)
+      objectKeys({ ...noF })
+        .map(p => `${p}=${JSON.stringify(noF[p])}`)
         .join(' ')} ${
       this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${
       this.childNodes
@@ -533,7 +534,7 @@ export class ProgramElement extends Element {
 
 }
 
-interface DebugJsonNode { [s: string]: any, children: DebugJsonNode[] }
+interface DebugJsonNode { [s: string]: any, children: (DebugJsonNode|string)[] }
 
 interface DebugOptions {
   level: number

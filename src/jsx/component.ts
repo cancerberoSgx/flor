@@ -1,6 +1,7 @@
 import { ProgramElement } from '../programDom/programElement'
 import { Deferred } from '../util/misc'
 import { ComponentProps } from './types'
+import { unique } from 'misc-utils-of-mine-generic';
 
 /**
  * Simple abstract Component class (like React.Component) but without life cycle methods.
@@ -8,9 +9,11 @@ import { ComponentProps } from './types'
  * Has a dummy state property that subclasses could implement some behavior for, right now it does nothing.
  */
 export abstract class Component<P = {}, S = {}> {
+  readonly internalId: string;
 
   constructor(protected props: P & ComponentProps, protected state: S) {
     this.elementReady = new Deferred<ProgramElement>()
+    this.internalId = unique('component_')
   }
 
   protected elementReady: Deferred<ProgramElement>

@@ -15,11 +15,13 @@ interface ConcreteTextAreaProps extends TextInputCursorOptions {
 
 export class TextArea extends Component<TextAreaProps> {
   editor: TextInputCursorMulti
+  protected cursorName:string
   constructor(p: TextAreaProps, s: {}) {
     super(p, s)
     this.editor = new TextInputCursorMulti({
       ...this.props
     })
+    this.cursorName = TextArea.elementType+this.internalId
   }
 
   protected lineProps = { left: 0, width: .99, height: 1, border: undefined, padding: undefined }
@@ -28,7 +30,7 @@ export class TextArea extends Component<TextAreaProps> {
     if (!this.cursor || !this.element) {
       return
     }
-    this.cursor.hide({ name: TextArea.elementType })
+    this.cursor.hide({ name: this.cursorName })
     this.editor.onKey(e)
     const el = this.element
     el.empty()
@@ -37,35 +39,42 @@ export class TextArea extends Component<TextAreaProps> {
     })
     el.childNodes[0].textContent = this.editor.value
     el.render()
-    this.cursor.show({
-      name: 'cursorTextEditorTest1', top: el.absoluteContentTop + this.editor.pos.row, left: el.absoluteContentLeft + this.editor.pos.col
-    })
+    // this.cursor.show({
+    //   name: 'cursorTextEditorTest1', 
+    //   top: el.absoluteContentTop + this.editor.pos.row, 
+    //   left: el.absoluteContentLeft + this.editor.pos.col
+    // })
     this.props.onInput && this.props.onInput({ ...e, currentTarget: this.element, input: this.editor.value })
     this.renderElement()
-    this.cursor.show({ name: TextArea.elementType, top: el.absoluteContentTop + this.editor.pos.row, left: el.absoluteContentLeft + this.editor.pos.col })
+    this.cursor.show({ 
+      name: this.cursorName, 
+      top: el.absoluteContentTop + this.editor.pos.row, 
+      left: el.absoluteContentLeft + this.editor.pos.col 
+    })
   }
 
   protected static elementType = 'flor.textArea'
-  static is(n: Node): n is ElementOfComponent<TextArea> {
-    return isElement(n) && n.props.elementType === TextArea.elementType
-  }
+  // static is(n: Node): n is ElementOfComponent<TextArea> {
+  //   return isElement(n) && n.props.elementType === this.cursorName
+  // }
 
   render() {
     return <el {...focusableProps()} {...this.props}
       onFocus={e => {
         if (this.cursor && this.element) {
           this.cursor.show({
-            name: TextArea.elementType, top: this.element.absoluteContentTop + this.editor.pos.row, left: this.element.absoluteContentLeft + this.editor.pos.col
+            name: this.cursorName, 
+            top: this.element.absoluteContentTop + this.editor.pos.row, 
+            left: this.element.absoluteContentLeft + this.editor.pos.col
           })
           this.props.onFocus &&  this.props.onFocus(e)
         }
       }}
       onBlur={e => {
         if (this.cursor && this.element) {
-          this.cursor.hide({ name: TextArea.elementType })
+          this.cursor.hide({ name: this.cursorName })
           this.props.onBlur &&  this.props.onBlur(e)
         }
-        
       }}
       onKeyPressed={e => {
         if (!this.cursor || !this.element) {
@@ -79,7 +88,9 @@ export class TextArea extends Component<TextAreaProps> {
         this.element.childNodes[0].textContent = this.editor.value
         this.element.render()
         this.cursor.show({
-          name: TextArea.elementType, top: this.element.absoluteContentTop + this.editor.pos.row, left: this.element.absoluteContentLeft + this.editor.pos.col
+          name: this.cursorName, 
+          top: this.element.absoluteContentTop + this.editor.pos.row, 
+          left: this.element.absoluteContentLeft + this.editor.pos.col
         })
         this.props.onKeyPressed &&  this.props.onKeyPressed(e)
       }}

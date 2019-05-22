@@ -44,7 +44,9 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
       // width: this.getWidth(), height: this.getHeight(), left: this.getLeft(), top: this.getTop()   
      }
   }
-
+  // set data(d: any){
+  //   super.data = d
+  // }
   public get textWrap(): boolean | undefined {
     return this._data.textWrap
   }

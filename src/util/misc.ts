@@ -1,3 +1,9 @@
+import { ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript';
+import { RemoveProperties } from 'misc-utils-of-mine-generic';
+
+export type KeysValued<T, V, K extends keyof T = keyof T>=V extends T[K] ? K : never
+export type RemoveKeysValued<T, V> = Exclude<ObjectStringKeyUnion<T>, KeysValued<T, V>>
+export type RemovePropertiesValued<T, V>= RemoveProperties<T,RemoveKeysValued<T, V>>
 
 export const nextTick = global.setImmediate || process.nextTick.bind(process)
 
@@ -52,33 +58,3 @@ export class Deferred<R, J = any> {
     return this.promise.catch(r)
   }
 }
-
-// /**
-//  * Promise instance resolvable by an external actor. This is an anti pattern but is useful in some cases when
-//  * two different actors at different moments collaborate to provide a async notification where one knows when
-//  * to create the promise object and later another knows how to resolve. The only way of solving this is by
-//  * having a emitter and subscribing in the promise resolve. instead of having to create such an emitter, we
-//  * leave the promise as API and coordinate with other actor that will take care of resolving it (this last
-//  * actor, doesn't konw or is too late to provide an API for listeners). Usage:
-
-// ```ts
-// apiProvider(){
-//   this.somethingReady = new ResolvablePromise(resolve=>{
-//     this.somethingReady.resolve = resolve
-//   })
-// }
-// ...
-// resolverActor(){
-//   this.somethingReady.resolve(something())
-// }
-// ```
-// */
-// export class ResolvablePromise<T> extends Promise<T> {
-//   resolve: ((t: T) => void) = null as any
-//   constructor(executor: (resolve: (value?: T | PromiseLike<T>) => void, reject?: (reason?: any) => void) => void) {
-//     super(resolve => {
-//       this.resolve = resolve
-//       new Promise(executor.bind(this)).then(resolve)
-//     })
-//   }
-// }

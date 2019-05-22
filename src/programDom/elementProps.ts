@@ -3,14 +3,21 @@ import { BlurEvent, FocusEvent } from '../'
 import { Node } from '../dom'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps, StyleProps } from './types'
+import { objectFilter, RemoveProperties } from 'misc-utils-of-mine-generic';
+import { RemoveKeysValued, RemovePropertiesValued } from '../util/misc';
 
 export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<ElementProps> {
 
+  // dataNoFunctions() {
+  //   return {...objectFilter(super.data, (k,v)=>typeof v!=='function'), ...this._dataFocus ? {focus: this._dataFocus.data} : {} } as Partial<RemovePropertiesValued<T, (...args: any[])=>any>>
+  // }  
   get data() {
-    return {...super.data, ...this._dataFocus ? {focus: this._dataFocus.data} : {} }
+    return { ...super.data, ...this._dataFocus ? {focus: this._dataFocus.data} : {} } 
   }
 
-
+  // set data(d: any){
+  //   super.data = d
+  // }
   public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow
   }
