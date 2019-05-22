@@ -1,9 +1,12 @@
 import { FocusEvent, ProgramElement, StyleProps } from '../programDom'
 import { FocusManager } from './focusManager'
+import { objectKeys } from 'misc-utils-of-mine-generic';
+import { debug } from '../util';
 
 interface State {
   dirty: boolean
-  notFocusedStyle?: Partial<StyleProps>
+  normalProps?: Partial<StyleProps>
+  focusProps?: Partial<StyleProps>
 }
 
 interface Options<T extends ProgramElement = ProgramElement> {
@@ -40,8 +43,15 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     }
     let s = this._state[e.internalId]
     if (!s) {
+      const focusedStyle:Partial<StyleProps> = { ...this.options.focusedExtraStyles || {}, ...e.props.data, ...e.props.data.focus||{} }
+      const notFocusedStyle = { ...this.options.normalExtraStyles, ... e.props.data}
+      // objectKeys(focusStyle).forEach(k => {
+      //   notFocusedStyle[k] = focused.resolvePropValue(k )
+      // })
       s = {
-        dirty: !!e.props.focus
+        dirty: !!e.props.focus,
+        focusProps: focusedStyle,
+        normalProps: notFocusedStyle
       }
       this._state[e.internalId] = s
     }
@@ -50,29 +60,26 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
 
   protected setFocusedStyle(focused?: T) {
     const s = this.get(focused)
-    if (!focused || !s || !s.dirty || !focused.props.focus || !focused.props.focus.data) {
+    if (!focused || !s || !s.dirty ||!s.focusProps) {
       return
     }
-    const focusStyle = { ...this.options.focusedExtraStyles || {}, ...focused.props.focus.data }
+   
     // TODO: if default style changes after this moment, we will loose the changes. Perhaps we need to remove the if()
-    if (!s.notFocusedStyle) {
-      const focusedKeys = Object.keys(focusStyle)
-      s.notFocusedStyle = { ...this.options.normalExtraStyles || {} }
-      focusedKeys.forEach(k => {
-        (s.notFocusedStyle as any)[k] = focused.props.data[k]
-      })
-    }
-    focused.props.assign(focusStyle)
-    focused.render()
+    
+    focused.props.assign(s.focusProps)
+    focused.render()//{preventSiblingCascade: true, preventChildrenCascade: true})
   }
 
   protected setNotFocusedStyle(previous: T | undefined) {
     const s = this.get(previous)
-    if (!previous || !s || !s.dirty || !s.notFocusedStyle) {
+    if (!previous || !s || !s.dirty || !s.normalProps) {
       return
     }
-    previous.props.assign(s.notFocusedStyle)
-    previous.render()
+    debug(JSON.stringify(s.normalProps, null, 2))
+    // console.log(s.notFocusedStyle);
+    
+    previous.props.assign(s.normalProps)
+    previous.render()//{preventSiblingCascade: true, preventChildrenCascade: true})
   }
 
   setNormalExtraStyles(styles: Partial<StyleProps>) {

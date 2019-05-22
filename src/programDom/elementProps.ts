@@ -6,6 +6,11 @@ import { ElementProps, StyleProps } from './types'
 
 export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<ElementProps> {
 
+  get data() {
+    return {...super.data, ...this._dataFocus ? {focus: this._dataFocus.data} : {} }
+  }
+
+
   public get overflow(): 'visible' | 'hidden' | undefined {
     return this._data.overflow
   }

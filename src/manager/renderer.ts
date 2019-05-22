@@ -60,7 +60,7 @@ background, then the next sibling will have that border or background by default
      elements will always need to declare **all** its properties explicitly.
 
  */
-interface RenderElementOptions {
+export interface RenderElementOptions {
   /**
    * Default value is `false`. in which case, children inherits its parent properties, declared or not
    * declared. If `true`, children won't inherits parent's properties. See [[RenderElementOptions]]
@@ -350,6 +350,9 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
+
+    let originalAttrs = options.preventChildrenCascade&&options.preventSiblingCascade ?  this._currentAttrs : undefined
+
     let originalWriteArea: Rectangle | undefined
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
@@ -369,6 +372,9 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     el._renderCounter = this.renderCounter++
     if (originalWriteArea) {
       this._writeArea = originalWriteArea
+    }
+    if(originalAttrs){
+      this.currentAttrs = originalAttrs
     }
     return el
   }

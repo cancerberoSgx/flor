@@ -3,8 +3,13 @@ import { BorderProps, Component, createElement, Element, ElementPropsImpl, Event
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
 import { rectangleIntersects } from './elementUtil'
+import { RenderElementOptions } from '../manager';
+import { ElementProps } from './types';
 
 export class ProgramElement extends Element {
+  resolvePropValue<K extends keyof ElementProps = keyof ElementProps>(k: K): ElementProps[K] {
+    return this.props.data[k]||this.parentElement && this.parentElement.resolvePropValue(k)||undefined
+  }
   private static counter = 1
 
   props: ElementPropsImpl
@@ -426,8 +431,8 @@ export class ProgramElement extends Element {
   /**
    * If the owner document has a renderer available it request to render this element on the screen.
    */
-  render() {
-    this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this)
+  render( options?: RenderElementOptions) {
+    this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this, options)
   }
 
   /**

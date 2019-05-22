@@ -12,12 +12,22 @@ import { createProgramForBrowser, installExitKeys, ProgramBrowserOptions } from 
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 
 export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends RendererCreateOptions, ProgramBrowserOptions {
+
   /**
+   * If true, it will install key listeners so `tab` and `S-tab` will focus next and previous focusable 
+   * elements present in the program respectively. By default is false.
+   */
+  installDefaultChangeFocusKeys?: boolean
+
+  /**
+   * If true, it will install key listeners so when 'q' or 'C-c' keys are pressed the program is destroyed. 
+   * 
    * By default is true.
    */
-  installExitKeys?: boolean
+  installDefaultExitKeys?: boolean
+
   /**
-   * If provided, this program instance will be used instead of creating a new one
+   * If provided, this program instance will be used instead of creating a new one.
    */
   program?: Program
 
@@ -84,9 +94,10 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
   private _cursor: CursorManager = undefined as any
   private _effects: StyleEffectsManager<E> = undefined as any
 
-  protected static programDefaultOptions = {
+  protected static programDefaultOptions : FlorDocumentOptions = {
     buffer: true,
-    installExitKeys: true,
+    installDefaultExitKeys: true,
+    installDefaultChangeFocusKeys: false,
     enableMouse: true,
     browser: false,
     installLoggers: false
@@ -103,7 +114,7 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     }
     this.render = this.render.bind(this)
     this._events = new EventManager(this._program)
-    if (options.installExitKeys) {
+    if (options.installDefaultExitKeys) {
       installExitKeys(this._program)
     }
     this._document = options.documentImplementation ? options.documentImplementation() : new ProgramDocument() as any
@@ -111,6 +122,9 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
+    if(options.installDefaultChangeFocusKeys){
+      this._focus.installDefaultChangeFocusKeys()
+    }
     this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this._cursor.enter()
     this._effects = new StyleEffectsManager<E>({
@@ -223,20 +237,30 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
    * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
   debug(...args: any[]) {
+    if(this._debugTimer){
+      clearTimeout(this._debugTimer)
+    }
     setTimeout(() => {
-      this.program.saveCursor('flordebug')
-      args.map(a => typeof a === 'string' ? [a] : inspect(a, { sorted: true, compact: true, maxArrayLength: 44, breakLength: 120 }).split('\n')).flat()
+      this.program.saveCursor('flor.debug')
+      args.map(a => typeof a === 'string' ? [a] : inspect(a, { sorted: true, compact: true, maxArrayLength: 4, breakLength: 44 }).split('\n')).flat()
         .forEach((c, i) => {
-          this.renderer.write(i, 0, c)
+          // this.program.saveCursor(  'flor.debug')
+          const writeArea = {...this.renderer.writeArea}
+          this.renderer.resetWriteArea()
+          this.renderer.write(i, 0, `<DEBUG>${c}</DEBUG>`)
+          this.renderer.writeArea = writeArea
+          // this.program.restoreCursor(  'flor.debug')
+
         })
-      this.program.restoreCursor('flordebug')
-      setTimeout(() => {
-        this.program.saveCursor('flordebug')
+      this.program.restoreCursor('flor.debug')
+      this._debugTimer = setTimeout(() => {
+        this.program.saveCursor('flor.debug')
         this.render()
-        this.program.restoreCursor('flordebug')
-      }, 3000)
-    }, 1000)
+        this.program.restoreCursor('flor.debug')
+      }, 30000)
+    }, 500)
   }
+  private _debugTimer: NodeJS.Timeout|undefined
 
   private installLoggers() {
     addLogger({

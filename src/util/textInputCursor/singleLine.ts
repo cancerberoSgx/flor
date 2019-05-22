@@ -124,10 +124,18 @@ export class SingleLineTextInputCursor {
   }
 
   protected get lineText(): string {
+    this._verifyValidRow();
     return this._lines[this.y]
   }
   protected set lineText(value: string) {
+    this._verifyValidRow();
     this._lines[this.y] = value
+  }
+
+  private _verifyValidRow() {
+    if (this.y < 0 || this.y >= this._lines.length) {
+      this.y = 0;
+    }
   }
 
   protected get lines() {
@@ -152,11 +160,13 @@ export class SingleLineTextInputCursor {
   }
 
   get pos() {
+    this._verifyValidRow();
     return { col: this.x, row: this.y }
   }
   set pos(p: Pos) {
     this.x = p.col
     this.y = p.row
+    this._verifyValidRow();
     this.lineText = this._lines[this.y]
   }
 

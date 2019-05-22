@@ -8,6 +8,7 @@ describe('core', () => {
     expect(Object.keys(s.data)).toEqual(['bg'])
     done()
   })
+
   it('Element.props should not spread private members', async done => {
     const doc = new ProgramDocument()
     const el = doc.createElement('box')
@@ -16,7 +17,7 @@ describe('core', () => {
     expect({ ...s }).toEqual({})
     expect(Object.keys(s)).toEqual([])
     el.props.bg = 'blue'
-    expect(Object.keys(s)).toEqual(['bg'])
+    expect(Object.keys(el.props.data)).toEqual(['bg'])
     done()
   })
 

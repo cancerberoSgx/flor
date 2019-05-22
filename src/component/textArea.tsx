@@ -22,6 +22,8 @@ export class TextArea extends Component<TextAreaProps> {
     })
   }
 
+  protected lineProps = { left: 0, width: .99, height: 1, border: undefined, padding: undefined }
+
   protected onKey(e: KeyEvent) {
     if (!this.cursor || !this.element) {
       return
@@ -31,7 +33,7 @@ export class TextArea extends Component<TextAreaProps> {
     const el = this.element
     el.empty()
     this.editor.value.split('\n').forEach((line, i) => {
-      el.create({ children: [line], top: i, left: 0, width: .99, height: 1 })
+      el.create({ children: [line], top: i, ...this.lineProps })
     })
     el.childNodes[0].textContent = this.editor.value
     el.render()
@@ -50,6 +52,21 @@ export class TextArea extends Component<TextAreaProps> {
 
   render() {
     return <el {...focusableProps()} {...this.props}
+      onFocus={e => {
+        if (this.cursor && this.element) {
+          this.cursor.show({
+            name: TextArea.elementType, top: this.element.absoluteContentTop + this.editor.pos.row, left: this.element.absoluteContentLeft + this.editor.pos.col
+          })
+          this.props.onFocus &&  this.props.onFocus(e)
+        }
+      }}
+      onBlur={e => {
+        if (this.cursor && this.element) {
+          this.cursor.hide({ name: TextArea.elementType })
+          this.props.onBlur &&  this.props.onBlur(e)
+        }
+        
+      }}
       onKeyPressed={e => {
         if (!this.cursor || !this.element) {
           return
@@ -57,15 +74,16 @@ export class TextArea extends Component<TextAreaProps> {
         this.editor.onKey(e)
         this.element.empty()
         this.editor.value.split('\n').forEach((line, i) => {
-          this.element!.create({ children: [line], top: i, left: 0, width: .99, height: 1 })
+          this.element!.create({ children: [line], top: i, ...this.lineProps })
         })
         this.element.childNodes[0].textContent = this.editor.value
         this.element.render()
         this.cursor.show({
           name: TextArea.elementType, top: this.element.absoluteContentTop + this.editor.pos.row, left: this.element.absoluteContentLeft + this.editor.pos.col
         })
+        this.props.onKeyPressed &&  this.props.onKeyPressed(e)
       }}
-    >{this.editor.getValueLines().map((line, i) => <el {...{ top: i, left: 0, width: .99, height: 1 }}>{line}</el>)}
+    >{this.editor.getValueLines().map((line, i) => <el {...{ top: i, ...this.lineProps }}>{line}</el>)}
     </el>
   }
 }
