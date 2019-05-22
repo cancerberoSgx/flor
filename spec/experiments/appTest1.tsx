@@ -36,7 +36,7 @@ async function test() {
       <Button width={.5} height={3}> click me 4</Button>
 
       <el height={0.46} width={.99} bg="white" fg="black" layout={{
-        layout: Layout['justifiedRows'],
+        layout: Layout['justifiedLayout'],
         justifiedLayout: {
         }
       }}

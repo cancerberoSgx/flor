@@ -14,8 +14,10 @@ export interface Edges {
   right: number
   bottom: number
 }
+
 export interface Padding extends Edges {
 }
+
 /**
  * This represents the native styles attrs that are set directly using tput (the axioms)
  */
@@ -31,14 +33,16 @@ export interface Attrs {
 }
 
 export interface StyleProps extends Attrs {
+
   /**
- * Width of the element (number of columns or fraction).
- *
- * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentHeight]]
- * multiplied for that number. For example, width==0.5 will be half the parent's [[contentHeight]].
- * Otherwise is columns.
- */
+   * Width of the element (number of columns or fraction).
+   *
+   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentWidth]]
+   * multiplied for that number. For example, width==0.5 will be half the parent's [[contentWidth]]. Otherwise
+   * is columns.
+   */
   width: number
+
   /**
    * Height of the element (number of rows or fraction).
    *
@@ -47,39 +51,56 @@ export interface StyleProps extends Attrs {
    * Otherwise is rows.
    */
   height: number
+
   /**
    * Top coordinate (row number), relative to the parent.
    *
    * Can be negative number in which case the element will be outside parent's viewport.
    *
-   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute top
-   * position multiplied for that number. For example, top==0.5 will be position the element at the middle of
-   * the parent. Otherwise is rows.
+   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's [[contentHeight]]
+   * multiplied for that number. For example, top==0.5 will be position the element at the middle of the
+   * parent. Otherwise is rows.
    */
   top: number
+
   /**
    * Left coordinate (column number, negative column number or fraction), relative to the parent's
    * [[absoluteLeft]] coordinate.
    *
    * Can be negative number in which case the element will be outside parent's viewport.
    *
-   * If the value is a number between 0 and 1 (non inclusive) then it will be the parent's absolute left
-   * position multiplied for that number. For example, left==0.5 will be position the element at the middle of
-   * the parent. Otherwise is columns.
+   * If the value is a number between -1, 1 (non inclusive) then it will be the parent's [[contentWidth]]
+   * multiplied for that number. For example, left==0.5 will will position the element at the middle of the
+   * parent. Otherwise is a number in columns.
    */
   left: number
 
   /**
-   * If true child text nodes will be wrapped into element's [[contentWidth]]. Default value: false
+   * If true child text nodes will be wrapped into element's [[contentWidth]]. Default value: false.
    */
   textWrap: boolean
 
   /**
-   *
+   * Like in HTML DOM box model, the padding is the area between the border and the content. Adding padding
+   * won't change the element's bounds, but shrink the content bounds. Attributes like `bg` and `ch` applies
+   * in this area.  
    */
   padding: Padding
 
+  /**
+   * Layout element's children with a layout manager. `flor` supports several layout implementations, when one
+   * is defined, element's children will be positioned and possible sized according to the layout rules. See
+   * [[LayoutOptions]].
+   */
   layout: LayoutOptions
+
+  /**
+   * Similar to HTML DOM, when `visible` the area of elements that get outside this parent element will be
+   * visible, no matter if they are rendered outside this element's content area. If `hidden` the area of
+   * children outside this parent element won't be shown (the elements will be shown but truncated to the
+   * parent's content area).
+   */
+  overflow: 'visible' | 'hidden'
 
   /**
    * if defined, a 1-sized outer wrapper will be added in all size calculations and a border will be drawn.
@@ -90,7 +111,7 @@ export interface StyleProps extends Attrs {
   /**
    * It will prevent painting the background so back elements will be visible. IMPORTANT: if true then `bg`
    * property must be undefined. NOTE: to preserve parent's background color, just don't `bg` instead using
-   * this. This whould rarely used, probably useful fo rcustom elements that need to manage the rendering 100%
+   * this. This would rarely used, probably useful for custom elements that need to manage the rendering 100%
    * their self.
    */
   noFill: boolean
@@ -165,7 +186,6 @@ export interface ElementProps extends StyleProps, ComponentProps {
 
   focusable: boolean
   focused: boolean
-  overflow: 'visible' | 'hidden'
   preventChildrenCascade: boolean
   preventSiblingCascade: boolean
 
@@ -279,7 +299,14 @@ export interface ElementProps extends StyleProps, ComponentProps {
    */
   value: string
 
+  /**
+   * Called when the element looses its focus.
+   */
   onBlur?(e: BlurEvent): void | boolean
+
+  /**
+   * Called when the element gains focus.
+   */
   onFocus?(e: FocusEvent): void | boolean
 
   /**

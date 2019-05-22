@@ -52,19 +52,23 @@ export class ProgramElement extends Element {
    * @internal
    */
   doLayout() {
-    if (this.layout && (!this.layout.manualLayout || !this._layoutOnce)
+    if (this.layout 
+      // && (
+      // !this.layout.manualLayout || 
+      // !this._layoutOnce
+      // )
       && (this._positionDirty || this._boundsDirty)
     ) {
       layoutChildren({
         el: this, ...this.layout
       })
-      this._layoutOnce = true
+      // this._layoutOnce = trCue
     }
   }
-  private _layoutOnce = false
+  // private _layoutOnce = false
 
   public forceUpdate(descendants = false) {
-    this._layoutOnce = false
+    // this._layoutOnce = false
     this._positionDirty = true
     this._boundsDirty = true
     this.updateBounds(descendants)
@@ -122,7 +126,7 @@ export class ProgramElement extends Element {
    */
   protected updateBounds(descendants?: boolean, force?: boolean) {
     if (force) {
-      this._layoutOnce = false
+      // this._layoutOnce = false
       this._positionDirty = true
       this._boundsDirty = true
     }

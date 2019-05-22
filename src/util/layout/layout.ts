@@ -2,29 +2,37 @@ import { ProgramElement } from '../..'
 import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout'
 import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms'
 
+
 export interface LayoutOptions {
   /**
-   * If non is provided 'binary-tree' will be used
+   * If non is provided 'binary-tree' will be used.
    */
   layout?: Layout
+
   /**
    * lined-up layouts support sorting items from smaller to biggest one.
    */
   sort?: boolean
+
+  /**
+   * This applies to layouts that could resize the parent element (like [[topDown]] or [[leftRight]]). 
+   * If true, it will prevent so.  Default value is false. 
+   */
   neverResizeContainer?: boolean
 
   /**
-   * Options for layout == 'justified-layout
+   * Options for [[justifiedRows]]. See [[JustifiedLayoutOptions]].
    */
   justifiedLayout?: JustifiedLayoutOptions
 
-  size?: {
-    width: number
-    height: number
-  }
+  // size?: {
+  //   width: number
+  //   height: number
+  // }
 
-  manualLayout?: boolean
+  // manualLayout?: boolean
 }
+
 export enum Layout {
 
   /**
@@ -65,9 +73,9 @@ export enum Layout {
 
   /**
    * This is [Flickr justified-layout](http://flickr.github.io/justified-layout/) used to show images in
-   * justified rows. Has many configurable options available in property [[justifiedLayoutOptions]]. See
+   * justified rows. Has many configurable options available in property [[JustifiedLayoutOptions]]. See
    */
-  justifiedRows = 'justified-layout'
+  justifiedLayout = 'justified-layout'
 }
 
 /**

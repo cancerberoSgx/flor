@@ -2,7 +2,9 @@ import { merge } from 'misc-utils-of-mine-generic'
 import { ProgramElement } from '../..'
 import { isElement } from '../../programDom/elementUtil'
 import { LayoutOptions } from './layout'
+
 const justifiedLayout = require('justified-layout')
+
 export function handleJustifiedLayout(o: LayoutOptions & {
   el: ProgramElement;
 }) {
@@ -42,15 +44,17 @@ export function handleJustifiedLayout(o: LayoutOptions & {
         c.props.left = Math.trunc(r.left)
         c.props.width = Math.trunc(r.width)
         c.props.height = Math.trunc(r.height)
-        // c.props.assign({ top: Math.trunc(r.top), left: Math.trunc(r.left), width: Math.trunc(r.width), height: Math.trunc(r.height) })
       }
     })
   }
 }
+
 /**
- * Accepts an array of boxes (with a lot of optional configuration options) and returns geometry for a nice justified layout as seen all over [Flickr](https://www.flickr.com/explore)
+ * Accepts an array of boxes (with a lot of optional configuration options) and returns geometry for a nice 
+ * justified layout as seen all over [Flickr](https://www.flickr.com/explore)
  */
 export interface JustifiedLayoutOptions {
+
   /**
    * Provide a single integer to apply padding to all sides or provide an object to apply individual values
    * to each side, like this:
@@ -61,6 +65,7 @@ export interface JustifiedLayoutOptions {
     bottom?: number;
     left?: number;
   }
+
   /**
    *  Provide a single integer to apply spacing both horizontally and vertically or provide an object to
    *  apply individual values to each axis, like this:
@@ -69,6 +74,7 @@ export interface JustifiedLayoutOptions {
     horizontal?: number;
     vertical?: number;
   }
+
   /**
    * It's called a target because row height is the lever we use in order to fit everything in nicely. The
    * algorithm will get as close to the target row height as it can.
@@ -76,10 +82,12 @@ export interface JustifiedLayoutOptions {
    * **IMPORTANT** by default is setted to half element's height, but if many children should be adjust.
    */
   targetRowHeight?: number
+
   /**
    * Will stop adding rows at this number regardless of how many items still need to be laid out.
    */
   maxNumRows?: number
+
   /**
    * If you'd like to insert a full width box every n rows you can specify it with this parameter. The box
    * on that row will ignore the targetRowHeight, make itself as wide as containerWidth - containerPadding
@@ -87,17 +95,21 @@ export interface JustifiedLayoutOptions {
    * Best to have a look at the examples to see what this does. Default : false.
    */
   fullWidthBreakoutRowCadence?: boolean
+
   /**
    * How far row heights can stray from targetRowHeight. 0 would force rows to be the targetRowHeight
    * exactly and would likely make it impossible to justify. The value must be between 0 and 1. Default
    * value:   0.25.
    */
   targetRowHeightTolerance?: number
+
   /**
   Provide an aspect ratio here to return everything in that aspect ratio. Makes the values in your input array irrelevant. The length of the array remains relevant. default value: false.
    */
   forceAspectRatio?: boolean | number
+
 }
+
 interface JustifiedLayoutResult {
   boxes: {
     aspectRatio: number;

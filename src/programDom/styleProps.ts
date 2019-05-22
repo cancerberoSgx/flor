@@ -35,6 +35,18 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
       this.layout = o.layout
       delete o.layout
     }
+    if (typeof o.noFill !== 'undefined') {
+      this.noFill = o.noFill
+      delete o.noFill
+    }
+    if (typeof o.overflow !== 'undefined') {
+      this.overflow = o.overflow
+      delete o.overflow
+    }
+    if (typeof o.textWrap !== 'undefined') {
+      this.textWrap = o.textWrap
+      delete o.textWrap
+    }
     super.assign(o)
   }
 
@@ -47,6 +59,31 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   // set data(d: any){
   //   super.data = d
   // }
+
+
+  public get layout(): LayoutOptions | undefined {
+    return this._data.layout
+  }
+  public set layout(value: LayoutOptions | undefined) {
+    this._data.layout = value
+    this.owner._positionDirty = true
+    this.owner._boundsDirty = true
+  }
+
+  public get noFill(): boolean | undefined {
+    return this._data.noFill
+  }
+  public set noFill(value: boolean | undefined) {
+    this._data.noFill = value
+  }
+
+  public get overflow(): 'visible' | 'hidden' | undefined {
+    return this._data.overflow
+  }
+  public set overflow(value: 'visible' | 'hidden' | undefined) {
+    this._data.overflow = value
+  }
+
   public get textWrap(): boolean | undefined {
     return this._data.textWrap
   }
@@ -87,7 +124,8 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
     return this._calculatedWidth
   }
   /**
-   * Returns the calculated width in cols, relative to parent's . It always perform the calculation if the value was given as ratio.
+   * Returns the calculated width in cols, relative to parent's.
+   * If the value was given as ratio (number between -1 and 1), it calculates the value.
    * Use [[getWidth]] to get the original value given by the user.
    */
   public get width(): number {
@@ -121,7 +159,8 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
     return this._calculatedHeight
   }
   /**
-   * Returns the calculated Height in rows declared in this props, relative to parent's . It always perform the calculation if the value was given as ratio.
+   * Returns the calculated Height in rows declared in this props, relative to parent's.
+   * If the value was given as ratio (number between -1 and 1),, it calculates the value.
    * Use [[getHeight]] to get the original value given by the user.
    */
   public get height(): number {
@@ -158,7 +197,8 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
     return this._calculatedLeft
   }
   /**
-   * Returns the calculated left coordinate, relative to parent's, given in number of columns as declared in this props.. It always perform the calculation if the value was given as ratio.
+   * Returns the calculated left coordinate, relative to parent's, given in number of columns as declared in this props.
+   * If the value was given as ratio (number between -1 and 1),, it calculates the value.
    * Use [[getLeft]] to get the original value given by the user.
    */
   get left(): number {
@@ -217,22 +257,6 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   */
   getTop() {
     return this._data.top
-  }
-
-  public get layout(): LayoutOptions | undefined {
-    return this._data.layout
-  }
-  public set layout(value: LayoutOptions | undefined) {
-    this._data.layout = value
-    this.owner._positionDirty = true
-    this.owner._boundsDirty = true
-  }
-
-  public get noFill(): boolean | undefined {
-    return this._data.noFill
-  }
-  public set noFill(value: boolean | undefined) {
-    this._data.noFill = value
   }
 }
 export type ColorString = string

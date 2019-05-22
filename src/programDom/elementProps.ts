@@ -8,23 +8,24 @@ import { RemoveKeysValued, RemovePropertiesValued } from '../util/misc';
 
 export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<ElementProps> {
 
-  // dataNoFunctions() {
-  //   return {...objectFilter(super.data, (k,v)=>typeof v!=='function'), ...this._dataFocus ? {focus: this._dataFocus.data} : {} } as Partial<RemovePropertiesValued<T, (...args: any[])=>any>>
-  // }  
   get data() {
     return { ...super.data, ...this._dataFocus ? {focus: this._dataFocus.data} : {} } 
   }
 
-  // set data(d: any){
-  //   super.data = d
-  // }
-  public get overflow(): 'visible' | 'hidden' | undefined {
-    return this._data.overflow
+  public get input(): string | undefined {
+    return this._data.input
   }
-  public set overflow(value: 'visible' | 'hidden' | undefined) {
-    this._data.overflow = value
+  public set input(value: string | undefined) {
+    this._data.input = value
   }
 
+  public get value(): string | undefined {
+    return this._data.value
+  }
+  public set value(value: string | undefined) {
+    this._data.value = value
+  }
+  
   public get focused(): boolean | undefined {
     return this._data.focused
   }
@@ -39,24 +40,28 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
   public set id(value: undefined | string) {
     this._data.id = value
   }
+
   public get name(): undefined | string {
     return this._data.name
   }
   public set name(value: undefined | string) {
     this._data.name = value
   }
+
   public get classes(): undefined | string[] {
     return this._data.classes
   }
   public set classes(value: undefined | string[]) {
     this._data.classes = value
   }
+
   public get number(): undefined | number {
     return this._data.number
   }
   public set number(value: undefined | number) {
     this._data.number = value
   }
+
   public get elementType(): undefined | string {
     return this._data.elementType
   }
@@ -88,6 +93,7 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
   public set preventSiblingCascade(value: boolean | undefined) {
     this._data.preventSiblingCascade = value
   }
+
   public get preventChildrenCascade(): boolean | undefined {
     return this._data.preventChildrenCascade
   }
@@ -155,17 +161,4 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
    */
   renderChildText?(renderer: ProgramDocumentRenderer, text: TextNode, index: number): void
 
-  public get input(): string | undefined {
-    return this._data.input
-  }
-  public set input(value: string | undefined) {
-    this._data.input = value
-  }
-
-  public get value(): string | undefined {
-    return this._data.value
-  }
-  public set value(value: string | undefined) {
-    this._data.value = value
-  }
 }
