@@ -14,7 +14,7 @@ export class EventManager {
     this.onKeyPress = this.onKeyPress.bind(this)
     this.onMouse = this.onMouse.bind(this)
     this._program.on('keypress', this.onKeyPress)
-    _program.on('mouse', this.onMouse)
+    this._program.on('mouse', this.onMouse)
   }
 
   get program() {
@@ -35,7 +35,6 @@ export class EventManager {
     if (this.ignoreKeys) {
       return
     }
-    // debug(ch, e)
     this.keyListeners
       .filter(l => !l.el || l.el.props.focused)
       .some(l => {
@@ -54,11 +53,13 @@ export class EventManager {
       this.keyListeners.push({ name, listener: l, el })
     }
   }
+
   preppedKeyListener(l: KeyListener, el?: ProgramElement, name = 'keypress') {
     if (!this.keyListeners.find(k => k.listener === l && k.el === el && k.name === name)) {
       this.keyListeners.splice(0, 0, ({ name, listener: l, el }))
     }
   }
+
   /**
    * Removes a previously added key listener with [[addKeyListener]].
    */
@@ -180,6 +181,15 @@ export class EventManager {
       button: 'left'
     })
   }
+
+  destroy() {
+    this._program.off('keypress', this.onKeyPress)
+    this._program.off('mouse', this.onMouse)
+    this.keyListeners = []
+    this.mouseListeners = []
+    this.beforeAllMouseListeners = []
+  }
+
 }
 
 /**

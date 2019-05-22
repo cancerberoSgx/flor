@@ -85,7 +85,8 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
 
   childrenReady?(): boolean
   afterRenderWithoutChildren?(): boolean
-  afterRender?(): boolean
+  afterRender?(el: ProgramElement): boolean
+  onceRendered?(el: ProgramElement): boolean
   beforeRender?(): boolean
 
   onClick?(r: MouseEvent): void

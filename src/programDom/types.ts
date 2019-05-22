@@ -7,6 +7,7 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
+import { Element } from '../dom';
 
 export interface Edges {
   top: number
@@ -182,18 +183,22 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
    */
   id: string
+
   /**
    * Similar to [[id]] but doesn't have to be unique. Not used internally, meant for the user.
    */
   name: string
+
   /**
    * Similar to Dom Element class names. Not used internally, meant for the user.
    */
   classes: string[]
+
   /**
    * Similar to [[name]] but numeric type. Not used internally, meant for the user.
    */
   number: number
+
   /**
    * Custom elements or components can use this property to identify the their type with a name.
    */
@@ -206,13 +211,20 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
    */
   afterRenderWithoutChildren?(): void
+
   /**
    * Called by the rendered just after the element all all its children were rendered.
    *
    * This gives Element subclasses the chance to change some props, or it's children just before rendering.
    *
    */
-  afterRender?(): void
+  afterRender?(el: ProgramElement): void
+
+  /**
+   * Like [[afterRender]] but it will be called only once.
+   */
+  onceRendered?(el: ProgramElement): void
+
   /**
    * Called by the renderer just before rendering this element. It's children will follow.
    *
@@ -222,6 +234,7 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * children is done here so it can be prevented by returning true.
    */
   beforeRender?(): boolean
+
   /**
    * Called by  `Flor.render()` after all children ProgramElement instances are created and appended to this
    * node.
@@ -248,6 +261,7 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * (`Program.enableMouse()`).
    */
   onKeyPressed?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
+  onKeyDown?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
 
   onMouse?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
   onMouseOut?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean

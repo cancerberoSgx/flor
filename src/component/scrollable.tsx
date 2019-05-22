@@ -393,7 +393,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     }
   }
 
-  protected renderElement(c = this.element!.parentNode as ProgramElement) {
+  renderElement(c = this.element!.parentNode as ProgramElement) {
     const p = this.renderer!.writeArea
     this.renderer!.writeArea = this.element!.getContentBounds()
     this.renderer!.renderElement(c)

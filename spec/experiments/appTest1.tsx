@@ -7,7 +7,7 @@ async function test() {
 
   try {
     const flor = new FlorDocument({ browser: true, browserTermCols: 255, browserTermRows: 65 })
-    await flor.ready
+    // await flor.ready
 
     const app = <el width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['topDown'], neverResizeContainer: true }}>
 

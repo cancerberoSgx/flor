@@ -2,6 +2,7 @@ import { array, indent } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
+import { rectangleIntersects } from './elementUtil';
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -71,9 +72,14 @@ export class ProgramElement extends Element {
    *
    * @internal
    */
-  _afterRender(): any {
-    this.props.afterRender && this.props.afterRender()
+  _afterRender() {
+    this.props.afterRender && this.props.afterRender(this)
+    if (!this._renderedOnce) {
+      this._renderedOnce = true
+      this.props.onceRendered && this.props.onceRendered(this)
+    }
   }
+  protected _renderedOnce = false
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
@@ -82,7 +88,7 @@ export class ProgramElement extends Element {
    *
    * @internal
    */
-  _afterRenderWithoutChildren(): any {
+  _afterRenderWithoutChildren() {
     this.props.afterRenderWithoutChildren && this.props.afterRenderWithoutChildren()
   }
 
@@ -93,7 +99,7 @@ export class ProgramElement extends Element {
    *
    * @internal
    */
-  _beforeRender(): any {
+  _beforeRender() {
     if (!this.props.beforeRender || !this.props.beforeRender()) {
       if (this._positionDirty || this._boundsDirty) {
         this.updateBounds()
@@ -316,7 +322,7 @@ export class ProgramElement extends Element {
         xl: this.absoluteLeft + this.width
       }
     } else {
-      throw new Error('TODO')
+      throw new Error('Not implemented')
     }
   }
 
@@ -329,7 +335,7 @@ export class ProgramElement extends Element {
         xl: this._absoluteLeft + this.contentWidth
       }
     } else {
-      throw new Error('TODO')
+      throw new Error('Not implemented')
     }
   }
 
@@ -347,6 +353,23 @@ export class ProgramElement extends Element {
     } else {
       throw new Error('TODO')
     }
+  }
+
+  intersects(r: Rectangle, options: { relative?: boolean, regionKind?: 'outer' | 'inner' | 'content' } = { relative: false }) {
+    let cr: Rectangle
+    if (!options.relative) {
+      if (options.regionKind === 'inner') {
+        cr = this.getInnerBounds()
+      }
+      else if (options.regionKind === 'content') {
+        cr = this.getContentBounds()
+      } else {
+        cr = this.getBounds()
+      }
+    } else {
+      throw new Error('Not implemented')
+    }
+    return rectangleIntersects(cr, r)
   }
 
   /**
@@ -406,6 +429,7 @@ export class ProgramElement extends Element {
   render() {
     this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this)
   }
+
   /**
    * If the owner document has a renderer available it request to erase this element from the screen.
    */
@@ -421,7 +445,6 @@ export class ProgramElement extends Element {
   }
 
   debugAsJson(): DebugJsonNode {
-    // return {...this.node.getComputedLayout(), children: array(this.node.getChildCount()).map(i=>this.node.getChild(i))}
     return { ...this.props.data, children: (this.childNodes).map(e => isElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
   }
 
@@ -486,12 +509,12 @@ export class ProgramElement extends Element {
       this.ownerDocument.events && this.ownerDocument.events.triggerKeyEvent(typeof e === 'string' ? e : undefined, typeof e === 'string' ? { name: e } : e)
     })
   }
+
   enterText(s: string) {
     return new Promise(resolve => {
       s.split('').forEach(i => nextTick(() => this.key(i)))
       setTimeout(resolve, 100)
     })
-
   }
 
   /**

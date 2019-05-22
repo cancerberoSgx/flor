@@ -1,7 +1,8 @@
-import { tryTo } from 'misc-utils-of-mine-generic'
+import { tryTo, inBrowser } from 'misc-utils-of-mine-generic'
 import { FullProps, ProgramDocument, ProgramDocumentRenderer } from '..'
 import { Program, ProgramOptions } from '../declarations/program'
 import { Flor } from '../jsx/createElement'
+import { debug } from '../util';
 
 /**
  * Destroy given program and exits the process with given status.
@@ -149,23 +150,31 @@ export function createProgramRendererDocumentAndElement(programOptions: ProgramO
 let termJs = require('term.js')
 declare var window: any, document: any
 
+type HTMLElement = any
 export interface ProgramBrowserOptions extends ProgramOptions {
   browserTermCols?: number
   browserTermRows?: number
+  containerElement?: HTMLElement
 }
-export function createProgramForBrowser(o: ProgramBrowserOptions): Promise<Program> {
-  return new Promise(resolve => {
+export function createProgramForBrowser(options: ProgramBrowserOptions)  {
+  if(!inBrowser()){
+    const s = 'createProgramForBrowser invoked but not in a browser!';
+    debug(s)
+    console.warn(s)       
+    return createProgram(options)
+  }
+  // return new Promise(resolve => {
 
-    window.onload = function() {
+  //   window.onload = function() {
       let term = new termJs.Terminal({
-        cols: o.browserTermCols || 80,
-        rows: o.browserTermRows || 24,
+        cols: options.browserTermCols || 80,
+        rows: options.browserTermRows || 24,
         useStyle: true,
         screenKeys: true,
         dontEmitKeyPress: true
       })
 
-      term.open(document.body)
+      term.open(options.containerElement || document.body)
       term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n')
 
       // glue to make blessed work in browserify
@@ -173,19 +182,20 @@ export function createProgramForBrowser(o: ProgramBrowserOptions): Promise<Progr
       term.isTTY = true
       require('readline').emitKeypressEvents = function() { }  // Can I side-affect a module this way? Apparently.
       process.listeners = function fakelisteners() { return [] }
-      term.resize(o.browserTermCols || 100, o.browserTermRows || 36)
+      term.resize(options.browserTermCols || 100, options.browserTermRows || 36)
 
       // term._keypressDecoder = true
       const program = new Program({
         ...defaultProgramOptions,
-        ...o,
+        ...options,
         input: term,
         output: term,
         tput: false
       })
-      resolve(program)
-    }
+      return program
+  //     resolve(program)
+  //   }
 
-  })
+  // })
 
 }

@@ -480,10 +480,10 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     const type = border.type || BorderStyle.light
     this.setAttrs({ ...elProps, ...border })
     const { xi, xl, yi, yl } = {
-      xi: elProps.xi || el.absoluteLeft,
-      xl: (elProps.xi || el.absoluteLeft) + (elProps.width || el.props.width),
-      yi: elProps.yi || el.absoluteTop,
-      yl: (elProps.yi || el.absoluteTop) + (elProps.height || el.props.height)
+      xi: (elProps as any).xi || el.absoluteLeft,
+      xl: ((elProps as any).xi || el.absoluteLeft) + (elProps.width || el.props.width),
+      yi: (elProps as any).yi || el.absoluteTop,
+      yl: ((elProps as any).yi || el.absoluteTop) + (elProps.height || el.props.height)
     }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))
