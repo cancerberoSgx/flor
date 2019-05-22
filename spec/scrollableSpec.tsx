@@ -138,7 +138,6 @@ describe('scrollable', () => {
           </el>)}
       </el>)}
     </Scrollable>
-    flor.create(<el>Hello</el>)
     const el = flor.create(a)
     flor.render()
     await waitForPredicate(() => flor.renderer.printBuffer(true).includes('firstChild123'))

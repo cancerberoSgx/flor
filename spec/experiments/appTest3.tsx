@@ -1,9 +1,8 @@
-import { BorderStyle, Component, FlorDocument, KeyEvent, BorderProps, ProgramElement, ElementOfComponent, ElementProps, debug, rectangleIntersects } from '../../src';
-import { Flor } from '../../src/jsx/createElement';
-import { int } from '../data';
-import { nextTick } from '../../src/util/misc';
-import { RemoveProperties } from 'misc-utils-of-mine-generic';
-import { lookup } from 'dns';
+import { RemoveProperties } from 'misc-utils-of-mine-generic'
+import { BorderProps, BorderStyle, Component, debug, ElementOfComponent, ElementProps, FlorDocument, KeyEvent, ProgramElement } from '../../src'
+import { Flor } from '../../src/jsx/createElement'
+import { nextTick } from '../../src/util/misc'
+import { int } from '../data'
 
 async function test() {
 
@@ -80,10 +79,9 @@ async function test() {
 
       impact() {
         if (this.shields > 0) {
-          this.shields--;
-        }
-        else {
-          this.health--;
+          this.shields--
+        } else {
+          this.health--
         }
       }
 
@@ -100,7 +98,7 @@ async function test() {
         new ShipImpl({ x: 51, y: 31, width: 2, height: 1, direction: Direction.up, health: 3, shields: 3, ammo: 100, isEnemy: true })
       ],
       board: {
-        width: 20, height: 20, x: 0, y: 0,
+        width: 20, height: 20, x: 0, y: 0
       },
       bullets: []
     }
@@ -131,14 +129,11 @@ async function test() {
         this.element!.erase()
         if (d === Direction.left) {
           this.moveLeft()
-        }
-        else if (d === Direction.right) {
+        } else if (d === Direction.right) {
           this.moveRight()
-        }
-        else if (d === Direction.up) {
+        } else if (d === Direction.up) {
           this.moveUp()
-        }
-        else if (d === Direction.down) {
+        } else if (d === Direction.down) {
           this.moveDown()
         }
         this.element!.render()
@@ -148,40 +143,40 @@ async function test() {
       moveLeft() {
         this.props.ship.direction = Direction.left
         if (this.props.ship.x > 0) {
-          this.props.ship.x--;
-          this.element!.left = this.props.ship.x;
-          this.element!.height = 2; //ship.height*2
-          this.element!.width = 7;
+          this.props.ship.x--
+          this.element!.left = this.props.ship.x
+          this.element!.height = 2 // ship.height*2
+          this.element!.width = 7
         }
       }
 
       moveRight() {
         this.props.ship.direction = Direction.right
         if (this.props.ship.x < this.props.state.board.width - 1) {
-          this.props.ship.x++;
-          this.element!.left = this.props.ship.x;
-          this.element!.height = 2; //ship.height*2
-          this.element!.width = 7;
+          this.props.ship.x++
+          this.element!.left = this.props.ship.x
+          this.element!.height = 2 // ship.height*2
+          this.element!.width = 7
         }
       }
 
       moveDown() {
         this.props.ship.direction = Direction.down
         if (this.props.ship.y < this.props.state.board.height - 1) {
-          this.props.ship.y++;
-          this.element!.top = this.props.ship.y;
-          this.element!.height = 4; //ship.width
-          this.element!.width = 3;
+          this.props.ship.y++
+          this.element!.top = this.props.ship.y
+          this.element!.height = 4 // ship.width
+          this.element!.width = 3
         }
       }
 
       moveUp() {
         this.props.ship.direction = Direction.up
         if (this.props.ship.y > 0) {
-          this.props.ship.y--;
-          this.element!.top = this.props.ship.y;
-          this.element!.height = 4; //ship.width
-          this.element!.width = 3;
+          this.props.ship.y--
+          this.element!.top = this.props.ship.y
+          this.element!.height = 4 // ship.width
+          this.element!.width = 3
         }
       }
 
@@ -229,8 +224,8 @@ async function test() {
       } if (b.direction === Direction.left) {
         b.x--
       }
-      b.el.top = b.y;
-      b.el.left = b.x;
+      b.el.top = b.y
+      b.el.left = b.x
       b.el.render()
     }
 
@@ -239,7 +234,6 @@ async function test() {
         return null
       }
     }
-
 
     class Settings extends Component<{ state: State }> {
       render() {
@@ -260,25 +254,25 @@ async function test() {
           flor.debug(state.gameOver)
           setTimeout(() => {
             flor.destroy()
-          }, 2000);
+          }, 2000)
           return
         }
         state.bullets.forEach(b => {
           const hit = state.enemyShips.find(s => s.intersects(b))
           if (hit) {
             b.hit = true
-            hit.impact();
+            hit.impact()
           }
           move(b)
         })
         state.enemyShips.forEach(s => {
           if (s.intersects(state.ship)) {
-            s.impact();
-            state.ship.impact();
+            s.impact()
+            state.ship.impact()
           }
           const d = int(1, 4)
-          s.direction = d === 1 ? Direction.up : d === 2 ? Direction.right : d === 3 ? Direction.down : d === 4 ? Direction.left : s.direction;
-          s.el && s.el.getComponent().move(s.direction) 
+          s.direction = d === 1 ? Direction.up : d === 2 ? Direction.right : d === 3 ? Direction.down : d === 4 ? Direction.left : s.direction
+          s.el && s.el.getComponent().move(s.direction)
         })
         nextTick(() => {
           state.bullets = state.bullets.filter(b => !b.hit)
@@ -326,11 +320,9 @@ async function test() {
     const le = flor.create(<App state={state} />)
     flor.render()
 
-
   } catch (error) {
     debug(error)
   }
 }
 
 test()
-

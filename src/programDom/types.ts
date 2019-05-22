@@ -7,7 +7,6 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
-import { Element } from '../dom';
 
 export interface Edges {
   top: number

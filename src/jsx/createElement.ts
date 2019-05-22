@@ -85,12 +85,19 @@ class FlorJsxImpl implements FlorJsx {
   }
 
   /**
-   * Default blessed Node factory for text like "foo" in <box>foo</box>
+   * Default blessed Node factory for text like "foo" in <box>foo</box>.
    */
-  protected createTextNode(c: JSX.BlessedJsxText, el: JSXElementImpl) {
-    const t = { type: '__text', props: { textContent: c + '', children: [] }, children: [] }
-    this.appendChild(el, t)
-    return t
+  protected createTextNode(c: JSX.BlessedJsxText | false, el: JSXElementImpl) {
+    if (c !== null && c !== false) {
+      const t = {
+        type: '__text',
+        props: {
+          textContent: c + '',
+          children: []
+        }, children: []
+      }
+      this.appendChild(el, t)
+    }
   }
 
   private installAttributesAndChildren(

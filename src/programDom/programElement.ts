@@ -2,7 +2,7 @@ import { array, indent } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
-import { rectangleIntersects } from './elementUtil';
+import { rectangleIntersects } from './elementUtil'
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -65,6 +65,7 @@ export class ProgramElement extends Element {
     this.updateBounds(descendants)
   }
 
+  protected _renderedOnce = false
   /**
    * Called by the rendered just after the element all all its children were rendered to the screen
    *
@@ -79,7 +80,7 @@ export class ProgramElement extends Element {
       this.props.onceRendered && this.props.onceRendered(this)
     }
   }
-  protected _renderedOnce = false
+
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
@@ -360,8 +361,7 @@ export class ProgramElement extends Element {
     if (!options.relative) {
       if (options.regionKind === 'inner') {
         cr = this.getInnerBounds()
-      }
-      else if (options.regionKind === 'content') {
+      } else if (options.regionKind === 'content') {
         cr = this.getContentBounds()
       } else {
         cr = this.getBounds()

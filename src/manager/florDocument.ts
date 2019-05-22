@@ -4,7 +4,6 @@ import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
 import { Program } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
 import { addLogger } from '../util'
-import { Deferred } from '../util/misc'
 import { CursorManager } from './cursorManager'
 import { StyleEffectsManager } from './effects'
 import { EventManager } from './eventManager'
@@ -29,25 +28,25 @@ export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, 
    * DOM implementation.
    *
    * As an example, currently, flor supports an experimental DOM implementation: [[YogaDocument]] (that
-   * extends the first one but with different API, and extra props and different render implementation). 
+   * extends the first one but with different API, and extra props and different render implementation).
    *
    * To use that implementation, flor needs to be instantiated like this:
    *
    * `const flor = new FlorDocument({documentImplementation: ()=>new YogaDocument()})` . This will make flor
    * use [[YogaDocument]] instance which [[createElement]] method will create [[Element]] implementations
-   * other than [[ProgramElement]]. 
+   * other than [[ProgramElement]].
    */
   documentImplementation?: () => T
   /**
-   * Will create a program compatible with the browser so it can be bundled using browserify. 
-   * 
-   * It will use term.js for emulate a terminal in the browser. 
-   * 
-   * Tput (`program.tput`, `program.put`) won't be available. 
-   * 
-   * IMPORTANT: Make sure the document is ready and body or provided container element are present and ready 
-   * in the document. i.e : 
-   * 
+   * Will create a program compatible with the browser so it can be bundled using browserify.
+   *
+   * It will use term.js for emulate a terminal in the browser.
+   *
+   * Tput (`program.tput`, `program.put`) won't be available.
+   *
+   * IMPORTANT: Make sure the document is ready and body or provided container element are present and ready
+   * in the document. i.e :
+   *
 ```
 window.onload=()=>{
   const flor = new FlorDocument({browser: true})
@@ -57,7 +56,7 @@ window.onload=()=>{
 */
   browser?: boolean
 
-  installLoggers?:  boolean
+  installLoggers?: boolean
   enableMouse?: boolean
 }
 
@@ -85,27 +84,18 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
   private _cursor: CursorManager = undefined as any
   private _effects: StyleEffectsManager<E> = undefined as any
 
-  protected static programDefaultOptions = { 
-    buffer: true, 
-    installExitKeys: true, 
-    enableMouse: true, 
-    browser: false, 
-    installLoggers: false 
+  protected static programDefaultOptions = {
+    buffer: true,
+    installExitKeys: true,
+    enableMouse: true,
+    browser: false,
+    installLoggers: false
   }
-  
-  constructor(o?: FlorDocumentOptions ) {
-    // this.ready = new Deferred<void>()
-    const options = { ...FlorDocument.programDefaultOptions, ...o||{} }
-    // if (!o.program && o.browser) {
-      // this._program  = o.program || createProgramForBrowser(options)
-      // .then(program => {
-      //   this._program = program
-        // this.initialize(options)
-      // })
-    // // } else {
-      this._program = options.program || options.browser ? createProgramForBrowser(options) : new Program(options)
-    // }
-    if(options.enableMouse){
+
+  constructor(o?: FlorDocumentOptions) {
+    const options = { ...FlorDocument.programDefaultOptions, ...o || {} }
+    this._program = options.program || options.browser ? createProgramForBrowser(options) : new Program(options)
+    if (options.enableMouse) {
       this._program.setMouse({
         allMotion: true
       }, true)
@@ -113,7 +103,7 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     }
     this.render = this.render.bind(this)
     this._events = new EventManager(this._program)
-    if(options.installExitKeys){
+    if (options.installExitKeys) {
       installExitKeys(this._program)
     }
     this._document = options.documentImplementation ? options.documentImplementation() : new ProgramDocument() as any
@@ -121,7 +111,6 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
-    // this.createTextNode = this.createTextNode.bind(this)
     this._cursor = new CursorManager({ program: this._program, cursor: {} })
     this._cursor.enter()
     this._effects = new StyleEffectsManager<E>({
@@ -130,39 +119,17 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     this._document._setManagers(this)
     this.debug = this.debug.bind(this)
     options.installLoggers && this.installLoggers()
-    // this.initialize(o)
   }
-
-  // protected initialize(options: FlorDocumentOptions<ProgramElement, ProgramDocument<ProgramElement>>) {
-
-    // this.ready.resolve()
-  // }
-
-  // ready: Deferred<void>
 
   /**
    * Destroys the program.
    */
   destroy(): any {
-    // this.document.destroy()
+    this.document.destroy()
     this.events.destroy()
     this.cursor.leave()
     this.renderer.destroy()
   }
-
-  // /**
-  //  * Creates an empty Element with given tagName with no parent.
-  //  */
-  // createElement(tagName: string) {
-  //   return this._document.createElement(tagName)
-  // }
-
-  // /**
-  //  * Creates a new text node with given text with no parent.
-  //  */
-  // createTextNode(text: string) {
-  //   return this._document.createTextNode(text)
-  // }
 
   /**
    * Creates an Element from given Props or by rendering given JSXElement and appends it to [[body]].

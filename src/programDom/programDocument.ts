@@ -12,41 +12,41 @@ interface Managers { events: EventManager, focus: FocusManager, renderer: Progra
 
 export class ProgramDocument<E extends ProgramElement = ProgramElement> extends Document<E> {
   body: ProgramElement
-
+  
   protected managers: Managers | undefined
   private registerListenerQueue: { type: 'event' | 'blur' | 'focus' | 'clicks', listener: any }[] = []
-
+  
   constructor() {
     super()
     this.empty()
     this.body = this.createElement('body')
     this.appendChild(this.body)
   }
-
+  
   get program() {
     return this.managers && this.managers.renderer.program
   }
-
+  
   get renderer() {
     return this.managers && this.managers.renderer
   }
-
+  
   get cursor() {
     return this.managers && this.managers.cursor
   }
-
+  
   get focus() {
     return this.managers && this.managers.focus
   }
-
+  
   get events() {
     return this.managers && this.managers.events
   }
-
+  
   createElement(t: string): E {
     return new ProgramElement(t, this) as E
   }
-
+  
   /**
    * better syntax for creating an element, setting properties, children and optionally parent.
    */
@@ -55,7 +55,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     this.body.appendChild(el)
     return el
   }
-
+  
   managersReady = new Deferred<Managers>()
   /**
    * @internal
@@ -74,9 +74,9 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
     }
     this.managersReady.resolve(managers)
   }
-
+  
   private _setManagersListeners: (() => void)[] = []
-
+  
   /**
    * @internal
    */
@@ -86,7 +86,7 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
       this._emptyListenerQueue()
     }
   }
-
+  
   private _emptyListenerQueue() {
     if (this.managers) {
       this.registerListenerQueue.forEach(l => {
@@ -102,5 +102,8 @@ export class ProgramDocument<E extends ProgramElement = ProgramElement> extends 
       })
       this.registerListenerQueue.length = 0
     }
+  }
+  
+  destroy()  {
   }
 }
