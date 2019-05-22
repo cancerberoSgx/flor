@@ -101,15 +101,15 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  public get position(): Partial<ValuedEdges<Value | number>> | undefined {
-    return this._data.position
-  }
-  public set position(value: Partial<ValuedEdges<Value | number>> | undefined) {
-    if (value !== this._data.position) {
-      this._data.position = value
-      this.owner._boundsDirty = true
-    }
-  }
+  // public get position(): Partial<ValuedEdges<Value | number>> | undefined {
+  //   return this._data.position
+  // }
+  // public set position(value: Partial<ValuedEdges<Value | number>> | undefined) {
+  //   if (value !== this._data.position) {
+  //     this._data.position = value
+  //     this.owner._boundsDirty = true
+  //   }
+  // }
   public get positionPercent(): Partial<ValuedEdges<number>> | undefined {
     return this._data.positionPercent
   }
@@ -302,13 +302,13 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
       this.owner._boundsDirty = true
     }
   }
-  public get positionType(): PositionType | undefined {
-    return this._data.positionType
-  }
-  public set positionType(value: PositionType | undefined) {
-    if (value !== this._data.positionType) {
-      this._data.positionType = value
-      this.owner._boundsDirty = true
-    }
-  }
+  // public get positionType(): PositionType | undefined {
+  //   return this._data.positionType
+  // }
+  // public set positionType(value: PositionType | undefined) {
+  //   if (value !== this._data.positionType) {
+  //     this._data.positionType = value
+  //     this.owner._boundsDirty = true
+  //   }
+  // }
 }

@@ -184,9 +184,9 @@ function setYogaProps(node: yoga.YogaNode, props: Partial<YogaElementProps>) {
   if (typeof props.minWidth !== 'undefined') {
     node.setMinWidth(props.minWidth)
   }
-  if (typeof props.positionType !== 'undefined') {
-    node.setPositionType(props.positionType)
-  }
+  // if (typeof props.positionType !== 'undefined') {
+  //   node.setPositionType(props.positionType)
+  // }
   if (typeof props.heightAuto !== 'undefined') {
     node.setHeightAuto()
   }

@@ -96,6 +96,31 @@ export interface StyleProps extends Attrs {
   layout: LayoutOptions
 
   /**
+   * Similar to CSS `position`. The position type of an element defines how it is positioned within its
+   * parent.
+   *
+   * RELATIVE (DEFAULT) By default an element is positioned relatively. This means an element v If position is
+   * `relative` then  is positioned according to the normal flow of the layout, and then offset relative to
+   * that position based on the values of top, right, bottom, and left. The offset does not affect the
+   * position of any sibling or parent elements. In other words, the parent layout, if any, will manage the
+   * element's bounds.
+   *
+   * If `absolute`  parent layout won't have effect on this element. When positioned absolutely an element
+   * doesn't take part in the normal layout flow. It is instead laid out independent of its siblings. The
+   * position is determined based on the top, right, bottom, and left values.The position values top, right,
+   * bottom, and left behave differently depending on the position type of the element. For a relative element
+   * they offset the position of the element in the direction specified. For absolute element though these
+   * properties specify the offset of the element's side from the same side on the parent.
+   *
+   * In both cases, `top`, `left`, `width`and `height`are relative to the parent's content bounds. 
+   *
+   * Default value is `relative`.
+   * 
+   * See [flex-box absolute-relative-layout](https://yogalayout.com/docs/absolute-relative-layout/).
+   */
+  position: 'relative' | 'absolute'
+
+  /**
    * Similar to HTML DOM, when `visible` the area of elements that get outside this parent element will be
    * visible, no matter if they are rendered outside this element's content area. If `hidden` the area of
    * children outside this parent element won't be shown (the elements will be shown but truncated to the
@@ -229,7 +254,7 @@ export interface InputEventTarget {
    * a change in the value, he is just writing text. For subscribing for when the user explicitly changes the
    * value (like when pressing enter), use [[onChange]].
    */
-  onInput (e: { currentTarget: ProgramElement, input: string }): void
+  onInput(e: { currentTarget: ProgramElement, input: string }): void
 
   /**
    * Emitted when the user explicitly gestures a change in the value, like when pressing enter, or blur.
@@ -311,13 +336,13 @@ export interface Renderable {
 }
 
 export interface Focusable {
-    /**
-   * If true, the element can gain focus, when FocusManager's [[focusNext]] or [[focusPrevious]] methods are
-   * call to cycle the focus. 
-   *
-   * Note that key listeners subscribed to an element (ej using [[onKeyPressed]]), will be only notified when
-   * the element has focus. See [[FocusManager]] for details.
-   */
+  /**
+ * If true, the element can gain focus, when FocusManager's [[focusNext]] or [[focusPrevious]] methods are
+ * call to cycle the focus. 
+ *
+ * Note that key listeners subscribed to an element (ej using [[onKeyPressed]]), will be only notified when
+ * the element has focus. See [[FocusManager]] for details.
+ */
   focusable: boolean
 
   /**

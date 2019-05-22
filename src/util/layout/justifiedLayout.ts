@@ -1,14 +1,14 @@
 import { merge } from 'misc-utils-of-mine-generic'
 import { ProgramElement } from '../..'
 import { isElement } from '../../programDom/elementUtil'
-import { LayoutOptions } from './layout'
+import { LayoutOptions, isLayoutedElement } from './layout'
 
 const justifiedLayout = require('justified-layout')
 
 export function handleJustifiedLayout(o: LayoutOptions & {
   el: ProgramElement;
 }) {
-  const children = (o.el.childNodes).filter(isElement)
+  const children = (o.el.childNodes).filter(isLayoutedElement)
   const data = children.map(c => ({
     top: c.props.top,
     left: c.props.left,

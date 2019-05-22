@@ -40,9 +40,9 @@ export interface ConcreteYogaElementProps {
   // overflow: Overflow                <------ set with current prop
   flexPadding: Partial<ValuedEdges<number>> //        <------ set with current prop  currently yoga percentage width is a string 30% instead of .3 like
   paddingPercent: Partial<ValuedEdges<number>>
-  position: Partial<ValuedEdges<Value | number>> //        <------ set with current prop   currently yoga percentage width is a string 30% instead of .3 like
-  positionPercent: Partial<ValuedEdges<number>>
-  positionType: PositionType
+  // position: Partial<ValuedEdges<Value | number>> //        <------ set with current prop   currently yoga percentage width is a string 30% instead of .3 like
+  // positionPercent: Partial<ValuedEdges<number>>
+  // positionType: PositionType
   // width: number                     <------ set with current prop - currently yoga percentage width is a string 30% instead of .3 like current one
   widthAuto: boolean
   widthPercent: number

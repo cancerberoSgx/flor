@@ -1,6 +1,8 @@
 import { LayoutOptions } from '.'
 import { ProgramElement } from '../..'
 import { isElement } from '../../programDom/elementUtil'
+import { Node } from '../../dom';
+import { isLayoutedElement } from './layout';
 
 const layout = require('layout')
 
@@ -17,18 +19,10 @@ interface Info {
 }
 
 export function handleLayout(o: LayoutOptions & { el: ProgramElement }) {
-
-  // if (o.size) {
-  //   o.neverResizeContainer = undefined
-  // }
-
   let layer: any = layout(o.layout, { sort: !!o.sort })
-  o.el.childNodes.forEach(c => {
-    if (isElement(c)) {
+  o.el.childNodes.filter(isLayoutedElement).forEach(c => {
       layer.addItem({ 'height': c.props.height, 'width': c.props.width, 'meta': c })
-    }
   })
-
   let info: Info = layer['export']()
   info.items.forEach(i => {
     i.meta.props.left = i.x

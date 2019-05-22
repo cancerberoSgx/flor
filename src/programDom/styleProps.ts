@@ -57,6 +57,13 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
     }
   }
 
+  public get position(): 'relative' | 'absolute' | undefined {
+    return this._data.position
+  }
+  public set position(value: 'relative' | 'absolute' | undefined) {
+    this._data.position = value;
+  }
+  
   public get layout(): LayoutOptions | undefined {
     return this._data.layout
   }

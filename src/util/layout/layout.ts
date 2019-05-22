@@ -1,6 +1,8 @@
 import { ProgramElement } from '../..'
 import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout'
 import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms'
+import { Node } from '../../dom';
+import { isElement } from '../../programDom';
 
 export interface LayoutOptions {
   /**
@@ -89,4 +91,8 @@ export function layoutChildren(o: LayoutOptions & { el: ProgramElement }) {
   } else {
     // TODO: unknown layout log
   }
+}
+
+export function isLayoutedElement(c: Node): c is ProgramElement {
+  return isElement(c) && c.props.position !== 'absolute';
 }

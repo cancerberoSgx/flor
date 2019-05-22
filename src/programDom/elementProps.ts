@@ -1,5 +1,6 @@
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer, ProgramElement, TextNode } from '..'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer,TextNode } from '..'
 import { BlurEvent, FocusEvent } from '../'
+import { ProgramElement } from '../programDom'
 import { Node } from '../dom'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps, StyleProps, KeyPredicate } from './types'
