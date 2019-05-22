@@ -1,4 +1,4 @@
-import { FocusEvent, ProgramElement, StyleProps, StylePropsImpl } from '../programDom'
+import { FocusEvent, ProgramElement, StyleProps, StylePropsImpl, ElementProps, ElementPropsImpl } from '../programDom'
 import { FocusManager } from './focusManager'
 import { objectKeys, clone, objectFilter } from 'misc-utils-of-mine-generic';
 import { debug } from '../util';
@@ -31,11 +31,14 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     // if (focused === previous) {
     //   return
     // }
-    this.setFocusedStyle(focused)
     this.setNotFocusedStyle(previous)
+    this.setFocusedStyle(focused)
     // this.previous = focused
   }
   
+  static getFocusValidProps(props: StylePropsImpl){
+    return {...props.attrs, ...objectFilter(props.data, k=>typeof k === 'string'&&['padding', 'border', 'layout'].includes(k))}
+  }
   protected get(e?: T): State | undefined {
     if (!e || !e.props.focus) {
       return
@@ -44,17 +47,21 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     if (!s) {
       const focusProps:Partial<StyleProps> = {
         ...this.options.focusedExtraStyles,
+        ...StyleEffectsManager.getFocusValidProps(e.props),
+        ...StyleEffectsManager.getFocusValidProps((e.props.focus as StylePropsImpl))
         // ...e.props. data.attrs,
-        // ... objectFilter(e.props.data||{}, (k,v)=>typeof v!=='function'  ),
+        // ... objectFilter(e.props.focus.data||{}, (k,v)=>typeof v!=='function'  ),
         // ...objectFilter(e.props.focus.data||{}, (k,v)=>k==='fg')
-        ...(e.props.focus as StylePropsImpl).attrs
+        // ...(e.props.focus as StylePropsImpl).attrs
+        // ...e.props.focus.data
       }
       const normalProps = { 
         ...this.options.normalExtraStyles, 
         // ...(e.props.focus as StylePropsImpl).attrs,
         // ...objectFilter(e.props.data||{}, (k,v)=>k==='fg')
-        ...e.props.attrs
+        // ...e.props.data
         
+        ...StyleEffectsManager.getFocusValidProps(e.props)
         // ... objectFilter(e.props.data||{}, (k,v)=>typeof v!=='function')
       }
       // objectKeys(focusStyle).forEach(k => {
@@ -79,10 +86,10 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     }
    
     // TODO: if default style changes after this moment, we will loose the changes. Perhaps we need to remove the if()
-    el.props.assign(s.focusProps||{})
+    // el.props.assign(s.focusProps||{})
     
     // focused.props.data = clone(s.focusProps)
-    // focused.props.assign(clone(s.focusProps))
+    el.props.assign(clone(s.focusProps))
     el.ownerDocument.body.render()
     // this.
     // el.render({preventSiblingCascade: true })//{preventSiblingCascade: true, preventChildrenCascade: true})
@@ -96,8 +103,8 @@ export class StyleEffectsManager<T extends ProgramElement = ProgramElement> {
     // console.log(s.notFocusedStyle);
     
     // previous.props.assign(clone(s.normalProps))
-    el.props.assign(s.normalProps||{})
-    // previous.props.data = clone(s.normalProps)
+    // el.props.assign(s.normalProps||{})
+    el.props.assign(clone(s.normalProps||{}))
     el.ownerDocument.body.render()
     // el.ownerDocument.renderer!.renderElement(el.ownerDocument.body);//.render({preventSiblingCascade: true })
   }

@@ -845,6 +845,15 @@ program.getCursor(function(err, data) {
   el(param?: string): boolean
 
   /**
+   * Turns on/off character attributes. Examples: 
+```
+program.charAttributes('gray bg', true) // turns on gray background color
+program.charAttributes('gray bg', false) // turns off gray background color
+program.charAttributes('red fg', true) // turns on red foreground color
+program.charAttributes(['red fg', 'black bg'], true) // turns on red foreground and black background
+program.charAttributes(['red fg', 'black bg', 'underline'], false) // turns off red foreground and black background and underline
+```
+
 ```
  CSI Pm m  Character Attributes (SGR).
   Ps = 0  -> Normal (default).
@@ -911,21 +920,25 @@ If 88- or 256-color support is compiled, the following apply.
 ```
    */
   charAttributes(param: string, val?: boolean): boolean
-  charAttributes(param: string[], val?: boolean): boolean
+  /** Alias for [[charAttributes]]  */
+  sgr(param: string[], val?: boolean): boolean
+  /** Alias for [[charAttributes]]  */
+  attr(param: string[], val?: boolean): boolean
   /**
-   * set the foreground color and character for the following writings to the output buffer. Example:
+   * Turns on/off foreground color. Example:
 ```
-program.setBackground('green', 'O')
+program.setForeground('green', 'O')
 program.setForeground('red', 'i')
 program.cup(2, 3);
 program.write('X');
 ```
    */
-  setForeground(color: string, val?: string): boolean
+  setForeground(color: string, val?: boolean): boolean
   /** Alias for [[setForeground]]  */
   fg(color: string, val?: boolean): string
+
   /**
-   * set the background color and character for the following writings to the output buffer. Example:
+   * Turns on/off background color. Example:
 ```
 program.setBackground('green', 'O')
 program.setForeground('red', 'i')
@@ -933,10 +946,9 @@ program.cup(2, 3);
 program.write('X');
 ```
    */
-
-  setBackground(color: string, val?: string): boolean
+  setBackground(color: string, val?: boolean): boolean
   /** Alias for [[setBackground]]  */
-  bg(color: string, val?: string): boolean
+  bg(color: string, val?: boolean): boolean
   /**
 ```
 CSI Ps n  Device Status Report (DSR).

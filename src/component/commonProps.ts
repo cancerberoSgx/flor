@@ -4,11 +4,7 @@ import { YogaElementProps } from '../yogaDom'
 
 export const baseProps: () => RemoveProperties<Partial<YogaElementProps>, 'children'> = () => ({
   bg: '#1e1e1e',
-  fg: 'lightgray',
-  width: .4,
-  height: 3,
-  left: 0,
-  top: 0,
+  fg: 'green',
   bold: false
 })
 
@@ -24,7 +20,7 @@ export const focusableProps: () => Partial<YogaElementProps> = () => ({
   focus: {
     border: { ...baseProps(), type: BorderStyle.double, fg: 'red' },
     bold: true,
-    fg: 'green',
-    bg: 'gray'
+    fg: '#112277',
+    bg: '#ffeeaa'
   }
 })

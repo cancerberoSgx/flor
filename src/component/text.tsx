@@ -98,7 +98,7 @@ export class Text<P extends TextProps = TextProps> extends Component<P, {}> {
   }
 
   render() {
-    return <el {...baseProps()} {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</el>
+    return <el {...baseProps()} width={.4} height={3} {...this.props} renderChildren={this.renderChildren} beforeRender={this.beforeRender}>{this.props.children}</el>
   }
 
 }
