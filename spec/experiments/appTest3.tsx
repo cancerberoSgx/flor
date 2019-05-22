@@ -12,7 +12,7 @@ interface P {
 }
 class App extends Component<P> {
   render() {
-    return <el top={0} left={0} width={44} height={33} bg="gray" fg="green" 
+    return <el top={0} left={0} width={33} height={22}  
     border={{ type: BorderStyle.round }} 
     // layout={{ layout: Layout['leftRight']}} 
     >p

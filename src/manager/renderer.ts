@@ -420,27 +420,23 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     }
   }
 
-  /**
-   * Renders just the content area of this element and its borders, without children elements or text.
-   */
   renderElementWithoutChildren(el: E, options: RenderElementOptions = this._defaultRenderOptions) {
+    const attrs: Partial<ElementProps> = {
+      ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
+      ...!options.preventSiblingCascade ? this._currentAttrs : {},
+      ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data: {}) : {},
+      ...el.props.data, width: el.props.width, height: el.props.height, top: el.props.top, left: el.props.left, 
+    }
     if (el.props.render) {
       el.props.render(this)
       return
-    }
-    const { xi, xl, yi, yl } = el.getInnerBounds()
-    const attrs: Partial<ElementProps>&Rectangle = {
-      ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
-      ...!options.preventSiblingCascade ? this._currentAttrs : {},
-      ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.attrs : {}) : {},
-      ...el.props.attrs, xi, xl, yi, yl, width: el.width, height: el.height
     }
     if (el.props.renderContent) {
       el.props.renderContent(this)
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
-        const width = xl - xi
+        const { xi, xl, yi, yl } = el.getInnerBounds()
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi;i < yl;i++) {
           this.write(i, xi, s)
@@ -475,8 +471,8 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   /**
    * Draw given element's border.
    */
-  renderElementBorder(el: E, elProps: Partial<ElementProps>&Rectangle) {
-    const border = elProps.border||el.props.border
+  renderElementBorder(el: E, elProps: Partial<ElementProps>&Partial<Rectangle>) {
+    const border = elProps.border
     if (!border) {
       return
     }
