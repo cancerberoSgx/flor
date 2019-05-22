@@ -85,12 +85,15 @@ export interface RenderElementOptions {
   //    [[writeArea]] or the method [[setElementWriteArea]]
   //    */
   //  writeArea?: Rectangle
+
 }
 /**
  * TODO. should eb PAttrs for completness
  */
 interface BufferData {
-  ch: string, bg: string, fg: string
+  ch: string
+  bg: string
+   fg: string
 }
 /**
  * Responsibilities:
@@ -120,7 +123,8 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   private _currentAttrs: Attrs
   private _defaultRenderOptions: RenderElementOptions = {
     preventSiblingCascade: true,
-    preventChildrenCascade: false
+    preventChildrenCascade: false,
+    
 
   }
   private _writeArea: Rectangle
@@ -341,11 +345,18 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   /**
    * Renders given element in the screen. Element's props character attributes will me merged with
    * [[currentAttrs]] and that will be used to render the element's pixels.
+   * 
+   * @param __childrenRecursion Indicates whenever the renderElement call is the first one from the 
+   * user or is a recursive one rendering children. @internal  
    */
   renderElement(el: E
-    , options: RenderElementOptions = this._defaultRenderOptions
+    , options: RenderElementOptions = this._defaultRenderOptions, __childrenRecursion=false
   ) {
     el._beforeRender()
+    if(!__childrenRecursion){
+      this.program.saveCursor('flor.renderer')
+      this.program.hideCursor()
+    }
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
@@ -368,14 +379,17 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     } else {
       this.renderChildren(el, options)
     }
-    el._afterRender()
-    el._renderCounter = this.renderCounter++
     if (originalWriteArea) {
       this._writeArea = originalWriteArea
     }
     if(originalAttrs){
       this.currentAttrs = originalAttrs
     }
+    if(!__childrenRecursion){
+      this.program.restoreCursor('flor.renderer')
+    }    
+    el._afterRender()
+    el._renderCounter = this.renderCounter++
     return el
   }
 
@@ -393,7 +407,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
         if (el.props.renderChildElement) {
           el.props.renderChildElement(this, c, i, a)
         } else {
-          this.renderElement(c, { ...options })
+          this.renderElement(c, { ...options},true )
         }
       } else {
         debug('Element type invalid: ' + inspect(c))
