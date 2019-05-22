@@ -7,7 +7,7 @@ describe('textArea', () => {
   describe('should allow to navigate up and down, create new lines with enter', () => {
 
     let flor: FlorDocument
-    defaultTestSetup(f =>      flor = f || flor    )
+    defaultTestSetup(f => flor = f || flor)
 
     it('should render value and cursor pos initially', async done => {
       const text = `

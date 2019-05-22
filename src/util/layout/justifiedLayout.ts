@@ -50,7 +50,7 @@ export function handleJustifiedLayout(o: LayoutOptions & {
 }
 
 /**
- * Accepts an array of boxes (with a lot of optional configuration options) and returns geometry for a nice 
+ * Accepts an array of boxes (with a lot of optional configuration options) and returns geometry for a nice
  * justified layout as seen all over [Flickr](https://www.flickr.com/explore)
  */
 export interface JustifiedLayoutOptions {

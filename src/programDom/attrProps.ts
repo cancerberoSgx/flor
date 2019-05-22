@@ -1,6 +1,5 @@
 import { CommonElementImpl, CommonElementProps } from '../jsx'
 import { ColorString, PAttrs } from './styleProps'
-import { objectKeys } from 'misc-utils-of-mine-generic';
 
 export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   constructor(p: PAttrs | undefined, owner: Partial<CommonElementImpl>) {
@@ -9,23 +8,15 @@ export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
   }
   protected _data: CommonElementProps
   protected owner: CommonElementImpl
-  
+
   assign(o: Partial<CommonElementProps>) {
     Object.assign(this._data, o || {})
   }
 
-  // set data(d: any){
-  //   const dk = objectKeys(d)
-  //   // we trigger the setters to undefined so dirty - like state is set.
-  //   objectKeys(this._data).filter(k=>!dk.includes(k)).forEach(k=>{
-  //     (this as any)[k] = undefined
-  //   })
-  //   this.assign(d)
-  // }
   /**
    * Gets all props as plain object.
    */
-  get data(): any { // TODO: sould eb AttrsProps - workqaround for types issue.
+  get data(): any { // TODO: should eb AttrsProps - workaround for types issue.
     return this._data
   }
 

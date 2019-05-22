@@ -2,38 +2,13 @@ import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineText
 import { Component, Flor } from '../jsx'
 import { YogaElementProps } from '../yogaDom'
 import { focusableProps } from './commonProps'
+import { InputEventTarget, ElementProps } from '../programDom';
 
-export interface InputProps extends JSX.PropsWithRef<Partial<YogaElementProps>>, ConcreteInputProps {
+export interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>,Partial< ConcreteInputProps> {
 
 }
 
-export interface ConcreteInputProps {
-  /**
-   * Emitted when the user writs or deletes text in the input. Notice that the user didn't explicitly gestured
-   * a change in the value, he is just writing text. For subscribing for when the user explicitly changes the
-   * value (like when pressing enter), use [[onChange]].
-   */
-  onInput?: (e: { currentTarget: ProgramElement, input: string }) => void
-
-  /**
-   * Emitted when the user explicitly gestures a change in the value, like when pressing enter, or blur.
-   */
-  onChange?(e: { currentTarget: ProgramElement, value: string }): void
-
-  /**
-   * Initial value for the input.
-   */
-  value?: string
-
-  /**
-   * Keys to change the value. By default is ENTER.
-   */
-  changeKeys?: KeyPredicate
-
-  /**
-   * Change the value on blur? By default is true.
-   */
-  changeOnBlur?: boolean
+export interface ConcreteInputProps extends InputEventTarget{
 
   /**
    * Input looses focus when user changes the value (pressing enter)
@@ -53,13 +28,15 @@ export interface ConcreteInputProps {
   disableInputKeys?: KeyPredicate
 }
 
-export const defaultInputProps: Required<ConcreteInputProps> = {
+export const defaultInputProps: Required<ConcreteInputProps>  = {
   onInput(e) { },
   onChange(e) { },
+  focusOnClick: true,
   changeKeys: e => e.name === 'enter',
   changeOnBlur: true,
   blurOnChange: true,
   value: '',
+  input: '',
   enableInputKeys: e => e.name === 'enter',
   disableInputKeys: e => e.name === 'escape'
 }
@@ -73,7 +50,7 @@ export const defaultInputProps: Required<ConcreteInputProps> = {
  */
 export class Input extends Component<InputProps, {}> {
 
-  protected p: Required<ConcreteInputProps>
+  protected p:Required<ConcreteInputProps>&InputEventTarget 
   protected boxEl: ProgramElement | undefined
   protected textInputCursorManager: SingleLineTextInputCursor
 

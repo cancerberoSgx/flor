@@ -77,24 +77,20 @@ export interface RenderElementOptions {
   /**
    * Ensures writings only happen inside given element's area by temporarily changing [[writeArea]].
    */
-  writeInsideOnly?: boolean
-
-  //  /**
-  //  * if passed the write area will be applied only temporarily for the current frament being rendered.
-  //    After the renderElement() call finished, it will be reseted. For a permanent write area use the setter
-  //    [[writeArea]] or the method [[setElementWriteArea]]
-  //    */
-  //  writeArea?: Rectangle
-
+  writeInsideOnly?: boolean 
 }
+
 /**
- * TODO. should eb PAttrs for completness
+ * TODO. should eb PAttrs for completeness
+ * 
+ * TODO: represent also the cursor.
  */
 interface BufferData {
   ch: string
   bg: string
-   fg: string
+  fg: string
 }
+
 /**
  * Responsibilities:
  *
@@ -123,10 +119,9 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   private _currentAttrs: Attrs
   private _defaultRenderOptions: RenderElementOptions = {
     preventSiblingCascade: true,
-    preventChildrenCascade: false,
-    
-
+    preventChildrenCascade: false
   }
+
   private _writeArea: Rectangle
 
   private lastAbsLeft: number = 0
@@ -345,15 +340,15 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   /**
    * Renders given element in the screen. Element's props character attributes will me merged with
    * [[currentAttrs]] and that will be used to render the element's pixels.
-   * 
-   * @param __childrenRecursion Indicates whenever the renderElement call is the first one from the 
-   * user or is a recursive one rendering children. @internal  
+   *
+   * @param __childrenRecursion Indicates whenever the renderElement call is the first one from the
+   * user or is a recursive one rendering children. @internal
    */
   renderElement(el: E
-    , options: RenderElementOptions = this._defaultRenderOptions, __childrenRecursion=false
+    , options: RenderElementOptions = this._defaultRenderOptions, __childrenRecursion = false
   ) {
     el._beforeRender()
-    if(!__childrenRecursion){
+    if (!__childrenRecursion) {
       this.program.saveCursor('flor.renderer')
       this.program.hideCursor()
     }
@@ -361,9 +356,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
-
-    let originalAttrs = options.preventChildrenCascade&&options.preventSiblingCascade ?  this._currentAttrs : undefined
-
+    let originalAttrs = options.preventChildrenCascade && options.preventSiblingCascade ? this._currentAttrs : undefined
     let originalWriteArea: Rectangle | undefined
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
@@ -382,12 +375,12 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     if (originalWriteArea) {
       this._writeArea = originalWriteArea
     }
-    if(originalAttrs){
+    if (originalAttrs) {
       this.currentAttrs = originalAttrs
     }
-    if(!__childrenRecursion){
+    if (!__childrenRecursion) {
       this.program.restoreCursor('flor.renderer')
-    }    
+    }
     el._afterRender()
     el._renderCounter = this.renderCounter++
     return el
@@ -407,7 +400,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
         if (el.props.renderChildElement) {
           el.props.renderChildElement(this, c, i, a)
         } else {
-          this.renderElement(c, { ...options},true )
+          this.renderElement(c, { ...options }, true)
         }
       } else {
         debug('Element type invalid: ' + inspect(c))

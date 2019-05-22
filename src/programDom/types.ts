@@ -7,6 +7,7 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
+import { TextNode, Node } from '../dom';
 
 export interface Edges {
   top: number
@@ -83,7 +84,7 @@ export interface StyleProps extends Attrs {
   /**
    * Like in HTML DOM box model, the padding is the area between the border and the content. Adding padding
    * won't change the element's bounds, but shrink the content bounds. Attributes like `bg` and `ch` applies
-   * in this area.  
+   * in this area.
    */
   padding: Padding
 
@@ -182,22 +183,173 @@ export interface BlurEvent<T extends ProgramElement = ProgramElement> extends Ev
   focused?: T
 }
 
-export interface ElementProps extends StyleProps, ComponentProps {
-
-  focusable: boolean
-  focused: boolean
-  preventChildrenCascade: boolean
-  preventSiblingCascade: boolean
+interface KeyEventTarget {
+  /**
+   * Listener for when the element is clicked. The element must have the mouse enabled
+   * (`Program.enableMouse()`).
+   */
+  onKeyPressed?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
+  onKeyDown?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
+}
+interface MouseEventTarget {
+  /**
+   * Listener for when the element is clicked. The element must have the mouse enabled
+   * (`Program.enableMouse()`).
+   */
+  onClick?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
 
   /**
-   * Custom Styles for when the element is focused. Note: in order for the element to restore the normal
-   * property value, it must also be declared as a normal property. Example: `<box focus={{bg: 'blue'}}/>`,
-   * because `bg` is only declared as a focus property when the element looses focus the 'blue' background
-   * will remain applied. This can ba avoided declaring also a normal state background color: `<box bg="black"
-   * focus={{bg: 'blue'}}/>`.
+   * Listener for when the element is clicked several times in a short amount of time, like double click. The
+   * element must have the mouse enabled (`Program.enableMouse()`).
+   */
+  onClicks?<T extends ProgramElement = ProgramElement>(r: ClicksEvent<T>): void | boolean
+
+  onMouse?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseOut?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseOver?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseDown?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onWheelDown?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onWheelUp?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+  onMouseMove?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
+}
+
+export interface InputEventTarget {
+  /**
+   * Current input for input elements like input, textarea, etc.
+   */
+  input: string
+
+  /**
+   * Current value for input elements like input, textarea, etc.
+   */
+  value: string
+
+  /**
+   * Emitted when the user writs or deletes text in the input. Notice that the user didn't explicitly gestured
+   * a change in the value, he is just writing text. For subscribing for when the user explicitly changes the
+   * value (like when pressing enter), use [[onChange]].
+   */
+  onInput (e: { currentTarget: ProgramElement, input: string }): void
+
+  /**
+   * Emitted when the user explicitly gestures a change in the value, like when pressing enter, or blur.
+   */
+  onChange(e: { currentTarget: ProgramElement, value: string }): void
+
+  /**
+   * Keys to change the value. By default is ENTER.
+   */
+  changeKeys: KeyPredicate
+
+  /**
+   * Change the value on blur? By default is true.
+   */
+  changeOnBlur: boolean
+
+  focusOnClick: boolean
+}
+
+export interface Renderable {
+  /**
+   * Default value is `false`. in which case, children inherits its parent properties, declared or not
+   * declared. If `true`, children won't inherits parent's properties. See [[RenderElementOptions]]
+   * description for details..
+   */
+  preventChildrenCascade: boolean
+
+  /**
+   * Default value: `true` in which an element's properties are totally independent on the properties of its
+   * siblings. If `false`, properties defined by previous siblings or their descendants will be propagated to
+   * the element. See [[RenderElementOptions]] description for details.
+   *
+   */
+  preventSiblingCascade: boolean
+
+
+  /**
+   * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared,
+   * the content and border won't be rendered, and implementation is responsible of them.
+   */
+  render?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
+   * method. If declared, the content   won't be rendered but the border will. The implementation is
+   * responsible of drawing the content.
+   */
+  renderContent?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
+   * method. If declared, the content   won't be rendered but the border will. The implementation is
+   * responsible of drawing the content.
+   */
+  renderBorder?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses
+   * that need custom children drawing method. If declared, children   won't be rendered but the content and
+   * border will. The implementation is responsible of drawing the children.
+   */
+  renderChildren?(renderer: ProgramDocumentRenderer): void
+
+  /**
+   * Custom element child element draw function. Child elements are child elements but not text nodes. Can be
+   * declared by subclasses that need custom children drawing method. If declared, child elements (not text)
+   * won't be rendered but the child text nodes, content and border will. The implementation is responsible of
+   * drawing the child elements and its children's children.
+   */
+  renderChildElement?(renderer: ProgramDocumentRenderer, child: ProgramElement, index: number, children: Node[]): void
+
+  /**
+   * Custom element child text node draw function. Child text nodes are child  text but not child elements.
+   * Can be declared by subclasses that need custom child text nodes drawing method. If declared, child text
+   * nodes (not child elements) won't be rendered but the child elements, content and border will. The
+   * implementation is responsible of drawing the text and respecting props.wordWrap and styles.
+   */
+  renderChildText?(renderer: ProgramDocumentRenderer, text: TextNode, index: number): void
+}
+
+export interface Focusable {
+    /**
+   * If true, the element can gain focus, when FocusManager's [[focusNext]] or [[focusPrevious]] methods are
+   * call to cycle the focus. 
+   *
+   * Note that key listeners subscribed to an element (ej using [[onKeyPressed]]), will be only notified when
+   * the element has focus. See [[FocusManager]] for details.
+   */
+  focusable: boolean
+
+  /**
+   * Indicates if this element has focus. Setting this property will request the focus manager, if any, to
+   * give focus to this element.
+   */
+  focused: boolean
+
+  /**
+   * Custom Styles to apply when the element is focused. 
+   *
+   * See [[StyleEffectsManager]] for details.
+   *
+   * Note: in order for the element to restore the normal property value, it must also be declared as a normal
+   * property. Example: `<box focus={{bg: 'blue'}}/>`, because `bg` is only declared as a focus property when
+   * the element looses focus the 'blue' background will remain applied. This can ba avoided declaring also a
+   * normal state background color: `<box bg="black" focus={{bg: 'blue'}}/>`.
    */
   focus: Partial<StyleProps>
 
+  /**
+   * Called when the element looses its focus.
+   */
+  onBlur?(e: BlurEvent): void | boolean
+
+  /**
+   * Called when the element gains focus.
+   */
+  onFocus?(e: FocusEvent): void | boolean
+}
+
+export interface Classifiable {
   /**
    * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
    */
@@ -222,7 +374,9 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * Custom elements or components can use this property to identify the their type with a name.
    */
   elementType: string
+}
 
+export interface LifeCycleEventTarget {
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be
    * next.
@@ -262,79 +416,10 @@ export interface ElementProps extends StyleProps, ComponentProps {
    * children is done here so it can be prevented by returning true.
    */
   childrenReady?(): boolean
+}
 
-  /**
-   * Listener for when the element is clicked. The element must have the mouse enabled
-   * (`Program.enableMouse()`).
-   */
-  onClick?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
 
-  /**
-   * Listener for when the element is clicked several times in a short amount of time, like double click. The
-   * element must have the mouse enabled (`Program.enableMouse()`).
-   */
-  onClicks?<T extends ProgramElement = ProgramElement>(r: ClicksEvent<T>): void | boolean
-
-  /**
-   * Listener for when the element is clicked. The element must have the mouse enabled
-   * (`Program.enableMouse()`).
-   */
-  onKeyPressed?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
-  onKeyDown?<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): void | boolean
-
-  onMouse?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseOut?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseOver?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseDown?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-  onWheelDown?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-  onWheelUp?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-  onMouseMove?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
-
-  /**
-   * Current input for input elements like input, textarea, etc.
-   */
-  input: string
-  /**
-   * Current value for input elements like input, textarea, etc.
-   */
-  value: string
-
-  /**
-   * Called when the element looses its focus.
-   */
-  onBlur?(e: BlurEvent): void | boolean
-
-  /**
-   * Called when the element gains focus.
-   */
-  onFocus?(e: FocusEvent): void | boolean
-
-  /**
-   * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared,
-   * the content and border won't be rendered, and implementation is responsible of them.
-   */
-  render?(renderer: ProgramDocumentRenderer): void
-
-  /**
-   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
-   * method. If declared, the content   won't be rendered but the border will. The implementation is
-   * responsible of drawing the content.
-   */
-  renderContent?(renderer: ProgramDocumentRenderer): void
-
-  /**
-   * Custom element content draw function. Can be declared by subclasses that need custom content drawing
-   * method. If declared, the content   won't be rendered but the border will. The implementation is
-   * responsible of drawing the content.
-   */
-  renderBorder?(renderer: ProgramDocumentRenderer): void
-
-  /**
-   * Custom element children draw function. Children are both elements and text. Can be declared by subclasses
-   * that need custom children drawing method. If declared, children   won't be rendered but the content and
-   * border will. The implementation is responsible of drawing the children.
-   */
-  renderChildren?(renderer: ProgramDocumentRenderer): void
+export interface ElementProps extends StyleProps, ComponentProps, MouseEventTarget, Renderable, Focusable, Classifiable, LifeCycleEventTarget, InputEventTarget, KeyEventTarget {
 
 }
 

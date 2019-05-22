@@ -51,15 +51,11 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   }
 
   get data() {
-    return {...super.data, 
-      ...this._data.border ? {border: ((this._data.border as any).data ||this._data.border)} : {}, 
-      // width: this.getWidth(), height: this.getHeight(), left: this.getLeft(), top: this.getTop()   
-     }
+    return {
+      ...super.data,
+      ...this._data.border ? { border: ((this._data.border as any).data || this._data.border) } : {}
+    }
   }
-  // set data(d: any){
-  //   super.data = d
-  // }
-
 
   public get layout(): LayoutOptions | undefined {
     return this._data.layout

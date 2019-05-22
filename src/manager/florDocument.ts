@@ -1,5 +1,4 @@
 import { isObject } from 'misc-utils-of-mine-generic'
-import { inspect } from 'util'
 import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
 import { Program } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
@@ -14,14 +13,14 @@ import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends RendererCreateOptions, ProgramBrowserOptions {
 
   /**
-   * If true, it will install key listeners so `tab` and `S-tab` will focus next and previous focusable 
+   * If true, it will install key listeners so `tab` and `S-tab` will focus next and previous focusable
    * elements present in the program respectively. By default is false.
    */
   installDefaultChangeFocusKeys?: boolean
 
   /**
-   * If true, it will install key listeners so when 'q' or 'C-c' keys are pressed the program is destroyed. 
-   * 
+   * If true, it will install key listeners so when 'q' or 'C-c' keys are pressed the program is destroyed.
+   *
    * By default is true.
    */
   installDefaultExitKeys?: boolean
@@ -94,7 +93,7 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
   private _cursor: CursorManager = undefined as any
   private _effects: StyleEffectsManager<E> = undefined as any
 
-  protected static programDefaultOptions : FlorDocumentOptions = {
+  protected static programDefaultOptions: FlorDocumentOptions = {
     buffer: true,
     installDefaultExitKeys: true,
     installDefaultChangeFocusKeys: false,
@@ -122,7 +121,7 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
     this._renderer = new ProgramDocumentRenderer({ program: this._program })
     this._focus = new FocusManager(this._events, this._document)
-    if(options.installDefaultChangeFocusKeys){
+    if (options.installDefaultChangeFocusKeys) {
       this._focus.installDefaultChangeFocusKeys()
     }
     this._cursor = new CursorManager({ program: this._program, cursor: {} })
@@ -237,18 +236,18 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
    * Prints a box, by default at the right-bottom corner of the screen, with given text or element inside.
    */
   debug(...args: any[]) {
-    if(this._debugTimer){
+    if (this._debugTimer) {
       clearTimeout(this._debugTimer)
     }
     setTimeout(() => {
       this.program.saveCursor('flor.debug')
       args.map(a => JSON.stringify(a))
-      // inspect(a, { sorted: true, compact: true, maxArrayLength: 4, breakLength: 44 })
-      // .split('\n'))
-      // .flat()
+        // inspect(a, { sorted: true, compact: true, maxArrayLength: 4, breakLength: 44 })
+        // .split('\n'))
+        // .flat()
         .forEach((c, i) => {
           // this.program.saveCursor(  'flor.debug')
-          const writeArea = {...this.renderer.writeArea}
+          const writeArea = { ...this.renderer.writeArea }
           this.renderer.resetWriteArea()
           this.renderer.write(i, 0, `<DEBUG>${c}</DEBUG>`)
           this.renderer.writeArea = writeArea
@@ -263,7 +262,7 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
       }, 30000)
     }, 500)
   }
-  private _debugTimer: NodeJS.Timeout|undefined
+  private _debugTimer: NodeJS.Timeout | undefined
 
   private installLoggers() {
     addLogger({

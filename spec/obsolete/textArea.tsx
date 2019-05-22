@@ -11,18 +11,18 @@ interface ConcreteTextAreaProps extends ConcreteInputProps {
   newLineKeys?: KeyPredicate
   upKeys?: KeyPredicate
   downKeys?: KeyPredicate
-  /**
-   * TODO.
-   * If true it will wrap lines outside the content area in a new line.
-   * It will not modify given text, just visualize long lines wrapped in the following line.
-   */
-  wordWrap?: boolean
+  // /**
+  //  * TODO.
+  //  * If true it will wrap lines outside the content area in a new line.
+  //  * It will not modify given text, just visualize long lines wrapped in the following line.
+  //  */
+  // wordWrap?: boolean
 
 }
 const defaultTextAreaProps: Required<ConcreteTextAreaProps> = {
   ...defaultInputProps,
   currentLine: 0,
-  wordWrap: false,
+  // wordWrap: false,
   changeKeys: e => e.name === 'escape',
   downKeys: e => e.name === 'down',
   upKeys: e => e.name === 'up',

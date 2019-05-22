@@ -1,10 +1,9 @@
-import { array, indent, objectKeys, objectFilter, objectMap } from 'misc-utils-of-mine-generic'
+import { array, indent, objectKeys, objectMap } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, Element, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
+import { RenderElementOptions } from '../manager'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
 import { rectangleIntersects } from './elementUtil'
-import { RenderElementOptions } from '../manager';
-import { ElementProps } from './types';
 
 export class ProgramElement extends Element {
   // resolvePropValue<K extends keyof ElementProps = keyof ElementProps>(k: K): ElementProps[K] {
@@ -52,9 +51,9 @@ export class ProgramElement extends Element {
    * @internal
    */
   doLayout() {
-    if (this.layout 
+    if (this.layout
       // && (
-      // !this.layout.manualLayout || 
+      // !this.layout.manualLayout ||
       // !this._layoutOnce
       // )
       && (this._positionDirty || this._boundsDirty)
@@ -435,7 +434,7 @@ export class ProgramElement extends Element {
   /**
    * If the owner document has a renderer available it request to render this element on the screen.
    */
-  render( options?: RenderElementOptions) {
+  render(options?: RenderElementOptions) {
     this.ownerDocument.renderer && this.ownerDocument.renderer.renderElement(this, options)
   }
 
@@ -461,7 +460,7 @@ export class ProgramElement extends Element {
    * Returns a XML like string representation of this element instance.
    */
   debugAsXml(o: DebugOptions = { level: 0 }): string {
-    const noF = objectMap(this.props.data, (k, v)=>typeof v === 'function' ? v.toString(): v)
+    const noF = objectMap(this.props.data, (k, v) => typeof v === 'function' ? v.toString() : v)
     return `${indent(o.level)}<${this.tagName} ${
       objectKeys({ ...noF })
         .map(p => `${p}=${JSON.stringify(noF[p])}`)
@@ -538,7 +537,7 @@ export class ProgramElement extends Element {
 
 }
 
-interface DebugJsonNode { [s: string]: any, children: (DebugJsonNode|string)[] }
+interface DebugJsonNode { [s: string]: any, children: (DebugJsonNode | string)[] }
 
 interface DebugOptions {
   level: number

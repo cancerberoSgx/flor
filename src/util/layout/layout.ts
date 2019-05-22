@@ -2,7 +2,6 @@ import { ProgramElement } from '../..'
 import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout'
 import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms'
 
-
 export interface LayoutOptions {
   /**
    * If non is provided 'binary-tree' will be used.
@@ -15,8 +14,8 @@ export interface LayoutOptions {
   sort?: boolean
 
   /**
-   * This applies to layouts that could resize the parent element (like [[topDown]] or [[leftRight]]). 
-   * If true, it will prevent so.  Default value is false. 
+   * This applies to layouts that could resize the parent element (like [[topDown]] or [[leftRight]]).
+   * If true, it will prevent so.  Default value is false.
    */
   neverResizeContainer?: boolean
 

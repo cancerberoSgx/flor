@@ -37,11 +37,6 @@ describe('jsx', () => {
     done()
   })
 
-
-  
-
-
-
   it('should render components', async done => {
     class C extends Component<{ name: string, colors: string[] } & ComponentProps> {
       render() {
@@ -116,17 +111,15 @@ an empty line
     done()
   })
 
-
-  
-  describe('text', ()=>{
+  describe('text', () => {
 
     let renderer: ProgramDocumentRenderer
-   
-    beforeEach(()=>{
-        renderer = createProgramRendererDocument().renderer
+
+    beforeEach(() => {
+      renderer = createProgramRendererDocument().renderer
     })
 
-    afterEach(()=>{
+    afterEach(() => {
       renderer.destroy()
     })
 
@@ -167,43 +160,43 @@ an empty line
   `))
       done()
     })
-   
+
     it('should not render null ', async done => {
-      class C1 extends Component  {
+      class C1 extends Component {
         render() {
           return null
         }
-      } 
-      const app = <el><C1/></el>
+      }
+      const app = <el><C1 /></el>
       const e = Flor.render(app)
       renderer.renderElement(e)
-      expect(renderer.printBuffer(true).trim()).not.toContain(`null`) 
+      expect(renderer.printBuffer(true).trim()).not.toContain(`null`)
       done()
     })
-  
+
     it('should not render false ', async done => {
-      class C2 extends Component  {
+      class C2 extends Component {
         render() {
           return false
         }
       }
-      const app = <el><C2/></el>      
+      const app = <el><C2 /></el>
       const e = Flor.render(app)
       renderer.renderElement(e)
-      expect(renderer.printBuffer(true).trim()).not.toContain(`false`) 
+      expect(renderer.printBuffer(true).trim()).not.toContain(`false`)
       done()
     })
-  
+
     it('should render 0 ', async done => {
-      class C2 extends Component  {
+      class C2 extends Component {
         render() {
           return 0
         }
       }
-      const app = <el><C2/></el>
+      const app = <el><C2 /></el>
       const e = Flor.render(app)
       renderer.renderElement(e)
-      expect(renderer.printBuffer(true).trim()).toContain(`0`) 
+      expect(renderer.printBuffer(true).trim()).toContain(`0`)
       done()
     })
 
