@@ -1,6 +1,6 @@
-import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement, SingleLineTextInputCursor, TextInputCursorMulti } from '../src'
+import { BorderStyle, Flor, FlorDocument } from '../src'
+import { TextArea } from '../src/component/textArea'
 import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
-import { TextArea } from '../src/component/textArea';
 
 describe('textArea', () => {
 
@@ -18,13 +18,9 @@ QUe los cumplas feliz,
 Que los cumplas, que los cumplas
 Que los cumplas feliz.
       `.trim()
-
-      const el = flor.create(<TextArea focused={true} top={10} left={18} width={33} height={23} border={{ type: BorderStyle.heavy }} bg="blue"         text={text}  pos={{ col: 0, row: 0 }}
- enabled={true}/>)
+      const el = flor.create(<TextArea focused={true} top={10} left={18} width={33} height={23} border={{ type: BorderStyle.heavy }} bg="blue" text={text} pos={{ col: 0, row: 0 }}
+        enabled={true} />)
       flor.render()
-      // flor.cursor.show({
-      //   name: 'cursorTextEditorTest1', top: el.absoluteContentTop, left: el.absoluteContentLeft
-      // })
       await willContain(flor, 'Que los cumplas,')
       expectNotToContain(flor, '*um*')
       expectNotToContain(flor, '*plas*')

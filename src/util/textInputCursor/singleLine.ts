@@ -132,8 +132,8 @@ export class SingleLineTextInputCursor {
 
   protected get lines() {
     return this._lines
-  }  
-  getValueLines()  {
+  }
+  getValueLines() {
     return this._lines
   }
 
