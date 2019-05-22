@@ -3,8 +3,12 @@ import { Button } from '../../src/component/button'
 import { Flor } from '../../src/jsx/createElement'
 import { color, float, item } from '../data'
 
+async function test(){
+
 try {
-  const flor = new FlorDocument()
+  const flor = new FlorDocument({browser: true, browserTermCols: 255, browserTermRows: 65})
+  await flor.ready
+
   const app = <el width={.99} height={.999} bg="gray" fg="green" border={{ type: BorderStyle.round }} layout={{ layout: Layout['topDown'], neverResizeContainer: true }}>
 
     <el height={.19} width={.99} left={0} padding={{ bottom: 1, top: 1, left: 1, right: 1 }} border={{ type: BorderStyle.round }} bg="red" layout={{ layout: Layout['leftRight'], neverResizeContainer: true }}
@@ -62,3 +66,6 @@ try {
 } catch (error) {
   debug(error)
 }
+}
+
+test()

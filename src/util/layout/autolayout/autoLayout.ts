@@ -12,7 +12,11 @@ interface Options<E extends ProgramElement = ProgramElement> {
 }
 
 /**
- * Define and apply layout to element's children using Apple's [Auto Layout](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/index.html) and [Visual Format Language](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage.html) through the library [autolayout](https://github.com/IjzerenHein/autolayout.js)
+ * Define and apply layout to element's children using Apple's [Auto
+ * Layout](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/index.html)
+ * and [Visual Format
+ * Language](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage.html)
+ * through the library [autolayout](https://github.com/IjzerenHein/autolayout.js)
  */
 export class AutoLayout<E extends ProgramElement = ProgramElement> {
   protected constraints: Constraint[]
@@ -43,7 +47,8 @@ export class AutoLayout<E extends ProgramElement = ProgramElement> {
   }
 
   /**
-   * Gets children new bounds corresponding to current parent content bounds. Don't modify children's just returns the values.
+   * Gets children new bounds corresponding to current parent content bounds. Don't modify children's just
+   * returns the values.
    */
   getBounds(): { bounds: { left: number, top: number, width: number, height: number }, el: E }[] {
     this.view.setSize(this.parent.contentWidth, this.parent.contentHeight)
@@ -68,7 +73,6 @@ export class AutoLayout<E extends ProgramElement = ProgramElement> {
       }
     }).filter(notFalsy)
   }
-
 }
 
 export function extractSubViewBounds(view: SubView) {

@@ -1,6 +1,6 @@
 import { sleep } from 'misc-utils-of-mine-generic'
-import { Program } from '../../../../src'
-import { int } from '../../../data'
+import { Program } from '../../src'
+import { int } from '../data'
 
 const program = new Program({
 })
@@ -19,7 +19,7 @@ program.key(['q', 'escape', 'C-c'], function() {
 
   for (let i = 0;i < program.cols;i++) {
     for (let j = 0;j < program.rows;j++) {
-      program._write(program.setab(int(0, 7)) + 'X' + program.sgr0())
+      program._write(program.tput && program.tput.setab(int(0, 7)) + 'X' + program.tput && program.tput.sgr0())
     }
   }
   await sleep(1000)

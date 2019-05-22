@@ -193,7 +193,7 @@ export interface ProgramOptions {
   buffer?: boolean
   terminal?: string
   term?: string
-  tput?: TPut
+  tput?: TPut | boolean
   debug?: boolean
   resizeTimeout?: boolean
 }
@@ -315,7 +315,7 @@ program.getWindowSize(function(err:any, data:any) {
 });
 ```
 */
-export declare class Program extends TPut implements EventEmitter {
+export declare class Program  implements EventEmitter {
 
   /** @internal */
   static instances: Program[]
@@ -355,7 +355,7 @@ export declare class Program extends TPut implements EventEmitter {
    */
   rows: number
 
-  tput: TPut
+  tput?: TPut
 
   scrollTop: number
 

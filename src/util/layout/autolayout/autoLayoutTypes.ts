@@ -1,4 +1,3 @@
-
 export interface AutoLayout {
   VisualFormat: VisualFormat
   View: ViewConstructor
@@ -9,14 +8,17 @@ export interface ViewOptions {
    * One or more constraint definitions.
    */
   constraints: Constraint[]
+
   /**
    * Spacing for the view
    */
   spacing?: number | number[]
+
   /**
    * Initial height of the view.
    */
   height?: number
+
   /**
    * Initial width of the view.
    */
@@ -28,14 +30,17 @@ export interface ViewConstructor {
 }
 
 export interface View<Names extends string = string> {
+
   /**
    * Width that was set using setSize.
    */
   readonly width: number
+
   /**
    * Height that was set using setSize.
    */
   readonly height: number
+
   /**
    * Width that is calculated from the constraints and the .intrinsicWidth of the sub-views.
    * When the width has been explicitly set using setSize, the fittingWidth will always be the same as the
@@ -47,21 +52,25 @@ export interface View<Names extends string = string> {
    * view.subViews.view1.intrinsicWidth = 100; view.subViews.view2.intrinsicWidth = 100;
    * console.log('fittingWidth: ' + view.fittingWidth); // 260
   ```
-*/
+  */
   fittingWidth: number
+
   /**
    * Height that is calculated from the constraints and the .intrinsicHeight of the sub-views. See
    * .[[fittingWidth]].
    */
   fittingHeight: number
+
   /**
    * Dictionary of SubView objects that have been created when adding constraints.
    */
   subViews: { [name in Names]: SubView }
+
   /**
    * Sets the width and height of the view.
    */
   setSize(width: number, height: number): View
+
   /**
    * Sets the spacing for the view.
    *
@@ -72,25 +81,29 @@ export interface View<Names extends string = string> {
    *
    * Instead of using the full spacing syntax, it is also possible to use shorthand notations:
    *
-   * |Syntax|Type|Description|
+|Syntax|Type|Description|
   |---|---|---|
-   * |[top, right, bottom, left, width, height, zIndex]|Array(7)|Full syntax including z-index (clockwise
-   * order).| |[top, right, bottom, left, width, height]|Array(6)|Full horizontal & vertical spacing syntax
-   * (no z-index) (clockwise order).| |[horizontal, vertical, zIndex]|Array(3)|Horizontal = left, right,
-   * width, vertical = top, bottom, height.| |[horizontal, vertical]|Array(2)|Horizontal = left, right, width,
-   * vertical = top, bottom, height, z-index = 1.| |spacing|number|Horizontal & vertical spacing are all the
-   * same, z-index = 1.|
-   *
-   * Examples:
-  ```
-   * view.setSpacing(10); // horizontal & vertical spacing 10 view.setSpacing([10, 15, 2]); // horizontal
-   * spacing 10, vertical spacing 15, z-axis spacing 2 view.setSpacing([10, 20, 10, 20, 5, 5]); // top, right,
-   * bottom, left, horizontal, vertical view.setSpacing([10, 20, 10, 20, 5, 5, 1]); // top, right, bottom,
-   * left, horizontal, vertical, z
-  ```
-  */
+|[top, right, bottom, left, width, height, zIndex]|Array(7)|Full syntax including z-index (clockwise
+order).| |[top, right, bottom, left, width, height]|Array(6)|Full horizontal & vertical spacing syntax
+(no z-index) (clockwise order).| |[horizontal, vertical, zIndex]|Array(3)|Horizontal = left, right,
+width, vertical = top, bottom, height.| |[horizontal, vertical]|Array(2)|Horizontal = left, right, width,
+vertical = top, bottom, height, z-index = 1.| |spacing|number|Horizontal & vertical spacing are all the
+same, z-index = 1.|
+   
+Examples:
+
+```
+view.setSpacing(10); // horizontal & vertical spacing 10 view.setSpacing([10, 15, 2]); // horizontal
+spacing 10, vertical spacing 15, z-axis spacing 2 view.setSpacing([10, 20, 10, 20, 5, 5]); // top, right,
+bottom, left, horizontal, vertical view.setSpacing([10, 20, 10, 20, 5, 5, 1]); // top, right, bottom,
+left, horizontal, vertical, z
+```
+
+*/
   setSpacing(spacing: number | number[]): View
+
   addConstraint(constraint: Constraint): View
+
   addConstraints(constraints: Constraint[]): View
 
 }
@@ -102,6 +115,7 @@ export interface VisualFormat {
    * and column position.
    */
   parse(constraints: string[], options?: ParseOptions): Constraint[]
+
   /**
    * Parses a single line of vfl into an array of constraint definitions. When the visual-format could not be
    * successfully parsed an exception is thrown containing additional info about the parse error and column
@@ -149,6 +163,7 @@ export interface parseMetaInfoOptions {
    * String that defines the end of a line (default \n).
    */
   lineSeparator?: string
+
   /**
    * When specified, also processes the categories using that prefix (e.g. "-dev-viewport max-height:10").
    */
@@ -160,6 +175,7 @@ export interface ParseOptions extends ParseLineOptions {
    * When set to false trims any leading/trailing spaces and ignores empty lines (default: true).
    */
   strict?: boolean
+
   /**
    * String that defines the end of a line (default \n).
    */
@@ -170,11 +186,13 @@ export interface ParseLineOptions {
   /**
    * When set to true uses the extended syntax (default: false).
    */
-  extended?: boolean,
+  extended?: boolean
+
   /**
    * Output format (constraints or raw) (default: constraints).
    */
   spacing?: number
+
   /**
    * Output format (constraints or raw) (default: constraints).
    */
@@ -206,20 +224,26 @@ export interface SubView {
   name: string
   /**
    * Intrinsic width of the sub-view. Use this property to explicitly set the width of the sub-view, e.g.:
-   *
+
 ```
 var view = new AutoLayout.View(AutoLayout.VisualFormat.parse('|[child1][child2]|'), {width: 500});
 view.subViews.child1.intrinsicWidth = 100; console.log('child2 width: ' + view.subViews.child2.width); // 400
 ```
    */
   intrinsicWidth: number
+
   /**
    * Intrinsic height of the subView. See [[intrinsicWidth]]
    */
   intrinsicHeight: number
+
   centerX: number
+
   centerY: number
+
   zIndex: number
+
   type: String
+
   getValue(attr: string): number | undefined
 }

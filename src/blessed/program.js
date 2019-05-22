@@ -16,13 +16,17 @@ var EventEmitter = require('events').EventEmitter
   , util = require('util')
   , fs = require('fs');
 
-var Tput = require('./tput')
+  
+  var Tput = require('./tput')
   , colors = require('./colors')
   , slice = Array.prototype.slice;
-
-var nextTick = global.setImmediate || process.nextTick.bind(process);
-
-/**
+  
+  var nextTick = global.setImmediate || process.nextTick.bind(process);
+  function isBrowser() {
+    return typeof document!=='undefined'&& typeof window!=='undefined'
+  }
+  
+  /**
  * Program
  */
 
@@ -2780,7 +2784,7 @@ Program.prototype._attr = function(param, val) {
           return this._attr('default ' + m[2]);
         }
 
-        color = colors.reduce(color, this.tput.colors);
+        color = colors.reduce(color, this.tput ? this.tput.colors : isBrowser() ? 256 : 16);
 
         if (color < 16 || (this.tput && this.tput.colors <= 16)) {
           if (m[2] === 'fg') {
@@ -2867,7 +2871,7 @@ Program.prototype.getCursor = function(callback) {
 
 Program.prototype.saveReportedCursor = function(callback) {
   var self = this;
-  if (this.tput.strings.user7 === '\x1b[6n' || this.term('screen')) {
+  if (this.tput && this.tput.strings.user7 === '\x1b[6n' || this.term('screen')) {
     return this.getCursor(function(err, data) {
       if (data) {
         self._rx = data.status.x;
@@ -4182,7 +4186,7 @@ Program.prototype.requestLocatorPosition = function(param, callback) {
   // get_mouse / getm / Gm
   // mouse_info / minfo / Mi
   // Correct for tput?
-  if (this.has('req_mouse_pos')) {
+  if (this.tput && this.has('req_mouse_pos')) {
     var code = this.tput.req_mouse_pos(param);
     return this.response('locator-position', code, callback);
   }

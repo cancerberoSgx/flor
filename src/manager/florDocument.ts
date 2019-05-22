@@ -8,14 +8,17 @@ import { CursorManager } from './cursorManager'
 import { StyleEffectsManager } from './effects'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
-import { installExitKeys } from './programUtil'
+import { installExitKeys, createProgramForBrowser, ProgramBrowserOptions } from './programUtil'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
+import { Deferred } from '../util/misc';
 
-export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends ProgramOptions, RendererCreateOptions {
+export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends  RendererCreateOptions, ProgramBrowserOptions {
   program?: Program
   useAnsiDiff?: boolean
   documentImplementation?: () => T
+  browser?: boolean
 }
+
 /**
  * Main entry point for the library. When calling `new FlorDocument()`, a new [[Program]] instance is created along with a new [[ProgramDocumentRenderer]], [[ProgramDocument]], [[EventManager]] and [[FocusManager]].
 
@@ -32,41 +35,58 @@ TODO: probably this should extend ProgramDocument and handle all registerListene
 */
 
 export class FlorDocument<E extends ProgramElement = ProgramElement> {
-  private _renderer: ProgramDocumentRenderer
+  private _renderer: ProgramDocumentRenderer = undefined as any
   private _program: Program = undefined as any
-  private _document: ProgramDocument<E>
-  private _events: EventManager
-  private _focus: FocusManager
-  private _cursor: CursorManager
-  private _effects: StyleEffectsManager<E>
+  private _document: ProgramDocument<E> = undefined as any
+  private _events: EventManager = undefined as any
+  private _focus: FocusManager = undefined as any
+  private _cursor: CursorManager = undefined as any
+  private _effects: StyleEffectsManager<E> = undefined as any
 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
-    if (!o.program) {
+    this.ready =  new Deferred<void>()
+    // if (!o.program) {
       const programDefaultOptions = { buffer: true }
-      this._program = new Program({ ...programDefaultOptions, ...o })
-      this._program.setMouse({
-        allMotion: true
-      }, true)
-      this._program.enableMouse()
-      installExitKeys(this._program)
-    }
-    this.render = this.render.bind(this)
-    this._events = new EventManager(this._program)
-    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument() as any
-    Flor.setDocument(this._document)
-    this._renderer = new ProgramDocumentRenderer({ program: this._program })
-    this._focus = new FocusManager(this._events, this._document)
-    this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
-    this._document._setManagers(this)
-    this.createTextNode = this.createTextNode.bind(this)
-    this.debug = this.debug.bind(this)
-    this._cursor = new CursorManager({ program: this._program, cursor: {} })
-    this._cursor.enter()
+      const programOptions = { ...programDefaultOptions, ...o }
+      if(!o.program && o.browser){
+        createProgramForBrowser(programOptions).then(program=>{
+          this._program = program
+          this.initialize(programOptions)
+        })
+      }
+      else {
+        this._program = o.program||new Program(programOptions)
+        this.initialize(o);
+      }      
+    // }
+  }
+
+  protected initialize(o: FlorDocumentOptions<ProgramElement, ProgramDocument<ProgramElement>>) {
+    this._program.setMouse({
+      allMotion: true
+    }, true);
+    this._program.enableMouse();
+    installExitKeys(this._program);
+    this.render = this.render.bind(this);
+    this._events = new EventManager(this._program);
+    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument() as any;
+    Flor.setDocument(this._document);
+    this._renderer = new ProgramDocumentRenderer({ program: this._program });
+    this._focus = new FocusManager(this._events, this._document);
+    this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 });
+    this._document._setManagers(this);
+    this.createTextNode = this.createTextNode.bind(this);
+    this.debug = this.debug.bind(this);
+    this._cursor = new CursorManager({ program: this._program, cursor: {} });
+    this._cursor.enter();
     this._effects = new StyleEffectsManager<E>({
       focusManager: this.focus as any
-    })
+    });
     // this.installLoggers()
+    this.ready.resolve()
   }
+
+  ready: Deferred<void>
 
   /**
    * Destroys the program.

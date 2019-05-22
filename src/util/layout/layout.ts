@@ -26,6 +26,7 @@ export interface LayoutOptions {
   manualLayout?: boolean
 }
 export enum Layout {
+
   /**
    * The top-down algorithm places items vertically.
    *
@@ -33,6 +34,7 @@ export enum Layout {
    * via sort: false.
    */
   topDown = 'top-down',
+
   /**
    * The left-right algorithm places items horizontally.
    *
@@ -40,6 +42,7 @@ export enum Layout {
    * false.
    */
   leftRight = 'left-right',
+
   /**
    * The diagonal algorithm places items diagonally (top-left to bottom-right).
    *
@@ -47,16 +50,19 @@ export enum Layout {
    * via sort: false.
    */
   diagonal = 'diagonal',
+
   /**
    * The alt-diagonal algorithm places items diagonally (top-right to bottom-left).
    */
   diagonalAlt = 'alt-diagonal',
+
   /**
    * The binary-tree algorithm packs items via the binary tree algorithm.
    *
    * This is an efficient way to pack items into the smallest container possible.
    */
   pack = 'binary-tree',
+  
   /**
    * This is [Flickr justified-layout](http://flickr.github.io/justified-layout/) used to show images in
    * justified rows. Has many configurable options available in property [[justifiedLayoutOptions]]. See

@@ -20,7 +20,7 @@ const defaultProgramOptions = {
  */
 export function destroyProgram(program: Program) {
   // if (!program.isAlt) return
-  program.put.keypad_local()
+  program.put && program.put.keypad_local()
   if (program.scrollTop !== 0
     || program.rows - 1) {
     program.csr(0, program.rows - 1)
@@ -36,7 +36,7 @@ export function destroyProgram(program: Program) {
   })
   // program.showCursor() program.disableMouse()
   program.normalBuffer()
-  program.sgr0()
+  program.tput && program.tput .sgr0()
   program.reset()
   program.clear()
   program.flush()
@@ -65,7 +65,7 @@ export function leaveProgram(program: Program) {
   if (!program.isAlt) {
     return
   }
-  program.put.keypad_local()
+program.put &&   program.put.keypad_local()
   if (program.scrollTop !== 0
     || program.scrollBottom !== program.rows - 1) {
     program.csr(0, program.rows - 1)
@@ -101,12 +101,12 @@ export function enterProgram(program: Program): any {
     }
   }
   program.alternateBuffer()
-  program.put.keypad_xmit()
+  program.put && program.put.keypad_xmit()
   program.csr(0, program.rows - 1)
   program.hideCursor()
   program.cup(0, 0)
   // We need this for tmux now:
-  if (program.tput.strings.ena_acs) {
+  if (program.tput && program.tput.strings.ena_acs) {
     program._write(program.tput.enacs())
   }
 }
@@ -144,4 +144,48 @@ export function createProgramRendererDocumentAndElement(programOptions: ProgramO
   const renderer = new ProgramDocumentRenderer({ program })
   const el = document.create({ top: 0, left: 0, width: program.cols - 1, height: program.rows - 1, fg: 'black', bg: 'green', border: {}, ...props || {} })
   return { renderer, document, program, el }
+}
+
+var termJs = require('term.js')
+declare var window: any, document: any
+
+export interface ProgramBrowserOptions extends ProgramOptions{
+  browserTermCols?: number
+  browserTermRows?: number
+}
+export function createProgramForBrowser(o: ProgramBrowserOptions): Promise<Program>{
+return new Promise(resolve=>{
+
+  window.onload = function () {
+    var term = new termJs.Terminal({
+      cols: o.browserTermCols|| 80,
+      rows: o.browserTermRows|| 24,
+      useStyle: true,
+      screenKeys: true,
+      dontEmitKeyPress: true
+    });
+  
+    term.open(document.body);
+    term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+  
+    // glue to make blessed work in browserify
+    term.columns = term.cols;
+    term.isTTY = true;
+    require('readline').emitKeypressEvents = function () { };  // Can I side-affect a module this way? Apparently.
+    process.listeners = function fakelisteners() { return []; };
+    term.resize(o.browserTermCols|| 100, o.browserTermRows|| 36);
+  
+    // term._keypressDecoder = true
+    const program = new Program({
+      ...defaultProgramOptions, 
+      ...o, 
+      input: term, 
+      output: term, 
+      tput: false
+    })
+   resolve(program)
+  }
+
+})
+
 }

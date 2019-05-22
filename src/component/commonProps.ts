@@ -7,6 +7,8 @@ export const baseProps: () => RemoveProperties<Partial<YogaElementProps>, 'child
   fg: 'lightgray',
   width: .4,
   height: 3,
+  left: 0,
+  top: 0,
   bold: false
 })
 
