@@ -1,40 +1,40 @@
-import { RemoveProperties } from 'misc-utils-of-mine-generic';
-import { ElementOfComponent, ProgramElement } from '../../../src';
-import { ShipC } from './ship';
-type Data<T extends any> = RemoveProperties<T, 'intersects' | 'impact'>;
+import { RemoveProperties } from 'misc-utils-of-mine-generic'
+import { ElementOfComponent, ProgramElement } from '../../../src'
+import { ShipC } from './ship'
+type Data<T extends any> = RemoveProperties<T, 'intersects' | 'impact'>
 interface Point {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 interface Rect extends Point {
-  width: number;
-  height: number;
+  width: number
+  height: number
 }
 export interface Object<E extends ProgramElement = ProgramElement> extends Rect {
-  direction: Direction;
-  el?: E;
-  intersects(r: Rect): boolean;
+  direction: Direction
+  el?: E
+  intersects(r: Rect): boolean
 }
 class ObjectImpl<E extends ProgramElement = ProgramElement> implements Object<E> {
-  direction: Direction = null as any;
-  width: number = null as any;
-  height: number = null as any;
-  x: number = null as any;
-  y: number = null as any;
-  el?: E = null as any;
+  direction: Direction = null as any
+  width: number = null as any
+  height: number = null as any
+  x: number = null as any
+  y: number = null as any
+  el?: E = null as any
   intersects(r: Rect): boolean {
-    return !!this.el && this.el.intersects({ xi: r.x, yi: r.y, xl: r.x + r.width, yl: r.y + r.height });
+    return !!this.el && this.el.intersects({ xi: r.x, yi: r.y, xl: r.x + r.width, yl: r.y + r.height })
   }
   constructor(s: Data<Object>) {
-    Object.assign(this, s);
+    Object.assign(this, s)
   }
 }
 export interface Ship extends Object<ElementOfComponent<ShipC>> {
-  health: 1 | 2 | 3;
-  shields: 1 | 2 | 3;
-  ammo: number;
-  isEnemy: boolean;
-  impact(): void;
+  health: 1 | 2 | 3
+  shields: 1 | 2 | 3
+  ammo: number
+  isEnemy: boolean
+  impact(): void
 }
 export enum Direction {
   up,
@@ -48,45 +48,44 @@ export enum Direction {
 }
 export interface State {
   settings: Settings
-  gameOver: string | false;
+  gameOver: string | false
   // interval: number;
-  ship: Ship;
-  board: Board;
-  enemyShips: Ship[];
-  bullets: Bullet[];
+  ship: Ship
+  board: Board
+  enemyShips: Ship[]
+  bullets: Bullet[]
 }
 interface Bullet extends Object {
-  hit: boolean;
+  hit: boolean
 }
 export interface Settings {
-  speed : number
+  speed: number
 }
 export class BulletImpl extends ObjectImpl implements Bullet {
-  hit: boolean = false;
+  hit: boolean = false
   constructor(b: Data<Bullet>) {
-    super(b);
-    Object.assign(this, b);
+    super(b)
+    Object.assign(this, b)
   }
 }
 interface Board extends Rect {
-  width: number;
-  height: number;
+  width: number
+  height: number
 }
 export class ShipImpl extends ObjectImpl<ElementOfComponent<ShipC>> implements Ship {
-  health: 1 | 2 | 3 = null as any;
-  shields: 1 | 2 | 3 = null as any;
-  ammo: number = null as any;
-  isEnemy: boolean = null as any;
+  health: 1 | 2 | 3 = null as any
+  shields: 1 | 2 | 3 = null as any
+  ammo: number = null as any
+  isEnemy: boolean = null as any
   constructor(s: Data<Ship>) {
-    super(s);
-    Object.assign(this, s);
+    super(s)
+    Object.assign(this, s)
   }
   impact() {
     if (this.shields > 0) {
-      this.shields--;
-    }
-    else {
-      this.health--;
+      this.shields--
+    } else {
+      this.health--
     }
   }
 }
@@ -106,4 +105,4 @@ export const state: State = {
     width: 20, height: 20, x: 0, y: 0
   },
   bullets: []
-};
+}

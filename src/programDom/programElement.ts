@@ -1,10 +1,9 @@
 import { array, indent, objectKeys, objectMap } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
+import { Element } from '../dom'
 import { RenderElementOptions } from '../manager'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
-import { Element } from '../dom'
-
 import { rectangleIntersects } from './elementUtil'
 
 export class ProgramElement extends Element {

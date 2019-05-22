@@ -1,9 +1,9 @@
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer,TextNode } from '..'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer, TextNode } from '..'
 import { BlurEvent, FocusEvent } from '../'
-import { ProgramElement } from '../programDom'
 import { Node } from '../dom'
+import { ProgramElement } from '../programDom'
 import { StylePropsImpl } from './styleProps'
-import { ElementProps, StyleProps, KeyPredicate } from './types'
+import { ElementProps, KeyPredicate, StyleProps } from './types'
 
 export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<ElementProps> {
 
@@ -30,27 +30,24 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
   onChange?(e: { currentTarget: ProgramElement, value: string }): void
 
   public get changeKeys(): KeyPredicate {
-    return this._data.changeKeys;
+    return this._data.changeKeys
   }
   public set changeKeys(value: KeyPredicate) {
-    this._data.changeKeys = value;
+    this._data.changeKeys = value
   }
 
   public get changeOnBlur(): boolean {
-    return !!this._data.changeOnBlur;
+    return !!this._data.changeOnBlur
   }
   public set changeOnBlur(value: boolean) {
-    this._data.changeOnBlur = value;
+    this._data.changeOnBlur = value
   }
-
-
-  
 
   public get focusOnClick(): boolean {
-    return typeof this._data.focusOnClick==='undefined' ? true : this._data.focusOnClick
+    return typeof this._data.focusOnClick === 'undefined' ? true : this._data.focusOnClick
   }
   public set focusOnClick(value: boolean) {
-    this._data.focusOnClick = value;
+    this._data.focusOnClick = value
   }
 
   public get focused(): boolean | undefined {
@@ -82,10 +79,6 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
   onBlur?(e: BlurEvent): void
 
   onFocus?(e: FocusEvent): void
-
-
-
-
 
   public get id(): undefined | string {
     return this._data.id
@@ -122,7 +115,6 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
     this._data.elementType = value
   }
 
-
   childrenReady?(): boolean
 
   afterRenderWithoutChildren?(): boolean
@@ -132,10 +124,6 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
   onceRendered?(el: ProgramElement): boolean
 
   beforeRender?(): boolean
-
-
-
-
 
   onClick?(r: MouseEvent): void
 
@@ -154,10 +142,6 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
   onWheelUp?(r: MouseEvent): void
 
   onMouseMove?(r: MouseEvent): void
-
-
-
-
 
   public get preventSiblingCascade(): boolean | undefined {
     return this._data.preventSiblingCascade

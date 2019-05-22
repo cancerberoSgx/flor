@@ -61,9 +61,16 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
     return this._data.position
   }
   public set position(value: 'relative' | 'absolute' | undefined) {
-    this._data.position = value;
+    this._data.position = value
   }
-  
+
+  public get visible(): boolean {
+    return typeof this._data.visible==='undefined' ? true : this._data.visible
+  }
+  public set visible(value: boolean) {
+    this._data.visible = value;
+  }
+
   public get layout(): LayoutOptions | undefined {
     return this._data.layout
   }

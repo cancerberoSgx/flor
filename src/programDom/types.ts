@@ -1,5 +1,6 @@
 import { PropertyOptional } from 'misc-utils-of-mine-generic'
 import { MouseAction, ProgramKeyEvent, ProgramMouseEvent } from '../declarations'
+import { Node, TextNode } from '../dom'
 import { ComponentProps } from '../jsx'
 import { ProgramDocumentRenderer } from '../manager'
 import { ClicksEvent } from '../manager/clicks'
@@ -7,7 +8,6 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
-import { TextNode, Node } from '../dom';
 
 export interface Edges {
   top: number
@@ -112,13 +112,23 @@ export interface StyleProps extends Attrs {
    * they offset the position of the element in the direction specified. For absolute element though these
    * properties specify the offset of the element's side from the same side on the parent.
    *
-   * In both cases, `top`, `left`, `width`and `height`are relative to the parent's content bounds. 
+   * In both cases, `top`, `left`, `width`and `height`are relative to the parent's content bounds.
    *
    * Default value is `relative`.
-   * 
+   *
    * See [flex-box absolute-relative-layout](https://yogalayout.com/docs/absolute-relative-layout/).
    */
   position: 'relative' | 'absolute'
+
+  /**
+   * If `false`, the element (or its descendants) won't be visible and won't affect others in the layout flow.
+   * 
+   * Default value: `true`. 
+   * 
+   * Changing this property will affect siblings and parents since the layuot will have to be recalculated possibly
+   * changing sibling or parent bounds.  
+   */
+  visible: boolean
 
   /**
    * Similar to HTML DOM, when `visible` the area of elements that get outside this parent element will be
@@ -290,7 +300,6 @@ export interface Renderable {
    */
   preventSiblingCascade: boolean
 
-
   /**
    * Custom element draw function. Can be declared by subclasses that need custom drawing method. If declared,
    * the content and border won't be rendered, and implementation is responsible of them.
@@ -338,7 +347,7 @@ export interface Renderable {
 export interface Focusable {
   /**
  * If true, the element can gain focus, when FocusManager's [[focusNext]] or [[focusPrevious]] methods are
- * call to cycle the focus. 
+ * call to cycle the focus.
  *
  * Note that key listeners subscribed to an element (ej using [[onKeyPressed]]), will be only notified when
  * the element has focus. See [[FocusManager]] for details.
@@ -352,7 +361,7 @@ export interface Focusable {
   focused: boolean
 
   /**
-   * Custom Styles to apply when the element is focused. 
+   * Custom Styles to apply when the element is focused.
    *
    * See [[StyleEffectsManager]] for details.
    *
@@ -442,7 +451,6 @@ export interface LifeCycleEventTarget {
    */
   childrenReady?(): boolean
 }
-
 
 export interface ElementProps extends StyleProps, ComponentProps, MouseEventTarget, Renderable, Focusable, Classifiable, LifeCycleEventTarget, InputEventTarget, KeyEventTarget {
 

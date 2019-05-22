@@ -1,7 +1,6 @@
 import { merge } from 'misc-utils-of-mine-generic'
 import { ProgramElement } from '../..'
-import { isElement } from '../../programDom/elementUtil'
-import { LayoutOptions, isLayoutedElement } from './layout'
+import { isLayoutedElement, LayoutOptions } from './layout'
 
 const justifiedLayout = require('justified-layout')
 

@@ -32,12 +32,6 @@ class FlorJsxImpl implements FlorJsx {
     if (typeof e.type !== 'string') {
       throw new Error('unexpected undefined type ' + e)
     }
-
-    // function isVirtualElement(e: JSXElementImpl): e is 
-    // if(isVirtualElement(e)){
-
-    // }
-
     const el = document.createElement(e.type)
     parent.appendChild(el)
     if (isJSXElementImpl(e) && e._component) {

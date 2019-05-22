@@ -1,4 +1,4 @@
-import { Component, ElementProps, Flor, Layout, Text, Input } from '../../../src';
+import { Component, ElementProps, Flor, Input, Layout, Text } from '../../../src';
 import { State } from './state';
 
 export class Status extends Component<{
@@ -65,8 +65,10 @@ export class Select extends Component<SelectProps>{
 }
 
 
-export class PopUp extends Component<SelectProps>{
-  render(){
+interface PopUpProps extends Partial<ElementProps> {
+}
+export class PopUp extends Component<PopUpProps>{
+  render() {
     return null
   }
 }

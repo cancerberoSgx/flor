@@ -77,12 +77,12 @@ export interface RenderElementOptions {
   /**
    * Ensures writings only happen inside given element's area by temporarily changing [[writeArea]].
    */
-  writeInsideOnly?: boolean 
+  writeInsideOnly?: boolean
 }
 
 /**
  * TODO. should eb PAttrs for completeness
- * 
+ *
  * TODO: represent also the cursor.
  */
 interface BufferData {

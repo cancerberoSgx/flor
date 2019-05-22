@@ -1,64 +1,64 @@
-import { BorderStyle, Component, FlorDocument , Flor} from '../../../src';
-import { nextTick } from '../../../src/util/misc';
-import { int } from '../../data';
-import { Settings, Status } from "./panel";
-import { State, Direction, state, Object } from "./state";
-import { ShipC } from './ship';
-let app;
+import { BorderStyle, Component, Flor, FlorDocument } from '../../../src'
+import { nextTick } from '../../../src/util/misc'
+import { int } from '../../data'
+import { Settings, Status } from './panel'
+import { ShipC } from './ship'
+import { Direction, Object, State, state } from './state'
+let app
 interface AppProps {
-  state: State;
-  flor: FlorDocument;
+  state: State
+  flor: FlorDocument
 }
 export class App extends Component<AppProps> {
   constructor(p: AppProps, s: {}) {
-    super(p, s);
-    this.loop = this.loop.bind(this);
+    super(p, s)
+    this.loop = this.loop.bind(this)
   }
   loop() {
-    const state = this.props.state;
+    const state = this.props.state
     if (state.gameOver) {
-      this.props.flor.debug(state.gameOver);
+      this.props.flor.debug(state.gameOver)
       setTimeout(() => {
-        this.props.flor.destroy();
-      }, 2000);
-      return;
+        this.props.flor.destroy()
+      }, 2000)
+      return
     }
     state.bullets.forEach(b => {
-      const hit = state.enemyShips.find(s => s.intersects(b));
+      const hit = state.enemyShips.find(s => s.intersects(b))
       if (hit) {
-        b.hit = true;
-        hit.impact();
+        b.hit = true
+        hit.impact()
       }
-      move(b);
-    });
+      move(b)
+    })
     state.enemyShips.forEach(s => {
       if (s.intersects(state.ship)) {
-        s.impact();
-        state.ship.impact();
+        s.impact()
+        state.ship.impact()
       }
-      const d = int(1, 4);
-      s.direction = d === 1 ? Direction.up : d === 2 ? Direction.right : d === 3 ? Direction.down : d === 4 ? Direction.left : s.direction;
-      s.el && s.el.getComponent().move(s.direction);
-    });
+      const d = int(1, 4)
+      s.direction = d === 1 ? Direction.up : d === 2 ? Direction.right : d === 3 ? Direction.down : d === 4 ? Direction.left : s.direction
+      s.el && s.el.getComponent().move(s.direction)
+    })
     nextTick(() => {
-      state.bullets = state.bullets.filter(b => !b.hit);
+      state.bullets = state.bullets.filter(b => !b.hit)
       state.enemyShips = state.enemyShips.filter(s => {
         if (s.health <= 0) {
-          s.el!.erase();
-          s.el!.remove();
+          s.el!.erase()
+          s.el!.remove()
           // explosion
-          return false;
+          return false
         }
-        return true;
-      });
+        return true
+      })
       if (state.ship.health <= 0) {
-        state.gameOver = 'GAME OVER - You loose';
+        state.gameOver = 'GAME OVER - You loose'
       }
       if (state.enemyShips.length === 0) {
-        state.gameOver = 'GAME OVER - You win';
+        state.gameOver = 'GAME OVER - You win'
       }
-    });
-    setTimeout(this.loop, this.props.state.settings.speed);
+    })
+    setTimeout(this.loop, this.props.state.settings.speed)
   }
   render() {
     return <el width={.99} height={.99} onceRendered={this.loop}>
@@ -74,7 +74,7 @@ export class App extends Component<AppProps> {
           <Status state={state} />
         </el>
       </el>
-    </el>;
+    </el>
   }
 }
 
@@ -97,9 +97,6 @@ export function move(b: Object) {
   b.el.render()
 }
 
-
-
-
 export class BoardC extends Component<{ state: State }> {
   render() {
     const board = this.props.state.board
@@ -113,5 +110,3 @@ export class BoardC extends Component<{ state: State }> {
     </el>
   }
 }
-
-

@@ -1,14 +1,13 @@
 import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..'
 import { Component, Flor } from '../jsx'
-import { YogaElementProps } from '../yogaDom'
+import { ElementProps, InputEventTarget } from '../programDom'
 import { focusableProps } from './commonProps'
-import { InputEventTarget, ElementProps } from '../programDom';
 
-export interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>,Partial< ConcreteInputProps> {
+export interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, Partial<ConcreteInputProps> {
 
 }
 
-export interface ConcreteInputProps extends InputEventTarget{
+export interface ConcreteInputProps extends InputEventTarget {
 
   /**
    * Input looses focus when user changes the value (pressing enter)
@@ -28,7 +27,7 @@ export interface ConcreteInputProps extends InputEventTarget{
   disableInputKeys?: KeyPredicate
 }
 
-export const defaultInputProps: Required<ConcreteInputProps>  = {
+export const defaultInputProps: Required<ConcreteInputProps> = {
   onInput(e) { },
   onChange(e) { },
   focusOnClick: true,
@@ -50,7 +49,7 @@ export const defaultInputProps: Required<ConcreteInputProps>  = {
  */
 export class Input extends Component<InputProps, {}> {
 
-  protected p:Required<ConcreteInputProps>&InputEventTarget 
+  protected p: Required<ConcreteInputProps> & InputEventTarget
   protected boxEl: ProgramElement | undefined
   protected textInputCursorManager: SingleLineTextInputCursor
 

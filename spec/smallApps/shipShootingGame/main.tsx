@@ -1,6 +1,6 @@
-import { debug, FlorDocument, Flor } from '../../../src'
-import { App } from './app';
-import { state, Object, Direction } from './state';
+import { debug, Flor, FlorDocument } from '../../../src'
+import { App } from './app'
+import { state } from './state'
 
 try {
   const flor = new FlorDocument()
@@ -10,7 +10,3 @@ try {
 } catch (error) {
   debug(error)
 }
-
-
-
-
