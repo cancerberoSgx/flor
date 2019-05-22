@@ -315,7 +315,7 @@ program.getWindowSize(function(err:any, data:any) {
 });
 ```
 */
-export declare class Program  implements EventEmitter {
+export declare class Program implements EventEmitter {
 
   /** @internal */
   static instances: Program[]

@@ -36,7 +36,7 @@ export function destroyProgram(program: Program) {
   })
   // program.showCursor() program.disableMouse()
   program.normalBuffer()
-  program.tput && program.tput .sgr0()
+  program.tput && program.tput.sgr0()
   program.reset()
   program.clear()
   program.flush()
@@ -65,7 +65,7 @@ export function leaveProgram(program: Program) {
   if (!program.isAlt) {
     return
   }
-program.put &&   program.put.keypad_local()
+  program.put && program.put.keypad_local()
   if (program.scrollTop !== 0
     || program.scrollBottom !== program.rows - 1) {
     program.csr(0, program.rows - 1)
@@ -146,46 +146,46 @@ export function createProgramRendererDocumentAndElement(programOptions: ProgramO
   return { renderer, document, program, el }
 }
 
-var termJs = require('term.js')
+let termJs = require('term.js')
 declare var window: any, document: any
 
-export interface ProgramBrowserOptions extends ProgramOptions{
+export interface ProgramBrowserOptions extends ProgramOptions {
   browserTermCols?: number
   browserTermRows?: number
 }
-export function createProgramForBrowser(o: ProgramBrowserOptions): Promise<Program>{
-return new Promise(resolve=>{
+export function createProgramForBrowser(o: ProgramBrowserOptions): Promise<Program> {
+  return new Promise(resolve => {
 
-  window.onload = function () {
-    var term = new termJs.Terminal({
-      cols: o.browserTermCols|| 80,
-      rows: o.browserTermRows|| 24,
-      useStyle: true,
-      screenKeys: true,
-      dontEmitKeyPress: true
-    });
-  
-    term.open(document.body);
-    term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
-  
-    // glue to make blessed work in browserify
-    term.columns = term.cols;
-    term.isTTY = true;
-    require('readline').emitKeypressEvents = function () { };  // Can I side-affect a module this way? Apparently.
-    process.listeners = function fakelisteners() { return []; };
-    term.resize(o.browserTermCols|| 100, o.browserTermRows|| 36);
-  
-    // term._keypressDecoder = true
-    const program = new Program({
-      ...defaultProgramOptions, 
-      ...o, 
-      input: term, 
-      output: term, 
-      tput: false
-    })
-   resolve(program)
-  }
+    window.onload = function() {
+      let term = new termJs.Terminal({
+        cols: o.browserTermCols || 80,
+        rows: o.browserTermRows || 24,
+        useStyle: true,
+        screenKeys: true,
+        dontEmitKeyPress: true
+      })
 
-})
+      term.open(document.body)
+      term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n')
+
+      // glue to make blessed work in browserify
+      term.columns = term.cols
+      term.isTTY = true
+      require('readline').emitKeypressEvents = function() { }  // Can I side-affect a module this way? Apparently.
+      process.listeners = function fakelisteners() { return [] }
+      term.resize(o.browserTermCols || 100, o.browserTermRows || 36)
+
+      // term._keypressDecoder = true
+      const program = new Program({
+        ...defaultProgramOptions,
+        ...o,
+        input: term,
+        output: term,
+        tput: false
+      })
+      resolve(program)
+    }
+
+  })
 
 }

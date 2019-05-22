@@ -424,8 +424,8 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     const attrs: Partial<ElementProps> = {
       ...(options.preventChildrenCascade || options.preventSiblingCascade) ? this._defaultAttrs : {},
       ...!options.preventSiblingCascade ? this._currentAttrs : {},
-      ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data: {}) : {},
-      ...el.props.data, width: el.props.width, height: el.props.height, top: el.props.top, left: el.props.left, 
+      ...!options.preventChildrenCascade ? (isElement(el.parentNode) ? el.parentNode.props.data : {}) : {},
+      ...el.props.data, width: el.props.width, height: el.props.height, top: el.props.top, left: el.props.left
     }
     if (el.props.render) {
       el.props.render(this)
@@ -437,6 +437,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
       if (!attrs.noFill) {
         this.setAttrs(attrs)
         const { xi, xl, yi, yl } = el.getInnerBounds()
+        const width = xl - xi
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi;i < yl;i++) {
           this.write(i, xi, s)
@@ -471,7 +472,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   /**
    * Draw given element's border.
    */
-  renderElementBorder(el: E, elProps: Partial<ElementProps>&Partial<Rectangle>) {
+  renderElementBorder(el: E, elProps: Partial<ElementProps> & Partial<Rectangle>) {
     const border = elProps.border
     if (!border) {
       return
@@ -479,10 +480,10 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     const type = border.type || BorderStyle.light
     this.setAttrs({ ...elProps, ...border })
     const { xi, xl, yi, yl } = {
-      xi: (elProps as any).xi || el.absoluteLeft,
-      xl: ((elProps as any).xi || el.absoluteLeft) + (elProps.width || el.props.width),
-      yi: (elProps as any).yi || el.absoluteTop,
-      yl: ((elProps as any).yi || el.absoluteTop) + (elProps.height || el.props.height)
+      xi: elProps.xi || el.absoluteLeft,
+      xl: (elProps.xi || el.absoluteLeft) + (elProps.width || el.props.width),
+      yi: elProps.yi || el.absoluteTop,
+      yl: (elProps.yi || el.absoluteTop) + (elProps.height || el.props.height)
     }
     this.write(yi, xi, getBoxStyleChar(type, BorderSide.topLeft))
     this.write(yi, xl - 1, getBoxStyleChar(type, BorderSide.topRight))

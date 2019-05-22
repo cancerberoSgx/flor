@@ -1,12 +1,12 @@
-import {Program} from  '../../src'
+import { Program } from '../../src'
 const program = new Program({
 })
 program.setMouse({
-  allMotion: true,
-}, true);
+  allMotion: true
+}, true)
 program.alternateBuffer()
 program.enableMouse()
-program.key(['q', 'escape', 'C-c'], function () {
+program.key(['q', 'escape', 'C-c'], function() {
   program.showCursor()
   program.disableMouse()
   program.normalBuffer()
@@ -15,7 +15,7 @@ program.key(['q', 'escape', 'C-c'], function () {
 })
 program.setBackground('green')
 program.setForeground('red')
-program.on('mouse', function (data) {
-  program.cup(data.y, data.x);
-  program.write('X');
-});
+program.on('mouse', function(data) {
+  program.cup(data.y, data.x)
+  program.write('X')
+})

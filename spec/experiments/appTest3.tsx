@@ -1,45 +1,49 @@
-import { BorderStyle, Component, debug, FlorDocument, YogaDocument, YogaElement, TextArea, Layout } from '../../src'
-import { Flor } from '../../src/jsx/createElement'
-import { nextTick } from '../../src/util/misc'
+import { BorderStyle, Component, FlorDocument } from '../../src';
+import { Flor } from '../../src/jsx/createElement';
 
-async function test(){
+async function test() {
 
-const flor = new FlorDocument({
-})
+  const flor = new FlorDocument({
+  })
 
-interface P {
+  interface P {
 
-}
-class App extends Component<P> {
-  render() {
-    return <el top={0} left={0} width={33} height={22}  
-    border={{ type: BorderStyle.round }} 
-    // layout={{ layout: Layout['leftRight']}} 
-    >p
-      <el name="c1" top={0} left={0}  border={{type: BorderStyle.round}} width={.7} height={.99}>
-c1
-      </el>
-
-      <el name="c2" top={0} left={.7}  border={{type: BorderStyle.round}} width={.3} height={.99}>
-c2
-      </el>
-    </el>
   }
-}
-flor.focus.installDefaultChangeFocusKeys()
-const le = flor.create(<App />)
-le.forceUpdate(true)
-flor.renderer.renderElement(le)
-// flor.render()
+  class App extends Component<P> {
+    render() {
+      return <el width={.99} height={.99}
+      // border={{ type: BorderStyle.round }}
+      // layout={{ layout: Layout['leftRight']}} 
+      >
+        <el name="c1" border={{ type: BorderStyle.round }} width={.7} height={.99}>
 
-// flor.program.on('resize', () => {
-//   flor.body.width = flor.program.cols
-//   flor.body.height = flor.program.rows
-//   flor.body.forceUpdate(true)
-//   nextTick(() => flor.render())
-// })
+        </el>
 
-// flor.render()
+        <el name="c2" left={.7} width={.3} height={.99}>
+          <el name="c21" border={{ type: BorderStyle.round }} width={.99} height={.6}>
+
+          </el>
+          <el name="c22" border={{ type: BorderStyle.round }} width={.99} top={.6} height={.4}>
+
+          </el>
+        </el>
+      </el>
+    }
+  }
+  flor.focus.installDefaultChangeFocusKeys()
+  const le = flor.create(<App />)
+  le.forceUpdate(true)
+  flor.renderer.renderElement(le)
+  // flor.render()
+
+  // flor.program.on('resize', () => {
+  //   flor.body.width = flor.program.cols
+  //   flor.body.height = flor.program.rows
+  //   flor.body.forceUpdate(true)
+  //   nextTick(() => flor.render())
+  // })
+
+  // flor.render()
 
 }
 

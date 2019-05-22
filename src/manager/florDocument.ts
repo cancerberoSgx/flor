@@ -1,18 +1,18 @@
 import { isObject } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
-import { Program, ProgramOptions } from '../declarations/program'
+import { Program } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
 import { addLogger } from '../util'
+import { Deferred } from '../util/misc'
 import { CursorManager } from './cursorManager'
 import { StyleEffectsManager } from './effects'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
-import { installExitKeys, createProgramForBrowser, ProgramBrowserOptions } from './programUtil'
+import { createProgramForBrowser, installExitKeys, ProgramBrowserOptions } from './programUtil'
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
-import { Deferred } from '../util/misc';
 
-export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends  RendererCreateOptions, ProgramBrowserOptions {
+export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends RendererCreateOptions, ProgramBrowserOptions {
   program?: Program
   useAnsiDiff?: boolean
   documentImplementation?: () => T
@@ -44,44 +44,43 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
   private _effects: StyleEffectsManager<E> = undefined as any
 
   constructor(o: FlorDocumentOptions = { buffer: true }) {
-    this.ready =  new Deferred<void>()
+    this.ready = new Deferred<void>()
     // if (!o.program) {
-      const programDefaultOptions = { buffer: true }
-      const programOptions = { ...programDefaultOptions, ...o }
-      if(!o.program && o.browser){
-        createProgramForBrowser(programOptions).then(program=>{
-          this._program = program
-          this.initialize(programOptions)
-        })
-      }
-      else {
-        this._program = o.program||new Program(programOptions)
-        this.initialize(o);
-      }      
+    const programDefaultOptions = { buffer: true }
+    const programOptions = { ...programDefaultOptions, ...o }
+    if (!o.program && o.browser) {
+      createProgramForBrowser(programOptions).then(program => {
+        this._program = program
+        this.initialize(programOptions)
+      })
+    } else {
+      this._program = o.program || new Program(programOptions)
+      this.initialize(o)
+    }
     // }
   }
 
   protected initialize(o: FlorDocumentOptions<ProgramElement, ProgramDocument<ProgramElement>>) {
     this._program.setMouse({
       allMotion: true
-    }, true);
-    this._program.enableMouse();
-    installExitKeys(this._program);
-    this.render = this.render.bind(this);
-    this._events = new EventManager(this._program);
-    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument() as any;
-    Flor.setDocument(this._document);
-    this._renderer = new ProgramDocumentRenderer({ program: this._program });
-    this._focus = new FocusManager(this._events, this._document);
-    this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 });
-    this._document._setManagers(this);
-    this.createTextNode = this.createTextNode.bind(this);
-    this.debug = this.debug.bind(this);
-    this._cursor = new CursorManager({ program: this._program, cursor: {} });
-    this._cursor.enter();
+    }, true)
+    this._program.enableMouse()
+    installExitKeys(this._program)
+    this.render = this.render.bind(this)
+    this._events = new EventManager(this._program)
+    this._document = o.documentImplementation ? o.documentImplementation() : new ProgramDocument() as any
+    Flor.setDocument(this._document)
+    this._renderer = new ProgramDocumentRenderer({ program: this._program })
+    this._focus = new FocusManager(this._events, this._document)
+    this.body.props.assign({ height: this.program.rows, width: this.program.cols, top: 0, left: 0 })
+    this._document._setManagers(this)
+    this.createTextNode = this.createTextNode.bind(this)
+    this.debug = this.debug.bind(this)
+    this._cursor = new CursorManager({ program: this._program, cursor: {} })
+    this._cursor.enter()
     this._effects = new StyleEffectsManager<E>({
       focusManager: this.focus as any
-    });
+    })
     // this.installLoggers()
     this.ready.resolve()
   }

@@ -89,7 +89,7 @@ order).| |[top, right, bottom, left, width, height]|Array(6)|Full horizontal & v
 width, vertical = top, bottom, height.| |[horizontal, vertical]|Array(2)|Horizontal = left, right, width,
 vertical = top, bottom, height, z-index = 1.| |spacing|number|Horizontal & vertical spacing are all the
 same, z-index = 1.|
-   
+
 Examples:
 
 ```

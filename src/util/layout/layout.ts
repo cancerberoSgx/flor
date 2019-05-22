@@ -62,7 +62,7 @@ export enum Layout {
    * This is an efficient way to pack items into the smallest container possible.
    */
   pack = 'binary-tree',
-  
+
   /**
    * This is [Flickr justified-layout](http://flickr.github.io/justified-layout/) used to show images in
    * justified rows. Has many configurable options available in property [[justifiedLayoutOptions]]. See

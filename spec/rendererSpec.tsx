@@ -1,4 +1,4 @@
-import { createElement, FlorDocument, Flor, BorderStyle, Layout } from '../src'
+import { BorderStyle, createElement, Flor, FlorDocument } from '../src'
 import { defaultTestSetup } from './testUtil'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
@@ -71,17 +71,16 @@ describe('renderer', () => {
     done()
   })
 
-
   it('all percent', async done => {
     const le = Flor.render(<el width={33} height={22}
     >
-      <el name="c1" border={{ type: BorderStyle.round }} width={.5} height={.99}>  
+      <el name="c1" border={{ type: BorderStyle.round }} width={.5} height={.99}>
 
-      <el name="c11" border={{ type: BorderStyle.round }} width={.99} height={.6} >c11
+        <el name="c11" border={{ type: BorderStyle.round }} width={.99} height={.6} >c11
         </el>
         <el name="c12" border={{ type: BorderStyle.round }} top={.6} height={.4} width={.99} >c12
         </el>
-        </el>
+      </el>
 
       <el name="c2" border={{ type: BorderStyle.round }} left={.5} width={.5} height={.99}>
 
@@ -94,7 +93,7 @@ describe('renderer', () => {
 
     </el>)
     flor.renderer.renderElement(le)
-        expect(flor.renderer.printBuffer(true)).toContain(`
+    expect(flor.renderer.printBuffer(true)).toContain(`
 ╭───────────────╮╭───────────────╮
 │╭─────────────╮││╭─────────────╮│
 ││c11          ││││c21          ││
@@ -118,9 +117,7 @@ describe('renderer', () => {
 │╰─────────────╯││╰─────────────╯│
 ╰───────────────╯╰───────────────╯
     `.trim())
-        done()
+    done()
   })
-
-
 
 })
