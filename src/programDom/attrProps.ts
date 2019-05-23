@@ -1,25 +1,15 @@
-import { CommonElementImpl, CommonElementProps } from '../jsx'
+import { CommonElementImpl, CommonElementProps } from '../yogaDom/yogaTypes'
 import { ColorString, PAttrs } from './styleProps'
+import { objectKeys } from 'misc-utils-of-mine-generic';
+import { BasePropsImpl } from '../dom/BaseProps';
 
-export class AttrsImpl<T extends PAttrs = PAttrs> implements PAttrs {
-  constructor(p: PAttrs | undefined, owner: Partial<CommonElementImpl>) {
-    this._data = p as any || {}
+export class AttrsImpl<T extends PAttrs = PAttrs> extends BasePropsImpl implements PAttrs {
+  constructor(p: PAttrs | undefined, owner: CommonElementImpl) {
+    super(p as T)
     this.owner = owner as CommonElementImpl
   }
-  protected _data: CommonElementProps
   protected owner: CommonElementImpl
-
-  assign(o: Partial<CommonElementProps>) {
-    Object.assign(this._data, o || {})
-  }
-
-  /**
-   * Gets all props as plain object.
-   */
-  get data(): any { // TODO: should eb AttrsProps - workaround for types issue.
-    return this._data
-  }
-
+  
   /**
    * Gets only the character attributes as plain object.
    */

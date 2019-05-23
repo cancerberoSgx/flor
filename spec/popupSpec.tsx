@@ -2,7 +2,7 @@ import { sleep } from 'misc-utils-of-mine-generic'
 import { FlorDocument, MouseAction, MouseEvent, Component, ElementProps, Box, Button, ElementOfComponent, isElement, ProgramElement } from '../src'
 import { Flor } from '../src/jsx/createElement'
 import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
-import { Selector, parseSelector } from '../src/dom/querySelector';
+import { Selector, parseSelector } from './experiments/querySelector';
 
 
 interface PopUpProps extends Partial<ElementProps> {

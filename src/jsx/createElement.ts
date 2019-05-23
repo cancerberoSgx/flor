@@ -1,7 +1,7 @@
-import { ProgramDocument, ProgramElement } from '..'
+import { ProgramDocument, ProgramElement } from '../programDom'
 import { Node } from '../dom'
 import { Component } from './component'
-import { BlessedJsxAttrs, FlorJsx, RefObject, RenderOptions } from './types'
+import { FlorJsxAttrs, FlorJsx, RefObject, RenderOptions } from './types'
 
 interface ComponentConstructor<P = {}, S = {}> {
   new(p: P, s: S): Component
@@ -13,7 +13,7 @@ function isComponentConstructor(tag: any): tag is ComponentConstructor {
 
 class JSXElementImpl<P extends { children?: JSX.FlorJsxNode } = { children: Array<JSX.FlorJsxNode> }> implements JSX.Element<P> {
   _component?: Component | undefined
-  constructor(public type: string, attrs: BlessedJsxAttrs) {
+  constructor(public type: string, attrs: FlorJsxAttrs) {
     this.props = { ...attrs || {} } as any
   }
   children: any[] = []
@@ -87,7 +87,7 @@ class FlorJsxImpl implements FlorJsx {
   /**
    * Default blessed Node factory for text like "foo" in <box>foo</box>.
    */
-  protected createTextNode(c: JSX.BlessedJsxText | false, el: JSXElementImpl) {
+  protected createTextNode(c: JSX.FlorJsxText | false, el: JSXElementImpl) {
     if (c !== null && c !== false) {
       const t = {
         type: '__text',
@@ -150,7 +150,7 @@ class FlorJsxImpl implements FlorJsx {
     this.doc = doc
   }
 
-  createElement(tag: JSX.ElementType, attrs: BlessedJsxAttrs, ...children: any[]) {
+  createElement(tag: JSX.ElementType, attrs: FlorJsxAttrs, ...children: any[]) {
     let el: JSX.FlorJsxNode
     let component: Component | undefined
     if (isComponentConstructor(tag)) {

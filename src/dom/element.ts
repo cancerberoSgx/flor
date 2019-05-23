@@ -1,5 +1,6 @@
 import { Document } from './document'
 import { Node } from './node'
+import { BasePropsImpl, BaseProps } from './BaseProps';
 
 export class Element extends Node {
 
@@ -8,4 +9,6 @@ export class Element extends Node {
     this._ownerDocument = ownerDocument
   }
 
+
+  
 }

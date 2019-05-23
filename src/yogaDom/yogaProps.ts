@@ -1,4 +1,4 @@
-import { ElementPropsImpl } from '..'
+import { ElementPropsImpl } from '../programDom/elementProps'
 import { Align, Direction, Display, Edge, FlexDirection, FlexWrap, JustifyContent, Value, ValuedEdges, YogaElementProps } from './types'
 
 export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements Partial<YogaElementProps> {
@@ -110,15 +110,15 @@ export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> imp
   //     this.owner._boundsDirty = true
   //   }
   // }
-  public get positionPercent(): Partial<ValuedEdges<number>> | undefined {
-    return this._data.positionPercent
-  }
-  public set positionPercent(value: Partial<ValuedEdges<number>> | undefined) {
-    if (value !== this._data.positionPercent) {
-      this._data.positionPercent = value
-      this.owner._boundsDirty = true
-    }
-  }
+  // public get positionPercent(): Partial<ValuedEdges<number>> | undefined {
+  //   return this._data.positionPercent
+  // }
+  // public set positionPercent(value: Partial<ValuedEdges<number>> | undefined) {
+  //   if (value !== this._data.positionPercent) {
+  //     this._data.positionPercent = value
+  //     this.owner._boundsDirty = true
+  //   }
+  // }
   public get paddingPercent(): Partial<ValuedEdges<number>> | undefined {
     return this._data.paddingPercent
   }

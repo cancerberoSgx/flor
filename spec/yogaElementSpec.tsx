@@ -22,12 +22,12 @@ describe('yogaElement', () => {
     Flor.setDocument(document)
     document._setManagers({ renderer, focus: null as any, events: null as any, cursor: null as any })
     const el = Flor.render(
-      <box top={2} left={2} width={50} height={20} border={{ type: BorderStyle.round }}
+      <yoga top={2} left={2} width={50} height={20} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_ROW} flexShrink={1}
       >
-        <box height={13} width={32} flex={1}>1</box>
-        <box height={13} width={32} flex={0}>2</box>
-      </box>)
+        <yoga height={13} width={32} flex={1}>1</yoga>
+        <yoga height={13} width={32} flex={0}>2</yoga>
+      </yoga>)
     renderer.renderElement(document.body)
     await willContain(renderer, '────────')
     expect(renderer.printBuffer(true)).toContain(`
@@ -60,22 +60,22 @@ describe('yogaElement', () => {
 
   it('FLEX_DIRECTION_ROW, row using heightAuto and widthAuto', async done => {
     const el = flor.create(
-      <box top={2} left={2} height={13} width={32} border={{ type: BorderStyle.round }}
+      <yoga top={2} left={2} height={13} width={32} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_ROW} preventChildrenCascade={true}
         display={yoga.DISPLAY_FLEX}
       >
-        <box
+        <yoga
           heightAuto
           widthAuto
           border={{ type: BorderStyle.heavyDoubleDash }}
           flexGrow={1}
-        >1</box>
-        <box
+        >1</yoga>
+        <yoga
           widthAuto
           border={{ type: BorderStyle.heavyDoubleDash }}
           heightAuto
-        ><box height={4} width={4}>4x4</box></box>
-      </box>)
+        ><yoga height={4} width={4}>4x4</yoga></yoga>
+      </yoga>)
     flor.render()
     await willContain(flor.renderer, '────────')
     flor.test.toContain(`
@@ -100,27 +100,27 @@ describe('yogaElement', () => {
 
   it('depth, percent bounds', async done => {
     const el = flor.create(
-      <box top={0} left={2} height={27} width={62}
+      <yoga top={0} left={2} height={27} width={62}
         flexDirection={yoga.FLEX_DIRECTION_ROW}
       >
-        <box width={.4} height={.999} flexShrink={1}
+        <yoga width={.4} height={.999} flexShrink={1}
           flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
-          <box width={.999} flexShrink={1} border={{ type: BorderStyle.round }} height={.3} fg="red"></box>
-          <box width={.999} height={.7} flexShrink={1} border={{ type: BorderStyle.roundTripleDash }}
+          <yoga width={.999} flexShrink={1} border={{ type: BorderStyle.round }} height={.3} fg="red"></yoga>
+          <yoga width={.999} height={.7} flexShrink={1} border={{ type: BorderStyle.roundTripleDash }}
             padding={{ top: 1, bottom: 2, left: 2, right: 2 }} ch="/" fg="yellow"
           >
-          </box>
-        </box>
-        <box width={.6} flexShrink={1} height={.999}
+          </yoga>
+        </yoga>
+        <yoga width={.6} flexShrink={1} height={.999}
           flexDirection={yoga.FLEX_DIRECTION_COLUMN_REVERSE}>
-          <box width={.999} height={.3} flexShrink={1} ch="." border={{ type: BorderStyle.roundQuadrupleDash }} >
-          </box>
-          <box width={.999} height={.3} ch="-"
+          <yoga width={.999} height={.3} flexShrink={1} ch="." border={{ type: BorderStyle.roundQuadrupleDash }} >
+          </yoga>
+          <yoga width={.999} height={.3} ch="-"
             flexShrink={1} flexGrow={1} border={{ type: BorderStyle.round }} >
-          </box>
-          <box width={.999} flexShrink={1} border={{ type: BorderStyle.double }} ch="|" height={.4}></box>
-        </box>
-      </box>)
+          </yoga>
+          <yoga width={.999} flexShrink={1} border={{ type: BorderStyle.double }} ch="|" height={.4}></yoga>
+        </yoga>
+      </yoga>)
     flor.render()
     // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     await willContain(flor.renderer, '═════════════')
@@ -158,14 +158,14 @@ describe('yogaElement', () => {
 
   it('align center', async done => {
     const el = flor.create(
-      <box height={18} width={30} top={1} left={2}
+      <yoga height={18} width={30} top={1} left={2}
         direction={yoga.DIRECTION_LTR}
         justifyContent={yoga.JUSTIFY_CENTER} alignItems={yoga.ALIGN_CENTER} ch="·"
       >
-        <box width={5} height={4} ch="s"
+        <yoga width={5} height={4} ch="s"
         >Seba
-        </box>
-      </box>)
+        </yoga>
+      </yoga>)
     flor.render()
     await willContain(flor.renderer, 'Seba')
     flor.test.toContain(`
@@ -194,18 +194,18 @@ describe('yogaElement', () => {
   it('Should update when props or text change (makes bounds dirty)', async done => {
     const o = { flexShrink: 1 }
     const el = flor.create(
-      <box top={0} left={4} height={33} width={52} border={{ type: BorderStyle.round }}
+      <yoga top={0} left={4} height={33} width={52} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_COLUMN} flexWrap={yoga.WRAP_WRAP} direction={yoga.DIRECTION_LTR}
       >
-        <box {...o} width={.5} height={3}>1</box>
-        <box  {...o} width={.4} height={8}>2</box>
-        <box  {...o} width={.3} height={5}>3</box>
-        <box  {...o} width={.1} height={9}>4</box>
-        <box {...o} width={.5} height={4}>5</box>
-        <box  {...o} width={.4} height={11}>6</box>
-        <box  {...o} width={.3} height={7}>7</box>
-        <box  {...o} width={.1} height={11}>8</box>
-      </box>)
+        <yoga {...o} width={.5} height={3}>1</yoga>
+        <yoga  {...o} width={.4} height={8}>2</yoga>
+        <yoga  {...o} width={.3} height={5}>3</yoga>
+        <yoga  {...o} width={.1} height={9}>4</yoga>
+        <yoga {...o} width={.5} height={4}>5</yoga>
+        <yoga  {...o} width={.4} height={11}>6</yoga>
+        <yoga  {...o} width={.3} height={7}>7</yoga>
+        <yoga  {...o} width={.1} height={11}>8</yoga>
+      </yoga>)
     flor.render()
     await flor.test.willContain('1')
     flor.test.toContain(`

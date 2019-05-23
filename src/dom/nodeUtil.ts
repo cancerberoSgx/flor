@@ -1,4 +1,4 @@
-import { repeat } from 'misc-utils-of-mine-generic'
+import { repeat, objectKeys } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document } from './document'
 import { Element } from './element'
@@ -232,11 +232,23 @@ export function nodeHtml(node: Node, outer = true, _level = 0): string {
 }
 
 function elementHtml(node: Element, outer: boolean, _level = 0) {
-  const attrs = [...Object.keys((node as any).props && (node as any).props.data || {})
-    .map(k => ({ name: k, value: (node as any).props[k] }))]
-  return `${'\n' + repeat(_level, '  ')}${outer ? `<${node.tagName}${attrs.length ? ' ' : ''}${attrs.map(a => a.value && `${a.name}="${a.value.toString ? a.value.toString() : a.value}"`)
+  const attrs = [...objectKeys(node.props && node.props.data || {})
+    .map(k => ({ name: k, value: node.getAttributeValue(k) }))]
+  return `${'\n' + repeat(_level, '  ')}${outer ? 
+    
+    `<${node.tagName}${attrs.length ? ' ' : ''}${
+
+      attrs
+      .map(a => a.value && `${a.name}="${
+        a.value.toString ? a.value.toString() : a.value
+      }"`)
     .filter(a => a)
-    .join(' ')}>` : ``}${(node.childNodes).map(c => nodeHtml(c, true, _level + 1)).join('\n' + repeat(_level, '  ')) + '\n' + repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`.split('\n')
+    .join(' ')}>` : ``}${
+
+      node.childNodes
+      .map(c => nodeHtml(c, true, _level + 1))
+      .join('\n' + repeat(_level, '  ')) + '\n' + repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`
+      .split('\n')
     .map(l => l.trim() ? l : '')
     .join('\n')
     .replace(/\n+/gm, '\n') // removes consecutive empty

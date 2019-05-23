@@ -5,49 +5,49 @@ export interface YogaElementProps extends ConcreteYogaElementProps, ElementProps
 }
 export interface ConcreteYogaElementProps {
   /** it can only be setted, to disable set height */
-  heightAuto: boolean
-  heightPercent: number
-  marginAuto: Edge
-  marginPercent: Partial<ValuedEdges<number>>
-  flexWrap: FlexWrap
-  flexDirection: FlexDirection
+  heightAuto?: boolean
+  heightPercent?: number
+  marginAuto?: Edge
+  marginPercent?: Partial<ValuedEdges<number>>
+  flexWrap?: FlexWrap
+  flexDirection?: FlexDirection
   /**
  * Defines the direction of which text and items are laid out
  */
-  direction: Direction
-  flexBasis: number
-  flexBasisPercent: number
-  alignContent: Align
-  alignItems: Align
-  alignSelf: Align
-  aspectRatio: number
-  // border: {} number                <-------set with current
-  display: Display
-  flex: number
-  flexGrow: number
-  flexShrink: number
-  // height: number                       <-------set with current currently yoga percentage width is a string 30% instead of .3 like
-  justifyContent: JustifyContent
-  margin: Partial<ValuedEdges<Value | number>> // {top?: number|Value, left?: number|Value, right?: number|Value, bottom?: number|Value}  // TODO
-  maxHeight: number | string
-  maxHeightPercent: number
-  maxWidth: number | string
-  maxWidthPercent: number
-  minHeight: number | string
-  minHeightPercent: number
-  minWidth: number | string
-  minWidthPercent: number
-  // overflow: Overflow                <------ set with current prop
-  flexPadding: Partial<ValuedEdges<number>> //        <------ set with current prop  currently yoga percentage width is a string 30% instead of .3 like
-  paddingPercent: Partial<ValuedEdges<number>>
-  // position: Partial<ValuedEdges<Value | number>> //        <------ set with current prop   currently yoga percentage width is a string 30% instead of .3 like
-  // positionPercent: Partial<ValuedEdges<number>>
-  // positionType: PositionType
-  // width: number                     <------ set with current prop - currently yoga percentage width is a string 30% instead of .3 like current one
-  widthAuto: boolean
-  widthPercent: number
-  bottom?: number | string // <---- use position to support it.
-  right?: number | string // <---- use position to support it.
+  direction?: Direction
+  flexBasis?: number
+  flexBasisPercent?: number
+  alignContent?: Align
+  alignItems?: Align
+  alignSelf?: Align
+  aspectRatio?: number
+  // border?: {} number                <-------set with current
+  display?: Display
+  flex?: number
+  flexGrow?: number
+  flexShrink?: number
+  // height?: number                       <-------set with current currently yoga percentage width is a string 30% instead of .3 like
+  justifyContent?: JustifyContent
+  margin?: Partial<ValuedEdges<Value | number>> // {top??: number|Value, left??: number|Value, right??: number|Value, bottom??: number|Value}  // TODO
+  maxHeight?: number | string
+  maxHeightPercent?: number
+  maxWidth?: number | string
+  maxWidthPercent?: number
+  minHeight?: number | string
+  minHeightPercent?: number
+  minWidth?: number | string
+  minWidthPercent?: number
+  // overflow?: Overflow                <------ set with current prop
+  flexPadding?: Partial<ValuedEdges<number>> //        <------ set with current prop  currently yoga percentage width is a string 30% instead of .3 like
+  paddingPercent?: Partial<ValuedEdges<number>>
+  // position?: Partial<ValuedEdges<Value | number>> //        <------ set with current prop   currently yoga percentage width is a string 30% instead of .3 like
+  // positionPercent?: Partial<ValuedEdges<number>>
+  // positionType?: PositionType
+  // width?: number                     <------ set with current prop - currently yoga percentage width is a string 30% instead of .3 like current one
+  widthAuto?: boolean
+  widthPercent?: number
+  // bottom??: number | string // <---- use position to support it.
+  // right??: number | sstring // <---- use position to support it.
 }
 export type FlexWrap = yoga.YogaFlexWrap
 export type FlexDirection = yoga.YogaFlexDirection

@@ -1,4 +1,3 @@
-import { createElement } from '../'
 import { Document } from '../dom'
 import { EventManager, ProgramDocumentRenderer } from '../manager'
 import { clicks } from '../manager/clicks'
@@ -7,6 +6,7 @@ import { FocusManager } from '../manager/focusManager'
 import { Deferred } from '../util/misc'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
+import { createElement } from './elementUtil';
 
 interface Managers { events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager }
 

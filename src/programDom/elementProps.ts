@@ -4,12 +4,16 @@ import { Node } from '../dom'
 import { ProgramElement } from '../programDom'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps, KeyPredicate, StyleProps } from './types'
+import { objectKeys } from 'misc-utils-of-mine-generic';
+import { CommonElementProps } from '../yogaDom/yogaTypes';
 
-export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<ElementProps> {
+export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<CommonElementProps> {
 
   get data() {
     return { ...super.data, ...this._dataFocus ? { focus: this._dataFocus.data } : {} }
   }
+
+ 
 
   public get input(): string | undefined {
     return this._data.input
@@ -29,10 +33,10 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
 
   onChange?(e: { currentTarget: ProgramElement, value: string }): void
 
-  public get changeKeys(): KeyPredicate {
+  public get changeKeys(): KeyPredicate| undefined {
     return this._data.changeKeys
   }
-  public set changeKeys(value: KeyPredicate) {
+  public set changeKeys(value: KeyPredicate| undefined) {
     this._data.changeKeys = value
   }
 

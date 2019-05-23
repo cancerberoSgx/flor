@@ -9,7 +9,7 @@
  * 
 
 ```
-.class1>#ChildId2 [descendantPropEquals=1]+[nextSiblingContains~substring]-[previousSiblingPropEquals1&.andHasClass2]<[parentProp="foo"]^.descendantClassContaining~xdf
+.class1>#ChildId2 [descendantPropEquals=1]+[nextSiblingsContains~substring]-[previousSiblingPropEquals1&.andHasClass2]<[parentProp="foo"]^.descendantClassContaining~xdf
 
 #sdf>ddf #ff+rf~12 [a=2&b=3]-[r=8]^.jj
 
@@ -130,10 +130,10 @@ UndefinedLiteral
 ChildrenSelectors
   = _ ">" _ children:Selectors { return {children } }  
   / _ "<" _ parent:Selectors { return {parent } }  
-  / _ "^" _ ancestor:Selectors { return {ancestor } }  
+  / _ "^" _ ancestors:Selectors { return {ancestors } }  
   / _ " " _ descendants:Selectors { return {descendants} }  
-  / _ "+" _ nextSibling:Selectors { return {nextSibling }}
-  / _ "-" _ prevSibling:Selectors { return {prevSibling }}
+  / _ "+" _ nextSiblings:Selectors { return {nextSiblings }}
+  / _ "-" _ prevSiblings:Selectors { return {prevSiblings }}
 
   
 TrueToken       = "true"           _?
@@ -338,16 +338,16 @@ module.exports = /*
         peg$c28 = function(parent) { return {parent } },
         peg$c29 = "^",
         peg$c30 = peg$literalExpectation("^", false),
-        peg$c31 = function(ancestor) { return {ancestor } },
+        peg$c31 = function(ancestors) { return {ancestors } },
         peg$c32 = " ",
         peg$c33 = peg$literalExpectation(" ", false),
         peg$c34 = function(descendants) { return {descendants} },
         peg$c35 = "+",
         peg$c36 = peg$literalExpectation("+", false),
-        peg$c37 = function(nextSibling) { return {nextSibling }},
+        peg$c37 = function(nextSiblings) { return {nextSiblings }},
         peg$c38 = "-",
         peg$c39 = peg$literalExpectation("-", false),
-        peg$c40 = function(prevSibling) { return {prevSibling }},
+        peg$c40 = function(prevSiblings) { return {prevSiblings }},
         peg$c41 = "true",
         peg$c42 = peg$literalExpectation("true", false),
         peg$c43 = "false",

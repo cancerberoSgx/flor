@@ -1,7 +1,4 @@
 import { ElementProps, ProgramDocument, ProgramElement } from '..'
-import { ElementPropsImpl } from '../programDom'
-import { YogaDocument, YogaElement, YogaElementPropsImpl } from '../yogaDom'
-import { YogaElementProps } from '../yogaDom/types'
 import { Component } from './component'
 
 declare global {
@@ -9,7 +6,7 @@ declare global {
   export namespace JSX {
     export interface IntrinsicElements {
       el: OptionsProps<ElementProps>
-      box: OptionsProps<YogaElementProps>
+      box: OptionsProps<ElementProps>
     }
 
     /**
@@ -39,17 +36,17 @@ declare global {
       (props: P & { children?: FlorJsxNode }, context?: any): Element<any> | null
     }
 
-    type BlessedJsxText = string | number
+    type FlorJsxText = string | number
 
-    type BlessedJsxChild<P extends { children?: FlorJsxNode } = {}> = Element<P> | BlessedJsxText
+    type FlorJsxChild<P extends { children?: FlorJsxNode } = {}> = Element<P> | FlorJsxText
 
     export interface ReactNodeArray extends Array<FlorJsxNode> { }
 
-    export type BlessedJsxFragment = {} | ReactNodeArray
+    export type FlorJsxFragment = {} | ReactNodeArray
 
     export type FlorJsxNode<P extends { children?: FlorJsxNode } = {}> =
-      | BlessedJsxChild<P>
-      | BlessedJsxFragment
+      | FlorJsxChild<P>
+      | FlorJsxFragment
       | boolean
       | null
   }
@@ -69,7 +66,7 @@ export interface FlorJsx<E extends ProgramElement = ProgramElement> {
    * This method should never be called directly by users, although is called internally when users call
    * [[React.createEkenebt]]
    */
-  createElement(tag: JSX.ElementType, attrs: BlessedJsxAttrs, ...children: any[]): JSX.FlorJsxNode
+  createElement(tag: JSX.ElementType, attrs: FlorJsxAttrs, ...children: any[]): JSX.FlorJsxNode
 
   /**
    * Creates a blessed.element from given JSX expression. Will append it to given parent in options or if none to current document's body.
@@ -98,7 +95,7 @@ export interface RenderOptions {
 }
 
 /** @internal */
-export type BlessedJsxAttrs = { [a: string]: any } | undefined
+export type FlorJsxAttrs = { [a: string]: any } | undefined
 
 export interface RefObject<T = any> {
   /*
@@ -113,15 +110,5 @@ export interface ComponentProps {
   ref?: RefObject
 }
 
-export interface CommonElementImpl extends YogaElement, ProgramElement {
-  props: CommonElementProps
-  ownerDocument: CommonDocumentImpl
-}
-export interface CommonDocumentImpl extends YogaDocument, ProgramDocument, YogaDocument {
-  createElement(s: string): CommonElementImpl
-  body: CommonElementImpl
-}
 
-export interface CommonElementProps extends YogaElementPropsImpl, ElementPropsImpl {
 
-}

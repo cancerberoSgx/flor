@@ -1,7 +1,7 @@
 import { PropertyOptional } from 'misc-utils-of-mine-generic'
 import { MouseAction, ProgramKeyEvent, ProgramMouseEvent } from '../declarations'
 import { Node, TextNode } from '../dom'
-import { ComponentProps } from '../jsx'
+import { ComponentProps } from '../jsx/'
 import { ProgramDocumentRenderer } from '../manager'
 import { ClicksEvent } from '../manager/clicks'
 import { LayoutOptions } from '../util'

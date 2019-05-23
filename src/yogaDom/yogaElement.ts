@@ -1,8 +1,8 @@
 import * as yoga from 'yoga-layout'
-import { ProgramElement } from '..'
 import { YogaElementProps } from './types'
 import { YogaDocument } from './yogaDocument'
 import { YogaElementPropsImpl } from './yogaProps'
+import { ProgramElement } from '../programDom/programElement'
 
 export class YogaElement extends ProgramElement {
 

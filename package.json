@@ -46,6 +46,7 @@
     "@types/word-wrap": "^1.2.0",
     "@types/yoga-layout": "^1.9.1",
     "ansi-diff-stream": "^1.2.1",
+    "astq": "^2.6.2",
     "browserify": "^16.2.3",
     "cli-driver": "^0.2.2",
     "diff": "^4.0.1",

@@ -1,6 +1,6 @@
 import { RemoveProperties } from 'misc-utils-of-mine-generic'
 import { BorderStyle } from '../util'
-import { YogaElementProps } from '../yogaDom'
+import { YogaElementProps } from '../yogaDom/types'
 
 export const baseProps: () => RemoveProperties<Partial<YogaElementProps>, 'children'> = () => ({
   bg: '#1e1e1e',
