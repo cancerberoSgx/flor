@@ -7,7 +7,8 @@ import { CursorManager } from './cursorManager'
 import { StyleEffectsManager } from './effects'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
-import { createProgramForBrowser, installExitKeys, ProgramBrowserOptions } from './programUtil'
+import { installExitKeys } from './programUtil'
+import { createProgramForBrowser, ProgramBrowserOptions } from "./browser";
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 
 export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends RendererCreateOptions, ProgramBrowserOptions {
