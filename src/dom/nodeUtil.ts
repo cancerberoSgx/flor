@@ -3,6 +3,7 @@ import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document } from './document'
 import { Element } from './element'
 import { Node, TextNode } from './node'
+import { BaseProps } from './BaseProps';
 
 export function nodeTypes(n: Node): number[] {
   const o: number[] = []
@@ -265,7 +266,7 @@ function elementHtml(node: Element, outer: boolean, _level = 0) {
     .replace(/\n+/gm, '\n') // removes consecutive empty
 }
 
-interface NodeProps<E extends Element = Element> {
+interface NodeProps<E extends Element = Element> extends  BaseProps {
 // children: Element|string
 textContent: string
 }
@@ -294,7 +295,7 @@ export function createDomElement<D extends Document>(doc: D, tagName: string | P
     })
   }
   const el = doc.createElement(tagName)
-  // Object.assign(el.props, props);
+  Object.assign(el.props, props);
   // (el.props as any).fofofo = 123123
   el.textContent = props.textContent
 

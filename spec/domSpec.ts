@@ -37,11 +37,9 @@ describe('dom', () => {
     d.body.appendChild(d2)
     d2.appendChild(d.createElement('div3'))
     div1.appendChild(d2)
-
     expect(d.filterDescendants(d => isDomElement(d) && d.tagName === 'Div1').length).toBe(1)
     expect(d.filterDescendants(isDomElement).length).toBe(5)
     expect(d.body.filterDescendants(isDomElement).length).toBe(4)
-
     done()
   })
 
@@ -58,6 +56,17 @@ describe('dom', () => {
         bite
       </me>
     </box>`))
+    done()
+  })
+
+  it('node attrs / props', async done => {
+    const doc = new Document()
+    const el =createDomElement(doc, { classes: ['foo', 'bar'],
+      children: ['hello', {textContent: 'world', children: ['bite'], tagName: 'me', name: 'name123'} ],
+      id:'id123'
+    })
+    expect(removeWhites(el.outerHTML)).toBe(removeWhites(`
+    <box classes="foo,bar" id="id123"> hello <me name="name123"> world bite </me> </box>`))
     done()
   })
 })
