@@ -3,14 +3,14 @@ import { ColorString, PAttrs } from '../programDom/styleProps'
 import { objectKeys } from 'misc-utils-of-mine-generic';
 import { ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript';
 
-export class BasePropsImpl<T extends any = any> implements BaseProps<T>  {
-  protected _data: T
+export class BasePropsImpl<T extends any = any> implements Partial<BaseProps<T> > {
+  protected _data:  T
   
   constructor( p?: T) {
     this._data = p  ||{} as any  
   }
 
-  assign(o: T) {
+  assign(o: Partial<T>) {
     Object.assign(this._data, o || {})
   }
   
@@ -22,6 +22,27 @@ export class BasePropsImpl<T extends any = any> implements BaseProps<T>  {
     return this._data[prop]
   }
   
+  public get classes(): undefined|string[] {
+    return this._data.classes
+  }
+  public set classes(value:  undefined|string[]) {
+    this._data.classes = value
+  }
+
+  public get id(): undefined | string {
+    return this._data.id
+  }
+
+  public set id(value: undefined | string) {
+    this._data.id = value
+  }
+
+  public get name(): undefined | string {
+    return this._data.name
+  }
+  public set name(value: undefined | string) {
+    this._data.name = value
+  }
   // getPropertyNames(): ObjectStringKeyUnion<T> {
   //   return objectKeys(this._data) as any
   // }
@@ -35,7 +56,7 @@ export class BasePropsImpl<T extends any = any> implements BaseProps<T>  {
   /**
    * Gets all props as plain object.
    */
-  get data(): T { // TODO: should eb AttrsProps - workaround for types issue.
+  get data() : T{ // TODO: should eb AttrsProps - workaround for types issue.
     return this._data
   }
 
@@ -43,17 +64,31 @@ export class BasePropsImpl<T extends any = any> implements BaseProps<T>  {
 
 export interface BaseProps<T extends any = any> {
 
+  /**
+   * Similar to Dom Element class names. Not used internally, meant for the user.
+   */
+  classes: string[]
+
+    /**
+   * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
+   */
+  id: string
+
+  /**
+   * Similar to [[id]] but doesn't have to be unique. Not used internally, meant for the user.
+   */
+  name: string
 
  
-  assign(o: T): void
+  // assign(o: T): void
   
-  getPropertyNames(): string[]
+  // getPropertyNames(): string[]
 
-  getPropertyValue<K extends keyof T>(prop:K): T[K]
-  /**
-   * Gets all props as plain object.
-   */
-  readonly data: T
+  // getPropertyValue<K extends keyof T>(prop:K): T[K]
+  // /**
+  //  * Gets all props as plain object.
+  //  */
+  // readonly data: T
 }
 
 // export interface ND {children: NodeProps[]}

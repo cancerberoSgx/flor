@@ -20,10 +20,10 @@ export class Node <T extends any= any>  implements EventTarget {
   constructor(readonly nodeType: NodeType) {
     this._childNodes = []
     this._boundsDirty = true
-    this.props = new BasePropsImpl<T>()    
+    this.props = new BasePropsImpl<Partial<T>>()    
   }
 
-  props: BaseProps<T>;
+  props: BasePropsImpl<Partial<T>>;
 
   get childNodes(): Node[] {
     return this._childNodes

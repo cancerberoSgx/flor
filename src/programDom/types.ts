@@ -8,6 +8,7 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
+import { BaseProps, BasePropsImpl } from '../dom/BaseProps';
 
 export interface Edges {
   top: number
@@ -383,21 +384,9 @@ export interface Focusable {
   onFocus?(e: FocusEvent): void | boolean
 }
 
-export interface Classifiable {
-  /**
-   * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
-   */
-  id: string
+export interface Classifiable extends BaseProps {
 
-  /**
-   * Similar to [[id]] but doesn't have to be unique. Not used internally, meant for the user.
-   */
-  name: string
 
-  /**
-   * Similar to Dom Element class names. Not used internally, meant for the user.
-   */
-  classes: string[]
 
   /**
    * Similar to [[name]] but numeric type. Not used internally, meant for the user.
