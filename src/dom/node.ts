@@ -1,10 +1,10 @@
-import { notFalsy } from 'misc-utils-of-mine-typescript'
+import { notFalsy, ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript'
 import { EventTarget } from '..'
 import { Document } from './document'
 import { ElementSimplePredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, nodeHtml, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions, ElementKindPredicate, ElementPredicate } from './nodeUtil'
 import { BasePropsImpl, BaseProps } from './BaseProps';
 
-export class Node<T extends any= any>  implements EventTarget {
+export class Node <T extends any= any>  implements EventTarget {
   static DOCUMENT_TYPE_NODE: NodeType = 10
   static TEXT_NODE: NodeType = 3
   static ELEMENT_NODE: NodeType = 1
@@ -14,19 +14,21 @@ export class Node<T extends any= any>  implements EventTarget {
   protected _childNodes: Node[]
   protected _ownerDocument: Document | undefined = undefined
  
-  get childNodes(): Node[] {
-    return this._childNodes
-  }
 
   protected _boundsDirty: boolean
 
   constructor(readonly nodeType: NodeType) {
     this._childNodes = []
     this._boundsDirty = true
-    this.props = new BasePropsImpl<T>()   
+    this.props = new BasePropsImpl<T>()    
   }
 
   props: BaseProps<T>;
+
+  get childNodes(): Node[] {
+    return this._childNodes
+  }
+  
   get nodeTypeName() {
     return this.nodeType === Node.DOCUMENT_TYPE_NODE ? 'document' : this.nodeType === Node.ELEMENT_NODE ? 'element' : 'text'
   }
@@ -128,7 +130,7 @@ export class Node<T extends any= any>  implements EventTarget {
     // TODO: mark boundsDirty
     const children = (this._parentNode as any)._childNodes as Node[]
     children.splice(children.indexOf(this), 1,
-      ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy))
+      ...nodes.map(n => typeof n === 'string' ? this.ownerDocument && this.ownerDocument.createTextNode(n) : n).filter(notFalsy) as any)
   }
 
   visitChildren(v: (c: Node) => void) {
@@ -209,10 +211,11 @@ export class Node<T extends any= any>  implements EventTarget {
     return this._parentNode ? this._parentNode.childNodes.filter(c => c !== this && p(c)) : [] as any
   }
 
-  getAttributeValue(p: keyof T): any {
+
+  getAttributeValue(p: keyof T)  {
     return this.props.getPropertyValue(p)
   }
-  getAttributeNames(): any {
+  getAttributeNames() {
    return this.props.getPropertyNames()
   }
 

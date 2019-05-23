@@ -42,6 +42,25 @@ export function rectangleIntersects(a: R, b: R) {
 export function rectanglePlusOffsets(r: R, xOffset = 0, yOffset = 0) {
   return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
 }
+/**
+ * public API to create DOM elements of the given Document. Example calls:
+ * 
+````
+const el =createElement(doc, 'Div', doc.body, { bg: 'red', fg: 'blue', left: 4, top: 2, height: 16, width:
+24, ch: '_' })
+ *
+ *
+ const el = createElement(flor.document, 'Div', flor.document.body, { bg: 'yellow', fg: 'black', border:
+  { type: BorderStyle.double }, left: 10, top: 3, height: 6, width: 16 },
+  [flor.document.createTextNode('hello'), flor.document.createTextNode(' world') 
+])
+ *
+ 
+const el1 = createElement(this.element.ownerDocument, { ...el.props.data, tagName: 'el', children: [line1] })
+const el2 = createElement(this.element.ownerDocument, { ...el.props.data, tagName: 'el', children: [line2] })
+
+```
+ */
 
 export function createElement(doc: ProgramDocument, tagName: string | Partial<FullProps>, parent?: ProgramElement, props: Partial<ElementProps> = {}, children?: Node[]) {
   if (typeof tagName !== 'string') {

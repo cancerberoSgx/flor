@@ -12,7 +12,8 @@
     "declaration": true,
     // "esModuleInterop": true,
     "jsx": "react",
-    "jsxFactory": "Flor.createElement"
+    "jsxFactory": "Flor.createElement",
+    // "noStrictGenericChecks": true
   },
   "include": [
     "src", "spec"

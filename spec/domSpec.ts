@@ -1,6 +1,7 @@
 import { removeWhites } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document, isDomElement } from '../src'
+import { createDomElement } from '../src/dom/nodeUtil';
 
 describe('dom', () => {
 
@@ -41,6 +42,22 @@ describe('dom', () => {
     expect(d.filterDescendants(isDomElement).length).toBe(5)
     expect(d.body.filterDescendants(isDomElement).length).toBe(4)
 
+    done()
+  })
+
+  it('createDomElement, textContent, outerHtml', async done => {
+    const doc = new Document()
+    const el =createDomElement(doc, {
+      children: ['hello', {textContent: 'world', children: ['bite'], tagName: 'me'} ]
+    })
+    expect(removeWhites(el.outerHTML)).toBe(removeWhites(`
+    <box>
+      hello
+      <me>
+        world
+        bite
+      </me>
+    </box>`))
     done()
   })
 })

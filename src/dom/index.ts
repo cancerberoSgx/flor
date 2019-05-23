@@ -1,4 +1,4 @@
-export * from './document'
-export * from './element'
-export * from './node'
-export * from './nodeUtil'
+export {Document} from './document'
+export {Element} from './element'
+export {Node, TextNode} from './node'
+export {isDomElement, isDomNode} from './nodeUtil'

@@ -11,12 +11,16 @@ export function nodeTypes(n: Node): number[] {
 }
 
 export function nodeTexts(n: Node): (string | undefined)[] {
-  return mapChildren(n, c => c.textContent)
+  return mapChildren(n, c => getNodeTextContent(c, undefined))
 }
 
 export function isDomElement(n: any): n is Element {
   return n && n.nodeType === Node.ELEMENT_NODE
 }
+export function isDomNode(n: any): n is Node {
+  return n && typeof n.nodeType === 'number' && typeof n.appendChild==='function'
+}
+
 
 export function isDomText(n: any): n is TextNode {
   return n && n.nodeType === Node.TEXT_NODE
@@ -81,27 +85,27 @@ export function filterAscendants<T extends Node = Node>(n: Node, p: ElementSimpl
 }
 
 export function findDescendantTextNodeContaining(
-  el: Element | Document,
+  el: Node,
   name: string,
   o: VisitorOptions = {}
 ): TextNode | undefined {
   return asElements(el)
-    .map(c => findDescendant(c, d => (d as any).name === name, o))
+    .map(c => findDescendant<TextNode>(c, d=>getNodeTextContent(d).includes(name)))
     .find(notFalsy)
 }
 
 export function filterDescendantTextNodesContaining(
-  el: Element | Document,
+  el: Node,
   name: string,
   o: VisitorOptions = {}
 ): TextNode[] {
   return asElements(el)
-    .map(c => filterDescendants(c, d => isDomText(d) && (d.textContent || '').includes(name)))
+    .map(c => filterDescendants<TextNode>(c, d => getNodeTextContent(d).includes(name)))
     .flat()
 }
 
-export function asElements(el: Element | Document): Element[] {
-  return (isDomElement(el) ? [el] : [el.body]).filter(isDomElement)
+export function asElements(el: Node): Element[] {
+  return (isDomElement(el) ? [el] : isDomDocument(el) ? [el.body] : []).filter(isDomElement)
 }
 
 /**
@@ -109,7 +113,7 @@ export function asElements(el: Element | Document): Element[] {
  * cast the result, be aware that this method doesn't perform any verification on the returned type.
  */
 export function findDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T | undefined {
-  return findDescendant<T>(n, n => (n.textContent || '').includes(text), o)
+  return findDescendant<T>(n, n => getNodeTextContent(n).includes(text), o)
 }
 
 /**
@@ -117,7 +121,7 @@ export function findDescendantContaining<T extends Node = Node>(n: Node, text: s
  * cast the result, be aware that this method doesn't perform any verification on the returned type.
  */
 export function filterDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T[] {
-  return filterDescendants(n, n => (n.textContent || '').includes(text), o)
+  return filterDescendants(n, n => getNodeTextContent(n).includes(text), o)
 }
 
 export type Visitor  = (n: Node) => boolean
@@ -226,16 +230,23 @@ export function nodeHtml(node: Node, outer = true, _level = 0): string {
     return `<document>${elementHtml(node.body, outer, _level) + '\n' + repeat(_level, '  ')}</document>`
   } else if (isDomElement(node)) {
     return elementHtml(node, outer, _level)
-  } else {
-    return '\n' + repeat(_level, '  ') + node.textContent || ''
-  }
+  } 
+  // else {
+    return '\n' + repeat(_level, '  ') +( getNodeTextContent(node)) || ''
+  // }
+}
+
+function getNodeTextContent(node: Node<any>, or='') {
+  return  node.textContent||or
 }
 
 function elementHtml(node: Element, outer: boolean, _level = 0) {
-  const attrs = [...objectKeys(node.props && node.props.data || {})
-    .map(k => ({ name: k, value: node.getAttributeValue(k) }))]
+  // console.log( node.getAttributeNames());
+  
+  const attrs = node.getAttributeNames()
+    .map(k => ({ name: k, value: node.getAttributeValue(k) }))
   return `${'\n' + repeat(_level, '  ')}${outer ? 
-    
+
     `<${node.tagName}${attrs.length ? ' ' : ''}${
 
       attrs
@@ -243,7 +254,7 @@ function elementHtml(node: Element, outer: boolean, _level = 0) {
         a.value.toString ? a.value.toString() : a.value
       }"`)
     .filter(a => a)
-    .join(' ')}>` : ``}${
+    .join(' ')}>` : ``}\n${ repeat(_level+1, '  ') +( getNodeTextContent(node))}${
 
       node.childNodes
       .map(c => nodeHtml(c, true, _level + 1))
@@ -252,4 +263,48 @@ function elementHtml(node: Element, outer: boolean, _level = 0) {
     .map(l => l.trim() ? l : '')
     .join('\n')
     .replace(/\n+/gm, '\n') // removes consecutive empty
+}
+
+interface NodeProps<E extends Element = Element> {
+// children: Element|string
+textContent: string
+}
+export interface FullNodeProps<E extends Element = Element> extends NodeProps {
+  children: (Partial<FullNodeProps> | E | string)[]
+  tagName: string
+  parent: E
+}
+
+
+export function createDomElement<D extends Document>(doc: D, tagName: string | Partial<FullNodeProps>, parent?: Element, props: Partial<NodeProps> = {}, children?: Node[]) {
+  if (typeof tagName !== 'string') {
+    let opts = tagName
+    tagName = opts.tagName || 'box'
+    parent = opts.parent
+    props = { ...opts, parent: undefined, children: undefined, tagName: undefined , textContent: opts.textContent} as any
+    children = [...opts.children || [], ...children||[] ]
+    .map(c => {
+      if (typeof c === 'string') {
+        return doc.createTextNode(c)
+      } else if (isDomElement(c)) {
+        return c
+      } else {
+        return createDomElement(doc, c)
+      }
+    })
+  }
+  const el = doc.createElement(tagName)
+  // Object.assign(el.props, props);
+  // (el.props as any).fofofo = 123123
+  el.textContent = props.textContent
+
+  if (parent) {
+    parent.appendChild(el)
+  }
+  if (children) {
+    children.forEach(c => {
+      el.appendChild(c)
+    })
+  }
+  return el
 }
