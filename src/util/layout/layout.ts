@@ -94,5 +94,5 @@ export function layoutChildren(o: LayoutOptions & { el: ProgramElement }) {
 }
 
 export function isLayoutedElement(c: Node): c is ProgramElement {
-  return isElement(c) && c.props.position !== 'absolute' && !!c.props.visible
+  return isElement(c) && c.props.position !== 'absolute' && c.props.visible
 }

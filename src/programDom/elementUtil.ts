@@ -23,11 +23,6 @@ export function isElementProps(e: any): e is ElementProps {
   return e && e._data
 }
 
-export function isVisible(e: ProgramElement): boolean {
-  return true // TODO
-  // throw new Error('not implemented')
-}
-
 export function isAttached(e: ProgramElement): boolean {
   return true// TODO
   // throw new Error('not implemented')

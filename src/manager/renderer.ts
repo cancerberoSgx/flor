@@ -347,11 +347,14 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   renderElement(el: E
     , options: RenderElementOptions = this._defaultRenderOptions, __childrenRecursion = false
   ) {
-    el._beforeRender()
     if (!__childrenRecursion) {
+      if(!el.visible){
+        return
+      }
       this.program.saveCursor('flor.renderer')
       this.program.hideCursor()
     }
+    el._beforeRender()
     Object.assign(options, {
       preventChildrenCascade: typeof el.props.preventChildrenCascade === 'undefined' ? options.preventChildrenCascade : el.props.preventChildrenCascade,
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
@@ -396,7 +399,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
         } else {
           this.renderText(c, a[i + 1])
         }
-      } else if (isElement<E>(c)) {
+      } else if (isElement<E>(c) && c.props.visible) {
         if (el.props.renderChildElement) {
           el.props.renderChildElement(this, c, i, a)
         } else {

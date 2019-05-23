@@ -164,15 +164,15 @@ export class Node implements EventTarget {
     return mapDescendants(this, p, o)
   }
 
-  findDescendant(p: ElementPredicate, o: VisitorOptions = {}) {
+  findDescendant<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T|undefined {
     return findDescendant(this, p, o)
   }
 
-  visitAscendants(v: Visitor, o = {}): boolean {
+  visitAscendants(v: Visitor, o: VisitorOptions = {}): boolean {
     return visitAscendants(this, v, o)
   }
 
-  findAscendant(p: ElementPredicate, o = {}) {
+  findAscendant(p: ElementPredicate, o: VisitorOptions = {}) {
     return findAscendant(this, p, o)
   }
 

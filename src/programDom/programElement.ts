@@ -536,6 +536,10 @@ export class ProgramElement extends Element {
     }
   }
 
+  get visible(){
+    return !this.findAscendant(a=>isElement(a)&&!a.props.visible, {andSelf: true})
+  }
+
 }
 
 interface DebugJsonNode { [s: string]: any, children: (DebugJsonNode | string)[] }

@@ -1,4 +1,4 @@
-import { BorderStyle, Flor, FlorDocument, Layout } from '../src'
+import { BorderStyle, Flor, FlorDocument, Layout, isElement, ProgramElement } from '../src'
 import { color } from './data'
 import { defaultTestSetup, expectToContain, willContain } from './testUtil'
 
@@ -42,4 +42,5 @@ describe('position', () => {
     `.trim())
     done()
   })
+
 })
