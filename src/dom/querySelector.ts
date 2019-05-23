@@ -52,7 +52,7 @@ function buildPredicate<T extends Node = Node  >(selector: Selector<T>):ElementP
   }
 }
 
+const {parse}= require('./selectorSyntax')
 export function parseSelector(s: string){
-  const p = require('./selectorSyntax')
-  return p.parse(s)
+  return parse(s)
 }
