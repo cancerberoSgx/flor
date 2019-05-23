@@ -1,7 +1,7 @@
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { EventTarget } from '..'
 import { Document } from './document'
-import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, nodeHtml, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
+import { ElementSimplePredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, nodeHtml, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions, ElementKindPredicate, ElementPredicate } from './nodeUtil'
 
 export class Node implements EventTarget {
 
@@ -144,44 +144,44 @@ export class Node implements EventTarget {
     return mapChildren(this, v)
   }
 
-  findChildren<T extends Node = Node>(p: ElementPredicate): T | undefined {
-    return findChildren(this, p) as T | undefined
+  findChildren<T extends Node = Node> (p: ElementPredicate<T>): T | undefined {
+    return findChildren<T>(this, p) as T | undefined
   }
 
-  filterChildren(p: ElementPredicate) {
-    return filterChildren(this, p)
+  filterChildren<T extends Node = Node>(p: ElementPredicate<T>) {
+    return filterChildren<T>(this, p)
   }
 
   visitDescendants(v: Visitor, o: VisitorOptions = {}): boolean {
     return visitDescendants(this, v, o)
   }
 
-  filterDescendants<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
-    return filterDescendants(this, p, o)
+  filterDescendants<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T[] {
+    return filterDescendants<T>(this, p, o)
   }
 
   mapDescendants<T extends Node = Node, V = any>(p: (p: T) => V, o: VisitorOptions = {}): V[] {
     return mapDescendants(this, p, o)
   }
 
-  findDescendant<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T | undefined {
-    return findDescendant(this, p, o)
+  findDescendant<T extends Node = Node>(p: ElementPredicate<T> , o: VisitorOptions = {}): T | undefined {
+    return findDescendant<T>(this, p, o)
   }
 
   visitAscendants(v: Visitor, o: VisitorOptions = {}): boolean {
     return visitAscendants(this, v, o)
   }
 
-  findAscendant(p: ElementPredicate, o: VisitorOptions = {}) {
-    return findAscendant(this, p, o)
+  findAscendant<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}) {
+    return findAscendant<T>(this, p, o)
   }
 
-  filterAscendants<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T[] {
-    return filterAscendants(this, p, o)
+  filterAscendants<T extends Node = Node>(p: ElementSimplePredicate, o: VisitorOptions = {}): T[] {
+    return filterAscendants<T>(this, p, o)
   }
 
-  findDescendantTextNodeContaining(name: string, o: VisitorOptions = {}): Node | undefined {
-    return findDescendantContaining(this, name, o)
+  findDescendantTextNodeContaining<T extends Node = Node>(name: string, o: VisitorOptions = {}): T | undefined {
+    return findDescendantContaining<T>(this, name, o)
   }
 
   filterDescendantTextNodesContaining(name: string, o: VisitorOptions = {}): Node[] {
@@ -206,12 +206,12 @@ export class Node implements EventTarget {
     }
   }
 
-  findSibling(p: ElementPredicate, o: VisitorOptions = {}): Node | undefined {
-    return this._parentNode ? this._parentNode.childNodes.find(c => c !== this && p(c)) : undefined
+  findSibling<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T | undefined {
+    return this._parentNode ? this._parentNode.childNodes.find(c => c !== this && p(c)) : undefined as any
   }
 
-  filterSibling(p: ElementPredicate, o: VisitorOptions = {}): Node[] {
-    return this._parentNode ? this._parentNode.childNodes.filter(c => c !== this && p(c)) : []
+  filterSibling<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T[] {
+    return this._parentNode ? this._parentNode.childNodes.filter(c => c !== this && p(c)) : [] as any
   }
 
 }

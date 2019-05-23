@@ -37,19 +37,19 @@ export function mapChildren<T>(n: Node, v: (c: Node) => T): T[] {
   return o
 }
 
-export function findChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-  return n.childNodes.find(p)
+export function findChildren<T extends Node = Node>(n: Node, p: ElementPredicate<T>): T|undefined{
+  return n.childNodes.find(p) as any
 }
 
-export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredicate) {
-  return (n.childNodes).filter(c => p(c))
+export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredicate<T>): T[] {
+  return n.childNodes.filter(c => p(c)) as any
 }
 
 export function visitAscendants(n: Node, v: Visitor, o = {}): boolean {
   return !n || v(n) || !n.parentNode || visitAscendants(n.parentNode, v, o)
 }
 
-export function findAscendant<T extends Node = Node>(n: T, p: ElementPredicate, o = {}) {
+export function findAscendant<T extends Node = Node>(n: Node, p: ElementPredicate<T>, o = {}): T|undefined {
   let a: T | undefined
   visitAscendants(
     n,
@@ -69,7 +69,7 @@ export function findRootElement(n: Node) {
   return isDomDocument(n) || isDomDocument(n.parentNode) ? n : findAscendant(n, a => isDomDocument(a) || isDomDocument(a.parentNode))
 }
 
-export function filterAscendants<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
+export function filterAscendants<T extends Node = Node>(n: Node, p: ElementSimplePredicate, o: VisitorOptions = {}): T[] {
   const a: T[] = []
   visitAscendants(n, c => {
     if (p(c)) {
@@ -109,7 +109,7 @@ export function asElements(el: Element | Document): Element[] {
  * cast the result, be aware that this method doesn't perform any verification on the returned type.
  */
 export function findDescendantContaining<T extends Node = Node>(n: Node, text: string, o: VisitorOptions = {}): T | undefined {
-  return findDescendant(n, n => (n.textContent || '').includes(text), o)
+  return findDescendant<T>(n, n => (n.textContent || '').includes(text), o)
 }
 
 /**
@@ -120,7 +120,7 @@ export function filterDescendantContaining<T extends Node = Node>(n: Node, text:
   return filterDescendants(n, n => (n.textContent || '').includes(text), o)
 }
 
-export type Visitor<T extends Node = Node> = (n: T) => boolean
+export type Visitor  = (n: Node) => boolean
 
 /**
  * settings for visitDescendants regarding visiting order and visit interruption modes.
@@ -144,10 +144,10 @@ export interface VisitorOptions {
  * options. By default, first the parent is evaluated which is configurable configurable with
  * [[[VisitorOptions.childrenFirst]]
  * */
-export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion = false): boolean {
+export function visitDescendants<T extends Node = Node> (n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion = false): boolean {
   let r = false
   if (o.childrenFirst) {
-    r = n.childNodes.some(c => visitDescendants(c, v, o, true))
+    r = n.childNodes.some(c => visitDescendants<T>(c, v, o, true))
     if (r) {
       if (!o.breakOnDescendantSignal && (o.andSelf || inRecursion)) {
         v(n)
@@ -165,19 +165,21 @@ export function visitDescendants(n: Node, v: Visitor, o: VisitorOptions = {}, in
       if (!o.visitDescendantsOnSelfSignalAnyway) {
         return true
       } else {
-        return n.childNodes.some(c => visitDescendants(c, v, o, true)) || true // true because self was signaled
+        return n.childNodes.some(c => visitDescendants<T>(c, v, o, true)) || true // true because self was signaled
       }
     } else {
-      return n.childNodes.some(c => visitDescendants(c, v, o, true))
+      return n.childNodes.some(c => visitDescendants<T>(c, v, o, true))
     }
   }
 }
 
-export type ElementPredicate<T extends Node = Node> = (n: T, i?: number, a?: T[]) => boolean
+export type ElementSimplePredicate = (n: Node, i?: number, a?: Node[]) => boolean
+export type ElementKindPredicate <T extends Node = Node>= (n: Node, i?: number, a?: Node[]) => n is T
+export type ElementPredicate <T extends Node = Node> =  ElementSimplePredicate|(ElementKindPredicate<T>)
 
-export function filterDescendants<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}): T[] {
+export function filterDescendants<T extends Node = Node>(n: Node, p: ElementPredicate<T>, o: VisitorOptions = {}): T[] {
   const a: T[] = []
-  visitDescendants(
+  visitDescendants<T>(
     n,
     c => {
       if (p(c)) {
@@ -192,7 +194,7 @@ export function filterDescendants<T extends Node = Node>(n: Node, p: ElementPred
 
 export function mapDescendants<T extends Node = Node, V = any>(n: Node, p: (p: T) => V, o: VisitorOptions = {}): V[] {
   const a: V[] = []
-  visitDescendants(
+  visitDescendants<T>(
     n,
     c => {
       a.push(p(c as any))
@@ -203,9 +205,9 @@ export function mapDescendants<T extends Node = Node, V = any>(n: Node, p: (p: T
   return a
 }
 
-export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredicate, o: VisitorOptions = {}) {
+export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredicate<T>, o: VisitorOptions = {}): T|undefined {
   let a: T | undefined
-  visitDescendants(
+  visitDescendants<T>(
     n,
     c => {
       if (p(c)) {

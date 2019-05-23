@@ -15,12 +15,13 @@ export const containerProps: () => Partial<YogaElementProps> = () => ({
 
 export const focusableProps: () => Partial<YogaElementProps> = () => ({
   ...baseProps(),
-  border: { ...baseProps(), type: BorderStyle.round, fg: 'blue' },
+  border: { ...baseProps(), type: BorderStyle.round, fg: 'blue',  bg: '#1e1e1e', },
   focusable: true,
   focus: {
-    border: { ...baseProps(), type: BorderStyle.double, fg: 'red' },
+    border: { ...baseProps(), type: BorderStyle.double, fg: 'red',  bg: '#1e1e1e', },
     bold: true,
-    fg: '#112277',
-    bg: '#ffeeaa'
+    fg: '#ffeeaa', 
+    bg: '#1e1e1e',
+    // bg: '#ffeeaa'
   }
 })

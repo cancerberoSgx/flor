@@ -37,12 +37,12 @@ describe('layout', () => {
     el.empty()
     array(N).map(i => ({
       top: int(4, 8), left: int(4, 12), width: int(8, 12), height: int(4, 8), bg: 'white', fg: 'black', border: {}
-      , children: [`N${i}th`]
+      , children: [`N${i}`]
     })).forEach(el.create.bind(el))
     renderer.renderElement(el)
     await sleep(100)
     const output = renderer.printBuffer(true)
-    array(N).map(i => `N${i}th`).forEach(l => expect(output).toContain(l))
+    array(N).map(i => `N${i}`).forEach(l => expect(output).toContain(l))
     renderer.destroy()
     done()
   })

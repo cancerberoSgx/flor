@@ -10,7 +10,7 @@ interface BoxProps extends Partial<YogaElementProps> {
  */
 export class Box extends Component<BoxProps, {}> {
   render() {
-    return <box {...containerProps()} {...{ ...this.props }}>{this.props.children}</box>
+    return <box width={.99} height={.99} {...containerProps()} {...{ ...this.props }}>{this.props.children}</box>
   }
 }
 

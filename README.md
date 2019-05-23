@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cancerberosgx/flor.png?branch=master)](https://travis-ci.org/cancerberosgx/flor)
+
 # Flor
 
 In Summary, it takes tput.js and program.js from [blessed](https://github.com/chjj/blessed) and implement form scratch the part on top of it, this is, screen/node/element.
