@@ -2,4 +2,4 @@ dist: xenial
 language: node_js
 node_js:
   - "11"
-script: npm run all
+script: npm run all-test

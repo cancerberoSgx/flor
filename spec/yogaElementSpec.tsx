@@ -100,7 +100,7 @@ describe('yogaElement', () => {
 
   it('depth, percent bounds', async done => {
     const el = flor.create(
-      <box top={2} left={2} height={27} width={62}
+      <box top={0} left={2} height={27} width={62}
         flexDirection={yoga.FLEX_DIRECTION_ROW}
       >
         <box width={.4} height={.999} flexShrink={1}
@@ -125,7 +125,6 @@ describe('yogaElement', () => {
     // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     await willContain(flor.renderer, '═════════════')
     flor.test.toContain(`
-
   ╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮╔═══════════════════════════════════╗
   ┆///////////////////////┆║|||||||||||||||||||||||||||||||||||║
   ┆///////////////////////┆║|||||||||||||||||||||||||||||||||||║
@@ -153,7 +152,7 @@ describe('yogaElement', () => {
   │                       │┊...................................┊
   │                       │┊...................................┊
   ╰───────────────────────╯╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
-`)
+`.trim())
     done()
   })
 
@@ -195,7 +194,7 @@ describe('yogaElement', () => {
   it('Should update when props or text change (makes bounds dirty)', async done => {
     const o = { flexShrink: 1 }
     const el = flor.create(
-      <box top={3} left={4} height={33} width={52} border={{ type: BorderStyle.round }}
+      <box top={0} left={4} height={33} width={52} border={{ type: BorderStyle.round }}
         flexDirection={yoga.FLEX_DIRECTION_COLUMN} flexWrap={yoga.WRAP_WRAP} direction={yoga.DIRECTION_LTR}
       >
         <box {...o} width={.5} height={3}>1</box>
@@ -210,8 +209,6 @@ describe('yogaElement', () => {
     flor.render()
     await flor.test.willContain('1')
     flor.test.toContain(`
-
-
     ╭──────────────────────────────────────────────────╮
     │1───────────────────────╮6──────────────────╮     │
     ││                       ││                  │     │
@@ -245,7 +242,7 @@ describe('yogaElement', () => {
     │                                                  │
     │                                                  │
     ╰──────────────────────────────────────────────────╯
-`)
+`.trim())
 
     await flor.test.wontContain('seba')
     el.props.flexDirection = yoga.FLEX_DIRECTION_ROW
@@ -255,8 +252,6 @@ describe('yogaElement', () => {
     await flor.test.wontContain('1')
 
     flor.test.toContain(`
-
-
     ╭──────────────────────────────────────────────────╮
     │seba────────────────────╮2──────────────────╮     │
     ││                       ││                  │     │
@@ -290,7 +285,7 @@ describe('yogaElement', () => {
     │                                                  │
     │                                                  │
     ╰──────────────────────────────────────────────────╯
-`)
+`.trim())
     // debug('expect: /n' + flor.printBuffer() + '/n', JSON.stringify(el.yogaDebug(), null, 2) + '/n', JSON.stringify(el.debugAsJson(), null, 2) + '/n', el.debugAsXml())
     done()
   })

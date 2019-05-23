@@ -66,6 +66,6 @@ interface PopUpProps extends Partial<ElementProps> {
 }
 export class PopUp extends Component<PopUpProps> {
   render() {
-    return  <box>{this.props.children}</box>
+    return  <box position="absolute" visible={this.props.visible||false} {...this.props}>{this.props.children}</box>
   }
 }
