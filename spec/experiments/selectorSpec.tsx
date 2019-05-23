@@ -56,7 +56,6 @@
 
 //   it('should parse a complex query with descendant, parent, children, ancestor, and logic', async done => {
 
-
 //     const expected =
 //       [
 //         {

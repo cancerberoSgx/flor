@@ -1,7 +1,7 @@
-import { ProgramDocument, ProgramElement } from '../programDom'
 import { Node } from '../dom'
+import { ProgramDocument, ProgramElement } from '../programDom'
 import { Component } from './component'
-import { FlorJsxAttrs, FlorJsx, RefObject, RenderOptions } from './types'
+import { FlorJsx, FlorJsxAttrs, RefObject, RenderOptions } from './types'
 
 interface ComponentConstructor<P = {}, S = {}> {
   new(p: P, s: S): Component
@@ -56,6 +56,7 @@ class FlorJsxImpl implements FlorJsx {
               el.appendChild(r)
             } else {
               r = this._render({ e: c, document, parent: el })
+              // parent.appendChild(r)
             }
           } else {
             throw new Error('Unrecognized child type ' + c)

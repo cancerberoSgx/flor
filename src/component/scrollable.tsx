@@ -231,6 +231,9 @@ export class Scrollable extends Component<ScrollableProps, {}> {
       }
     })
   }
+  protected onceRendered() {
+    this.scroll({ x: 0, y: 0 })
+  }
 
   private _calcScrollAreaRun = false
 

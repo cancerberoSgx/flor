@@ -28,6 +28,10 @@ export abstract class Component<P = {}, S = {}> {
 
   }
 
+  // set extraProps(p: Partial<P>){
+  //   this.props = {...this.props, p}
+  // }
+
   /**
    * Called from `Flor.render` when [[element]] is ready, this is, with its attributes and children
    * initialized and rendered as [[ProgramElement]]s.

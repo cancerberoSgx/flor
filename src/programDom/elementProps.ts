@@ -2,18 +2,15 @@ import { KeyEvent, MouseEvent, ProgramDocumentRenderer, TextNode } from '..'
 import { BlurEvent, FocusEvent } from '../'
 import { Node } from '../dom'
 import { ProgramElement } from '../programDom'
+import { CommonElementProps } from '../yogaDom/yogaTypes'
 import { StylePropsImpl } from './styleProps'
 import { ElementProps, KeyPredicate, StyleProps } from './types'
-import { objectKeys } from 'misc-utils-of-mine-generic';
-import { CommonElementProps } from '../yogaDom/yogaTypes';
 
 export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<CommonElementProps> {
 
   get data() {
     return { ...super.data, ...this._dataFocus ? { focus: this._dataFocus.data } : {} }
   }
-
- 
 
   public get input(): string | undefined {
     return this._data.input
@@ -33,10 +30,10 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
 
   onChange?(e: { currentTarget: ProgramElement, value: string }): void
 
-  public get changeKeys(): KeyPredicate| undefined {
+  public get changeKeys(): KeyPredicate | undefined {
     return this._data.changeKeys
   }
-  public set changeKeys(value: KeyPredicate| undefined) {
+  public set changeKeys(value: KeyPredicate | undefined) {
     this._data.changeKeys = value
   }
 
@@ -84,13 +81,12 @@ export class ElementPropsImpl<T extends ElementProps = ElementProps> extends Sty
 
   onFocus?(e: FocusEvent): void
 
-
   public get number(): undefined | number {
     return this._data.number
   }
   public set number(value: undefined | number) {
     this._data.number = value
-  }   
+  }
 
   public get elementType(): undefined | string {
     return this._data.elementType

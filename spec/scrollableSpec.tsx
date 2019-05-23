@@ -102,6 +102,7 @@ describe('scrollable', () => {
       <Scrollable top={0} left={0} width={50} height={30} rightExtraOffset={3} bottomExtraOffset={3} focus={undefined}
         border={{ type: BorderStyle.double }}
         layout={{ layout: Layout.topDown }} preventChildrenCascade={true}  >
+
         {['First paragraph. ', ...longText().split('\n')].map(text =>
           <Text width={.999} border={undefined} focus={undefined}
             padding={{ top: 1, right: 2, left: 3, bottom: 1 }}

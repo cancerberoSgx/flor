@@ -1,31 +1,28 @@
-import { CommonElementImpl, CommonElementProps } from '../yogaDom/yogaTypes'
-import { ColorString, PAttrs } from '../programDom/styleProps'
-import { objectKeys } from 'misc-utils-of-mine-generic';
-import { ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript';
+import { objectKeys } from 'misc-utils-of-mine-generic'
 
-export class BasePropsImpl<T extends any = any> implements Partial<BaseProps<T> > {
-  protected _data:  T
-  
-  constructor( p?: T) {
-    this._data = p  ||{} as any  
+export class BasePropsImpl<T extends any = any> implements Partial<BaseProps<T>> {
+  protected _data: T
+
+  constructor(p?: T) {
+    this._data = p || {} as any
   }
 
   assign(o: Partial<T>) {
     Object.assign(this._data, o || {})
   }
-  
+
   getPropertyNames() {
     return objectKeys(this._data)
   }
 
-  getPropertyValue(prop:keyof T){
+  getPropertyValue(prop: keyof T) {
     return this._data[prop]
   }
-  
-  public get classes(): undefined|string[] {
+
+  public get classes(): undefined | string[] {
     return this._data.classes
   }
-  public set classes(value:  undefined|string[]) {
+  public set classes(value: undefined | string[]) {
     this._data.classes = value
   }
 
@@ -50,13 +47,11 @@ export class BasePropsImpl<T extends any = any> implements Partial<BaseProps<T> 
   // getPropertyValue<K extends ObjectStringKeyUnion<T>>(prop:K) : T[K] {
   //   return this._data[prop] as any
   // }
-  
 
-  
   /**
    * Gets all props as plain object.
    */
-  get data() : T{ // TODO: should eb AttrsProps - workaround for types issue.
+  get data(): T { // TODO: should eb AttrsProps - workaround for types issue.
     return this._data
   }
 
@@ -69,9 +64,9 @@ export interface BaseProps<T extends any = any> {
    */
   classes: string[]
 
-    /**
-   * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
-   */
+  /**
+ * Like Dom element's ids to uniquely identify them. Not used internally, meant for the user.
+ */
   id: string
 
   /**
@@ -79,9 +74,8 @@ export interface BaseProps<T extends any = any> {
    */
   name: string
 
- 
   // assign(o: T): void
-  
+
   // getPropertyNames(): string[]
 
   // getPropertyValue<K extends keyof T>(prop:K): T[K]
@@ -93,7 +87,7 @@ export interface BaseProps<T extends any = any> {
 
 // export interface ND {children: NodeProps[]}
 // export interface NodeProps  extends BaseProps<ND> {
-// // 
+// //
 // }
 
 // export class BodePropsImpl extends BasePropsImpl<ND>{

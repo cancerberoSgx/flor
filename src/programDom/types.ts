@@ -1,6 +1,7 @@
 import { PropertyOptional } from 'misc-utils-of-mine-generic'
 import { MouseAction, ProgramKeyEvent, ProgramMouseEvent } from '../declarations'
 import { Node, TextNode } from '../dom'
+import { BaseProps } from '../dom/BaseProps'
 import { ComponentProps } from '../jsx/'
 import { ProgramDocumentRenderer } from '../manager'
 import { ClicksEvent } from '../manager/clicks'
@@ -8,7 +9,6 @@ import { LayoutOptions } from '../util'
 import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
-import { BaseProps, BasePropsImpl } from '../dom/BaseProps';
 
 export interface Edges {
   top: number
@@ -385,8 +385,6 @@ export interface Focusable {
 }
 
 export interface Classifiable extends BaseProps {
-
-
 
   /**
    * Similar to [[name]] but numeric type. Not used internally, meant for the user.

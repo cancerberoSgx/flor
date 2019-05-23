@@ -1,7 +1,7 @@
 import { removeWhites } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { Document, isDomElement } from '../src'
-import { createDomElement } from '../src/dom/nodeUtil';
+import { createDomElement } from '../src/dom/nodeUtil'
 
 describe('dom', () => {
 
@@ -45,8 +45,8 @@ describe('dom', () => {
 
   it('createDomElement, textContent, outerHtml', async done => {
     const doc = new Document()
-    const el =createDomElement(doc, {
-      children: ['hello', {textContent: 'world', children: ['bite'], tagName: 'me'} ]
+    const el = createDomElement(doc, {
+      children: ['hello', { textContent: 'world', children: ['bite'], tagName: 'me' }]
     })
     expect(removeWhites(el.outerHTML)).toBe(removeWhites(`
     <box>
@@ -61,9 +61,10 @@ describe('dom', () => {
 
   it('node attrs / props', async done => {
     const doc = new Document()
-    const el =createDomElement(doc, { classes: ['foo', 'bar'],
-      children: ['hello', {textContent: 'world', children: ['bite'], tagName: 'me', name: 'name123'} ],
-      id:'id123'
+    const el = createDomElement(doc, {
+      classes: ['foo', 'bar'],
+      children: ['hello', { textContent: 'world', children: ['bite'], tagName: 'me', name: 'name123' }],
+      id: 'id123'
     })
     expect(removeWhites(el.outerHTML)).toBe(removeWhites(`
     <box classes="foo,bar" id="id123"> hello <me name="name123"> world bite </me> </box>`))

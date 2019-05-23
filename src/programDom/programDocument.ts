@@ -4,9 +4,9 @@ import { clicks } from '../manager/clicks'
 import { CursorManager } from '../manager/cursorManager'
 import { FocusManager } from '../manager/focusManager'
 import { Deferred } from '../util/misc'
+import { createElement } from './elementUtil'
 import { ProgramElement } from './programElement'
 import { FullProps } from './types'
-import { createElement } from './elementUtil';
 
 interface Managers { events: EventManager, focus: FocusManager, renderer: ProgramDocumentRenderer, cursor: CursorManager }
 

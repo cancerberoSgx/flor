@@ -1,5 +1,5 @@
 
-const JsonAsty = require("json-asty")
+const JsonAsty = require('json-asty')
 
 /*  the JSON input  */
 let json = `{
@@ -14,7 +14,7 @@ console.log(`JSON (old):\n${json}`)
 /*  parse JSON into AST  */
 let ast = JsonAsty.parse(json)
 console.log(`AST Dump (all):\n${JsonAsty.dump(ast, { colors: true })}`)
- 
+
 /*  the AST query  */
 let query = `
     .// member [
@@ -34,14 +34,10 @@ let node = nodes[0]
 console.log(`AST Dump (sub, old):\n${node.dump()}`)
 
 /*  manipulate AST node  */
-let nodeNew = node.create("string").set({ value: "TEST" })
+let nodeNew = node.create('string').set({ value: 'TEST' })
 node.parent().del(node).add(nodeNew)
 console.log(`AST Dump (sub, new):\n${node.dump()}`)
 
 /*  unparse AST into JSON  */
 let jsonNew = JsonAsty.unparse(ast)
 console.log(`JSON (new):\n${jsonNew}`)
-
-
-
-

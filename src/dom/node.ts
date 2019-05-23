@@ -1,10 +1,12 @@
-import { notFalsy, ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript'
+import { notFalsy } from 'misc-utils-of-mine-typescript'
 import { EventTarget } from '..'
+import { BasePropsImpl } from './BaseProps'
 import { Document } from './document'
-import { ElementSimplePredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomText, mapChildren, mapDescendants, nodeHtml, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions, ElementKindPredicate, ElementPredicate } from './nodeUtil'
-import { BasePropsImpl, BaseProps } from './BaseProps';
+import { Element } from './element'
+import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomElement, isDomText, mapChildren, mapDescendants, nodeHtml, NodePredicate, NodeSimplePredicate, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
 
-export class Node <T extends any= any>  implements EventTarget {
+export class Node<T extends any = any> implements EventTarget {
+
   static DOCUMENT_TYPE_NODE: NodeType = 10
   static TEXT_NODE: NodeType = 3
   static ELEMENT_NODE: NodeType = 1
@@ -13,22 +15,21 @@ export class Node <T extends any= any>  implements EventTarget {
   protected _parentNode: Node | undefined = undefined
   protected _childNodes: Node[]
   protected _ownerDocument: Document | undefined = undefined
- 
 
   protected _boundsDirty: boolean
 
   constructor(readonly nodeType: NodeType) {
     this._childNodes = []
     this._boundsDirty = true
-    this.props = new BasePropsImpl<Partial<T>>()    
+    this.props = new BasePropsImpl<Partial<T>>()
   }
 
-  props: BasePropsImpl<Partial<T>>;
+  props: BasePropsImpl<Partial<T>>
 
   get childNodes(): Node[] {
     return this._childNodes
   }
-  
+
   get nodeTypeName() {
     return this.nodeType === Node.DOCUMENT_TYPE_NODE ? 'document' : this.nodeType === Node.ELEMENT_NODE ? 'element' : 'text'
   }
@@ -141,11 +142,17 @@ export class Node <T extends any= any>  implements EventTarget {
     return mapChildren(this, v)
   }
 
-  findChildren<T extends Node = Node> (p: ElementPredicate<T>): T | undefined {
-    return findChildren<T>(this, p) as T | undefined
+  findChildElements<T extends Element = Element>(p: ElementPredicate<T>): T | undefined {
+    return this.findChildren(e => isDomElement(e) && p(e))
+  }
+  findChildren<T extends Node = Node>(p: NodePredicate<T>): T | undefined {
+    return findChildren<T>(this, p)
   }
 
-  filterChildren<T extends Node = Node>(p: ElementPredicate<T>): T[] {
+  filterChildElements<T extends Element = Element>(p: ElementPredicate<T>): T[] {
+    return this.filterChildren(e => isDomElement(e) && p(e))
+  }
+  filterChildren<T extends Node = Node>(p: NodePredicate<T>): T[] {
     return filterChildren<T>(this, p)
   }
 
@@ -153,7 +160,7 @@ export class Node <T extends any= any>  implements EventTarget {
     return visitDescendants(this, v, o)
   }
 
-  filterDescendants<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T[] {
+  filterDescendants<T extends Node = Node>(p: NodePredicate<T>, o: VisitorOptions = {}): T[] {
     return filterDescendants<T>(this, p, o)
   }
 
@@ -161,7 +168,7 @@ export class Node <T extends any= any>  implements EventTarget {
     return mapDescendants(this, p, o)
   }
 
-  findDescendant<T extends Node = Node>(p: ElementPredicate<T> , o: VisitorOptions = {}): T | undefined {
+  findDescendant<T extends Node = Node>(p: NodePredicate<T>, o: VisitorOptions = {}): T | undefined {
     return findDescendant<T>(this, p, o)
   }
 
@@ -169,11 +176,11 @@ export class Node <T extends any= any>  implements EventTarget {
     return visitAscendants(this, v, o)
   }
 
-  findAscendant<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T|undefined{
+  findAscendant<T extends Node = Node>(p: NodePredicate<T>, o: VisitorOptions = {}): T | undefined {
     return findAscendant<T>(this, p, o)
   }
 
-  filterAscendants<T extends Node = Node>(p: ElementSimplePredicate, o: VisitorOptions = {}): T[] {
+  filterAscendants<T extends Node = Node>(p: NodeSimplePredicate, o: VisitorOptions = {}): T[] {
     return filterAscendants<T>(this, p, o)
   }
 
@@ -203,22 +210,20 @@ export class Node <T extends any= any>  implements EventTarget {
     }
   }
 
-  findSibling<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T | undefined {
+  findSibling<T extends Node = Node>(p: NodePredicate<T>, o: VisitorOptions = {}): T | undefined {
     return this._parentNode ? this._parentNode.childNodes.find(c => c !== this && p(c)) : undefined as any
   }
 
-  filterSibling<T extends Node = Node>(p: ElementPredicate<T>, o: VisitorOptions = {}): T[] {
+  filterSibling<T extends Node = Node>(p: NodePredicate<T>, o: VisitorOptions = {}): T[] {
     return this._parentNode ? this._parentNode.childNodes.filter(c => c !== this && p(c)) : [] as any
   }
 
-
-  getAttributeValue(p: keyof T)  {
+  getAttributeValue(p: keyof T) {
     return this.props.getPropertyValue(p)
   }
   getAttributeNames() {
-   return this.props.getPropertyNames()
+    return this.props.getPropertyNames()
   }
-
 
 }
 

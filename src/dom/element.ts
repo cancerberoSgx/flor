@@ -1,13 +1,21 @@
+import { asArray, notSameNotFalsy } from 'misc-utils-of-mine-generic'
 import { Document } from './document'
 import { Node } from './node'
-import { BasePropsImpl, BaseProps } from './BaseProps';
 
-export class Element  extends Node {
+export class Element extends Node {
   constructor(public readonly tagName: string, ownerDocument: Document) {
     super(Node.ELEMENT_NODE)
     this._ownerDocument = ownerDocument
     // this.props = new DomElementPropsImpl<T>()
-  }  
+  }
+
+  hashClass<T extends Element = Element>(c: string): this is T {
+    return (this.props.classes || []).includes(c)
+  }
+  addClass(c: string | string[]) {
+    this.props.classes = (this.props.classes || []).concat(asArray(c)).filter(notSameNotFalsy)
+  }
+
 }
 
 // export class DomElementPropsImpl<T extends ElementProps = ElementProps> extends BasePropsImpl<Partial<T>> {

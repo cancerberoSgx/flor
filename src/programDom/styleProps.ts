@@ -1,8 +1,8 @@
 import { LayoutOptions } from '../util'
+import { CommonElementProps } from '../yogaDom/yogaTypes'
 import { AttrsImpl } from './attrProps'
 import { isElement } from './elementUtil'
-import { Attrs, BorderProps, Padding, StyleProps, ElementProps } from './types'
-import { CommonElementProps } from '../yogaDom/yogaTypes';
+import { Attrs, BorderProps, Padding, StyleProps } from './types'
 
 export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl<Partial<T>> implements Partial<StyleProps> {
 
@@ -53,7 +53,7 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   get data() {
     return {
       ...super.data,
-      ...this._data.border ? { border: ((this._data.border as any).data || this._data.border) } : {}
+      ...this._data.border ? { border: ((this._data.border).data || this._data.border) } : {}
     }
   }
 

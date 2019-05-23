@@ -87,8 +87,12 @@ export class ProgramElement extends Element {
     if (!this._renderedOnce) {
       this._renderedOnce = true
       this.props.onceRendered && this.props.onceRendered(this)
+      // this.onceRendered(this)
     }
   }
+  // onceRendered(c: this) {
+
+  // }
 
   /**
    * Called by the renderer just after rendering this element. It's children were not yet rendered and will be

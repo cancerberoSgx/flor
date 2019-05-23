@@ -1,15 +1,14 @@
-import { CommonElementImpl, CommonElementProps } from '../yogaDom/yogaTypes'
+import { BasePropsImpl } from '../dom/BaseProps'
+import { CommonElementImpl } from '../yogaDom/yogaTypes'
 import { ColorString, PAttrs } from './styleProps'
-import { objectKeys } from 'misc-utils-of-mine-generic';
-import { BasePropsImpl } from '../dom/BaseProps';
 
 export class AttrsImpl<T extends PAttrs = PAttrs> extends BasePropsImpl implements PAttrs {
   constructor(p: PAttrs | undefined, owner: CommonElementImpl) {
     super(p as T)
-    this.owner = owner as CommonElementImpl
+    this.owner = owner
   }
   protected owner: CommonElementImpl
-  
+
   /**
    * Gets only the character attributes as plain object.
    */

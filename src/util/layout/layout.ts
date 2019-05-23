@@ -3,6 +3,7 @@ import { Node } from '../../dom'
 import { isElement } from '../../programDom'
 import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout'
 import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms'
+// import { debug } from '../logger';
 
 export interface LayoutOptions {
   /**
@@ -94,5 +95,6 @@ export function layoutChildren(o: LayoutOptions & { el: ProgramElement }) {
 }
 
 export function isLayoutedElement(c: Node): c is ProgramElement {
+  // debug(isElement(c) && c.props.position !== 'absolute' && c.props.visible)
   return isElement(c) && c.props.position !== 'absolute' && c.props.visible
 }

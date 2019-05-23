@@ -1,7 +1,7 @@
 {
   "name": "flor",
-  "version": "0.0.4",
-  "description": "Command line user interface JavaScript toolkit",
+  "version": "0.0.5",
+  "description": "Command line user interface JavaScript toolkit, portable, multipurpose, and extensible. Based on the core source of blessed library.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "bin": "bin/tput.js",

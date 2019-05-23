@@ -9,19 +9,20 @@ export const baseProps: () => RemoveProperties<Partial<YogaElementProps>, 'child
 })
 
 export const containerProps: () => Partial<YogaElementProps> = () => ({
-  ...baseProps(),
-  bg: 'gray'
+  ...baseProps()
+  // top: 0, left: 0, width: .99, height: .99
+  // bg: 'gray'
 })
 
 export const focusableProps: () => Partial<YogaElementProps> = () => ({
   ...baseProps(),
-  border: { ...baseProps(), type: BorderStyle.round, fg: 'blue',  bg: '#1e1e1e', },
+  border: { ...baseProps(), type: BorderStyle.round, fg: 'blue', bg: '#1e1e1e' },
   focusable: true,
   focus: {
-    border: { ...baseProps(), type: BorderStyle.double, fg: 'red',  bg: '#1e1e1e', },
-    bold: true,
-    fg: '#ffeeaa', 
-    bg: '#1e1e1e',
+    border: { ...baseProps(), type: BorderStyle.double, fg: 'red', bg: '#1e1e1e' },
+    bold: true
+    // fg: '#ffeeaa',
+    // bg: '#1e1e1e',
     // bg: '#ffeeaa'
   }
 })

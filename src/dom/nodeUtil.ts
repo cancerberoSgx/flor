@@ -1,9 +1,9 @@
-import { repeat, objectKeys } from 'misc-utils-of-mine-generic'
+import { repeat } from 'misc-utils-of-mine-generic'
 import { notFalsy } from 'misc-utils-of-mine-typescript'
+import { BaseProps } from './BaseProps'
 import { Document } from './document'
 import { Element } from './element'
 import { Node, TextNode } from './node'
-import { BaseProps } from './BaseProps';
 
 export function nodeTypes(n: Node): number[] {
   const o: number[] = []
@@ -19,9 +19,8 @@ export function isDomElement(n: any): n is Element {
   return n && n.nodeType === Node.ELEMENT_NODE
 }
 export function isDomNode(n: any): n is Node {
-  return n && typeof n.nodeType === 'number' && typeof n.appendChild==='function'
+  return n && typeof n.nodeType === 'number' && typeof n.appendChild === 'function'
 }
-
 
 export function isDomText(n: any): n is TextNode {
   return n && n.nodeType === Node.TEXT_NODE
@@ -42,11 +41,11 @@ export function mapChildren<T>(n: Node, v: (c: Node) => T): T[] {
   return o
 }
 
-export function findChildren<T extends Node = Node>(n: Node, p: ElementPredicate<T>): T|undefined{
+export function findChildren<T extends Node = Node>(n: Node, p: NodePredicate<T>): T | undefined {
   return n.childNodes.find(p) as any
 }
 
-export function filterChildren<T extends Node = Node>(n: Node, p: ElementPredicate<T>): T[] {
+export function filterChildren<T extends Node = Node>(n: Node, p: NodePredicate<T>): T[] {
   return n.childNodes.filter(c => p(c)) as any
 }
 
@@ -54,13 +53,13 @@ export function visitAscendants(n: Node, v: Visitor, o = {}): boolean {
   return !n || v(n) || !n.parentNode || visitAscendants(n.parentNode, v, o)
 }
 
-export function findAscendant<T extends Node = Node>(n: Node, p: ElementPredicate<T>, o = {}): T|undefined {
+export function findAscendant<T extends Node = Node>(n: Node, p: NodePredicate<T>, o = {}): T | undefined {
   let a: T | undefined
   visitAscendants(
     n,
     c => {
       if (p(c)) {
-        a = c as T
+        a = c
         return true
       }
       return false
@@ -74,7 +73,7 @@ export function findRootElement(n: Node) {
   return isDomDocument(n) || isDomDocument(n.parentNode) ? n : findAscendant(n, a => isDomDocument(a) || isDomDocument(a.parentNode))
 }
 
-export function filterAscendants<T extends Node = Node>(n: Node, p: ElementSimplePredicate, o: VisitorOptions = {}): T[] {
+export function filterAscendants<T extends Node = Node>(n: Node, p: NodeSimplePredicate, o: VisitorOptions = {}): T[] {
   const a: T[] = []
   visitAscendants(n, c => {
     if (p(c)) {
@@ -91,7 +90,7 @@ export function findDescendantTextNodeContaining(
   o: VisitorOptions = {}
 ): TextNode | undefined {
   return asElements(el)
-    .map(c => findDescendant<TextNode>(c, d=>getNodeTextContent(d).includes(name)))
+    .map(c => findDescendant<TextNode>(c, d => getNodeTextContent(d).includes(name)))
     .find(notFalsy)
 }
 
@@ -125,7 +124,7 @@ export function filterDescendantContaining<T extends Node = Node>(n: Node, text:
   return filterDescendants(n, n => getNodeTextContent(n).includes(text), o)
 }
 
-export type Visitor  = (n: Node) => boolean
+export type Visitor = (n: Node) => boolean
 
 /**
  * settings for visitDescendants regarding visiting order and visit interruption modes.
@@ -149,7 +148,7 @@ export interface VisitorOptions {
  * options. By default, first the parent is evaluated which is configurable configurable with
  * [[[VisitorOptions.childrenFirst]]
  * */
-export function visitDescendants<T extends Node = Node> (n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion = false): boolean {
+export function visitDescendants<T extends Node = Node>(n: Node, v: Visitor, o: VisitorOptions = {}, inRecursion = false): boolean {
   let r = false
   if (o.childrenFirst) {
     r = n.childNodes.some(c => visitDescendants<T>(c, v, o, true))
@@ -178,17 +177,20 @@ export function visitDescendants<T extends Node = Node> (n: Node, v: Visitor, o:
   }
 }
 
-export type ElementSimplePredicate = (n: Node, i?: number, a?: Node[]) => boolean
-export type ElementKindPredicate <T extends Node = Node>= (n: Node, i?: number, a?: Node[]) => n is T
-export type ElementPredicate <T extends Node = Node> =  ElementSimplePredicate|(ElementKindPredicate<T>)
+export type NodeSimplePredicate = (n: Node, i?: number, a?: Node[]) => boolean
+export type NodeKindPredicate<T extends Node = Node> = (n: Node, i?: number, a?: Node[]) => n is T
+export type NodePredicate<T extends Node = Node> = NodeSimplePredicate | (NodeKindPredicate<T>)
+export type ElementKindPredicate<T extends Element = Element> = (n: Element, i?: number, a?: Element[]) => n is T
+export type ElementPredicate<T extends Element = Element> = ElementSimplePredicate | (ElementKindPredicate<T>)
+export type ElementSimplePredicate = (n: Element, i?: number, a?: Element[]) => boolean
 
-export function filterDescendants<T extends Node = Node>(n: Node, p: ElementPredicate<T>, o: VisitorOptions = {}): T[] {
+export function filterDescendants<T extends Node = Node>(n: Node, p: NodePredicate<T>, o: VisitorOptions = {}): T[] {
   const a: T[] = []
   visitDescendants<T>(
     n,
     c => {
       if (p(c)) {
-        a.push(c as T)
+        a.push(c)
       }
       return false
     },
@@ -210,13 +212,13 @@ export function mapDescendants<T extends Node = Node, V = any>(n: Node, p: (p: T
   return a
 }
 
-export function findDescendant<T extends Node = Node>(n: Node, p: ElementPredicate<T>, o: VisitorOptions = {}): T|undefined {
+export function findDescendant<T extends Node = Node>(n: Node, p: NodePredicate<T>, o: VisitorOptions = {}): T | undefined {
   let a: T | undefined
   visitDescendants<T>(
     n,
     c => {
       if (p(c)) {
-        a = c as T
+        a = c
         return true
       }
       return false
@@ -231,44 +233,44 @@ export function nodeHtml(node: Node, outer = true, _level = 0): string {
     return `<document>${elementHtml(node.body, outer, _level) + '\n' + repeat(_level, '  ')}</document>`
   } else if (isDomElement(node)) {
     return elementHtml(node, outer, _level)
-  } 
+  }
   // else {
-    return '\n' + repeat(_level, '  ') +( getNodeTextContent(node)) || ''
+  return '\n' + repeat(_level, '  ') + (getNodeTextContent(node)) || ''
   // }
 }
 
-function getNodeTextContent(node: Node<any>, or='') {
-  return  node.textContent||or
+function getNodeTextContent(node: Node<any>, or = '') {
+  return node.textContent || or
 }
 
 function elementHtml(node: Element, outer: boolean, _level = 0) {
   // console.log( node.getAttributeNames());
-  
+
   const attrs = node.getAttributeNames()
     .map(k => ({ name: k, value: node.getAttributeValue(k) }))
-  return `${'\n' + repeat(_level, '  ')}${outer ? 
+  return `${'\n' + repeat(_level, '  ')}${outer ?
 
     `<${node.tagName}${attrs.length ? ' ' : ''}${
 
-      attrs
+    attrs
       .map(a => a.value && `${a.name}="${
         a.value.toString ? a.value.toString() : a.value
-      }"`)
-    .filter(a => a)
-    .join(' ')}>` : ``}\n${ repeat(_level+1, '  ') +( getNodeTextContent(node))}${
+        }"`)
+      .filter(a => a)
+      .join(' ')}>` : ``}\n${repeat(_level + 1, '  ') + (getNodeTextContent(node))}${
 
-      node.childNodes
+    node.childNodes
       .map(c => nodeHtml(c, true, _level + 1))
       .join('\n' + repeat(_level, '  ')) + '\n' + repeat(_level, '  ')}${outer ? `</${node.tagName}>` : ``}`
-      .split('\n')
+    .split('\n')
     .map(l => l.trim() ? l : '')
     .join('\n')
     .replace(/\n+/gm, '\n') // removes consecutive empty
 }
 
-interface NodeProps<E extends Element = Element> extends  BaseProps {
-// children: Element|string
-textContent: string
+interface NodeProps<E extends Element = Element> extends BaseProps {
+  // children: Element|string
+  textContent: string
 }
 export interface FullNodeProps<E extends Element = Element> extends NodeProps {
   children: (Partial<FullNodeProps> | E | string)[]
@@ -276,26 +278,25 @@ export interface FullNodeProps<E extends Element = Element> extends NodeProps {
   parent: E
 }
 
-
 export function createDomElement<D extends Document>(doc: D, tagName: string | Partial<FullNodeProps>, parent?: Element, props: Partial<NodeProps> = {}, children?: Node[]) {
   if (typeof tagName !== 'string') {
     let opts = tagName
     tagName = opts.tagName || 'box'
     parent = opts.parent
-    props = { ...opts, parent: undefined, children: undefined, tagName: undefined , textContent: opts.textContent} as any
-    children = [...opts.children || [], ...children||[] ]
-    .map(c => {
-      if (typeof c === 'string') {
-        return doc.createTextNode(c)
-      } else if (isDomElement(c)) {
-        return c
-      } else {
-        return createDomElement(doc, c)
-      }
-    })
+    props = { ...opts, parent: undefined, children: undefined, tagName: undefined, textContent: opts.textContent } as any
+    children = [...opts.children || [], ...children || []]
+      .map(c => {
+        if (typeof c === 'string') {
+          return doc.createTextNode(c)
+        } else if (isDomElement(c)) {
+          return c
+        } else {
+          return createDomElement(doc, c)
+        }
+      })
   }
   const el = doc.createElement(tagName)
-  Object.assign(el.props, props);
+  Object.assign(el.props, props)
   // (el.props as any).fofofo = 123123
   el.textContent = props.textContent
 
