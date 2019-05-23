@@ -164,7 +164,7 @@ export class Node implements EventTarget {
     return mapDescendants(this, p, o)
   }
 
-  findDescendant<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T|undefined {
+  findDescendant<T extends Node = Node>(p: ElementPredicate, o: VisitorOptions = {}): T | undefined {
     return findDescendant(this, p, o)
   }
 

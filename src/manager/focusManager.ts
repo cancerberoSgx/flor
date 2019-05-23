@@ -1,4 +1,4 @@
-import { isAttached, isElement, isVisible, ProgramDocument, ProgramElement } from '..'
+import { isAttached, isElement, ProgramDocument, ProgramElement } from '..'
 import { ProgramMouseEvent } from '../declarations/program'
 import { filterDescendants, findDescendant } from '../dom/nodeUtil'
 import { BlurEvent, FocusEvent } from '../programDom'
@@ -74,7 +74,7 @@ export class FocusManager<T extends ProgramElement = ProgramElement> {
     if (this.locked) {
       return
     }
-    if (!el || isVisible(el) && isAttached(el) && el.props.focusable) {
+    if (!el || el.visible && isAttached(el) && el.props.focusable) {
       this.dispatchFocusChanged(el)
     } else {
       throw new Error('Element must be visible and attached and have property focusable on true.')

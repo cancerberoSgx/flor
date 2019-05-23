@@ -122,11 +122,11 @@ export interface StyleProps extends Attrs {
 
   /**
    * If `false`, the element (or its descendants) won't be visible and won't affect others in the layout flow.
-   * 
-   * Default value: `true`. 
-   * 
+   *
+   * Default value: `true`.
+   *
    * Changing this property will affect siblings and parents since the layuot will have to be recalculated possibly
-   * changing sibling or parent bounds.  
+   * changing sibling or parent bounds.
    */
   visible: boolean
 

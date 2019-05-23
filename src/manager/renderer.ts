@@ -348,7 +348,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     , options: RenderElementOptions = this._defaultRenderOptions, __childrenRecursion = false
   ) {
     if (!__childrenRecursion) {
-      if(!el.visible){
+      if (!el.visible) {
         return
       }
       this.program.saveCursor('flor.renderer')

@@ -65,10 +65,10 @@ export class StylePropsImpl<T extends StyleProps = StyleProps> extends AttrsImpl
   }
 
   public get visible(): boolean {
-    return typeof this._data.visible==='undefined' ? true : this._data.visible
+    return typeof this._data.visible === 'undefined' ? true : this._data.visible
   }
   public set visible(value: boolean) {
-    this._data.visible = value;
+    this._data.visible = value
   }
 
   public get layout(): LayoutOptions | undefined {
