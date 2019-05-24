@@ -5,24 +5,15 @@
 
 ## TODO
  * TODO: something is wrong with JSX typings - it doesnt allow to declare mandatory children
+ * BaseScrollableProps-> Perhaps change name to something more generic like advanceKeys retrocedeKeys since it's used 
+   * to more than just scroll (select list items)
  * Css cascading - currently is resolved by the renderer, but i need that information before render. lets another manager resolve that and store it somehow in the el (store it in another props, could be props._data_inherited) - the issue is in yoga, if I dont set the border / padding explicitly then is not considered and erased because is not in the prop, is drawn by the renderer.
  * renderer: erase text nodes outside parent viewport not possible unless the whole body is erased.
  * we are not using Node.attributes - we should make attributes===props
  * prevent children cascade per property - I dont want all my childs to have a border like me that i'm container
  * when look up for mouse event target - we can associate the element in the renderer buffer and so each visible pixel has its element and the lookup is fastest
 
-
-# out of topic
 <!-- 
-
-lotslots of items when locating clicked: https://github.com/mourner/rbush
-word wrap : 
-https://github.com/jonschlinkert/word-wrap
-http://flickr.github.io/justified-layout/
- * https://dxr.mozilla.org/mozilla-beta/source/toolkit/modules
-
-
-
  notes
  Sequence: CSI = Ps ; Pn m
 Mnemonic: SSM

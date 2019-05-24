@@ -1,6 +1,6 @@
 import { sleep } from 'misc-utils-of-mine-generic'
 import { Program } from '../../src'
-import { int } from '../data'
+import { int } from '../../spec/data'
 
 const program = new Program({
 })

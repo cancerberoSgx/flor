@@ -1,5 +1,5 @@
 import { inspect } from 'util'
-import { Program } from '../../../../src'
+import { Program } from '../../../src'
 
 // import { words } from '../../../data';
 // import { debug } from '../../../../src';

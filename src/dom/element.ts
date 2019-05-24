@@ -10,10 +10,7 @@ export class Element extends Node {
     // this.props = new DomElementPropsImpl<T>()
   }
 
-
   // debug operations from up-level APIs moved here. TODO: find other place
-
-
 
   hasClass<T extends Element = Element>(c: string): this is T {
     return (this.props.classes || []).includes(c)

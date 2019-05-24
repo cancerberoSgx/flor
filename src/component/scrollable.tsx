@@ -2,16 +2,15 @@ import { asArray, throttle } from 'misc-utils-of-mine-generic'
 import { animate, easing, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
+import { emitEventWithStopPropagation } from '../manager'
+import { BaseScrollableProps } from '../programDom/types'
 import { Animation } from '../util'
 import { rectangleIntersects, rectanglePlusOffsets, Rectangle_LTBR } from '../util/geometry'
 import { nextTick } from '../util/misc'
 import { YogaElementProps } from '../yogaDom'
-import {   BaseScrollableProps } from '../programDom/types'
 import { focusableProps } from './commonProps'
 
-
-
-export interface ScrollHandlerProps<T extends ProgramElement = ProgramElement>  extends BaseScrollableProps<T> {
+export interface ScrollHandlerProps<T extends ProgramElement = ProgramElement> extends BaseScrollableProps<T> {
   /**
    * Number of cols to advance / retrocede on a normal horizontal scroll.
    */
@@ -56,7 +55,7 @@ export interface ScrollHandlerProps<T extends ProgramElement = ProgramElement>  
 }
 
 interface ConcreteScrollableProps extends ScrollHandlerProps {
- 
+
   /**
    * If given, vertical scroll will be throttled by [[throttleVertical]] milliseconds. Use it only if really
    * necessary since it adds flickering.
@@ -124,7 +123,7 @@ export const defaultScrollHandleProps: () => Required<ScrollHandlerProps> = () =
   normalVerticalStep: 2,
   normalHorizontalStep: 1,
   disableMouseWheel: false,
-  onScroll(e) { },
+  onScroll(e) { }
 })
 
 export const defaultScrollableProps: () => Required<ConcreteScrollableProps> = () => ({
@@ -188,6 +187,10 @@ export class Scrollable extends Component<ScrollableProps, {}> {
     this._renderChildren = this._renderChildren.bind(this)
     this.xOffset = 0 - this.p.leftExtraOffset
     this.handleScrollEnd = this.handleScrollEnd.bind(this)
+    if (this.props.onScroll) {
+      this.props.onScroll = this.props.onScroll.bind(this)
+    }
+
   }
 
   /**
@@ -281,9 +284,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   protected handleScrollEnd() {
     this.scrolling = false
     this._stopAnimation()
-    if (this.props.onScroll) {
-      this.props.onScroll({ currentTarget: this.element!, xOffset: this.xOffset, yOffset: this.yOffset })
-    }
+    return emitEventWithStopPropagation(this.props.onScroll, { currentTarget: this.element!, xOffset: this.xOffset, yOffset: this.yOffset })
   }
 
   protected onKeyPressed<T extends ProgramElement = ProgramElement>(e: KeyEvent<T>): boolean | void {

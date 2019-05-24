@@ -1,6 +1,6 @@
 import { Box, Button, Component, ElementOfComponent, ElementProps, FlorDocument, isElement, ProgramElement } from '../src'
 import { Flor } from '../src/jsx/createElement'
-import { Selector } from './experiments/querySelector'
+import { Selector } from '../probes/experiments/querySelector/querySelector'
 import { defaultTestSetup, willContain } from './testUtil'
 
 interface PopUpProps extends Partial<ElementProps> {

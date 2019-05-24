@@ -16,7 +16,7 @@
     // "noStrictGenericChecks": true
   },
   "include": [
-    "src", "spec"
+    "src", "spec", "probes"
   ],
   "exclude": [
     "node_modules", "dist"

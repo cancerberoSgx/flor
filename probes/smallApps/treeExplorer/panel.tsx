@@ -1,6 +1,6 @@
-import { Component, ElementProps, Flor, Input, Layout, Text, Col } from '../../../src'
+import { Col, Component, Flor, Input, Text } from '../../../src'
+import { Row } from '../shipShootingGame/panel'
 import { State } from './state'
-import { Row } from '../shipShootingGame/panel';
 
 export class Status extends Component<{
   state: State;

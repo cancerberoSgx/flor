@@ -1,8 +1,8 @@
 import { objectKeys } from 'misc-utils-of-mine-generic'
 import { notUndefined, TODO } from 'misc-utils-of-mine-typescript'
-import { Node } from '../../src/dom/node'
-import { NodePredicate, VisitorOptions } from '../../src/dom/nodeUtil'
-import { ElementPropsImpl, isElement } from '../../src/programDom'
+import { Node } from '../../../src/dom/node'
+import { NodePredicate, VisitorOptions } from '../../../src/dom/nodeUtil'
+import { ElementPropsImpl, isElement } from '../../../src/programDom'
 
 export interface Selector<T extends Node = Node, PropValue extends any = any> {
   prop?: { prop: StringPredicate, value: string | number | boolean | undefined | Predicate<PropValue> }

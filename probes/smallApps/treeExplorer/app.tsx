@@ -1,7 +1,6 @@
-import { Component, Flor, FlorDocument, Box as Row, Col, Scrollable, BorderStyle, Text, Layout, Button } from '../../../src';
-import { State } from './state';
-import { Settings } from './panel';
-import { containerProps } from '../../../src/component/commonProps';
+import { Box as Row, Button, Col, Component, Flor, FlorDocument, Scrollable } from '../../../src'
+import { Settings } from './panel'
+import { State } from './state'
 
 interface AppProps {
   state: State
@@ -13,24 +12,24 @@ export class App extends Component<AppProps> {
   }
   render() {
 
-return (
-    <Row height={.99} width={.99} >
-      <Col width={.5 }>
-        <Scrollable height={.99} width={.99} top={0} left={0}>
+    return (
+      <Row height={.99} width={.99} >
+        <Col width={.5}>
+          <Scrollable height={.99} width={.99} top={0} left={0}>
 
-<box > hello</box>
+            <box > hello</box>
 
-<Button onClick={e=>{}}>asdasdas</Button>
-        </Scrollable>
-      </Col>
-      <Settings {...this.props}  >
+            <Button onClick={e => { }}>asdasdas</Button>
+          </Scrollable>
+        </Col>
+        <Settings {...this.props}  >
 
-      </Settings>
-      {/* <Col width={.5} ch="2">
+        </Settings>
+        {/* <Col width={.5} ch="2">
         <Row height={.7}></Row>
         <Row height={.3}></Row>
       </Col> */}
-    </Row>)
+      </Row>)
   }
 }
 

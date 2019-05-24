@@ -1,6 +1,6 @@
 import { BorderStyle, Component, Flor, FlorDocument } from '../../../src'
 import { nextTick } from '../../../src/util/misc'
-import { int } from '../../data'
+import { int } from '../../../spec/data'
 import { Settings, Status } from './panel'
 import { ShipC } from './ship'
 import { Direction, Object, State, state } from './state'

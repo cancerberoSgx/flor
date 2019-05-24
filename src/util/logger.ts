@@ -7,10 +7,10 @@ export function addLogger(l: Logger) {
 }
 
 export function removeLogger(l: Logger) {
-const i = loggers.findIndex(o=>o===l)
-if(i!==-1){
-  loggers.splice(i, 1)
-}
+  const i = loggers.findIndex(o => o === l)
+  if (i !== -1) {
+    loggers.splice(i, 1)
+  }
 }
 
 const loggers: Logger[] = []

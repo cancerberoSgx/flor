@@ -68,7 +68,7 @@ export abstract class Component<P = {}, S = {}> {
   get focused() {
     return this.element && !!this.element.props.focused
   }
-  
+
   renderElement(e: ProgramElement | undefined = this.element) {
     if (e && this.renderer) {
       this.renderer.renderElement(e)

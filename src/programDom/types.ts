@@ -10,7 +10,6 @@ import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
 
-
 /**
  * This represents the native styles attrs that are set directly using tput (the axioms)
  */
@@ -24,10 +23,6 @@ export interface Attrs {
   blink: boolean
   invisible: boolean
 }
-
-
-
-
 
 export interface StyleProps extends Attrs {
 
@@ -163,11 +158,6 @@ export interface Edges {
 export interface Padding extends Edges {
 }
 
-
-
-
-
-
 export interface EventTarget {
 
 }
@@ -212,7 +202,7 @@ export interface KeyEvent<T extends ProgramElement = ProgramElement> extends Abs
   ch: string
 }
 
-export type KeyPredicate = (e: KeyEvent) => boolean
+export type KeyPredicate<T extends ProgramElement = ProgramElement> = (e: KeyEvent<T>) => boolean
 
 export interface MouseEvent<T extends ProgramElement = ProgramElement> extends AbstractEvent<T, MouseAction>, ProgramMouseEvent {
   x: number
@@ -259,51 +249,54 @@ interface MouseEventTarget {
   onMouseMove?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
 }
 
+interface InputEvent<V = string, T extends ProgramElement = ProgramElement> extends Event<T> {
+  // currentTarget: T,
+  input: V
+}
 
+interface ChangeEvent<V = string, T extends ProgramElement = ProgramElement> extends Event<T> {
+  value: V,
+  //  currentTarget: T,
+}
 
-
-
-
-export interface InputEventTarget {
+export interface InputEventTarget<V = string, T extends ProgramElement = ProgramElement> {
   /**
    * Current input for input elements like input, textarea, etc.
    */
-  input: string
+  input: V
 
   /**
    * Current value for input elements like input, textarea, etc.
    */
-  value: string
+  value: V
 
   /**
    * Emitted when the user writs or deletes text in the input. Notice that the user didn't explicitly gestured
    * a change in the value, he is just writing text. For subscribing for when the user explicitly changes the
    * value (like when pressing enter), use [[onChange]].
    */
-  onInput(e: { currentTarget: ProgramElement, input: string }): void
+  onInput(e: InputEvent<V, T>): void
 
   /**
    * Emitted when the user explicitly gestures a change in the value, like when pressing enter, or blur.
    */
-  onChange(e: { currentTarget: ProgramElement, value: string }): void
+  onChange(e: ChangeEvent<V, T>): void
 
   /**
    * Keys to change the value. By default is ENTER.
    */
-  changeKeys: KeyPredicate
+  changeKeys: KeyPredicate<T>
 
   /**
    * Change the value on blur? By default is true.
    */
   changeOnBlur: boolean
 
-  focusOnClick: boolean
+  /**
+ * Style and Attrs props to apply to items when they are active.
+ */
+  activeProps: Partial<StyleProps>
 }
-
-
-
-
-
 
 export interface Renderable {
   /**
@@ -365,13 +358,9 @@ export interface Renderable {
   renderChildText?(renderer: ProgramDocumentRenderer, text: TextNode, index: number): void
 }
 
+interface ScrollEvent<T extends ProgramElement = ProgramElement> extends Event<T> {
 
-
-
-
-interface ScrollEvent<T extends ProgramElement = ProgramElement> {
-
-  currentTarget: T
+  // currentTarget: T
 
   /**
    * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current
@@ -392,27 +381,24 @@ interface ScrollEvent<T extends ProgramElement = ProgramElement> {
  * should define default values for this and each widget , subclass or not, should start from there (so the
  * same scroll-gesture keys are used across the app).
  */
-export interface BaseScrollableProps<T extends ProgramElement = ProgramElement>  {
+export interface BaseScrollableProps<T extends ProgramElement = ProgramElement> {
 
   /**
   * Listener notified when a scroll event happens.
   */
- onScroll?: (e: ScrollEvent<T>) => void
+  onScroll?: (e: ScrollEvent<T>) => void
 
-   /**
-   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
+  /**
+  * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
+
+  */
+  normalScrollUpKeys?: KeyPredicate[]
+
+  /**
+   * Keys that activate normal scroll down. Default: `[e => e.ctrl === false && e.name === 'down']`.
    */
-   normalScrollUpKeys?: KeyPredicate[]
- 
-   /**
-    * Keys that activate normal scroll down. Default: `[e => e.ctrl === false && e.name === 'down']`.
-    */
-   normalScrollDownKeys?: KeyPredicate[]
+  normalScrollDownKeys?: KeyPredicate[]
 }
-
-
-
-
 
 export interface Focusable {
   /**
@@ -451,9 +437,12 @@ export interface Focusable {
    * Called when the element gains focus.
    */
   onFocus?(e: FocusEvent): void | boolean
+
+  /**
+   * if true the element will gain focus when clicked.
+   */
+  focusOnClick: boolean
 }
-
-
 
 export interface Classifiable extends BaseProps {
 
@@ -467,8 +456,6 @@ export interface Classifiable extends BaseProps {
    */
   elementType: string
 }
-
-
 
 export interface LifeCycleEventTarget {
   /**

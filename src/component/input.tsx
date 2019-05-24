@@ -1,5 +1,6 @@
 import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..'
 import { Component, Flor } from '../jsx'
+import { emitEventWithStopPropagation } from '../manager'
 import { ElementProps, InputEventTarget } from '../programDom'
 import { focusableProps, inputEventTargetDefaultProps } from './commonProps'
 
@@ -63,8 +64,8 @@ export class Input extends Component<InputProps, {}> {
   protected handleChangeValue() {
     if (this.element) {
       this.element.props.value = this.element.props.input || ''
-      this.props.onChange && this.props.onChange({ currentTarget: this.element, value: (this.element.props.input || '') })
-      this.disableInput()
+
+      return emitEventWithStopPropagation(this.props.onChange, { currentTarget: this.element, value: (this.element.props.input || '') })
     }
   }
 
@@ -75,7 +76,7 @@ export class Input extends Component<InputProps, {}> {
     if (this.element) {
       this.element.props.input = s
       this.element.childNodes[0].textContent = this.element.props.input || ''
-      this.props.onInput && this.props.onInput({ currentTarget: this.element, input: (this.element.props.input || '') })
+      emitEventWithStopPropagation(this.props.onInput, { currentTarget: this.element, input: (this.element.props.input || '') })
     }
   }
 

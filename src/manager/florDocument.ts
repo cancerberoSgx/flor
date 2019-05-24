@@ -2,7 +2,7 @@ import { isObject } from 'misc-utils-of-mine-generic'
 import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
 import { Program } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
-import { addLogger, removeLogger, Logger } from '../util'
+import { addLogger, Logger, removeLogger } from '../util'
 import { createProgramForBrowser, ProgramBrowserOptions } from './browser'
 import { CursorManager } from './cursorManager'
 import { StyleEffectsManager } from './effects'
@@ -269,14 +269,14 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     addLogger(this.defaultLogger)
   }
 
-  private defaultLogger: Logger =  {
-      log: (...args: any[]) => {
-        this.debug('', undefined, ...args);
-      }
+  private defaultLogger: Logger = {
+    log: (...args: any[]) => {
+      this.debug('', undefined, ...args)
+    }
   }
 
   removeLoggers(): any {
-   removeLogger(this.defaultLogger)
+    removeLogger(this.defaultLogger)
   }
 
   printBuffer(linesTrimRight = true) {

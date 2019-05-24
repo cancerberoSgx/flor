@@ -197,7 +197,16 @@ export class EventManager {
  * @internal
  */
 export function notifyListener<T extends Node = Node, E extends Event<T> = Event<T>>(l: KeyListener | MouseListener, ev: RemoveProperties<E, 'stopPropagation'>) {
-  let stop = false;
-  (l as any)({ ...ev, stopPropagation() { stop = true } } as any)
-  return stop
+  return emitEventWithStopPropagation(l, ev)
+}
+/**
+ * A generic verion of [[notifyListener]] so it can be used without strict typechecking by outside modules.
+ */
+export function emitEventWithStopPropagation(listener?: (...args: any[]) => any, ev?: any) {
+  if (listener && ev) {
+    let stop = false
+    listener({ ...ev, stopPropagation() { stop = true } })
+    return stop
+  }
+  return false
 }

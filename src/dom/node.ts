@@ -156,7 +156,7 @@ export class Node<T extends any = any> implements EventTarget {
     return filterChildren<T>(this, p)
   }
   filterChildrenWithClass<T extends Node = Node>(className: string): T[] {
-    return filterChildren<T>(this, e=>isDomElement(e) && e.hasClass(className)) as T[]
+    return filterChildren<T>(this, e => isDomElement(e) && e.hasClass(className))
   }
   visitDescendants(v: Visitor, o: VisitorOptions = {}): boolean {
     return visitDescendants(this, v, o)

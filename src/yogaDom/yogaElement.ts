@@ -19,7 +19,7 @@ export class YogaElement extends ProgramElement {
     if (!this._node) {
       this._node = yoga.Node.create()
       this.setPropsToNode()
-      setYogaProps(this.node, this.props)
+      setYogaProps(this.node, this.props as any)
       this.childNodes.filter(YogaElement.is).forEach((c, i) => {
         this.node.insertChild(c.node, i)
       })
@@ -35,7 +35,7 @@ export class YogaElement extends ProgramElement {
   }
 
   protected setYogaProps() {
-    setYogaProps(this.node, this.props)
+    setYogaProps(this.node, this.props as any)
     this.childNodes.filter(YogaElement.is).forEach((c, i) => {
       c.setYogaProps()
     })
