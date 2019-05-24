@@ -1,7 +1,7 @@
-import { asArray, notSameNotFalsy, objectMap, indent, objectKeys } from 'misc-utils-of-mine-generic'
+import { asArray, indent, notSameNotFalsy, objectKeys, objectMap } from 'misc-utils-of-mine-generic'
 import { Document } from './document'
 import { Node } from './node'
-import { isDomElement } from './nodeUtil';
+import { isDomElement } from './nodeUtil'
 
 export class Element extends Node {
   constructor(public readonly tagName: string, ownerDocument: Document) {
@@ -10,7 +10,12 @@ export class Element extends Node {
     // this.props = new DomElementPropsImpl<T>()
   }
 
-  hashClass<T extends Element = Element>(c: string): this is T {
+
+  // debug operations from up-level APIs moved here. TODO: find other place
+
+
+
+  hasClass<T extends Element = Element>(c: string): this is T {
     return (this.props.classes || []).includes(c)
   }
   addClass(c: string | string[]) {
@@ -25,18 +30,17 @@ export class Element extends Node {
    * Returns a XML like string representation of this element instance.
    */
   debugAsXml(o: DebugOptions = { level: 0 }): string {
-    return this.printElementAsXml(o);
+    return this.printElementAsXml(o)
   }
 
   private printElementAsXml(o: DebugOptions) {
-    const noF = objectMap(this.props.data, (k, v) => typeof v === 'function' ? v.toString() : v);
+    const noF = objectMap(this.props.data, (k, v) => typeof v === 'function' ? v.toString() : v)
     return `${indent(o.level)}<${this.tagName} ${objectKeys({ ...noF })
       .map(p => `${p}=${JSON.stringify(noF[p])}`)
       .join(' ')} ${this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${this.childNodes
         .map(e => isDomElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`)
-        .join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`;
+        .join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`
   }
-
 
 }
 

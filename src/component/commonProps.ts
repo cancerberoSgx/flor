@@ -1,6 +1,18 @@
 import { RemoveProperties } from 'misc-utils-of-mine-generic'
 import { BorderStyle } from '../util'
 import { YogaElementProps } from '../yogaDom/types'
+import { InputEventTarget } from '../programDom';
+
+
+export const inputEventTargetDefaultProps:()=> Required<InputEventTarget> = ()=>({
+  onInput(e) { },
+  onChange(e) { },
+  focusOnClick: true,
+  changeOnBlur: true,
+  value: '',
+  input: '',
+  changeKeys: e => e.name === 'enter',
+} )
 
 export const baseProps: () => RemoveProperties<Partial<YogaElementProps>, 'children'> = () => ({
   bg: '#1e1e1e',

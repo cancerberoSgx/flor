@@ -65,11 +65,16 @@ export abstract class Component<P = {}, S = {}> {
     return this.element && this.element.ownerDocument.events
   }
 
+  get focused() {
+    return this.element && !!this.element.props.focused
+  }
+  
   renderElement(e: ProgramElement | undefined = this.element) {
     if (e && this.renderer) {
       this.renderer.renderElement(e)
     }
   }
+
 }
 
 export function isComponent(c: any): c is Component {

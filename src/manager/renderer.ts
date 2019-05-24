@@ -8,8 +8,8 @@ import { PAttrs } from '../programDom/styleProps'
 import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
+import { Rectangle_LTBR } from '../util/geometry'
 import { createProgram, destroyProgram } from './programUtil'
-import { Rectangle_LTBR } from '../util/geometry';
 
 export interface RendererCreateOptions {
   program?: Program

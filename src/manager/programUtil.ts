@@ -145,6 +145,3 @@ export function createProgramRendererDocumentAndElement(programOptions: ProgramO
   const el = document.create({ top: 0, left: 0, width: program.cols - 1, height: program.rows - 1, fg: 'black', bg: 'green', border: {}, ...props || {} })
   return { renderer, document, program, el }
 }
-
-
-

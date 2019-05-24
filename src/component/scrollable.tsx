@@ -1,49 +1,32 @@
 import { asArray, throttle } from 'misc-utils-of-mine-generic'
-import { animate, easing, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement,   } from '..'
+import { animate, easing, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { Animation } from '../util'
+import { rectangleIntersects, rectanglePlusOffsets, Rectangle_LTBR } from '../util/geometry'
 import { nextTick } from '../util/misc'
 import { YogaElementProps } from '../yogaDom'
+import {   BaseScrollableProps } from '../programDom/types'
 import { focusableProps } from './commonProps'
-import { rectangleIntersects, Rectangle_LTBR, rectanglePlusOffsets } from '../util/geometry';
 
-interface ScrollEvent {
-  currentTarget: ProgramElement
-  /**
-   * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current
-   * percentage
-   */
-  xOffset: number
-  /**
-   * Current vertical scroll position. `rows` / [[yOffset]] is the vertical scrolled current percentage, where
-   * `rows` is `scrollArea.yl -  scrollArea.yi`.
-   */
-  yOffset: number
-}
 
-export interface ScrollHandlerProps {
+
+export interface ScrollHandlerProps<T extends ProgramElement = ProgramElement>  extends BaseScrollableProps<T> {
+  /**
+   * Number of cols to advance / retrocede on a normal horizontal scroll.
+   */
+  normalHorizontalStep?: number
 
   /**
    * Number of rows to advance / retrocede on a normal vertical  scroll.
    */
   normalVerticalStep?: number
-  /**
-   * Number of cols to advance / retrocede on a normal horizontal scroll.
-   */
-  normalHorizontalStep?: number
-  /**
-  * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
-  */
-  normalScrollUpKeys?: KeyPredicate[]
-  /**
-   * Keys that activate normal scroll down. Default: `[e => e.ctrl === false && e.name === 'down']`.
-   */
-  normalScrollDownKeys?: KeyPredicate[]
+
   /**
    * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'left']`.
    */
   normalScrollLeftKeys?: KeyPredicate[]
+
   /**
    * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'right']`.
    */
@@ -53,10 +36,12 @@ export interface ScrollHandlerProps {
    * Keys that activate normal scroll down. Default: `[e => e.ctrl === true && e.name === 'down']`.
    */
   largeScrollDownKeys?: KeyPredicate[]
+
   /**
    * Keys that activate large scroll up. Default: `[e => e.ctrl === true && e.name === 'up']`.
    */
   largeScrollUpKeys?: KeyPredicate[]
+
   /**
    * Amount of rows to advance or retrocede on large scrolls. Default: 40.
    */
@@ -67,19 +52,17 @@ export interface ScrollHandlerProps {
    * [[disableMouseWheel]] is false then this behavior will be disabled.
    */
   disableMouseWheel?: boolean
+
 }
 
 interface ConcreteScrollableProps extends ScrollHandlerProps {
-  /**
-   * Listener notified when a scroll event happens.
-   */
-  onScroll?: (e: ScrollEvent) => void
-
+ 
   /**
    * If given, vertical scroll will be throttled by [[throttleVertical]] milliseconds. Use it only if really
    * necessary since it adds flickering.
    */
   throttleVertical?: number
+
   /**
    * Vertical easing animation to perform on fast scrolls or when scrolling to the end or start. By default
    * `bounceEasyOut`. Example: `largeScrollAnimation: easing.bounceEasyOut()`.
@@ -140,7 +123,8 @@ export const defaultScrollHandleProps: () => Required<ScrollHandlerProps> = () =
   normalScrollRightKeys: [e => !e.ctrl && e.name === 'right' || !e.ctrl && e.name === 'd'],
   normalVerticalStep: 2,
   normalHorizontalStep: 1,
-  disableMouseWheel: false
+  disableMouseWheel: false,
+  onScroll(e) { },
 })
 
 export const defaultScrollableProps: () => Required<ConcreteScrollableProps> = () => ({
@@ -153,7 +137,6 @@ export const defaultScrollableProps: () => Required<ConcreteScrollableProps> = (
   throttleVertical: 0,
   largeScrollAnimation: easing.bounceEasyOut(),
   verticalAnimationDuration: 1000,
-  onScroll(e) { },
   verticalGotoEndKeys: [''],
   verticalGotoStartKeys: [''],
   horizontalGotoEndKeys: [''],

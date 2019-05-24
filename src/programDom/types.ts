@@ -10,15 +10,6 @@ import { BorderStyle } from '../util/border'
 import { ProgramElement } from './programElement'
 import { ColorString } from './styleProps'
 
-export interface Edges {
-  top: number
-  left: number
-  right: number
-  bottom: number
-}
-
-export interface Padding extends Edges {
-}
 
 /**
  * This represents the native styles attrs that are set directly using tput (the axioms)
@@ -33,6 +24,10 @@ export interface Attrs {
   blink: boolean
   invisible: boolean
 }
+
+
+
+
 
 export interface StyleProps extends Attrs {
 
@@ -158,6 +153,21 @@ export interface BorderProps extends StyleProps {
   type?: BorderStyle
 }
 
+export interface Edges {
+  top: number
+  left: number
+  right: number
+  bottom: number
+}
+
+export interface Padding extends Edges {
+}
+
+
+
+
+
+
 export interface EventTarget {
 
 }
@@ -249,6 +259,11 @@ interface MouseEventTarget {
   onMouseMove?<T extends ProgramElement = ProgramElement>(r: MouseEvent<T>): void | boolean
 }
 
+
+
+
+
+
 export interface InputEventTarget {
   /**
    * Current input for input elements like input, textarea, etc.
@@ -284,6 +299,11 @@ export interface InputEventTarget {
 
   focusOnClick: boolean
 }
+
+
+
+
+
 
 export interface Renderable {
   /**
@@ -345,6 +365,55 @@ export interface Renderable {
   renderChildText?(renderer: ProgramDocumentRenderer, text: TextNode, index: number): void
 }
 
+
+
+
+
+interface ScrollEvent<T extends ProgramElement = ProgramElement> {
+
+  currentTarget: T
+
+  /**
+   * Current horizontal scroll position. getS [[cols]] / [[xOffset]] is the horizontal scrolled current
+   * percentage
+   */
+  xOffset: number
+
+  /**
+   * Current vertical scroll position. `rows` / [[yOffset]] is the vertical scrolled current percentage, where
+   * `rows` is `scrollArea.yl -  scrollArea.yi`.
+   */
+  yOffset: number
+}
+
+/**
+ * All components that provide scroll-like gesture support, like a list, tree, table, etc should extend their
+ * props from here. This should be the base API to interact with such behaviors. Also a library/ application
+ * should define default values for this and each widget , subclass or not, should start from there (so the
+ * same scroll-gesture keys are used across the app).
+ */
+export interface BaseScrollableProps<T extends ProgramElement = ProgramElement>  {
+
+  /**
+  * Listener notified when a scroll event happens.
+  */
+ onScroll?: (e: ScrollEvent<T>) => void
+
+   /**
+   * Keys that activate normal scroll up. Default: `[e => e.ctrl === false && e.name === 'up']`.
+   */
+   normalScrollUpKeys?: KeyPredicate[]
+ 
+   /**
+    * Keys that activate normal scroll down. Default: `[e => e.ctrl === false && e.name === 'down']`.
+    */
+   normalScrollDownKeys?: KeyPredicate[]
+}
+
+
+
+
+
 export interface Focusable {
   /**
  * If true, the element can gain focus, when FocusManager's [[focusNext]] or [[focusPrevious]] methods are
@@ -384,6 +453,8 @@ export interface Focusable {
   onFocus?(e: FocusEvent): void | boolean
 }
 
+
+
 export interface Classifiable extends BaseProps {
 
   /**
@@ -396,6 +467,8 @@ export interface Classifiable extends BaseProps {
    */
   elementType: string
 }
+
+
 
 export interface LifeCycleEventTarget {
   /**
@@ -439,7 +512,7 @@ export interface LifeCycleEventTarget {
   childrenReady?(): boolean
 }
 
-export interface ElementProps extends StyleProps, ComponentProps, MouseEventTarget, Renderable, Focusable, Classifiable, LifeCycleEventTarget, InputEventTarget, KeyEventTarget {
+export interface ElementProps extends StyleProps, ComponentProps, MouseEventTarget, Renderable, Focusable, Classifiable, LifeCycleEventTarget, InputEventTarget, KeyEventTarget, BaseScrollableProps {
 
 }
 

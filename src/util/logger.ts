@@ -6,9 +6,16 @@ export function addLogger(l: Logger) {
   loggers.push(l)
 }
 
+export function removeLogger(l: Logger) {
+const i = loggers.findIndex(o=>o===l)
+if(i!==-1){
+  loggers.splice(i, 1)
+}
+}
+
 const loggers: Logger[] = []
 
-interface Logger {
+export interface Logger {
   log(...args: any[]): void
 }
 

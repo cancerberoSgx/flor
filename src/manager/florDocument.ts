@@ -2,13 +2,13 @@ import { isObject } from 'misc-utils-of-mine-generic'
 import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
 import { Program } from '../declarations/program'
 import { Flor, isJSXElementImpl } from '../jsx/createElement'
-import { addLogger } from '../util'
+import { addLogger, removeLogger, Logger } from '../util'
+import { createProgramForBrowser, ProgramBrowserOptions } from './browser'
 import { CursorManager } from './cursorManager'
 import { StyleEffectsManager } from './effects'
 import { EventManager } from './eventManager'
 import { FocusManager } from './focusManager'
 import { installExitKeys } from './programUtil'
-import { createProgramForBrowser, ProgramBrowserOptions } from "./browser";
 import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
 
 export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends RendererCreateOptions, ProgramBrowserOptions {
@@ -142,9 +142,9 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
     this.document.destroy()
     this.events.destroy()
     this.cursor.leave()
+    this.removeLoggers()
     this.renderer.destroy()
   }
-
   /**
    * Creates an Element from given Props or by rendering given JSXElement and appends it to [[body]].
    */
@@ -266,11 +266,17 @@ export class FlorDocument<E extends ProgramElement = ProgramElement> {
   private _debugTimer: NodeJS.Timeout | undefined
 
   private installLoggers() {
-    addLogger({
+    addLogger(this.defaultLogger)
+  }
+
+  private defaultLogger: Logger =  {
       log: (...args: any[]) => {
-        this.debug('', undefined, ...args)
+        this.debug('', undefined, ...args);
       }
-    })
+  }
+
+  removeLoggers(): any {
+   removeLogger(this.defaultLogger)
   }
 
   printBuffer(linesTrimRight = true) {

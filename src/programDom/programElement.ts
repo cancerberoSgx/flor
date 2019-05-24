@@ -1,10 +1,10 @@
-import { array, indent, objectKeys, objectMap } from 'misc-utils-of-mine-generic'
+import { array } from 'misc-utils-of-mine-generic'
 import { BorderProps, Component, createElement, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument } from '..'
 import { Element } from '../dom'
 import { RenderElementOptions } from '../manager'
 import { clicks, ClicksListener } from '../manager/clicks'
+import { Rectangle, rectangleIntersects, Rectangle_LTBR } from '../util/geometry'
 import { nextTick } from '../util/misc'
-import { rectangleIntersects, Rectangle_LTBR, Rectangle } from "../util/geometry";
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -213,7 +213,6 @@ export class ProgramElement extends Element {
     this.props.layout = value
   }
 
-
   /**
    * Left coordinate, calculated in columns, relative to parent's content bounds. Alias for [[props.left]].
    */
@@ -265,41 +264,40 @@ export class ProgramElement extends Element {
   set height(value: number) {
     this.props.height = value
   }
-    /**
-   * Alias for [[props.top]] + [[props.height]]
-   */
+  /**
+ * Alias for [[props.top]] + [[props.height]]
+ */
   get bottom() {
     return this.top + this.height
   }
   /**
  * Alias for [[props.top]] + [[props.height]]
- *  
-  HEADS UP / TODO : this is dangerous, we dont known what change if the height or the top, 
-     we assume the top coordinate changed because is cheaper in performance, 
+ *
+  HEADS UP / TODO : this is dangerous, we dont known what change if the height or the top,
+     we assume the top coordinate changed because is cheaper in performance,
      TODO: remove this setter
 
  */
-  set bottom(value: number) {  
-    this.props.top = value -this.height
+  set bottom(value: number) {
+    this.props.top = value - this.height
   }
-/**
- *  * Alias for [[props.left]] + [[props.width]]
- */
+  /**
+   *  * Alias for [[props.left]] + [[props.width]]
+   */
   get right() {
     return this.left + this.width
   }
   /**
  * Alias for [[props.top]] + [[props.height]]
- *  
-   HEADS UP / TODO : this is dangerous, we dont known what change if the left or the width, 
-   we assume the top coordinate changed because is cheaper in performance, 
+ *
+   HEADS UP / TODO : this is dangerous, we dont known what change if the left or the width,
+   we assume the top coordinate changed because is cheaper in performance,
    TODO: remove this setter
 
  */
   set right(value: number) {
-    this.props.left = value -this.width
+    this.props.left = value - this.width
   }
-
 
   get absoluteContentTop() {
     return this.absoluteTop + (this.border ? 1 : 0) + (this.padding ? this.padding.top : 0)
@@ -373,15 +371,15 @@ export class ProgramElement extends Element {
   }
 
   /**
-   * Gets the current element external area in absolute coordinates,  
+   * Gets the current element external area in absolute coordinates,
    */
   getAbsoluteBounds_LTBR(): Rectangle_LTBR {
-      return {
-        top: this.absoluteTop,
-        left: this.absoluteLeft,
-        bottom: this.absoluteTop + this.height,
-        right: this.absoluteLeft + this.width
-      }
+    return {
+      top: this.absoluteTop,
+      left: this.absoluteLeft,
+      bottom: this.absoluteTop + this.height,
+      right: this.absoluteLeft + this.width
+    }
   }
 
   /**
@@ -394,18 +392,18 @@ export class ProgramElement extends Element {
       bottom: this.top + this.height,
       right: this.left + this.width
     }
-}
-/**
- * Sets the current element external area in  coordinates relative toe the parent's using the LTBR rectangle representation.
- */
-setBounds_LTBR(r: Rectangle_LTBR) {
-  this.props.assign({
-    top: r.top,
-    left: r.left,
-    width: r.right - r.left,
-    height: r.bottom - r.top
-  })
-}
+  }
+  /**
+   * Sets the current element external area in  coordinates relative toe the parent's using the LTBR rectangle representation.
+   */
+  setBounds_LTBR(r: Rectangle_LTBR) {
+    this.props.assign({
+      top: r.top,
+      left: r.left,
+      width: r.right - r.left,
+      height: r.bottom - r.top
+    })
+  }
 
   /**
    * Gets the current element external area in coordinates relative  toe th parent's using the common rectangle representation.
@@ -414,56 +412,54 @@ setBounds_LTBR(r: Rectangle_LTBR) {
     return {
       top: this.top,
       left: this.left,
-      height:  this.height,
+      height: this.height,
       width: this.width
     }
-}
-/**
- * Sets the current element external area in  coordinates relative toe the parent's using the common rectangle representation.
- */
-setBounds(r: Rectangle) {
-  this.props.assign({
-    top: r.top,
-    left: r.left,
-    width: r.width,
-    height: r.height
-  })
-}
+  }
+  /**
+   * Sets the current element external area in  coordinates relative toe the parent's using the common rectangle representation.
+   */
+  setBounds(r: Rectangle) {
+    this.props.assign({
+      top: r.top,
+      left: r.left,
+      width: r.width,
+      height: r.height
+    })
+  }
 
   getAbsoluteContentBounds_LTBR(): Rectangle_LTBR {
-      return {
-        top: this.absoluteContentTop,
-        left: this.absoluteContentLeft,
-        bottom: this.absoluteContentTop + this.contentHeight,
-        right: this._absoluteLeft + this.contentWidth
-      }
+    return {
+      top: this.absoluteContentTop,
+      left: this.absoluteContentLeft,
+      bottom: this.absoluteContentTop + this.contentHeight,
+      right: this._absoluteLeft + this.contentWidth
+    }
   }
 
   /**
    * Similar to [[getContentBounds]] but without consider padding.
    */
   getAbsoluteInnerBounds_LTBR(): Rectangle_LTBR {
-      return {
-        top: this.absoluteInnerTop,
-        left: this.absoluteInnerLeft,
-        bottom: this.absoluteInnerTop + this.innerHeight,
-        right: this._absoluteLeft + this.innerWidth
-      }
+    return {
+      top: this.absoluteInnerTop,
+      left: this.absoluteInnerLeft,
+      bottom: this.absoluteInnerTop + this.innerHeight,
+      right: this._absoluteLeft + this.innerWidth
+    }
   }
 
-  intersectsAbsolute_LTBR(r: Rectangle_LTBR, options: {  regionKind?: 'outer' | 'inner' | 'content' } = { }) {
+  intersectsAbsolute_LTBR(r: Rectangle_LTBR, options: { regionKind?: 'outer' | 'inner' | 'content' } = {}) {
     let cr: Rectangle_LTBR
-      if (options.regionKind === 'inner') {
-        cr = this.getAbsoluteInnerBounds_LTBR()
-      } else if (options.regionKind === 'content') {
-        cr = this.getAbsoluteContentBounds_LTBR()
-      } else {
-        cr = this.getAbsoluteBounds_LTBR()
-      }
+    if (options.regionKind === 'inner') {
+      cr = this.getAbsoluteInnerBounds_LTBR()
+    } else if (options.regionKind === 'content') {
+      cr = this.getAbsoluteContentBounds_LTBR()
+    } else {
+      cr = this.getAbsoluteBounds_LTBR()
+    }
     return rectangleIntersects(cr, r)
   }
-
-
 
   /**
    * Creates a new element and appends it to this element.
@@ -599,7 +595,7 @@ setBounds(r: Rectangle) {
   get visible() {
     return !this.findAscendant(a => isElement(a) && !a.props.visible, { andSelf: true })
   }
-  set visible (value: boolean) {
+  set visible(value: boolean) {
     this.props.visible = value
   }
   show() {

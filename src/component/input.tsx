@@ -1,7 +1,7 @@
 import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..'
 import { Component, Flor } from '../jsx'
 import { ElementProps, InputEventTarget } from '../programDom'
-import { focusableProps } from './commonProps'
+import { focusableProps, inputEventTargetDefaultProps } from './commonProps'
 
 export interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, Partial<ConcreteInputProps> {
 
@@ -28,14 +28,8 @@ export interface ConcreteInputProps extends InputEventTarget {
 }
 
 export const defaultInputProps: Required<ConcreteInputProps> = {
-  onInput(e) { },
-  onChange(e) { },
-  focusOnClick: true,
-  changeKeys: e => e.name === 'enter',
-  changeOnBlur: true,
-  blurOnChange: true,
-  value: '',
-  input: '',
+  ...inputEventTargetDefaultProps(),
+  blurOnChange: true, // TODO: move to   InputEventTarget and perhaps the rest too
   enableInputKeys: e => e.name === 'enter',
   disableInputKeys: e => e.name === 'escape'
 }
