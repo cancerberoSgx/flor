@@ -1,11 +1,12 @@
 import { asArray, throttle } from 'misc-utils-of-mine-generic'
-import { animate, easing, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement, Rectangle, rectangleIntersects, rectanglePlusOffsets } from '..'
+import { animate, easing, isElement, KeyEvent, KeyPredicate, MouseEvent, ProgramDocument, ProgramDocumentRenderer, ProgramElement,   } from '..'
 import { Node } from '../dom'
 import { Component, Flor } from '../jsx'
 import { Animation } from '../util'
 import { nextTick } from '../util/misc'
 import { YogaElementProps } from '../yogaDom'
 import { focusableProps } from './commonProps'
+import { rectangleIntersects, Rectangle_LTBR, rectanglePlusOffsets } from '../util/geometry';
 
 interface ScrollEvent {
   currentTarget: ProgramElement
@@ -406,12 +407,12 @@ export class Scrollable extends Component<ScrollableProps, {}> {
   /**
    * Gets the current whole scrolled area, optionally recalculating it. TODO: forceCalc.
    */
-  getScrollArea(forceCalc: boolean = false): Rectangle {
+  getScrollArea(forceCalc: boolean = false): Rectangle_LTBR {
     return {
-      yi: this.yi,
-      yl: this.yl,
-      xi: this.xi,
-      xl: this.xl
+      top: this.yi,
+      bottom: this.yl,
+      left: this.xi,
+      right: this.xl
     }
   }
 

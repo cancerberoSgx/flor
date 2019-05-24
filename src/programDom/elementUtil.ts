@@ -27,21 +27,6 @@ export function isAttached(e: ProgramElement): boolean {
   return true// TODO
   // throw new Error('not implemented')
 }
-
-export interface Rectangle {
-  xi: number, yi: number, yl: number, xl: number
-}
-type R = Rectangle
-export function rectangleIntersects(a: R, b: R) {
-  return (a.xi <= b.xl &&
-    b.xi <= a.xl &&
-    a.yi <= b.yl &&
-    b.yi <= a.yl)
-}
-
-export function rectanglePlusOffsets(r: R, xOffset = 0, yOffset = 0) {
-  return { yi: r.yi + yOffset, yl: r.yl + yOffset, xi: r.xi + xOffset, xl: r.xl + xOffset }
-}
 /**
  * public API to create DOM elements of the given Document. Example calls:
  *

@@ -34,7 +34,7 @@ export class AutoLayout<E extends ProgramElement = ProgramElement> {
    */
   apply(options: { fitContainerBounds?: boolean } = {}) {
     this.view.setSize(this.parent.contentWidth, this.parent.contentHeight)
-    this.getBounds().forEach(b => {
+    this.getChildrenBounds().forEach(b => {
       b.el.width = b.bounds.width
       b.el.height = b.bounds.height
       b.el.top = b.bounds.top
@@ -50,7 +50,7 @@ export class AutoLayout<E extends ProgramElement = ProgramElement> {
    * Gets children new bounds corresponding to current parent content bounds. Don't modify children's just
    * returns the values.
    */
-  getBounds(): { bounds: { left: number, top: number, width: number, height: number }, el: E }[] {
+  getChildrenBounds(): { bounds: { left: number, top: number, width: number, height: number }, el: E }[] {
     this.view.setSize(this.parent.contentWidth, this.parent.contentHeight)
     return this.parent.childNodes.filter(isElement).map((c, i) => {
       if (c.props.name) {

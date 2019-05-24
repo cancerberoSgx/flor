@@ -1,7 +1,7 @@
 import { array, repeat, trimRightLines } from 'misc-utils-of-mine-generic'
 import { inspect } from 'util'
 import * as wrap from 'word-wrap'
-import { isElement, Node, Program, ProgramOptions, Rectangle, TextNode } from '..'
+import { isElement, Node, Program, ProgramOptions, TextNode } from '..'
 import { isDomText } from '../dom/nodeUtil'
 import { ProgramElement } from '../programDom/programElement'
 import { PAttrs } from '../programDom/styleProps'
@@ -9,6 +9,7 @@ import { Attrs, ElementProps } from '../programDom/types'
 import { debug } from '../util'
 import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
 import { createProgram, destroyProgram } from './programUtil'
+import { Rectangle_LTBR } from '../util/geometry';
 
 export interface RendererCreateOptions {
   program?: Program
@@ -17,7 +18,7 @@ export interface RendererCreateOptions {
    */
   programOptions?: ProgramOptions
   noBuffer?: boolean
-  writeArea?: Rectangle
+  writeArea?: Rectangle_LTBR
 }
 
 /**
@@ -122,7 +123,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     preventChildrenCascade: false
   }
 
-  private _writeArea: Rectangle
+  private _writeArea: Rectangle_LTBR
 
   private lastAbsLeft: number = 0
   private lastAbsTop: number = 0
@@ -144,7 +145,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     this._currentAttrs = { ...this._defaultAttrs }
     this.resetAttrs()
     this.resetBuffer()
-    this._writeArea = options.writeArea || { yi: 0, xi: 0, yl: this.program.rows, xl: this.program.cols }
+    this._writeArea = options.writeArea || { top: 0, left: 0, bottom: this.program.rows, right: this.program.cols }
   }
 
   /**
@@ -203,11 +204,11 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   /**
     * Limit writing only inside this writeArea. By default all the screen.
     */
-  public get writeArea(): Rectangle {
+  public get writeArea(): Rectangle_LTBR {
     return this._writeArea
   }
 
-  public set writeArea(value: Rectangle) {
+  public set writeArea(value: Rectangle_LTBR) {
     this._writeArea = value
   }
 
@@ -215,7 +216,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
    * Reset write writeArea to whole screen
    */
   resetWriteArea() {
-    this._writeArea = { yi: 0, xi: 0, yl: this.program.rows, xl: this.program.cols }
+    this._writeArea = { top: 0, left: 0, bottom: this.program.rows, right: this.program.cols }
   }
 
   /**
@@ -235,7 +236,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
    *  this.tput.el();  'parm_insert_line'
    */
   write(y: number, x: number, s: string) {
-    const { xi, xl, yi, yl } = this._writeArea
+    const { left: xi, right: xl, top: yi, bottom: yl } = this._writeArea
     if (
       y < yi ||
       y >= yl ||
@@ -360,7 +361,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
       preventSiblingCascade: typeof el.props.preventSiblingCascade === 'undefined' ? options.preventSiblingCascade : el.props.preventSiblingCascade
     })
     let originalAttrs = options.preventChildrenCascade && options.preventSiblingCascade ? this._currentAttrs : undefined
-    let originalWriteArea: Rectangle | undefined
+    let originalWriteArea: Rectangle_LTBR | undefined
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
       this._writeArea = el.getBounds()
@@ -452,7 +453,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
-        const { xi, xl, yi, yl } = el.getInnerBounds()
+        const { left: xi, right: xl, top: yi, bottom: yl } = el.getInnerBounds()
         const width = xl - xi
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi;i < yl;i++) {
@@ -488,7 +489,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
   /**
    * Draw given element's border.
    */
-  renderElementBorder(el: E, elProps: Partial<ElementProps> & Partial<Rectangle>) {
+  renderElementBorder(el: E, elProps: Partial<ElementProps> & Partial<Rectangle_LTBR>) {
     const border = elProps.border
     if (!border) {
       return

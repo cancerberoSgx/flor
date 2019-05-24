@@ -1,15 +1,12 @@
 import { array, indent, objectKeys, objectMap } from 'misc-utils-of-mine-generic'
-import { BorderProps, Component, createElement, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument, Rectangle } from '..'
+import { BorderProps, Component, createElement, ElementPropsImpl, EventListener, FullProps, isElement, KeyEvent, KeyListener, layoutChildren, LayoutOptions, mouseActionNames, MouseListener, Padding, ProgramDocument } from '..'
 import { Element } from '../dom'
 import { RenderElementOptions } from '../manager'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
-import { rectangleIntersects } from './elementUtil'
+import { rectangleIntersects, Rectangle_LTBR } from "../util/geometry";
 
 export class ProgramElement extends Element {
-  // resolvePropValue<K extends keyof ElementProps = keyof ElementProps>(k: K): ElementProps[K] {
-  //   return this.props.data[k]||this.parentElement && this.parentElement.resolvePropValue(k)||undefined
-  // }
   private static counter = 1
 
   props: ElementPropsImpl
@@ -195,32 +192,6 @@ export class ProgramElement extends Element {
     return this.absoluteTop + this.height
   }
 
-  /**
-   * Left coordinate, calculated in columns, relative to parent's content bounds.
-   */
-  get left() {
-    return this.props.left
-  }
-  /**
-   * Left coordinate, calculated in columns, relative to parent's content bounds.
-   */
-  set left(value: number) {
-    this.props.left = value
-  }
-
-  /**
-   * Top coordinate, calculated in rows, relative to parent's content bounds.
-   */
-  get top() {
-    return this.props.top
-  }
-  /**
-   * Top coordinate, calculated in rows, relative to parent's content bounds.
-   */
-  set top(value: number) {
-    this.props.top = value
-  }
-
   public get padding(): Padding | undefined {
     return this.props.padding
   }
@@ -242,19 +213,94 @@ export class ProgramElement extends Element {
     this.props.layout = value
   }
 
+
+  /**
+   * Left coordinate, calculated in columns, relative to parent's content bounds. Alias for [[props.left]].
+   */
+  get left() {
+    return this.props.left
+  }
+  /**
+   * Left coordinate, calculated in columns, relative to parent's content bounds. Alias for [[props.left]].
+   */
+  set left(value: number) {
+    this.props.left = value
+  }
+
+  /**
+   * Top coordinate, calculated in rows, relative to parent's content bounds. Alias for [[props.top]].
+   */
+  get top() {
+    return this.props.top
+  }
+  /**
+   * Top coordinate, calculated in rows, relative to parent's content bounds. Alias for [[props.top]].
+   */
+  set top(value: number) {
+    this.props.top = value
+  }
+
+  /**
+   * Alias for [[props.width]]
+   */
   get width() {
     return this.props.width
   }
+  /**
+   * Alias for [[props.width]]
+   */
   set width(value: number) {
     this.props.width = value
   }
 
+  /**
+   * Alias for [[props.height]]
+   */
   get height() {
     return this.props.height
   }
+  /**
+   * Alias for [[props.height]]
+   */
   set height(value: number) {
     this.props.height = value
   }
+    /**
+   * Alias for [[props.top]] + [[props.height]]
+   */
+  get bottom() {
+    return this.top + this.height
+  }
+  /**
+ * Alias for [[props.top]] + [[props.height]]
+ *  
+  HEADS UP / TODO : this is dangerous, we dont known what change if the height or the top, 
+     we assume the top coordinate changed because is cheaper in performance, 
+     TODO: remove this setter
+
+ */
+  set bottom(value: number) {
+  
+    this.props.top = value -this.height
+  }
+/**
+ *  * Alias for [[props.left]] + [[props.width]]
+ */
+  get right() {
+    return this.left + this.width
+  }
+  /**
+ * Alias for [[props.top]] + [[props.height]]
+ *  
+   HEADS UP / TODO : this is dangerous, we dont known what change if the left or the width, 
+   we assume the top coordinate changed because is cheaper in performance, 
+   TODO: remove this setter
+
+ */
+  set right(value: number) {
+    this.props.left = value -this.width
+  }
+
 
   get absoluteContentTop() {
     return this.absoluteTop + (this.border ? 1 : 0) + (this.padding ? this.padding.top : 0)
@@ -327,26 +373,30 @@ export class ProgramElement extends Element {
     }
   }
 
-  getBounds(relative = false): Rectangle {
+  getBounds(relative = false): Rectangle_LTBR {
     if (!relative) {
       return {
-        yi: this.absoluteTop,
-        xi: this.absoluteLeft,
-        yl: this.absoluteTop + this.height,
-        xl: this.absoluteLeft + this.width
+        top: this.absoluteTop,
+        left: this.absoluteLeft,
+        bottom: this.absoluteTop + this.height,
+        right: this.absoluteLeft + this.width
       }
     } else {
       throw new Error('Not implemented')
     }
   }
 
-  getContentBounds(relative = false): Rectangle {
+  // setBounds(relative=false) {
+
+  // }
+
+  getContentBounds(relative = false): Rectangle_LTBR {
     if (!relative) {
       return {
-        yi: this.absoluteContentTop,
-        xi: this.absoluteContentLeft,
-        yl: this.absoluteContentTop + this.contentHeight,
-        xl: this._absoluteLeft + this.contentWidth
+        top: this.absoluteContentTop,
+        left: this.absoluteContentLeft,
+        bottom: this.absoluteContentTop + this.contentHeight,
+        right: this._absoluteLeft + this.contentWidth
       }
     } else {
       throw new Error('Not implemented')
@@ -356,21 +406,21 @@ export class ProgramElement extends Element {
   /**
    * Similar to [[getContentBounds]] but without consider padding.
    */
-  getInnerBounds(relative = false): Rectangle {
+  getInnerBounds(relative = false): Rectangle_LTBR {
     if (!relative) {
       return {
-        yi: this.absoluteInnerTop,
-        xi: this.absoluteInnerLeft,
-        yl: this.absoluteInnerTop + this.innerHeight,
-        xl: this._absoluteLeft + this.innerWidth
+        top: this.absoluteInnerTop,
+        left: this.absoluteInnerLeft,
+        bottom: this.absoluteInnerTop + this.innerHeight,
+        right: this._absoluteLeft + this.innerWidth
       }
     } else {
       throw new Error('TODO')
     }
   }
 
-  intersects(r: Rectangle, options: { relative?: boolean, regionKind?: 'outer' | 'inner' | 'content' } = { relative: false }) {
-    let cr: Rectangle
+  intersects(r: Rectangle_LTBR, options: { relative?: boolean, regionKind?: 'outer' | 'inner' | 'content' } = { relative: false }) {
+    let cr: Rectangle_LTBR
     if (!options.relative) {
       if (options.regionKind === 'inner') {
         cr = this.getInnerBounds()

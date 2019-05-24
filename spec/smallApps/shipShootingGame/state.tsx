@@ -23,7 +23,7 @@ class ObjectImpl<E extends ProgramElement = ProgramElement> implements Object<E>
   y: number = null as any
   el?: E = null as any
   intersects(r: Rect): boolean {
-    return !!this.el && this.el.intersects({ xi: r.x, yi: r.y, xl: r.x + r.width, yl: r.y + r.height })
+    return !!this.el && this.el.intersects({ left: r.x, top: r.y, right: r.x + r.width, bottom: r.y + r.height })
   }
   constructor(s: Data<Object>) {
     Object.assign(this, s)

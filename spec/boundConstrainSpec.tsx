@@ -251,7 +251,7 @@ function createAutoLayout(el: ProgramElement, visualConstraints: string[], optio
   })
   view.setSize(el.contentWidth, el.contentHeight)
   return {
-    getBounds() {
+    getChildrenBounds() {
       view.setSize(el.contentWidth, el.contentHeight)
       return el.childNodes.filter(isElement).map((c, i) => {
         if (c.props.name) {
@@ -389,7 +389,7 @@ describe('auto layout - boundConstrain', () => {
   ╰──────────────────────────────────────────╯
 `)
 
-    debug(autoLayout.getBounds())
+    debug(autoLayout.getChildrenBounds())
 
     done()
   })
