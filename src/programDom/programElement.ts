@@ -4,7 +4,7 @@ import { Element } from '../dom'
 import { RenderElementOptions } from '../manager'
 import { clicks, ClicksListener } from '../manager/clicks'
 import { nextTick } from '../util/misc'
-import { rectangleIntersects, Rectangle_LTBR } from "../util/geometry";
+import { rectangleIntersects, Rectangle_LTBR, Rectangle } from "../util/geometry";
 
 export class ProgramElement extends Element {
   private static counter = 1
@@ -279,8 +279,7 @@ export class ProgramElement extends Element {
      TODO: remove this setter
 
  */
-  set bottom(value: number) {
-  
+  set bottom(value: number) {  
     this.props.top = value -this.height
   }
 /**
@@ -373,67 +372,98 @@ export class ProgramElement extends Element {
     }
   }
 
-  getBounds(relative = false): Rectangle_LTBR {
-    if (!relative) {
+  /**
+   * Gets the current element external area in absolute coordinates,  
+   */
+  getAbsoluteBounds_LTBR(): Rectangle_LTBR {
       return {
         top: this.absoluteTop,
         left: this.absoluteLeft,
         bottom: this.absoluteTop + this.height,
         right: this.absoluteLeft + this.width
       }
-    } else {
-      throw new Error('Not implemented')
-    }
   }
 
-  // setBounds(relative=false) {
+  /**
+   * Gets the current element external area in coordinates relative  toe th parent's using the LTBR rectangle representation.
+   */
+  getBounds_LTBR(): Rectangle_LTBR {
+    return {
+      top: this.top,
+      left: this.left,
+      bottom: this.top + this.height,
+      right: this.left + this.width
+    }
+}
+/**
+ * Sets the current element external area in  coordinates relative toe the parent's using the LTBR rectangle representation.
+ */
+setBounds_LTBR(r: Rectangle_LTBR) {
+  this.props.assign({
+    top: r.top,
+    left: r.left,
+    width: r.right - r.left,
+    height: r.bottom - r.top
+  })
+}
 
-  // }
+  /**
+   * Gets the current element external area in coordinates relative  toe th parent's using the common rectangle representation.
+   */
+  getBounds(): Rectangle {
+    return {
+      top: this.top,
+      left: this.left,
+      height:  this.height,
+      width: this.width
+    }
+}
+/**
+ * Sets the current element external area in  coordinates relative toe the parent's using the common rectangle representation.
+ */
+setBounds(r: Rectangle) {
+  this.props.assign({
+    top: r.top,
+    left: r.left,
+    width: r.width,
+    height: r.height
+  })
+}
 
-  getContentBounds(relative = false): Rectangle_LTBR {
-    if (!relative) {
+  getAbsoluteContentBounds_LTBR(): Rectangle_LTBR {
       return {
         top: this.absoluteContentTop,
         left: this.absoluteContentLeft,
         bottom: this.absoluteContentTop + this.contentHeight,
         right: this._absoluteLeft + this.contentWidth
       }
-    } else {
-      throw new Error('Not implemented')
-    }
   }
 
   /**
    * Similar to [[getContentBounds]] but without consider padding.
    */
-  getInnerBounds(relative = false): Rectangle_LTBR {
-    if (!relative) {
+  getAbsoluteInnerBounds_LTBR(): Rectangle_LTBR {
       return {
         top: this.absoluteInnerTop,
         left: this.absoluteInnerLeft,
         bottom: this.absoluteInnerTop + this.innerHeight,
         right: this._absoluteLeft + this.innerWidth
       }
-    } else {
-      throw new Error('TODO')
-    }
   }
 
-  intersects(r: Rectangle_LTBR, options: { relative?: boolean, regionKind?: 'outer' | 'inner' | 'content' } = { relative: false }) {
+  intersectsAbsolute_LTBR(r: Rectangle_LTBR, options: {  regionKind?: 'outer' | 'inner' | 'content' } = { }) {
     let cr: Rectangle_LTBR
-    if (!options.relative) {
       if (options.regionKind === 'inner') {
-        cr = this.getInnerBounds()
+        cr = this.getAbsoluteInnerBounds_LTBR()
       } else if (options.regionKind === 'content') {
-        cr = this.getContentBounds()
+        cr = this.getAbsoluteContentBounds_LTBR()
       } else {
-        cr = this.getBounds()
+        cr = this.getAbsoluteBounds_LTBR()
       }
-    } else {
-      throw new Error('Not implemented')
-    }
     return rectangleIntersects(cr, r)
   }
+
+
 
   /**
    * Creates a new element and appends it to this element.
@@ -482,10 +512,6 @@ export class ProgramElement extends Element {
     return this._component as T | undefined
   }
 
-  get ownerDocument(): ProgramDocument {
-    return this._ownerDocument as ProgramDocument
-  }
-
   /**
    * If the owner document has a renderer available it request to render this element on the screen.
    */
@@ -500,35 +526,15 @@ export class ProgramElement extends Element {
     this.ownerDocument.renderer && this.ownerDocument.renderer.eraseElement(this)
   }
 
+  get ownerDocument(): ProgramDocument {
+    return this._ownerDocument as ProgramDocument
+  }
+
   /**
    * Gets only childNodes that are elements.
    */
   getChildrenElements() {
-    return (this.childNodes).filter(isElement)
-  }
-
-  debugAsJson(): DebugJsonNode {
-    return { ...this.props.data, children: (this.childNodes).map(e => isElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
-  }
-
-  /**
-   * Returns a XML like string representation of this element instance.
-   */
-  debugAsXml(o: DebugOptions = { level: 0 }): string {
-    const noF = objectMap(this.props.data, (k, v) => typeof v === 'function' ? v.toString() : v)
-    return `${indent(o.level)}<${this.tagName} ${
-      objectKeys({ ...noF })
-        .map(p => `${p}=${JSON.stringify(noF[p])}`)
-        .join(' ')} ${
-      this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${
-      this.childNodes
-        .map(e => isElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`)
-        .join(`\n${indent(o.level + 1)}`)}\n${
-      indent(o.level)}</${this.tagName}>\n`
-  }
-
-  addKeyListener(l: KeyListener, name = 'keypress') {
-    this.ownerDocument.managersReady.then(({ events }) => events.addKeyListener(l, this, name))
+    return this.childNodes.filter(isElement)
   }
 
   removeKeyListener(l: KeyListener, name: string) {
@@ -593,11 +599,16 @@ export class ProgramElement extends Element {
   get visible() {
     return !this.findAscendant(a => isElement(a) && !a.props.visible, { andSelf: true })
   }
-
-}
-
-interface DebugJsonNode { [s: string]: any, children: (DebugJsonNode | string)[] }
-
-interface DebugOptions {
-  level: number
+  set visible (value: boolean) {
+    this.props.visible = value
+  }
+  show() {
+    return this.props.visible = true
+  }
+  hide() {
+    return this.props.visible = false
+  }
+  addKeyListener(l: KeyListener, name = 'keypress') {
+    this.ownerDocument.managersReady.then(({ events }) => events.addKeyListener(l, this, name))
+  }
 }

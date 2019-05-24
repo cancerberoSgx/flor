@@ -23,7 +23,7 @@ class ObjectImpl<E extends ProgramElement = ProgramElement> implements Object<E>
   y: number = null as any
   el?: E = null as any
   intersects(r: Rect): boolean {
-    return !!this.el && this.el.intersects({ left: r.x, top: r.y, right: r.x + r.width, bottom: r.y + r.height })
+    return !!this.el && this.el.intersectsAbsolute_LTBR({ left: r.x, top: r.y, right: r.x + r.width, bottom: r.y + r.height })
   }
   constructor(s: Data<Object>) {
     Object.assign(this, s)
@@ -49,7 +49,6 @@ export enum Direction {
 export interface State {
   settings: Settings
   gameOver: string | false
-  // interval: number;
   ship: Ship
   board: Board
   enemyShips: Ship[]

@@ -272,7 +272,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
             this.xl = cxl
           }
         }
-        const r = rectangleIntersects(c.getBounds(), viewportArea)
+        const r = rectangleIntersects(c.getAbsoluteBounds_LTBR(), viewportArea)
         if (r && !first) {
           first = c
           return true
@@ -399,7 +399,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
 
   renderElement(c = this.element!.parentNode as ProgramElement) {
     const p = this.renderer!.writeArea
-    this.renderer!.writeArea = this.element!.getContentBounds()
+    this.renderer!.writeArea = this.element!.getAbsoluteContentBounds_LTBR()
     this.renderer!.renderElement(c)
     this.renderer!.writeArea = p
   }
@@ -420,7 +420,7 @@ export class Scrollable extends Component<ScrollableProps, {}> {
    * Bounds of current viewport in absolute coordinates.
    */
   getViewportArea() {
-    return rectanglePlusOffsets(this.element!.getBounds(), this.xOffset, this.yOffset)
+    return rectanglePlusOffsets(this.element!.getAbsoluteBounds_LTBR(), this.xOffset, this.yOffset)
   }
 
   /**

@@ -1,6 +1,7 @@
-import { asArray, notSameNotFalsy } from 'misc-utils-of-mine-generic'
+import { asArray, notSameNotFalsy, objectMap, indent, objectKeys } from 'misc-utils-of-mine-generic'
 import { Document } from './document'
 import { Node } from './node'
+import { isDomElement } from './nodeUtil';
 
 export class Element extends Node {
   constructor(public readonly tagName: string, ownerDocument: Document) {
@@ -16,6 +17,33 @@ export class Element extends Node {
     this.props.classes = (this.props.classes || []).concat(asArray(c)).filter(notSameNotFalsy)
   }
 
+  debugAsJson(): DebugJsonNode {
+    return { ...this.props.data, children: (this.childNodes).map(e => isDomElement(e) ? e.debugAsJson() : 'Text(' + e.textContent + ')') }
+  }
+
+  /**
+   * Returns a XML like string representation of this element instance.
+   */
+  debugAsXml(o: DebugOptions = { level: 0 }): string {
+    return this.printElementAsXml(o);
+  }
+
+  private printElementAsXml(o: DebugOptions) {
+    const noF = objectMap(this.props.data, (k, v) => typeof v === 'function' ? v.toString() : v);
+    return `${indent(o.level)}<${this.tagName} ${objectKeys({ ...noF })
+      .map(p => `${p}=${JSON.stringify(noF[p])}`)
+      .join(' ')} ${this.textContent ? `textContent="${this.textContent}"` : ''}>\n${indent(o.level + 1)}${this.childNodes
+        .map(e => isDomElement(e) ? e.debugAsXml({ ...o, level: (o.level) + 1 }) : `${indent(o.level)}Text(${e.textContent})`)
+        .join(`\n${indent(o.level + 1)}`)}\n${indent(o.level)}</${this.tagName}>\n`;
+  }
+
+
+}
+
+interface DebugJsonNode { [s: string]: any, children: (DebugJsonNode | string)[] }
+
+interface DebugOptions {
+  level: number
 }
 
 // export class DomElementPropsImpl<T extends ElementProps = ElementProps> extends BasePropsImpl<Partial<T>> {

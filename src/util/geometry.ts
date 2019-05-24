@@ -1,3 +1,4 @@
+
 /**
  * Just another representation for a rectangle so different APIs can use it directly.
  */
@@ -8,6 +9,9 @@ export interface Rectangle_LTBR {
   right: number;
 }
 
+/**
+ * Default rectangle representation.
+ */
 export interface Rectangle {
   left: number;
   top: number;

@@ -223,7 +223,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
    * Sets write writeArea to given element bounds.
    */
   setElementWriteArea(el: E) {
-    this._writeArea = el.getBounds()
+    this._writeArea = el.getAbsoluteBounds_LTBR()
   }
 
   /**
@@ -364,10 +364,10 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     let originalWriteArea: Rectangle_LTBR | undefined
     if (options.writeInsideOnly) {
       originalWriteArea = this._writeArea
-      this._writeArea = el.getBounds()
+      this._writeArea = el.getAbsoluteBounds_LTBR()
     } else if (isElement(el.parentNode) && el.parentNode.props.overflow && el.parentNode.props.overflow !== 'visible') {
       originalWriteArea = this._writeArea
-      this._writeArea = el.parentNode.getContentBounds()
+      this._writeArea = el.parentNode.getAbsoluteContentBounds_LTBR()
     }
     this.renderElementWithoutChildren(el, options)
     el._afterRenderWithoutChildren()
@@ -453,7 +453,7 @@ export class ProgramDocumentRenderer<E extends ProgramElement = ProgramElement> 
     } else {
       if (!attrs.noFill) {
         this.setAttrs(attrs)
-        const { left: xi, right: xl, top: yi, bottom: yl } = el.getInnerBounds()
+        const { left: xi, right: xl, top: yi, bottom: yl } = el.getAbsoluteInnerBounds_LTBR()
         const width = xl - xi
         const s = this._program.repeat(el.props.ch || this._currentAttrs.ch, width)
         for (let i = yi;i < yl;i++) {
