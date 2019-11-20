@@ -1,6 +1,6 @@
-import { waitForPredicate } from 'misc-utils-of-mine-generic'
-import { Component, Flor, FlorDocument, ProgramElement } from '../src'
-import { defaultTestSetup, willContain } from './testUtil'
+import { waitForPredicate } from 'misc-utils-of-mine-generic';
+import { Component, Flor, FlorDocument, ProgramElement } from '../src';
+import { defaultTestSetup, willContain } from './testUtil';
 
 describe('ref', () => {
   let flor: FlorDocument

@@ -1,5 +1,5 @@
-import { ElementProps, ProgramDocument, ProgramElement } from '..'
-import { Component } from './component'
+import { ElementProps, ProgramDocument, ProgramElement } from '..';
+import { Component } from './component';
 
 declare global {
 

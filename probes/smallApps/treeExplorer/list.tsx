@@ -1,6 +1,6 @@
-import { array, repeat } from 'misc-utils-of-mine-generic'
-import { Box, Button, Component, debug, ElementOfComponent, ElementProps, Flor, FlorDocument, KeyEvent, KeyPredicate, Layout, ProgramElement, InputEventTarget } from '../../../src'
-import { focusableProps } from '../../../src/component/commonProps'
+import { array, repeat } from 'misc-utils-of-mine-generic';
+import { Box, Button, Component, debug, ElementOfComponent, ElementProps, Flor, FlorDocument, KeyEvent, KeyPredicate, Layout, ProgramElement } from '../../../src';
+import { focusableProps } from '../../../src/component/commonProps';
 
 interface ListKeys<T extends ProgramElement = ProgramElement> {
   normalNextKeys?: KeyPredicate<T>
@@ -10,7 +10,7 @@ interface ListKeys<T extends ProgramElement = ProgramElement> {
   startKeys?: KeyPredicate<T>
   endKeys?: KeyPredicate<T>
 }
-interface ConcreteListProps< T extends ProgramElement = ProgramElement> extends ListKeys<T> {
+interface ConcreteListProps<T extends ProgramElement = ProgramElement> extends ListKeys<T> {
   // onActive?: ListActiveEventListener
   // onSelect?: ListSelectEventListener
 }
@@ -75,10 +75,10 @@ class List extends Component<ListProps> {
     return <box {...focusableProps()} width={12} height={6} bg="green" {...this.props} layout={{ layout: Layout.topDown }}
       focusable={true}
       onFocus={e => {
-        this.updateItems({showAll: true})
+        this.updateItems({ showAll: true })
       }}
       onBlur={e => {
-        this.updateItems({hideAll: true})
+        this.updateItems({ hideAll: true })
       }}
       onKeyPressed={e => this.onKey(e)}>
       {this.props.children}
@@ -98,16 +98,16 @@ class List extends Component<ListProps> {
   private setActiveItem(index: number) {
     this.activeIndex = index
     this.updateItems()
-    //TODO: props.onActive or oninput
+    // TODO: props.onActive or oninput
   }
 
-  private updateItems(o: {showAll?: boolean, hideAll?: boolean}={}) {
+  private updateItems(o: { showAll?: boolean, hideAll?: boolean } = {}) {
     const items = this.getItemListElements()
     debug(this.activeIndex, items.map(i => i.outerHTML))
     this.getItemListElements().forEach((c, i) => {
       if (o.showAll || i === this.activeIndex) {
         c.props.visible = true
-      } else if(!o.hideAll) {
+      } else if (!o.hideAll) {
         c.props.visible = false
       }
     })
@@ -135,7 +135,7 @@ function test() {
         <Button >button2</Button>
         <Button  >button3</Button>
         <List
-        focusable={true}
+          focusable={true}
         >
           {array(7).map(i => <ListItem>{repeat(10, i + '')}</ListItem>)}
         </List>
@@ -143,8 +143,8 @@ function test() {
     const l = f.render(a)
     f.render()
   } catch (error) {
-    f!  .destroy()
+    f!.destroy()
     debug(JSON.stringify(error, null, 2))
   }
-} 
+}
 test()

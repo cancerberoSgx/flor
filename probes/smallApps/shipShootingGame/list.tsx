@@ -1,4 +1,4 @@
-import { Component, ElementProps, Flor, KeyPredicate, StyleProps } from '../../../src'
+import { Component, ElementProps, Flor, KeyPredicate, StyleProps } from '../../../src';
 
 interface ListKeys {
   normalNextKeys?: KeyPredicate

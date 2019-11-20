@@ -1,5 +1,5 @@
-import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement, SingleLineTextInputCursor, TextInputCursorMulti } from '../src'
-import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
+import { BorderStyle, Flor, FlorDocument, KeyListener, ProgramElement, SingleLineTextInputCursor, TextInputCursorMulti } from '../src';
+import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil';
 
 describe('cursorTextEditor', () => {
 

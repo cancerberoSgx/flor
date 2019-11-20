@@ -1,15 +1,15 @@
-import { isObject } from 'misc-utils-of-mine-generic'
-import { FullProps, isElement, ProgramDocument, ProgramElement } from '..'
-import { Program } from '../declarations/program'
-import { Flor, isJSXElementImpl } from '../jsx/createElement'
-import { addLogger, Logger, removeLogger } from '../util'
-import { createProgramForBrowser, ProgramBrowserOptions } from './browser'
-import { CursorManager } from './cursorManager'
-import { StyleEffectsManager } from './effects'
-import { EventManager } from './eventManager'
-import { FocusManager } from './focusManager'
-import { installExitKeys } from './programUtil'
-import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer'
+import { isObject } from 'misc-utils-of-mine-generic';
+import { FullProps, isElement, ProgramDocument, ProgramElement } from '..';
+import { Program } from '../declarations/program';
+import { Flor, isJSXElementImpl } from '../jsx/createElement';
+import { addLogger, Logger, removeLogger } from '../util';
+import { createProgramForBrowser, ProgramBrowserOptions } from './browser';
+import { CursorManager } from './cursorManager';
+import { StyleEffectsManager } from './effects';
+import { EventManager } from './eventManager';
+import { FocusManager } from './focusManager';
+import { installExitKeys } from './programUtil';
+import { ProgramDocumentRenderer, RendererCreateOptions } from './renderer';
 
 export interface FlorDocumentOptions<E extends ProgramElement = ProgramElement, T extends ProgramDocument<E> = ProgramDocument<E>> extends RendererCreateOptions, ProgramBrowserOptions {
 

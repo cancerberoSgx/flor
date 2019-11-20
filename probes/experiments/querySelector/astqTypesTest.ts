@@ -1,8 +1,8 @@
 import { Node, isDomNode, Document, createElement } from '../../../src';
 import { createDomElement, isDomElement, isDomText } from '../../../src/dom/nodeUtil';
 
-// import * as ASTQ from 'astq'
-var ASTQ = require("astq")
+import ASTQ from './astq'
+
 var astq = new ASTQ()
 astq.adapter({
     taste:            function (node : any) {

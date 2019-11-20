@@ -1,6 +1,6 @@
-import { sleep } from 'misc-utils-of-mine-generic'
-import { BorderStyle, FlorDocument, Input, Layout } from '../../src'
-import { Flor } from '../../src/jsx/createElement'
+import { sleep } from 'misc-utils-of-mine-generic';
+import { BorderStyle, FlorDocument, Input, Layout } from '../../src';
+import { Flor } from '../../src/jsx/createElement';
 
 // try {
 

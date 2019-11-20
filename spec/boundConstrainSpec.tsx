@@ -1,8 +1,8 @@
-import { sleep } from 'misc-utils-of-mine-generic'
-import { BorderStyle, debug, Flor, isElement, ProgramElement } from '../src'
-import { color } from './data'
-import { FlorDocumentTesting } from './florTestHelper'
-import { expectToContain, willContain } from './testUtil'
+import { sleep } from 'misc-utils-of-mine-generic';
+import { BorderStyle, debug, Flor, isElement, ProgramElement } from '../src';
+import { color } from './data';
+import { FlorDocumentTesting } from './florTestHelper';
+import { expectToContain, willContain } from './testUtil';
 let AutoLayout = require('autolayout') as AutoLayout
 
 interface AutoLayout {

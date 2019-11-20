@@ -1,15 +1,15 @@
-import { array, repeat, trimRightLines } from 'misc-utils-of-mine-generic'
-import { inspect } from 'util'
-import * as wrap from 'word-wrap'
-import { isElement, Node, Program, ProgramOptions, TextNode } from '..'
-import { isDomText } from '../dom/nodeUtil'
-import { ProgramElement } from '../programDom/programElement'
-import { PAttrs } from '../programDom/styleProps'
-import { Attrs, ElementProps } from '../programDom/types'
-import { debug } from '../util'
-import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border'
-import { Rectangle_LTBR } from '../util/geometry'
-import { createProgram, destroyProgram } from './programUtil'
+import { array, repeat, trimRightLines } from 'misc-utils-of-mine-generic';
+import { inspect } from 'util';
+import * as wrap from 'word-wrap';
+import { isElement, Node, Program, ProgramOptions, TextNode } from '..';
+import { isDomText } from '../dom/nodeUtil';
+import { ProgramElement } from '../programDom/programElement';
+import { PAttrs } from '../programDom/styleProps';
+import { Attrs, ElementProps } from '../programDom/types';
+import { debug } from '../util';
+import { BorderSide, BorderStyle, getBoxStyleChar } from '../util/border';
+import { Rectangle_LTBR } from '../util/geometry';
+import { createProgram, destroyProgram } from './programUtil';
 
 export interface RendererCreateOptions {
   program?: Program

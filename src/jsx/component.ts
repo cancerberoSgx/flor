@@ -1,7 +1,7 @@
-import { unique } from 'misc-utils-of-mine-generic'
-import { ProgramElement } from '../programDom/programElement'
-import { Deferred } from '../util/misc'
-import { ComponentProps } from './types'
+import { unique } from 'misc-utils-of-mine-generic';
+import { ProgramElement } from '../programDom/programElement';
+import { Deferred } from '../util/misc';
+import { ComponentProps } from './types';
 
 /**
  * Simple abstract Component class (like React.Component) but without life cycle methods.

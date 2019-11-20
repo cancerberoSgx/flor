@@ -1,6 +1,6 @@
-import { BorderStyle, Flor, FlorDocument, isElement, Layout, ProgramElement } from '../src'
-import { color } from './data'
-import { defaultTestSetup, expectToContain, willContain } from './testUtil'
+import { BorderStyle, Flor, FlorDocument, isElement, Layout, ProgramElement } from '../src';
+import { color } from './data';
+import { defaultTestSetup, expectToContain, willContain } from './testUtil';
 
 describe('visible', () => {
   let flor: FlorDocument

@@ -1,9 +1,9 @@
-import { BorderStyle, Component, Flor, FlorDocument } from '../../../src'
-import { nextTick } from '../../../src/util/misc'
-import { int } from '../../../spec/data'
-import { Settings, Status } from './panel'
-import { ShipC } from './ship'
-import { Direction, Object, State, state } from './state'
+import { int } from '../../../spec/data';
+import { BorderStyle, Component, Flor, FlorDocument } from '../../../src';
+import { nextTick } from '../../../src/util/misc';
+import { Settings, Status } from './panel';
+import { ShipC } from './ship';
+import { Direction, Object, State, state } from './state';
 let app
 interface AppProps {
   state: State

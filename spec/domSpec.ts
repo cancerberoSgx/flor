@@ -1,7 +1,7 @@
-import { removeWhites } from 'misc-utils-of-mine-generic'
-import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { Document, isDomElement } from '../src'
-import { createDomElement } from '../src/dom/nodeUtil'
+import { removeWhites } from 'misc-utils-of-mine-generic';
+import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { Document, isDomElement } from '../src';
+import { createDomElement } from '../src/dom/nodeUtil';
 
 describe('dom', () => {
 

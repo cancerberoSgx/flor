@@ -1,6 +1,6 @@
-import { execSync } from 'child_process'
-import { sleep, waitForPredicate } from 'misc-utils-of-mine-generic'
-import { debug, FlorDocument, ProgramDocumentRenderer } from '../src'
+import { execSync } from 'child_process';
+import { sleep, waitForPredicate } from 'misc-utils-of-mine-generic';
+import { debug, FlorDocument, ProgramDocumentRenderer } from '../src';
 
 export function defaultTestSetup(l: (flor?: FlorDocument) => FlorDocument) {
   beforeEach(() => {

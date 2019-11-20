@@ -1,6 +1,6 @@
-import { FlorDocument } from '../src'
-import { BorderStyle } from '../src/util/border'
-import { defaultTestSetup } from './testUtil'
+import { FlorDocument } from '../src';
+import { BorderStyle } from '../src/util/border';
+import { defaultTestSetup } from './testUtil';
 
 describe('props cascade', () => {
 

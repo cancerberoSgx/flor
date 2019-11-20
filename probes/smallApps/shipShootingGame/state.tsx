@@ -1,6 +1,6 @@
-import { RemoveProperties } from 'misc-utils-of-mine-generic'
-import { ElementOfComponent, ProgramElement } from '../../../src'
-import { ShipC } from './ship'
+import { RemoveProperties } from 'misc-utils-of-mine-generic';
+import { ElementOfComponent, ProgramElement } from '../../../src';
+import { ShipC } from './ship';
 type Data<T extends any> = RemoveProperties<T, 'intersects' | 'impact'>
 interface Point {
   x: number

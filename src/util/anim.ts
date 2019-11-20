@@ -1,5 +1,5 @@
-import { isObject } from 'misc-utils-of-mine-generic'
-import { nextTick } from './misc'
+import { isObject } from 'misc-utils-of-mine-generic';
+import { nextTick } from './misc';
 export type Animation = Timing | (() => Timing) | TimingObject
 type Timing = (n: number, c?: number, d?: number, x?: number, y?: number) => number
 type TimingObject = { fn: (duration: number) => Timing }

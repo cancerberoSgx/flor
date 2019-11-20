@@ -1,7 +1,7 @@
-import { waitForPredicate } from 'misc-utils-of-mine-generic'
-import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { borderStyles, FlorDocument, ProgramElement } from '../src'
-import { color, int, item } from './data'
+import { waitForPredicate } from 'misc-utils-of-mine-generic';
+import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { borderStyles, FlorDocument, ProgramElement } from '../src';
+import { color, int, item } from './data';
 
 interface Options { trimAndRemoveEmptyLines?: boolean }
 

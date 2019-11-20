@@ -1,4 +1,4 @@
-import { Driver, InteractionSpecHelper } from 'cli-driver'
+import { Driver, InteractionSpecHelper } from 'cli-driver';
 
 describe('tputTest', () => {
   let client: Driver
@@ -15,6 +15,13 @@ describe('tputTest', () => {
   afterAll(async done => {
     await client.destroy().catch()
     helper = null as any
+    done()
+  })
+
+  it('nave use 11', async done => {
+    await client.enter('npx nave use 11 && node -v')
+    expect(await helper.waitForStrippedDataToInclude('11.'))
+    await helper.expectLastExitCode(true)
     done()
   })
 

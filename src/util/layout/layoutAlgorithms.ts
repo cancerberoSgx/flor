@@ -1,6 +1,6 @@
-import { LayoutOptions } from '.'
-import { ProgramElement } from '../..'
-import { isLayoutedElement } from './layout'
+import { LayoutOptions } from '.';
+import { ProgramElement } from '../..';
+import { isLayoutedElement } from './layout';
 
 const layout = require('layout')
 

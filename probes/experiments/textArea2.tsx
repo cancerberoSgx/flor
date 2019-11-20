@@ -1,6 +1,6 @@
-import { Button, Component, ConcreteInputProps, createElement, debug, defaultInputProps, FlorDocument, isElement, KeyEvent, KeyPredicate, Layout, ProgramElement, SingleLineTextInputCursor, YogaElementProps } from '../../src'
-import { baseProps } from '../../src/component/commonProps'
-import { Flor } from '../../src/jsx/createElement'
+import { Button, Component, ConcreteInputProps, createElement, debug, defaultInputProps, FlorDocument, isElement, KeyEvent, KeyPredicate, Layout, ProgramElement, SingleLineTextInputCursor, YogaElementProps } from '../../src';
+import { baseProps } from '../../src/component/commonProps';
+import { Flor } from '../../src/jsx/createElement';
 
 interface TextAreaProps extends Partial<ConcreteTextAreaProps>, Partial<YogaElementProps> {
 }

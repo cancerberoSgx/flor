@@ -1,6 +1,6 @@
-import { BorderStyle, Button, Component, debug, ElementProps, FlorDocument, Input, KeyEvent, Layout, ProgramElement } from '../../src'
-import { baseProps } from '../../src/component/commonProps'
-import { Flor } from '../../src/jsx/createElement'
+import { BorderStyle, Button, Component, debug, ElementProps, FlorDocument, Input, KeyEvent, Layout, ProgramElement } from '../../src';
+import { baseProps } from '../../src/component/commonProps';
+import { Flor } from '../../src/jsx/createElement';
 
 interface P extends Partial<ElementProps> {
 

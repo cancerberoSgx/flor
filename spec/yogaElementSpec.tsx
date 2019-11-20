@@ -1,8 +1,8 @@
-import { BorderStyle, Flor, installExitKeys, ProgramDocumentRenderer, YogaDocument, YogaElement } from '../src'
-import { isDomText } from '../src/dom/nodeUtil'
-import * as yoga from '../src/yogaDom/types'
-import { FlorDocumentTesting } from './florTestHelper'
-import { willContain } from './testUtil'
+import { BorderStyle, Flor, installExitKeys, ProgramDocumentRenderer, YogaDocument, YogaElement } from '../src';
+import { isDomText } from '../src/dom/nodeUtil';
+import * as yoga from '../src/yogaDom/types';
+import { FlorDocumentTesting } from './florTestHelper';
+import { willContain } from './testUtil';
 
 describe('yogaElement', () => {
   let flor: FlorDocumentTesting<YogaElement>

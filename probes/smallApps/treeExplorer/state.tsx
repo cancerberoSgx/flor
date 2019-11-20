@@ -1,4 +1,4 @@
-import { TODO } from 'misc-utils-of-mine-typescript'
+import { TODO } from 'misc-utils-of-mine-typescript';
 export interface State {
   examples: TODO[]
   currentEditor: Editor

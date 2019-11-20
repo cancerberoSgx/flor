@@ -1,5 +1,5 @@
-import { Flor, FlorDocument, Layout } from '../src'
-import { defaultTestSetup } from './testUtil'
+import { Flor, FlorDocument, Layout } from '../src';
+import { defaultTestSetup } from './testUtil';
 
 describe('focus', () => {
   let flor: FlorDocument

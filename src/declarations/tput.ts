@@ -1131,4 +1131,5 @@ export function sprintf(format: string, ...args: any[]) { return '' }
 
 module.exports.TPut = require('../blessed/tput')
 module.exports.sprintf = require('../blessed/tput').sprintf
+module.exports.tryRead = require('../blessed/tput').tryRead
 // exports.tryRead = tryRead;

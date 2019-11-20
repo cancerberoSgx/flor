@@ -1,8 +1,8 @@
-import { array } from 'misc-utils-of-mine-generic'
-import * as yoga from 'yoga-layout'
-import { Node } from 'yoga-layout'
-import { debug, Flor, FlorDocument } from '../../../src'
-import { color } from '../../../spec/data'
+import { array } from 'misc-utils-of-mine-generic';
+import * as yoga from 'yoga-layout';
+import { Node } from 'yoga-layout';
+import { color } from '../../../spec/data';
+import { debug, Flor, FlorDocument } from '../../../src';
 
 // yogaFlorTest()
 

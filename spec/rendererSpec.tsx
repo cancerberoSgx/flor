@@ -1,5 +1,5 @@
-import { BorderStyle, createElement, Flor, FlorDocument } from '../src'
-import { defaultTestSetup } from './testUtil'
+import { BorderStyle, createElement, Flor, FlorDocument } from '../src';
+import { defaultTestSetup } from './testUtil';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 

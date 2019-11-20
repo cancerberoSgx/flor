@@ -1,9 +1,9 @@
-import { ProgramDocument, ProgramElement } from '../programDom'
-import { ElementPropsImpl } from '../programDom/elementProps'
-import { YogaElementProps } from './types'
-import { YogaDocument } from './yogaDocument'
-import { YogaElement } from './yogaElement'
-import { YogaElementPropsImpl } from './yogaProps'
+import { ProgramDocument, ProgramElement } from '../programDom';
+import { ElementPropsImpl } from '../programDom/elementProps';
+import { YogaElementProps } from './types';
+import { YogaDocument } from './yogaDocument';
+import { YogaElement } from './yogaElement';
+import { YogaElementPropsImpl } from './yogaProps';
 
 declare global {
   export namespace JSX {

@@ -1,4 +1,4 @@
-import { Program } from '../../src'
+import { Program } from '../../src';
 const program = new Program({
 })
 program.setMouse({

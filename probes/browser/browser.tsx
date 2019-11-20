@@ -5,7 +5,7 @@
 // npx terser -o dist/bundle.js dist/bundle.js
 
 let termJs = require('term.js')
-import { Program } from '../../src'
+import { Program } from '../../src';
 
 declare var window: any, document: any
 

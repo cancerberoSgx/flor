@@ -1,7 +1,7 @@
-import { BorderStyle, borderStyles, debug, FlorDocument, Input, Layout } from '../../src'
-import { Button } from '../../src/component/button'
-import { Flor } from '../../src/jsx/createElement'
-import { color, float, item } from '../../spec/data'
+import { color, float, item } from '../../spec/data';
+import { BorderStyle, borderStyles, debug, FlorDocument, Input, Layout } from '../../src';
+import { Button } from '../../src/component/button';
+import { Flor } from '../../src/jsx/createElement';
 
 async function test() {
 

@@ -1,9 +1,9 @@
-import { array } from 'misc-utils-of-mine-generic'
-import { BorderStyle, easing, FlorDocument, Layout } from '../../src'
-import { Scrollable } from '../../src/component/scrollable'
-import { Text } from '../../src/component/text'
-import { Flor } from '../../src/jsx/createElement'
-import { char, color, int, words } from '../../spec/data'
+import { array } from 'misc-utils-of-mine-generic';
+import { char, color, int, words } from '../../spec/data';
+import { BorderStyle, easing, FlorDocument, Layout } from '../../src';
+import { Scrollable } from '../../src/component/scrollable';
+import { Text } from '../../src/component/text';
+import { Flor } from '../../src/jsx/createElement';
 
 // describe('scrollable', () => {
 

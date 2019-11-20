@@ -1,7 +1,7 @@
-import { sleep } from 'misc-utils-of-mine-generic'
-import { FlorDocument, MouseAction, MouseEvent } from '../src'
-import { Flor } from '../src/jsx/createElement'
-import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
+import { sleep } from 'misc-utils-of-mine-generic';
+import { FlorDocument, MouseAction, MouseEvent } from '../src';
+import { Flor } from '../src/jsx/createElement';
+import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil';
 
 describe('events', () => {
   let flor: FlorDocument

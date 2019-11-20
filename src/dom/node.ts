@@ -1,9 +1,9 @@
-import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { EventTarget } from '..'
-import { BasePropsImpl } from './BaseProps'
-import { Document } from './document'
-import { Element } from './element'
-import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomElement, isDomText, mapChildren, mapDescendants, nodeHtml, NodePredicate, NodeSimplePredicate, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil'
+import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { EventTarget } from '..';
+import { BasePropsImpl } from './BaseProps';
+import { Document } from './document';
+import { Element } from './element';
+import { ElementPredicate, filterAscendants, filterChildren, filterDescendants, filterDescendantTextNodesContaining, findAscendant, findChildren, findDescendant, findDescendantContaining, isDomElement, isDomText, mapChildren, mapDescendants, nodeHtml, NodePredicate, NodeSimplePredicate, visitAscendants, visitChildren, visitDescendants, Visitor, VisitorOptions } from './nodeUtil';
 
 export class Node<T extends any = any> implements EventTarget {
 
@@ -145,6 +145,7 @@ export class Node<T extends any = any> implements EventTarget {
   findChildElements<T extends Element = Element>(p: ElementPredicate<T>): T | undefined {
     return this.findChildren(e => isDomElement(e) && p(e))
   }
+  
   findChildren<T extends Node = Node>(p: NodePredicate<T>): T | undefined {
     return findChildren<T>(this, p)
   }
@@ -152,12 +153,15 @@ export class Node<T extends any = any> implements EventTarget {
   filterChildElements<T extends Element = Element>(p: ElementPredicate<T>): T[] {
     return this.filterChildren(e => isDomElement(e) && p(e))
   }
+
   filterChildren<T extends Node = Node>(p: NodePredicate<T>): T[] {
     return filterChildren<T>(this, p)
   }
+
   filterChildrenWithClass<T extends Node = Node>(className: string): T[] {
     return filterChildren<T>(this, e => isDomElement(e) && e.hasClass(className))
   }
+
   visitDescendants(v: Visitor, o: VisitorOptions = {}): boolean {
     return visitDescendants(this, v, o)
   }

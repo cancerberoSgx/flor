@@ -1,4 +1,4 @@
-import { SingleLineTextInputCursor, TextInputCursorOptions } from './singleLine'
+import { SingleLineTextInputCursor, TextInputCursorOptions } from './singleLine';
 
 /**
  * Synchronizes text being edited with cursor movement. Based on [[SingleLineTextInputCursor]]

@@ -1,6 +1,6 @@
-import { clone, notSameNotFalsy, objectFilter } from 'misc-utils-of-mine-generic'
-import { FocusEvent, ProgramElement, StyleProps, StylePropsImpl } from '../programDom'
-import { FocusManager } from './focusManager'
+import { clone, notSameNotFalsy, objectFilter } from 'misc-utils-of-mine-generic';
+import { FocusEvent, ProgramElement, StyleProps, StylePropsImpl } from '../programDom';
+import { FocusManager } from './focusManager';
 
 interface State {
   normalProps?: Partial<StyleProps>

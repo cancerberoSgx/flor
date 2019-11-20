@@ -1,9 +1,9 @@
-import { ansi } from 'cli-driver'
-import { createPatch } from 'diff'
-import { DisplayProcessor } from 'jasmine-spec-reporter'
-import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter'
-import { removeEmptyLines } from 'misc-utils-of-mine-generic'
-import { notUndefined } from 'misc-utils-of-mine-typescript'
+import { ansi } from 'cli-driver';
+import { createPatch } from 'diff';
+import { DisplayProcessor } from 'jasmine-spec-reporter';
+import { CustomReporterResult } from 'jasmine-spec-reporter/built/spec-reporter';
+import { removeEmptyLines } from 'misc-utils-of-mine-generic';
+import { notUndefined } from 'misc-utils-of-mine-typescript';
 
 export class CustomProcessor extends DisplayProcessor {
   displayFailedSpec(spec: CustomReporterResult, log: string): string {

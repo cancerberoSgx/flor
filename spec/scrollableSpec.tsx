@@ -1,10 +1,10 @@
-import { array, waitForPredicate } from 'misc-utils-of-mine-generic'
-import { BorderStyle, debug, easing, FlorDocument, Layout } from '../src'
-import { Scrollable } from '../src/component/scrollable'
-import { Text } from '../src/component/text'
-import { Flor } from '../src/jsx/createElement'
-import { char, color, int, longText, words } from './data'
-import { defaultTestSetup, expectNotToContain, willContain } from './testUtil'
+import { array, waitForPredicate } from 'misc-utils-of-mine-generic';
+import { BorderStyle, debug, easing, FlorDocument, Layout } from '../src';
+import { Scrollable } from '../src/component/scrollable';
+import { Text } from '../src/component/text';
+import { Flor } from '../src/jsx/createElement';
+import { char, color, int, longText, words } from './data';
+import { defaultTestSetup, expectNotToContain, willContain } from './testUtil';
 
 describe('scrollable', () => {
 

@@ -1,7 +1,7 @@
-import { RemoveProperties } from 'misc-utils-of-mine-generic'
-import { InputEventTarget } from '../programDom'
-import { BorderStyle } from '../util'
-import { YogaElementProps } from '../yogaDom/types'
+import { RemoveProperties } from 'misc-utils-of-mine-generic';
+import { InputEventTarget } from '../programDom';
+import { BorderStyle } from '../util';
+import { YogaElementProps } from '../yogaDom/types';
 
 export const inputEventTargetDefaultProps: () => Required<InputEventTarget> = () => ({
   onInput(e) { },

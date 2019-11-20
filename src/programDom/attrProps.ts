@@ -1,6 +1,6 @@
-import { BasePropsImpl } from '../dom/BaseProps'
-import { CommonElementImpl } from '../yogaDom/yogaTypes'
-import { ColorString, PAttrs } from './styleProps'
+import { BasePropsImpl } from '../dom/BaseProps';
+import { CommonElementImpl } from '../yogaDom/yogaTypes';
+import { ColorString, PAttrs } from './styleProps';
 
 export class AttrsImpl<T extends PAttrs = PAttrs> extends BasePropsImpl implements PAttrs {
   constructor(p: PAttrs | undefined, owner: CommonElementImpl) {

@@ -1,7 +1,7 @@
-import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { isElement, ProgramElement } from '../../../programDom'
-import { debug } from '../../logger'
-import { AutoLayout as AutoLayoutType, Constraint, ParseOptions, SubView, View } from './autoLayoutTypes'
+import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { isElement, ProgramElement } from '../../../programDom';
+import { debug } from '../../logger';
+import { AutoLayout as AutoLayoutType, Constraint, ParseOptions, SubView, View } from './autoLayoutTypes';
 const AL = require('autolayout') as AutoLayoutType
 
 interface Options<E extends ProgramElement = ProgramElement> {

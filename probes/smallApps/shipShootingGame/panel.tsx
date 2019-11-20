@@ -1,5 +1,5 @@
-import { Component, ElementProps, Flor, Input, Layout, Text } from '../../../src'
-import { State } from './state'
+import { Component, ElementProps, Flor, Input, Layout, Text } from '../../../src';
+import { State } from './state';
 
 export class Status extends Component<{
   state: State;

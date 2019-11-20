@@ -1,6 +1,6 @@
-import { Box as Row, Button, Col, Component, Flor, FlorDocument, Scrollable } from '../../../src'
-import { Settings } from './panel'
-import { State } from './state'
+import { Box as Row, Button, Col, Component, Flor, FlorDocument, Scrollable } from '../../../src';
+import { Settings } from './panel';
+import { State } from './state';
 
 interface AppProps {
   state: State

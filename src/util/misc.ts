@@ -1,5 +1,5 @@
-import { RemoveProperties } from 'misc-utils-of-mine-generic'
-import { ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript'
+import { RemoveProperties } from 'misc-utils-of-mine-generic';
+import { ObjectStringKeyUnion } from 'misc-utils-of-mine-typescript';
 
 export type KeysValued<T, V, K extends keyof T = keyof T> = V extends T[K] ? K : never
 export type RemoveKeysValued<T, V> = Exclude<ObjectStringKeyUnion<T>, KeysValued<T, V>>

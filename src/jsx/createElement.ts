@@ -1,7 +1,7 @@
-import { Node } from '../dom'
-import { ProgramDocument, ProgramElement } from '../programDom'
-import { Component } from './component'
-import { FlorJsx, FlorJsxAttrs, RefObject, RenderOptions } from './types'
+import { Node } from '../dom';
+import { ProgramDocument, ProgramElement } from '../programDom';
+import { Component } from './component';
+import { FlorJsx, FlorJsxAttrs, RefObject, RenderOptions } from './types';
 
 interface ComponentConstructor<P = {}, S = {}> {
   new(p: P, s: S): Component

@@ -1,6 +1,6 @@
-import { sleep } from 'misc-utils-of-mine-generic'
-import { Program } from '../../src'
-import { int } from '../../spec/data'
+import { sleep } from 'misc-utils-of-mine-generic';
+import { int } from '../../spec/data';
+import { Program } from '../../src';
 
 const program = new Program({
 })
@@ -15,7 +15,7 @@ program.key(['q', 'escape', 'C-c'], function() {
   ;
 
 // tslint:disable-next-line: no-floating-promises
-(async() => {
+(async () => {
 
   for (let i = 0;i < program.cols;i++) {
     for (let j = 0;j < program.rows;j++) {

@@ -1,5 +1,5 @@
-import { Flor, FlorDocument, Layout } from '../src'
-import { defaultTestSetup, expectToContain, willContain } from './testUtil'
+import { Flor, FlorDocument, Layout } from '../src';
+import { defaultTestSetup, expectToContain, willContain } from './testUtil';
 
 describe('effects', () => {
   let flor: FlorDocument

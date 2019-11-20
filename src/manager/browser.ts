@@ -1,7 +1,7 @@
-import { inBrowser } from 'misc-utils-of-mine-generic'
-import { Program, ProgramOptions } from '../declarations/program'
-import { debug } from '../util'
-import { createProgram, defaultProgramOptions } from './programUtil'
+import { inBrowser } from 'misc-utils-of-mine-generic';
+import { Program, ProgramOptions } from '../declarations/program';
+import { debug } from '../util';
+import { createProgram, defaultProgramOptions } from './programUtil';
 
 let browser
 declare var window: any, document: any

@@ -1,9 +1,9 @@
-import { RemoveProperties } from 'misc-utils-of-mine-generic'
-import { Node } from '../dom'
-import { Component } from '../jsx'
-import { ProgramDocument } from './programDocument'
-import { ProgramElement } from './programElement'
-import { ElementProps, FullProps } from './types'
+import { RemoveProperties } from 'misc-utils-of-mine-generic';
+import { Node } from '../dom';
+import { Component } from '../jsx';
+import { ProgramDocument } from './programDocument';
+import { ProgramElement } from './programElement';
+import { ElementProps, FullProps } from './types';
 
 /**
  * important! right now it must match both ProgramElement and YogaElement

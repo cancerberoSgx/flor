@@ -1,8 +1,8 @@
-import { isAttached, isElement, ProgramDocument, ProgramElement } from '..'
-import { ProgramMouseEvent } from '../declarations/program'
-import { filterDescendants, findDescendant } from '../dom/nodeUtil'
-import { BlurEvent, FocusEvent } from '../programDom'
-import { EventManager, notifyListener } from './eventManager'
+import { isAttached, isElement, ProgramDocument, ProgramElement } from '..';
+import { ProgramMouseEvent } from '../declarations/program';
+import { filterDescendants, findDescendant } from '../dom/nodeUtil';
+import { BlurEvent, FocusEvent } from '../programDom';
+import { EventManager, notifyListener } from './eventManager';
 
 /**
  *

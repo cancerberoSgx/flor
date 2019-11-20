@@ -1,6 +1,6 @@
-import { trimRightLines } from 'misc-utils-of-mine-generic'
-import { FlorDocument } from '../src'
-import { defaultTestSetup } from './testUtil'
+import { trimRightLines } from 'misc-utils-of-mine-generic';
+import { FlorDocument } from '../src';
+import { defaultTestSetup } from './testUtil';
 
 describe('styleProps', () => {
   let flor: FlorDocument

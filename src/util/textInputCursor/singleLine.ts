@@ -1,5 +1,5 @@
-import { KeyEvent, KeyListener, KeyPredicate, ProgramElement } from '../..'
-import { Pos } from '../../manager/cursorManager'
+import { KeyEvent, KeyListener, KeyPredicate, ProgramElement } from '../..';
+import { Pos } from '../../manager/cursorManager';
 
 interface TextInputCursorKeys {
   left: KeyPredicate

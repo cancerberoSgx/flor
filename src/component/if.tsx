@@ -1,4 +1,4 @@
-import { notFalsy, NotFalsy } from 'misc-utils-of-mine-typescript'
+import { notFalsy, NotFalsy } from 'misc-utils-of-mine-typescript';
 
 /**
  * àIf()` as statement. children need to be in a function and the function accepts a parameter which value is given condition `c` but casted to NotFalsy<C> so there's no need of type guards in the body. Example:

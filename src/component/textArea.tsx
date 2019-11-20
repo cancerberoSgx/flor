@@ -1,9 +1,9 @@
-import { KeyEvent } from '../../src'
-import { focusableProps } from '../../src/component/commonProps'
-import { Component } from '../../src/jsx'
-import { Flor } from '../../src/jsx/createElement'
-import { TextInputCursorMulti, TextInputCursorOptions } from '../util'
-import { InputProps } from './input'
+import { KeyEvent } from '../../src';
+import { focusableProps } from '../../src/component/commonProps';
+import { Component } from '../../src/jsx';
+import { Flor } from '../../src/jsx/createElement';
+import { TextInputCursorMulti, TextInputCursorOptions } from '../util';
+import { InputProps } from './input';
 
 interface TextAreaProps extends Partial<ConcreteTextAreaProps>, Partial<InputProps> {
 }

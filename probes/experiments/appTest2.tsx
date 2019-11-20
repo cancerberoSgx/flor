@@ -1,6 +1,6 @@
-import { BorderStyle, Button, Component, FlorDocument, Input, TextArea, YogaElement } from '../../src'
-import { Box } from '../../src/component/box'
-import { Flor } from '../../src/jsx/createElement'
+import { BorderStyle, Button, Component, FlorDocument, Input, TextArea, YogaElement } from '../../src';
+import { Box } from '../../src/component/box';
+import { Flor } from '../../src/jsx/createElement';
 const flor = new FlorDocument<YogaElement>({
   installDefaultChangeFocusKeys: true,
   installLoggers: true

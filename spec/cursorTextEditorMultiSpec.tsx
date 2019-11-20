@@ -1,4 +1,4 @@
-import { TextInputCursorMulti } from '../src'
+import { TextInputCursorMulti } from '../src';
 
 describe('TextInputCursorMulti', () => {
 

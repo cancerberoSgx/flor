@@ -1,9 +1,9 @@
-import { removeWhites, trimRightLines } from 'misc-utils-of-mine-generic'
-import { ComponentProps, ProgramDocument, ProgramDocumentRenderer } from '../src'
-import { Component } from '../src/jsx/component'
-import { Flor } from '../src/jsx/createElement'
-import { createProgramRendererDocument } from '../src/manager/programUtil'
-import { isElement } from '../src/programDom/elementUtil'
+import { removeWhites, trimRightLines } from 'misc-utils-of-mine-generic';
+import { ComponentProps, ProgramDocument, ProgramDocumentRenderer } from '../src';
+import { Component } from '../src/jsx/component';
+import { Flor } from '../src/jsx/createElement';
+import { createProgramRendererDocument } from '../src/manager/programUtil';
+import { isElement } from '../src/programDom/elementUtil';
 
 describe('jsx', () => {
 

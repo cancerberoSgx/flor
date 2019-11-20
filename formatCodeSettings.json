@@ -16,5 +16,9 @@
   "indentMultiLineObjectLiteralBeginningOnBlankLine": true,
   "indentSize": 2,
   "tabSize": 2,
-  "convertTabsToSpaces": true
+  "convertTabsToSpaces": true,
+  "quotePreference": "single",
+  "importModuleSpecifierPreference": "relative",
+  "importModuleSpecifierEnding": "minimal",
+  "allowTextChangesInNewFiles": true
 }

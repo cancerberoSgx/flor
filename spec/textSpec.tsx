@@ -1,8 +1,8 @@
-import { trimRightLines } from 'misc-utils-of-mine-generic'
-import { Flor, FlorDocument } from '../src'
-import { Text, text } from '../src/component/text'
-import { BorderStyle } from '../src/util/border'
-import { defaultTestSetup } from './testUtil'
+import { trimRightLines } from 'misc-utils-of-mine-generic';
+import { Flor, FlorDocument } from '../src';
+import { Text, text } from '../src/component/text';
+import { BorderStyle } from '../src/util/border';
+import { defaultTestSetup } from './testUtil';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 

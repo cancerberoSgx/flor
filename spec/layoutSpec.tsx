@@ -1,8 +1,8 @@
-import { array, serial, sleep } from 'misc-utils-of-mine-generic'
-import { createElement } from '../src'
-import { createProgramRendererDocumentAndElement } from '../src/manager/programUtil'
-import { BorderStyle, Layout } from '../src/util'
-import { int } from './data'
+import { array, serial, sleep } from 'misc-utils-of-mine-generic';
+import { createElement } from '../src';
+import { createProgramRendererDocumentAndElement } from '../src/manager/programUtil';
+import { BorderStyle, Layout } from '../src/util';
+import { int } from './data';
 
 describe('layout', () => {
 
@@ -13,7 +13,7 @@ describe('layout', () => {
     const N = 5
     await serial([
       'top-down', 'left-right', 'diagonal', 'alt-diagonal', 'binary-tree', 'justified-layout'
-    ].map(l => async() => {
+    ].map(l => async () => {
       const el = createElement(document, 'Div', document.body, { bg: 'yellow', fg: 'black', layout: { layout: l as any }, border: { type: BorderStyle.double }, left: 2, top: 0, width: renderer.program.cols, height: renderer.program.rows, ch: ' ' },
         array(N).map(i => createElement(document, 'Div', undefined, { bg: 'white', fg: 'black', top: int(0, 4), left: int(0, 7), height: int(3, 4), width: int(8, 12), ch: '.', border: { type: BorderStyle.round } }, [
           document.createTextNode('N' + i + 'th')

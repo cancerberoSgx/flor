@@ -1,7 +1,7 @@
-import { PropertyOptional, RemoveProperties } from 'misc-utils-of-mine-generic'
-import { Event, KeyListener, MouseEvent, MouseListener, ProgramElement, RegisteredEventListener, RegisteredGlobalEventListener, StopPropagation } from '..'
-import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program'
-import { Node } from '../dom'
+import { PropertyOptional, RemoveProperties } from 'misc-utils-of-mine-generic';
+import { Event, KeyListener, MouseEvent, MouseListener, ProgramElement, RegisteredEventListener, RegisteredGlobalEventListener, StopPropagation } from '..';
+import { MouseAction, Program, ProgramKeyEvent, ProgramMouseEvent } from '../declarations/program';
+import { Node } from '../dom';
 
 type E<T = ProgramElement> = T extends ProgramElement ? T : never
 

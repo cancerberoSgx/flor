@@ -1,4 +1,4 @@
-import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement } from '../src'
+import { BorderStyle, Flor, FlorDocument, Input, input, ProgramElement } from '../src';
 
 describe('input', () => {
   function test(f: (flor: FlorDocument) => ProgramElement) {

@@ -1,7 +1,7 @@
-import { Component, Flor } from '../jsx'
-import { ElementProps } from '../programDom'
-import { Layout } from '../util'
-import { containerProps } from './commonProps'
+import { Component, Flor } from '../jsx';
+import { ElementProps } from '../programDom';
+import { Layout } from '../util';
+import { containerProps } from './commonProps';
 
 interface BoxProps extends Partial<ElementProps> {
 }

@@ -1,6 +1,6 @@
-import { Color, colors } from '../declarations/colors'
-import { Program } from '../declarations/program'
-import { enterProgram, leaveProgram } from './programUtil'
+import { Color, colors } from '../declarations/colors';
+import { Program } from '../declarations/program';
+import { enterProgram, leaveProgram } from './programUtil';
 
 type CursorShape = 'block' | 'underline' | 'line'
 

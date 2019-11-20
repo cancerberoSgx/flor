@@ -1,8 +1,8 @@
-import { ProgramElement } from '../..'
-import { Node } from '../../dom'
-import { isElement } from '../../programDom'
-import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout'
-import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms'
+import { ProgramElement } from '../..';
+import { Node } from '../../dom';
+import { isElement } from '../../programDom';
+import { handleJustifiedLayout, JustifiedLayoutOptions } from './justifiedLayout';
+import { handleLayout, isLayoutAlgorithm } from './layoutAlgorithms';
 // import { debug } from '../logger';
 
 export interface LayoutOptions {

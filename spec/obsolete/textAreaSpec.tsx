@@ -1,7 +1,7 @@
-import { Flor, FlorDocument, Scrollable } from '../../src'
-import { longText } from '../data'
-import { defaultTestSetup, willContain } from '../testUtil'
-import { TextArea } from './textArea'
+import { Flor, FlorDocument, Scrollable } from '../../src';
+import { longText } from '../data';
+import { defaultTestSetup, willContain } from '../testUtil';
+import { TextArea } from './textArea';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 99999
 

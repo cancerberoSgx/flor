@@ -1,8 +1,8 @@
-import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..'
-import { Component, Flor } from '../jsx'
-import { emitEventWithStopPropagation } from '../manager'
-import { ElementProps, InputEventTarget } from '../programDom'
-import { focusableProps, inputEventTargetDefaultProps } from './commonProps'
+import { KeyEvent, KeyPredicate, ProgramDocument, ProgramElement, SingleLineTextInputCursor } from '..';
+import { Component, Flor } from '../jsx';
+import { emitEventWithStopPropagation } from '../manager';
+import { ElementProps, InputEventTarget } from '../programDom';
+import { focusableProps, inputEventTargetDefaultProps } from './commonProps';
 
 export interface InputProps extends JSX.PropsWithRef<Partial<ElementProps>>, Partial<ConcreteInputProps> {
 

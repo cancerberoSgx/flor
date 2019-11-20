@@ -1,9 +1,9 @@
-import { ok } from 'assert'
-import { array, trimRightLines } from 'misc-utils-of-mine-generic'
-import * as yoga from 'yoga-layout'
-import { Flor, FlorDocument, KeyEvent } from '../../src'
-import { Text, TextProps } from '../../src/component/text'
-import { BorderStyle } from '../../src/util/border'
+import { ok } from 'assert';
+import { array, trimRightLines } from 'misc-utils-of-mine-generic';
+import * as yoga from 'yoga-layout';
+import { Flor, FlorDocument, KeyEvent } from '../../src';
+import { Text, TextProps } from '../../src/component/text';
+import { BorderStyle } from '../../src/util/border';
 
 interface Pos { x: number, y: number }
 interface TextCursorProps extends TextProps {

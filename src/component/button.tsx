@@ -1,7 +1,7 @@
-import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { Component, Flor } from '../jsx'
-import { YogaElementProps } from '../yogaDom'
-import { focusableProps } from './commonProps'
+import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { Component, Flor } from '../jsx';
+import { YogaElementProps } from '../yogaDom';
+import { focusableProps } from './commonProps';
 
 interface ButtonProps extends Partial<YogaElementProps> {
   children?: string[]

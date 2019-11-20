@@ -1,7 +1,7 @@
-import { BorderStyle, Flor, FlorDocument, isElement, Layout } from '../src'
-import { Button } from '../src/component/button'
-import { color } from './data'
-import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
+import { BorderStyle, Flor, FlorDocument, isElement, Layout } from '../src';
+import { Button } from '../src/component/button';
+import { color } from './data';
+import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil';
 
 describe('button', () => {
 

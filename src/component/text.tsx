@@ -1,10 +1,10 @@
-import { array } from 'misc-utils-of-mine-generic'
-import * as yoga from 'yoga-layout'
-import { isDomText } from '../dom/nodeUtil'
-import { Component, Flor } from '../jsx'
-import { ProgramDocumentRenderer } from '../manager'
-import { YogaElementProps } from '../yogaDom'
-import { baseProps } from './commonProps'
+import { array } from 'misc-utils-of-mine-generic';
+import * as yoga from 'yoga-layout';
+import { isDomText } from '../dom/nodeUtil';
+import { Component, Flor } from '../jsx';
+import { ProgramDocumentRenderer } from '../manager';
+import { YogaElementProps } from '../yogaDom';
+import { baseProps } from './commonProps';
 
 export interface TextProps extends JSX.PropsWithRef<Partial<YogaElementProps>> {
   children?: string[]

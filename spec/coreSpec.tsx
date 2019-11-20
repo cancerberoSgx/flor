@@ -1,4 +1,4 @@
-import { ProgramDocument, StylePropsImpl } from '../src'
+import { ProgramDocument, StylePropsImpl } from '../src';
 
 describe('core', () => {
   it('Attr and Props should not spread private members', async done => {

@@ -1,7 +1,7 @@
 
-import { appendFileSync } from 'fs'
-import { rm } from 'shelljs'
-import { format } from 'util'
+import { appendFileSync } from 'fs';
+import { rm } from 'shelljs';
+import { format } from 'util';
 
 const argv = process.argv.slice(2)
 const configFile = argv.shift()

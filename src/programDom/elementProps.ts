@@ -1,10 +1,10 @@
-import { KeyEvent, MouseEvent, ProgramDocumentRenderer, TextNode } from '..'
-import { BlurEvent, FocusEvent } from '../'
-import { Node } from '../dom'
-import { ProgramElement } from '../programDom'
-import { CommonElementProps } from '../yogaDom/yogaTypes'
-import { StylePropsImpl } from './styleProps'
-import { ElementProps, KeyPredicate, StyleProps } from './types'
+import { KeyEvent, MouseEvent, ProgramDocumentRenderer, TextNode } from '..';
+import { BlurEvent, FocusEvent } from '../';
+import { Node } from '../dom';
+import { ProgramElement } from '../programDom';
+import { CommonElementProps } from '../yogaDom/yogaTypes';
+import { StylePropsImpl } from './styleProps';
+import { ElementProps, KeyPredicate, StyleProps } from './types';
 
 export class ElementPropsImpl<T extends ElementProps = ElementProps> extends StylePropsImpl<T> implements Partial<CommonElementProps> {
 

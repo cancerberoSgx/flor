@@ -1,5 +1,5 @@
-import { ElementPropsImpl } from '../programDom/elementProps'
-import { Align, Direction, Display, Edge, FlexDirection, FlexWrap, JustifyContent, Value, ValuedEdges, YogaElementProps } from './types'
+import { ElementPropsImpl } from '../programDom/elementProps';
+import { Align, Direction, Display, Edge, FlexDirection, FlexWrap, JustifyContent, Value, ValuedEdges, YogaElementProps } from './types';
 // @ts-ignore
 export class YogaElementPropsImpl extends ElementPropsImpl<YogaElementProps> implements Partial<YogaElementProps> {
   public get heightAuto(): boolean | undefined {

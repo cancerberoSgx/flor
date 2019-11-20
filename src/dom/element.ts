@@ -1,7 +1,7 @@
-import { asArray, indent, notSameNotFalsy, objectKeys, objectMap } from 'misc-utils-of-mine-generic'
-import { Document } from './document'
-import { Node } from './node'
-import { isDomElement } from './nodeUtil'
+import { asArray, indent, notSameNotFalsy, objectKeys, objectMap } from 'misc-utils-of-mine-generic';
+import { Document } from './document';
+import { Node } from './node';
+import { isDomElement } from './nodeUtil';
 
 export class Element extends Node {
   constructor(public readonly tagName: string, ownerDocument: Document) {

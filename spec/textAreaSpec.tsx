@@ -1,6 +1,6 @@
-import { BorderStyle, Flor, FlorDocument } from '../src'
-import { TextArea } from '../src/component/textArea'
-import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil'
+import { BorderStyle, Flor, FlorDocument } from '../src';
+import { TextArea } from '../src/component/textArea';
+import { defaultTestSetup, expectNotToContain, expectToContain, willContain } from './testUtil';
 
 describe('textArea', () => {
 

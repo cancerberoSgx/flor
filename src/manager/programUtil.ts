@@ -1,7 +1,7 @@
-import { tryTo } from 'misc-utils-of-mine-generic'
-import { FullProps, ProgramDocument, ProgramDocumentRenderer } from '..'
-import { Program, ProgramOptions } from '../declarations/program'
-import { Flor } from '../jsx/createElement'
+import { tryTo } from 'misc-utils-of-mine-generic';
+import { FullProps, ProgramDocument, ProgramDocumentRenderer } from '..';
+import { Program, ProgramOptions } from '../declarations/program';
+import { Flor } from '../jsx/createElement';
 
 /**
  * Destroy given program and exits the process with given status.

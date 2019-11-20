@@ -1,4 +1,4 @@
-import { MouseEvent, ProgramElement } from '../programDom'
+import { MouseEvent, ProgramElement } from '../programDom';
 
 export interface ClicksEvent<T extends ProgramElement = ProgramElement> extends MouseEvent<T> {
   count: number

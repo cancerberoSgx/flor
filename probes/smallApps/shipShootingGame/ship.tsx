@@ -1,6 +1,6 @@
-import { BorderProps, BorderStyle, Component, ElementProps, KeyEvent } from '../../../src'
-import { Flor } from '../../../src/jsx/createElement'
-import { BulletImpl, Direction, Ship, ShipImpl, State, state } from './state'
+import { BorderProps, BorderStyle, Component, ElementProps, KeyEvent } from '../../../src';
+import { Flor } from '../../../src/jsx/createElement';
+import { BulletImpl, Direction, Ship, ShipImpl, State, state } from './state';
 let ship
 export class ShipC extends Component<{
   state: State;

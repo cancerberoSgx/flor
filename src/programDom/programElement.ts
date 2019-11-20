@@ -163,7 +163,7 @@ export class ProgramElement extends Element {
       let n: ProgramElement | ProgramDocument = this
       while (n.parentNode !== n.ownerDocument) {
         x = x + (n.parentNode as ProgramElement).left + ((n.parentNode as ProgramElement).padding && (n.parentNode as ProgramElement).padding!.left || 0) + ((n.parentNode as ProgramElement).border ? 1 : 0)
-        n = n.parentNode
+        n = n.parentNode as any
       }
       this._absoluteLeft = x
     }
@@ -181,7 +181,7 @@ export class ProgramElement extends Element {
       let n: ProgramElement | ProgramDocument = this
       while (n.parentNode && n.parentNode !== n.ownerDocument) {
         y = y + (n.parentNode as ProgramElement).top + ((n.parentNode as ProgramElement).padding && (n.parentNode as ProgramElement).padding!.top || 0) + ((n.parentNode as ProgramElement).border ? 1 : 0)
-        n = n.parentNode
+        n = n.parentNode as any
       }
       this._absoluteTop = y
     }

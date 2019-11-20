@@ -1,14 +1,14 @@
-import { PropertyOptional } from 'misc-utils-of-mine-generic'
-import { MouseAction, ProgramKeyEvent, ProgramMouseEvent } from '../declarations'
-import { Node, TextNode } from '../dom'
-import { BaseProps } from '../dom/BaseProps'
-import { ComponentProps } from '../jsx/'
-import { ProgramDocumentRenderer } from '../manager'
-import { ClicksEvent } from '../manager/clicks'
-import { LayoutOptions } from '../util'
-import { BorderStyle } from '../util/border'
-import { ProgramElement } from './programElement'
-import { ColorString } from './styleProps'
+import { PropertyOptional } from 'misc-utils-of-mine-generic';
+import { MouseAction, ProgramKeyEvent, ProgramMouseEvent } from '../declarations';
+import { Node, TextNode } from '../dom';
+import { BaseProps } from '../dom/BaseProps';
+import { ComponentProps } from '../jsx/';
+import { ProgramDocumentRenderer } from '../manager';
+import { ClicksEvent } from '../manager/clicks';
+import { LayoutOptions } from '../util';
+import { BorderStyle } from '../util/border';
+import { ProgramElement } from './programElement';
+import { ColorString } from './styleProps';
 
 /**
  * This represents the native styles attrs that are set directly using tput (the axioms)

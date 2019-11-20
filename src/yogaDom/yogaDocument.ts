@@ -1,5 +1,5 @@
-import { ProgramDocument } from '../programDom/programDocument'
-import { YogaElement } from './yogaElement'
+import { ProgramDocument } from '../programDom/programDocument';
+import { YogaElement } from './yogaElement';
 
 export class YogaDocument extends ProgramDocument<YogaElement> {
   body: YogaElement

@@ -1,9 +1,9 @@
-import { repeat } from 'misc-utils-of-mine-generic'
-import { notFalsy } from 'misc-utils-of-mine-typescript'
-import { BaseProps } from './BaseProps'
-import { Document } from './document'
-import { Element } from './element'
-import { Node, TextNode } from './node'
+import { repeat } from 'misc-utils-of-mine-generic';
+import { notFalsy } from 'misc-utils-of-mine-typescript';
+import { BaseProps } from './BaseProps';
+import { Document } from './document';
+import { Element } from './element';
+import { Node, TextNode } from './node';
 
 export function nodeTypes(n: Node): number[] {
   const o: number[] = []

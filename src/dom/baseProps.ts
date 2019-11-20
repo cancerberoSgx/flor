@@ -1,4 +1,4 @@
-import { objectKeys } from 'misc-utils-of-mine-generic'
+import { objectKeys } from 'misc-utils-of-mine-generic';
 
 export class BasePropsImpl<T extends any = any> implements Partial<BaseProps<T>> {
   protected _data: T
